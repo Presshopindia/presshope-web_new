@@ -1,0 +1,168 @@
+[33m9e0d616[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/notification_basket[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge branch 'notification_basket' of https://github.com/europa-promatics/presshope into notification_basket
+[33mf1705d5[m basket-design
+[33m00b4a3d[m[33m ([m[1;31morigin/onboarding_new_flow[m[33m, [m[1;32mnotification_basket[m[33m)[m Trying to add code which is not added
+[33m230e108[m bug of not showing image in notification has been fixed
+[33m3666355[m Sample basket page is ready need proper ui
+[33m51b5d6c[m Notification done
+[33m00353c7[m Flow of basket and notification clear all added
+[33m8559fb3[m[33m ([m[1;31morigin/basket[m[33m, [m[1;31morigin/Development[m[33m, [m[1;32mDevelopment[m[33m)[m some code added in basket
+[33m9a3d661[m[33m ([m[1;31morigin/image_resize[m[33m, [m[1;32mimage_resize[m[33m)[m all possible changes are done related to image resize
+[33m3d75987[m again some changes in ui
+[33m9cc7b3c[m Changed background url
+[33mc11064c[m Merge pull request #1 from europa-promatics/all_bugs_of_chat
+[33mbf41d05[m[33m ([m[1;31morigin/all_bugs_of_chat[m[33m)[m some bugs of external chat done
+[33m39d128d[m content external chat done
+[33mce797bc[m Content external chat done
+[33m3c9bc4f[m External chat done
+[33mb49f3ae[m Firebase change
+[33m9ec8f9d[m[33m ([m[1;31morigin/all_chat_bugs[m[33m)[m Registeration bug fix
+[33m3b5ee69[m some imp changes in routing
+[33m317774e[m[33m ([m[1;31morigin/bug_fixing_v1[m[33m)[m unused package has been deleted
+[33mf8535d2[m changes in registration
+[33m777b3d0[m[33m ([m[1;31morigin/optimization[m[33m)[m some optimization done
+[33m5f3e85f[m Deleted workflow of git
+[33m1a8ee7f[m commented code of ci/cd pipeline
+[33mda2164b[m design-points-19-07-2024
+[33mced44e8[m[33m ([m[1;31morigin/ending_of_all_bugs_v1[m[33m)[m some bugs are remaining
+[33me71c961[m Audio icon solved in recent activity
+[33ma5296ff[m Merge branch 'Development' of https://github.com/europa-promatics/presshope into Development
+[33m30958da[m Internal chat done
+[33m115ee75[m Fix firebase conflic issue
+[33m59b5b64[m Fix bug of delay
+[33m4c81ddc[m chat work start
+[33m420c123[m Feed sort filter done
+[33m30650d7[m Notification searching done
+[33mead2dc4[m[33m ([m[1;31morigin/feed_sort_filter[m[33m)[m Feed sort filter approximately done
+[33m48131f6[m some change done in sort and filter
+[33m4faf9cc[m unused api removed
+[33m033d104[m some changes in param and fav content param is ready
+[33m73e8b9d[m some changes in payload of content purchased online
+[33m7375be5[m Purchased content sort and filter payload is ready
+[33ma66d755[m Payload change for content under offer
+[33mdaa2101[m Content Under Offer Sort Filter Payload is ready
+[33m6e673c8[m Merge branch 'Development' of https://github.com/europa-promatics/presshope into Development
+[33m005936e[m MORE CONTENT DONE IN TASK
+[33m94b70cf[m design-points-12-07-2024
+[33mbb4d9bb[m task sort filter payload ready
+[33mdb8aa0e[m Fix average price
+[33m69835bc[m Report sort filter done from frontend side
+[33m18eed44[m payload is ready for account sort and filter
+[33m9195e2b[m accounts graph sorting done
+[33m1df5a7e[m accounts done
+[33me352ea2[m Multiple bugs of Task done
+[33mc84ca13[m design-points
+[33m56b127d[m Task section some of the bug has been fixed
+[33ma222af9[m payload change in manage user
+[33mb1c0a1b[m Reports percentage done
+[33m1e94f28[m All points of rating and review done
+[33m5c012ee[m check rating
+[33m98e79ce[m CHECK TASK SECTION
+[33m251f16f[m task section almost done
+[33m0c03daf[m content image preview
+[33m006f545[m payload is ready for purchased content
+[33md16992a[m 1 api is left on report section
+[33m0924d27[m graph done
+[33mc5697c0[m funds invested managed
+[33mf6734c0[m Multiple points done of reports and task and sorting
+[33m33dde13[m Report section v1 done
+[33ma4ea65e[m basic reports done need backend implementation
+[33mff8a55c[m Merge branch 'Development' of https://github.com/europa-promatics/presshope into Development
+[33m7e8861e[m reports half done
+[33ma028845[m Update firebase-hosting-merge.yml testing 3
+[33m82169d4[m Update firebase-hosting-merge.yml testing 2
+[33m54c4603[m Update firebase-hosting-merge.yml testing 1
+[33m8ea0fb7[m Merge branch 'Development' of https://github.com/europa-promatics/presshope into Development
+[33m05571ea[m sorting in rating done
+[33m5959edb[m CI/CD Testing
+[33m06d76c2[m Merge branch 'Development' of https://github.com/europa-promatics/presshope into Development
+[33m07a44e5[m ci-cd
+[33ma04f0cf[m Update firebase-hosting-merge.yml
+[33m48bcca9[m Merge branch 'Development' of https://github.com/europa-promatics/presshope into Development
+[33m6e5003f[m ci/cd test 3
+[33md7a6488[m ci/cd test 2
+[33m543fef3[m Update firebase-hosting-merge.yml v2
+[33m01f0552[m Merge branch 'Development' of https://github.com/europa-promatics/presshope into Development
+[33m29b33d1[m ci/ccd testing
+[33m182b3c7[m Update firebase-hosting-merge.yml
+[33mc98374b[m favourite in content fix
+[33m2a666bd[m comma in price done
+[33mfef6f40[m ui-work@03-july-2024
+[33mbed8f28[m searching point done
+[33m8a0474a[m some points done
+[33mb41d28e[m chat selection done
+[33mabaa44b[m new user account detail fixed
+[33m6c7e001[m fix data remove issue in sign up
+[33m47a094e[m Related content done
+[33m6f35035[m trending search issue and date issue done
+[33m7dfd095[m Firebase setup done
+[33m2675680[m ui-work@anwar-01-july
+[33mf8ae9cc[m firebase hosting setup
+[33m6032ed4[m firebase setup
+[33m0e5c705[m firebase setup change
+[33m58fcea8[m checking ci/cd
+[33m691e326[m Office details problem solve on profile section
+[33mcf50166[m Some bugs done
+[33m1045037[m hoppers who have contributed in content
+[33me84dd52[m done
+[33m7a674b6[m sort done of reports main sectiom
+[33m9b472e2[m Content Under Offer  Sort and Filter Done
+[33m624e6c2[m multiple bugs related to report done
+[33me0a9543[m multiple bugs done
+[33maf9469b[m multuiple bugs has been fuixed
+[33m5a05b88[m console removed
+[33m5d3fb71[m bugs done
+[33m2012e0d[m Human icon bug fix
+[33m4e96307[m Onboard bug fix
+[33m4d011c9[m Report done
+[33m811c3d5[m some bugs are done
+[33m5cee4fd[m audio and video bug fixed
+[33mf90cd64[m all sort
+[33mffabc60[m dashboord
+[33mc016eb6[m init
+[33m8581a7f[m chat-ui
+[33ma683886[m External-Chat
+[33me983e46[m external chat in task done
+[33mc680d98[m task is mostly done
+[33m361b466[m Merge branch 'Development' of https://github.com/europa-promatics/presshope into Development
+[33m67d2019[m task work is on progress
+[33m93cccc3[m ui-points-done
+[33m2141634[m sign up bug done
+[33m938217f[m multiple points done
+[33mef02ce7[m Manage user done and most popular done most viewed done
+[33m1a6568c[m Design-Update@02April
+[33mdc23f45[m Design-Update@02April
+[33me27a22c[m some points done
+[33m9ffb6c0[m some points done
+[33m4b415a7[m some points done
+[33m3d0e699[m hoppers done
+[33m7716ec9[m some bugs done
+[33ma2b0ec2[m Revert "changes 27-03"
+[33m3758a13[m changes 27-03
+[33m543bf7c[m Design-Update@21March
+[33m5d0a599[m Design-Update@21March
+[33mb46cd90[m Header-Search-Design@18March
+[33ma72dc6f[m fixed some bugs of chat
+[33mfc68dfa[m dp issue done
+[33m483cafc[m address change
+[33m115a41e[m Design@15March
+[33mef926cf[m bugs done
+[33mb7e455d[m some bugs done
+[33m638bfdc[m some bugs done
+[33mc3c5a15[m Design@14March
+[33mf73e927[m Design@13March
+[33m6465697[m some poitns done
+[33me8d88d5[m Design-Bugs@12March
+[33mf5ae07a[m frontend done
+[33mb6398bf[m trending search done
+[33m511f581[m bugs done
+[33ma015db6[m added
+[33ma7c5651[m profile image done
+[33m6e4779c[m some bugs done
+[33mb39ab8f[m some bugs done
+[33m8494abb[m some bugs fixed
+[33m1a7c20e[m some points are done
+[33m4505015[m some bugs are done
+[33m3cc9e7f[m added changes
+[33m3ffb21c[m added changes
+[33m02ee167[m design-changes-anwar
+[33m

@@ -1,0 +1,2068 @@
+[{
+  "_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "name": "Presshop Admin",
+  "admin_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "email": "hello@presshop.co.uk",
+  "password": "$2b$10$0QvIlNpmVQIcQOEEPeVizeRjCPMYrvFDBUtRdBMYoYVQrK5OHJ2mq",
+  "role": "admin",
+  "status": "approved",
+  "office_details": {
+    "company_name": "Presshop",
+    "company_number": "123434",
+    "company_vat": 20,
+    "name": "presshop",
+    "address": "167-169 Great Portland Street , London W1W 5PF",
+    "country_code": 23,
+    "phone": {
+      "$numberLong": "44121212121212"
+    },
+    "website": null
+  },
+  "bank_details": {
+    "account_holder_name": "Presshop Admin",
+    "account_number": 876598765,
+    "bank_name": "ICICI Bank",
+    "sort_code": "123456"
+  },
+  "country_code": 44,
+  "phone": {
+    "$numberLong": "44121212121212"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": true,
+    "assignNewEmployeeRights": true,
+    "completeAccess": true,
+    "controlHopper": true,
+    "controlPublication": true,
+    "controlContent": true,
+    "viewRightOnly": true
+  },
+  "profile_image": "1725276536200financial-times-logo.jpg",
+  "verified": true,
+  "verification": null,
+  "loginAttempts": 0,
+  "blockExpires": null,
+  "is_Contractsigned": true,
+  "is_Legal": true,
+  "is_Checkandapprove": true,
+  "forgotPassOTPExpire": 0,
+  "forgotPassOTP": 0,
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": true,
+  "updatedAt": {
+    "$date": "2024-09-02T11:28:56.276Z"
+  },
+  "employee_address": {
+    "coordinates": [
+      51.5072178,
+      -0.1275862
+    ],
+    "country": "United Kingdom",
+    "city": "London"
+  }
+},
+{
+  "_id": {
+    "$oid": "64edd6802337339c75b494ce"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [
+      37.7749295,
+      -122.4194155
+    ],
+    "country": "United States",
+    "post_code": "06492",
+    "city": "San Francisco"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": false,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": false,
+    "controlPublication": false,
+    "controlContent": false,
+    "viewRightOnly": true,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2023-08-29T07:31:26.569Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Raneeta N",
+  "designation_id": {
+    "$oid": "64c74df3875766bb25786fd5"
+  },
+  "department_id": {
+    "$oid": "64e5b30531defcae9a338971"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+1",
+  "phone": 2122121221,
+  "email": "micro@mailinator.com",
+  "password": "$2a$05$Lti22RSRhdRkp2tfwyvrkOumaxSx9cs.CIBPgTWlDbWj86Kd73tny",
+  "bank_details": {
+    "account_holder_name": "ICICI",
+    "account_number": "1111111111",
+    "bank_name": "ICICI",
+    "sort_code": "111111"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1693308544497unnamed (4).png",
+  "blockExpires": {
+    "$date": "2023-08-29T11:29:04.900Z"
+  },
+  "createdAt": {
+    "$date": "2023-08-29T11:29:04.906Z"
+  },
+  "updatedAt": {
+    "$date": "2023-08-29T11:29:04.906Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "64ef0b8f74ea9111a1f78916"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [
+      30.900965,
+      75.8572758
+    ],
+    "country": "India",
+    "city": "Ludhiana",
+    "post_code": "141014"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": false,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": false,
+    "controlPublication": false,
+    "controlContent": false,
+    "viewRightOnly": true,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2023-08-30T08:49:56.312Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "David Hassan",
+  "designation_id": {
+    "$oid": "64c74df3875766bb25786fd5"
+  },
+  "department_id": {
+    "$oid": "64c74ed7875766bb25786fdb"
+  },
+  "office_id": {
+    "$oid": "64ef04a974ea9111a1f788ca"
+  },
+  "country_code": "+380",
+  "phone": {
+    "$numberLong": "2525135432"
+  },
+  "email": "david@mailinator.com",
+  "password": "$2a$05$XLw4TRR996FcOZexTrkoXOMO3IrExC4HwB2G8x1O2.VCd4XUpZtYG",
+  "bank_details": {
+    "account_holder_name": "David",
+    "account_number": "10020301002",
+    "bank_name": "hdfc",
+    "sort_code": "123654"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1693387662689rt.png",
+  "blockExpires": {
+    "$date": "2023-08-30T09:27:43.023Z"
+  },
+  "createdAt": {
+    "$date": "2023-08-30T09:27:43.030Z"
+  },
+  "updatedAt": {
+    "$date": "2023-08-30T09:27:43.030Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "64f058e9c012183a02027989"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [
+      51.5072178,
+      -0.1275862
+    ],
+    "country": "United Kingdom",
+    "city": "London",
+    "post_code": "L1 8JQ"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": true,
+    "assignNewEmployeeRights": true,
+    "completeAccess": true,
+    "controlHopper": true,
+    "controlPublication": true,
+    "controlContent": true,
+    "viewRightOnly": true,
+    "other_rights": true
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2023-08-31T09:03:15.309Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": true,
+  "name": "Ritchie",
+  "designation_id": {
+    "$oid": "64c4dec01be72f57540c6b71"
+  },
+  "department_id": {
+    "$oid": "64e5b30531defcae9a338971"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+44",
+  "phone": {
+    "$numberLong": "66666666666666"
+  },
+  "email": "ritchie@mailinator.com",
+  "password": "$2a$05$00cvAQ8zLtEHk217yYkESOusjmxifD8..7rtpjVBMaoZbj8NJKKmu",
+  "bank_details": {
+    "account_holder_name": "Ritchie",
+    "account_number": "09090999",
+    "bank_name": "UK Bank",
+    "sort_code": "128127931"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1693473001340team-5.jpg",
+  "blockExpires": {
+    "$date": "2023-08-31T09:10:01.664Z"
+  },
+  "createdAt": {
+    "$date": "2023-08-31T09:10:01.700Z"
+  },
+  "updatedAt": {
+    "$date": "2023-08-31T09:10:01.700Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "64f9723522384f6a0142a7c4"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [
+      51.5009405,
+      -0.1629287
+    ],
+    "country": "United Kingdom",
+    "city": "",
+    "post_code": "SW1X 7QA"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": true,
+    "assignNewEmployeeRights": true,
+    "completeAccess": true,
+    "controlHopper": true,
+    "controlPublication": true,
+    "controlContent": true,
+    "viewRightOnly": true,
+    "other_rights": true
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2023-09-07T05:19:23.812Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": true,
+  "name": "Ritchie",
+  "designation_id": {
+    "$oid": "64c4deec1be72f57540c6b73"
+  },
+  "department_id": {
+    "$oid": "64e5b30531defcae9a338971"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+44",
+  "phone": 61424723,
+  "email": "ritchie123@mailinator.com",
+  "password": "$2a$05$8dWuOG3pmGfaxiohvJCuCuIQO.b2orztX5Lo5TckOVkQjr9CAc8EO",
+  "bank_details": {
+    "account_holder_name": "Ritchie",
+    "account_number": "101020103012",
+    "bank_name": "HDFC",
+    "sort_code": "SWIS025"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "169406930082116505138769591613024420661tach6.png",
+  "blockExpires": {
+    "$date": "2023-09-07T06:48:21.047Z"
+  },
+  "createdAt": {
+    "$date": "2023-09-07T06:48:21.055Z"
+  },
+  "updatedAt": {
+    "$date": "2023-09-07T06:48:21.055Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "65002a4a9c76dceedebbd822"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [
+      30.9108094,
+      75.879342
+    ],
+    "country": "India",
+    "city": "Ludhiana",
+    "post_code": "141008"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": true,
+    "assignNewEmployeeRights": true,
+    "completeAccess": true,
+    "controlHopper": true,
+    "controlPublication": true,
+    "controlContent": true,
+    "viewRightOnly": true,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2023-09-12T09:05:35.736Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Vikash",
+  "designation_id": {
+    "$oid": "64e5b32e31defcae9a3389c2"
+  },
+  "department_id": {
+    "$oid": "64c74eb2875766bb25786fd9"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+355",
+  "phone": {
+    "$numberLong": "4544454544"
+  },
+  "email": "vikash@mailinator.com",
+  "password": "$2a$05$C94QTe.ofdqSdB6qzH2/L.nYuwbTGFGqd9cBjleAW8XrpMaZi5yV6",
+  "bank_details": {
+    "account_holder_name": "vikash",
+    "account_number": "101010010101",
+    "bank_name": "HDFC",
+    "sort_code": "1233123"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "169450964197316505138769591613024420661tach6.png",
+  "blockExpires": {
+    "$date": "2023-09-12T09:07:22.167Z"
+  },
+  "createdAt": {
+    "$date": "2023-09-12T09:07:22.177Z"
+  },
+  "updatedAt": {
+    "$date": "2023-09-12T09:07:22.177Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "65002b5ef83bb5ef3b75a716"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [
+      30.9108094,
+      75.879342
+    ],
+    "country": "India",
+    "city": "Ludhiana",
+    "post_code": "141008"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": true,
+    "assignNewEmployeeRights": true,
+    "completeAccess": true,
+    "controlHopper": true,
+    "controlPublication": true,
+    "controlContent": true,
+    "viewRightOnly": true,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2023-09-12T09:07:35.053Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "ritesh",
+  "designation_id": {
+    "$oid": "64c74de6875766bb25786fd4"
+  },
+  "department_id": {
+    "$oid": "64c74e88875766bb25786fd6"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+973",
+  "phone": 635695654,
+  "email": "ritesh@mailinator.com",
+  "password": "$2a$05$WTUgWBnk3/l9xpuYSBMkBOPrNq8p2BX/EJR.WTJYJrD9uuwRxgzuq",
+  "bank_details": {
+    "account_holder_name": "Ritesh",
+    "account_number": "10101010101010",
+    "bank_name": "HDFC",
+    "sort_code": "101899"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1694509918222gift.jpeg",
+  "blockExpires": {
+    "$date": "2023-09-12T09:11:58.478Z"
+  },
+  "createdAt": {
+    "$date": "2023-09-12T09:11:58.487Z"
+  },
+  "updatedAt": {
+    "$date": "2023-09-13T04:57:34.406Z"
+  },
+  "admin_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "remarks": "123"
+},
+{
+  "_id": {
+    "$oid": "650ab9a4bae99e0c8f474b4d"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [
+      51.5569354,
+      -0.2766561
+    ],
+    "country": "United Kingdom",
+    "city": "",
+    "post_code": "HA9 0TT"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": false,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": false,
+    "controlPublication": false,
+    "controlContent": false,
+    "viewRightOnly": true,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2023-09-19T13:00:13.700Z"
+  },
+  "isTempBlocked": true,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Resham",
+  "designation_id": {
+    "$oid": "64c74d96875766bb25786fd0"
+  },
+  "department_id": {
+    "$oid": "64c74f29875766bb25786fe3"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+44",
+  "phone": {
+    "$numberLong": "7310320373"
+  },
+  "email": "presshopuk@gmail.com",
+  "password": "$2a$05$8lWqy5XTk3vUyXrgCIC4/O/SMliwsS3djReE/3R5kezX78wLb.Hli",
+  "bank_details": {
+    "account_holder_name": "Resham Singh",
+    "account_number": "99998888",
+    "bank_name": "Barclays Bank",
+    "sort_code": "328767"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1695201699167imageedit_16_9024639175.png",
+  "blockExpires": {
+    "$date": "2023-09-20T09:21:40.492Z"
+  },
+  "createdAt": {
+    "$date": "2023-09-20T09:21:40.506Z"
+  },
+  "updatedAt": {
+    "$date": "2023-09-20T10:20:07.697Z"
+  },
+  "admin_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "remarks": null
+},
+{
+  "_id": {
+    "$oid": "651144ee1f8b0929333bcefd"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [
+      43.2994285,
+      -74.21793260000001
+    ],
+    "country": "United States",
+    "city": "",
+    "post_code": "312540"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": false,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": true,
+    "completeAccess": false,
+    "controlHopper": false,
+    "controlPublication": false,
+    "controlContent": true,
+    "viewRightOnly": false,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2023-09-25T08:26:06.566Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Jack Kallis",
+  "designation_id": {
+    "$oid": "64e5b32e31defcae9a3389c2"
+  },
+  "department_id": {
+    "$oid": "64c74ef8875766bb25786fdf"
+  },
+  "office_id": {
+    "$oid": "64ef1e5d74ea9111a1f78c64"
+  },
+  "country_code": "+43",
+  "phone": 132654812,
+  "email": "jack@mailinator.com",
+  "password": "$2a$05$mp11ULlM.qdRPHFxJWv05u6PWEbEc105RoeFJ/4PaCfuOe21Allq.",
+  "bank_details": {
+    "account_holder_name": "Jack",
+    "account_number": "132465798132122",
+    "bank_name": "New Bank",
+    "sort_code": "56487975"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "16956305739451695186772029screenshot20230919183453.png",
+  "blockExpires": {
+    "$date": "2023-09-25T08:29:34.091Z"
+  },
+  "createdAt": {
+    "$date": "2023-09-25T08:29:34.103Z"
+  },
+  "updatedAt": {
+    "$date": "2023-09-25T08:29:34.103Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "651151190d02d72c3db6c0de"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [
+      30.19747109999999,
+      -97.66635289999999
+    ],
+    "country": "United States",
+    "city": "Austin",
+    "post_code": "78719"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": true,
+    "controlPublication": false,
+    "controlContent": false,
+    "viewRightOnly": false,
+    "other_rights": true
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2023-09-25T09:18:04.065Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Rowman",
+  "designation_id": {
+    "$oid": "64c74d96875766bb25786fd0"
+  },
+  "department_id": {
+    "$oid": "64c74edf875766bb25786fdc"
+  },
+  "office_id": {
+    "$oid": "64ef04a974ea9111a1f788ca"
+  },
+  "country_code": "+374",
+  "phone": {
+    "$numberLong": "457845522155"
+  },
+  "email": "rowman@mailinator.com",
+  "password": "$2a$05$A9CLrI/GRBwg0uTSzlwGlOHb0FahjrGFrWZpdZ2bnqDDuPeK38YEW",
+  "bank_details": {
+    "account_holder_name": "Rowman",
+    "account_number": "423155325121213",
+    "bank_name": "3258712205465",
+    "sort_code": "224652112"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "16956336894961695186772029screenshot20230919183453.png",
+  "blockExpires": {
+    "$date": "2023-09-25T09:21:29.649Z"
+  },
+  "createdAt": {
+    "$date": "2023-09-25T09:21:29.655Z"
+  },
+  "updatedAt": {
+    "$date": "2023-09-25T09:21:29.655Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "65115a677f44232d5d89464c"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [],
+    "post_code": "141007"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": true,
+    "controlPublication": false,
+    "controlContent": false,
+    "viewRightOnly": false,
+    "other_rights": true
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2023-09-25T09:59:43.021Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Preeti",
+  "designation_id": {
+    "$oid": "64e5b32e31defcae9a3389c2"
+  },
+  "department_id": {
+    "$oid": "64c74e94875766bb25786fd7"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+91",
+  "phone": {
+    "$numberLong": "6283881123"
+  },
+  "email": "test@mailinator.com",
+  "password": "$2a$05$fIGjoYlgDYNKbMaLunllGOCf5NYHW7D5WqYoBH50bKBfOfaF6Qrk2",
+  "bank_details": {
+    "account_holder_name": "dasda",
+    "account_number": "dasd",
+    "bank_name": "dasd",
+    "sort_code": "dasd"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1695636070859Screenshot_2023-04-17_14-11-05.png",
+  "blockExpires": {
+    "$date": "2023-09-25T10:01:11.013Z"
+  },
+  "createdAt": {
+    "$date": "2023-09-25T10:01:11.019Z"
+  },
+  "updatedAt": {
+    "$date": "2023-09-25T10:01:11.019Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6511643c795c50321299eb95"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": []
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": true,
+    "controlPublication": false,
+    "controlContent": false,
+    "viewRightOnly": false,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2023-09-25T10:42:02.335Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "dsds",
+  "designation_id": {
+    "$oid": "64c74d96875766bb25786fd0"
+  },
+  "department_id": {
+    "$oid": "64c74e94875766bb25786fd7"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+91",
+  "phone": 1234567890,
+  "email": "pops@mailinator.com",
+  "password": "$2a$05$Og9/PJBUHU0luxP0uJUbAO0820zXtSqxpi92aw0DQfu1EwyFBGtki",
+  "bank_details": {
+    "account_holder_name": "asda",
+    "account_number": "das",
+    "bank_name": "asda",
+    "sort_code": "dasd"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1695638588277Screenshot_2023-09-18_18-20-10.png",
+  "blockExpires": {
+    "$date": "2023-09-25T10:43:08.525Z"
+  },
+  "createdAt": {
+    "$date": "2023-09-25T10:43:08.535Z"
+  },
+  "updatedAt": {
+    "$date": "2023-09-25T10:43:08.535Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6511667a795c50321299ebc4"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [
+      36.102132,
+      -115.1744225
+    ],
+    "country": "United States",
+    "city": "Las Vegas",
+    "post_code": "89109"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": false,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": false,
+    "controlPublication": false,
+    "controlContent": false,
+    "viewRightOnly": false,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2023-09-25T10:42:02.335Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Nathon",
+  "designation_id": {
+    "$oid": "64c74dbb875766bb25786fd1"
+  },
+  "department_id": {
+    "$oid": "64c74ed7875766bb25786fdb"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+297",
+  "phone": 132465798,
+  "email": "nathon@mailinator.com",
+  "password": "$2a$05$3C9z6RTRVB3DphFijKGUL.t7ssjJN4bpuodRezVHtcPGTQg5wObo.",
+  "bank_details": {
+    "account_holder_name": "Nathon",
+    "account_number": "132465798132",
+    "bank_name": "New Bank",
+    "sort_code": "13246512"
+  },
+  "creator_id": {
+    "$oid": "651151190d02d72c3db6c0de"
+  },
+  "profile_image": "16956391621321695186772029screenshot20230919183453.png",
+  "blockExpires": {
+    "$date": "2023-09-25T10:52:42.325Z"
+  },
+  "createdAt": {
+    "$date": "2023-09-25T10:52:42.331Z"
+  },
+  "updatedAt": {
+    "$date": "2023-09-25T10:52:42.331Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6511683e15ba92326d24fe9f"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": []
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": true,
+    "controlPublication": false,
+    "controlContent": false,
+    "viewRightOnly": false,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2023-09-25T10:59:39.452Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "dsds",
+  "designation_id": {
+    "$oid": "64c74d96875766bb25786fd0"
+  },
+  "department_id": {
+    "$oid": "64c74e94875766bb25786fd7"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+91",
+  "phone": 1234567890,
+  "email": "gogo@mailinator.com",
+  "password": "$2a$05$lf/vDjIoQWo71XshaEVDW.WMmF7TZCG/Lm1zgLE0bLC..kv8Y6eIq",
+  "bank_details": {
+    "account_holder_name": "asda",
+    "account_number": "das",
+    "bank_name": "asda",
+    "sort_code": "dasd"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1695639614518Screenshot_2023-09-18_18-20-10.png",
+  "blockExpires": {
+    "$date": "2023-09-25T11:00:14.733Z"
+  },
+  "createdAt": {
+    "$date": "2023-09-25T11:00:14.742Z"
+  },
+  "updatedAt": {
+    "$date": "2023-09-25T11:00:14.742Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6511684315ba92326d24fea4"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": []
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": true,
+    "controlPublication": false,
+    "controlContent": false,
+    "viewRightOnly": false,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2023-09-25T10:59:39.452Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "dsds",
+  "designation_id": {
+    "$oid": "64c74d96875766bb25786fd0"
+  },
+  "department_id": {
+    "$oid": "64c74e94875766bb25786fd7"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+91",
+  "phone": 1234567890,
+  "email": "gogo1@mailinator.com",
+  "password": "$2a$05$Tk9ePDyPoNch5NMojlJUI.VoPYZY3wmpuPma.aE.i6BbBdQymBqlu",
+  "bank_details": {
+    "account_holder_name": "asda",
+    "account_number": "das",
+    "bank_name": "asda",
+    "sort_code": "dasd"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1695639618817Screenshot_2023-09-18_18-20-10.png",
+  "blockExpires": {
+    "$date": "2023-09-25T11:00:19.039Z"
+  },
+  "createdAt": {
+    "$date": "2023-09-25T11:00:19.044Z"
+  },
+  "updatedAt": {
+    "$date": "2023-09-25T11:00:19.044Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6593aeb5429ab81ee1c17d3d"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [
+      41.875952,
+      12.475694
+    ],
+    "country": "Italy",
+    "city": "Rome",
+    "post_code": "00153"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": true,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": true,
+    "controlPublication": true,
+    "controlContent": false,
+    "viewRightOnly": false,
+    "other_rights": true
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2023-11-23T06:51:24.330Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Test 1",
+  "designation_id": {
+    "$oid": "64e5b32e31defcae9a3389c2"
+  },
+  "department_id": {
+    "$oid": "64e5b30531defcae9a338971"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+358",
+  "phone": {
+    "$numberLong": "12312312312"
+  },
+  "email": "test1@mailinator.com",
+  "password": "$2a$05$3ZnhueuBqbi.cFNfiCxG3e341xDvLgtsoFuj2WaX0vh6U2ENv92HC",
+  "bank_details": {
+    "account_holder_name": "Test",
+    "account_number": "112312312312",
+    "bank_name": "Test",
+    "sort_code": "121212"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1704177333566Screenshot_2023-12-28_10-29-21.png",
+  "blockExpires": {
+    "$date": "2024-01-02T06:35:33.736Z"
+  },
+  "createdAt": {
+    "$date": "2024-01-02T06:35:33.739Z"
+  },
+  "updatedAt": {
+    "$date": "2024-01-02T06:35:33.739Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "65d236aaff53e9c232474b71"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [
+      30.9516436,
+      76.2015572
+    ],
+    "country": "India",
+    "city": "Machhiwara",
+    "post_code": "141115"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": true,
+    "controlPublication": true,
+    "controlContent": true,
+    "viewRightOnly": true,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2024-02-17T05:48:17.154Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Parteek",
+  "designation_id": {
+    "$oid": "64e5b32e31defcae9a3389c2"
+  },
+  "department_id": {
+    "$oid": "64bfc864bd52c83505125b25"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+1",
+  "phone": 1254789652,
+  "email": "promatics.parteekjain@gmail.com",
+  "password": "$2a$05$XAfKzqurmLzmPIw.WL4GOuUGeJQ9tIsDSQPX/Ttm10/IokaLbfpxS",
+  "bank_details": {
+    "account_holder_name": "parteek",
+    "account_number": "1254879532",
+    "bank_name": "AXIS",
+    "sort_code": "111111"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1708275370319cool-profile-picture-87h46gcobjl5e4xu.jpg",
+  "blockExpires": {
+    "$date": "2024-02-18T16:56:10.476Z"
+  },
+  "createdAt": {
+    "$date": "2024-02-18T16:56:10.492Z"
+  },
+  "updatedAt": {
+    "$date": "2024-02-18T16:56:10.492Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "65f70a39c3adcb08b6707e67"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [
+      26.4292992,
+      80.402048
+    ],
+    "country": "India",
+    "city": "Kanpur",
+    "post_code": "208010"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": true,
+    "assignNewEmployeeRights": true,
+    "completeAccess": false,
+    "controlHopper": true,
+    "controlPublication": true,
+    "controlContent": false,
+    "viewRightOnly": false,
+    "other_rights": true
+  },
+  "role": "subAdmin",
+  "status": "approved",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2024-03-13T05:29:50.517Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Sub Admin 1",
+  "designation_id": {
+    "$oid": "64c74df3875766bb25786fd5"
+  },
+  "department_id": {
+    "$oid": "65e71d5e19b642a9f622805e"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+973",
+  "phone": {
+    "$numberLong": "91349820734"
+  },
+  "email": "sub_1@mailinator.com",
+  "password": "$2b$10$8bzFUfK02c.6Rdee0KKrGOSu25YgmNcQKGXinjIRGyiXHbtfOIf/G",
+  "bank_details": {
+    "account_holder_name": "Sub 1",
+    "account_number": "8273489237489252",
+    "bank_name": "SBI",
+    "sort_code": "28737823742"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1710698846246bag2.jpeg",
+  "blockExpires": {
+    "$date": "2024-03-17T15:20:25.519Z"
+  },
+  "createdAt": {
+    "$date": "2024-03-17T15:20:25.527Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-20T19:39:48.512Z"
+  },
+  "admin_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "remarks": "ive temporary blocked Sub Admin Assistant because he did something wrong"
+},
+{
+  "_id": {
+    "$oid": "65fb3f615b9a8ac509490996"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [
+      40.7115776,
+      -74.0133362
+    ],
+    "country": "United States",
+    "city": "New York",
+    "post_code": "10007"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": false,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": false,
+    "controlPublication": false,
+    "controlContent": false,
+    "viewRightOnly": false,
+    "other_rights": true
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2024-03-20T12:40:21.215Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Sub 2",
+  "designation_id": {
+    "$oid": "65e71da319b642a9f62280e8"
+  },
+  "department_id": {
+    "$oid": "65e71d5e19b642a9f622805e"
+  },
+  "office_id": {
+    "$oid": "64ef1e5d74ea9111a1f78c64"
+  },
+  "country_code": "+43",
+  "phone": {
+    "$numberLong": "8139479123102"
+  },
+  "email": "sub_2@mailinator.com",
+  "password": "$2a$05$88VgIqxkkvtUjHayAfnpP.tebUWYhBM9vD1sskxg.qxF8asMcL1cS",
+  "bank_details": {
+    "account_holder_name": "Test",
+    "account_number": "1317318913489134",
+    "bank_name": "Test",
+    "sort_code": "134132413"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1710964577537sample logo.png",
+  "blockExpires": {
+    "$date": "2024-03-20T19:56:17.608Z"
+  },
+  "createdAt": {
+    "$date": "2024-03-20T19:56:17.614Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-20T19:56:17.614Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "65fb40545b9a8ac509490a8d"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": [
+      33.0865258,
+      -96.827983
+    ],
+    "country": "United States",
+    "city": "Plano",
+    "post_code": "75024"
+  },
+  "subadmin_rights": {
+    "onboardEmployess": false,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": false,
+    "controlPublication": false,
+    "controlContent": true,
+    "viewRightOnly": false,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2024-03-20T12:40:21.215Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Sub 3",
+  "designation_id": {
+    "$oid": "65e71da319b642a9f62280e8"
+  },
+  "department_id": {
+    "$oid": "65e71d5e19b642a9f622805e"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+247",
+  "phone": 1431412434,
+  "email": "sub_3@mailinator.com",
+  "password": "$2a$05$VHzscKl0RQ8ZUwPxMZND5Og2JykheHt7PDpXeRvpk63Plt98MkKeC",
+  "bank_details": {
+    "account_holder_name": "qwe",
+    "account_number": "1341423423423",
+    "bank_name": "qw",
+    "sort_code": "134123135sdfq"
+  },
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1710964820851GoodFood.png",
+  "blockExpires": {
+    "$date": "2024-03-20T20:00:20.968Z"
+  },
+  "createdAt": {
+    "$date": "2024-03-20T20:00:20.972Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-26T03:49:53.696Z"
+  },
+  "admin_id": {
+    "$oid": "65fb40545b9a8ac509490a8d"
+  }
+},
+{
+  "_id": {
+    "$oid": "65fc81e0d3a9520ef1ad7d1e"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": []
+  },
+  "subadmin_rights": {
+    "onboardEmployess": false,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": true,
+    "completeAccess": false,
+    "controlHopper": false,
+    "controlPublication": true,
+    "controlContent": false,
+    "viewRightOnly": false,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2024-03-21T10:49:47.963Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Sub 5",
+  "designation_id": {
+    "$oid": "64c74df3875766bb25786fd5"
+  },
+  "department_id": {
+    "$oid": "65ccb81eafdc1463120acbbd"
+  },
+  "office_id": {
+    "$oid": "65fc7e72d3a9520ef1ad7b89"
+  },
+  "country_code": "+358",
+  "phone": {
+    "$numberLong": "988718124133"
+  },
+  "email": "sub_@mailinator.com",
+  "password": "$2a$05$5ijDrfXbStR/gXxLcQPL2ekyhmTgUEn4tENJCY/cXRySU3cWg8F2C",
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1711047136524WhatsApp Image 2024-02-18 at 21.19.17_65c19e10.jpg",
+  "blockExpires": {
+    "$date": "2024-03-21T18:52:16.606Z"
+  },
+  "createdAt": {
+    "$date": "2024-03-21T18:52:16.613Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-21T18:52:16.613Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "65fc8513d3a9520ef1ad7e63"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": []
+  },
+  "subadmin_rights": {
+    "onboardEmployess": false,
+    "blockRemoveEmployess": true,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": false,
+    "controlPublication": false,
+    "controlContent": true,
+    "viewRightOnly": false,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2024-03-21T10:49:47.963Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Sub 6",
+  "designation_id": {
+    "$oid": "64c74df3875766bb25786fd5"
+  },
+  "department_id": {
+    "$oid": "65ccb81eafdc1463120acbbd"
+  },
+  "office_id": {
+    "$oid": "65fc7e72d3a9520ef1ad7b89"
+  },
+  "country_code": "+1",
+  "phone": {
+    "$numberLong": "98749134193"
+  },
+  "email": "sub_6@mailinator.com",
+  "password": "$2a$05$Fhvw.5llUaNXF9VpWV64MeaU2LBQuhtgqAE1XIuOd4TnqrkuOihcO",
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1711047955729f7640423-6420-41a4-975e-6b8561848601.png",
+  "blockExpires": {
+    "$date": "2024-03-21T19:05:55.831Z"
+  },
+  "createdAt": {
+    "$date": "2024-03-21T19:05:55.835Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-21T19:05:55.835Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "65fc8618d3a9520ef1ad7f06"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": []
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": false,
+    "controlPublication": false,
+    "controlContent": false,
+    "viewRightOnly": false,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2024-03-21T10:49:47.963Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Sub 7",
+  "designation_id": {
+    "$oid": "64c74df3875766bb25786fd5"
+  },
+  "department_id": {
+    "$oid": "65ccb81eafdc1463120acbbd"
+  },
+  "office_id": {
+    "$oid": "65fc7e72d3a9520ef1ad7b89"
+  },
+  "country_code": "+880",
+  "phone": {
+    "$numberLong": "8197491378423"
+  },
+  "email": "sub7@mailinator.com",
+  "password": "$2a$05$ZkazbwpLBvi17Awy.tGPgO36/1BLMGNkrmvq5R8u78PksK/DLDsLq",
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1711048216097f7640423-6420-41a4-975e-6b8561848601.png",
+  "blockExpires": {
+    "$date": "2024-03-21T19:10:16.189Z"
+  },
+  "createdAt": {
+    "$date": "2024-03-21T19:10:16.193Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-21T19:10:16.193Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "65fd033cd3a9520ef1adaab4"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": []
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": true,
+    "controlPublication": false,
+    "controlContent": false,
+    "viewRightOnly": false,
+    "other_rights": true
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2024-03-21T10:49:47.963Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Sub 8",
+  "designation_id": {
+    "$oid": "64c74ddb875766bb25786fd3"
+  },
+  "department_id": {
+    "$oid": "64e5b30531defcae9a338971"
+  },
+  "office_id": {
+    "$oid": "65fc7e72d3a9520ef1ad7b89"
+  },
+  "country_code": "+973",
+  "phone": {
+    "$numberLong": "8398417491234"
+  },
+  "email": "sub8@mailinator.com",
+  "password": "$2a$05$qM6IjwCFfmQthUqrNVjiA.pGkppN6pUZ1JpQwbUnQ0a3ZkbrSoXNK",
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "17110833493105.jpg",
+  "blockExpires": {
+    "$date": "2024-03-22T04:04:12.857Z"
+  },
+  "createdAt": {
+    "$date": "2024-03-22T04:04:12.871Z"
+  },
+  "updatedAt": {
+    "$date": "2024-03-22T04:55:49.416Z"
+  },
+  "admin_id": {
+    "$oid": "65fd033cd3a9520ef1adaab4"
+  }
+},
+{
+  "_id": {
+    "$oid": "66225bae19ca6c762eec9b5f"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": []
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": false,
+    "controlPublication": false,
+    "controlContent": false,
+    "viewRightOnly": false,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2024-04-16T07:29:43.582Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "new user",
+  "designation_id": {
+    "$oid": "65e71da319b642a9f62280e8"
+  },
+  "department_id": {
+    "$oid": "65e71d5e19b642a9f622805e"
+  },
+  "office_id": {
+    "$oid": "64ef04a974ea9111a1f788ca"
+  },
+  "country_code": "+44",
+  "phone": {
+    "$numberLong": "8436748142"
+  },
+  "email": "cvbvcbist2@mailinator.com",
+  "password": "$2a$05$23iPiIm0BGsPBMQFzMcUyuCCdcX2q0AXN74Ow6NhU3rg29vD08g8m",
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1713527726117screenshot-presshop-admin.web.app-2024.04.19-17_18_24.png",
+  "blockExpires": {
+    "$date": "2024-04-19T11:55:26.351Z"
+  },
+  "createdAt": {
+    "$date": "2024-04-19T11:55:26.394Z"
+  },
+  "updatedAt": {
+    "$date": "2024-04-19T11:55:26.394Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "663a018219ca6c762eff23c5"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": []
+  },
+  "subadmin_rights": {
+    "onboardEmployess": true,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": true,
+    "controlPublication": false,
+    "controlContent": false,
+    "viewRightOnly": false,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2024-04-16T07:29:43.582Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "Sonalika Gupta",
+  "designation_id": {
+    "$oid": "64bfc759bd52c83505125b04"
+  },
+  "department_id": {
+    "$oid": "64c74eb8875766bb25786fda"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+91",
+  "phone": {
+    "$numberLong": "7853248332"
+  },
+  "email": "sonalika@mailinator.com",
+  "password": "$2a$05$kqbYKclBIWVYAopObrNQBO6eSsH3Qltj5HyGSkOObTMFVV8D6mpiG",
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1715077506600round_profil_picture_after_.webp",
+  "blockExpires": {
+    "$date": "2024-05-07T10:25:06.766Z"
+  },
+  "createdAt": {
+    "$date": "2024-05-07T10:25:06.820Z"
+  },
+  "updatedAt": {
+    "$date": "2024-05-07T10:25:06.820Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "663a030019ca6c762eff2626"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": []
+  },
+  "subadmin_rights": {
+    "onboardEmployess": false,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": false,
+    "controlHopper": false,
+    "controlPublication": false,
+    "controlContent": false,
+    "viewRightOnly": false,
+    "other_rights": false
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2024-04-16T07:29:43.582Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "xcv xcv",
+  "designation_id": {
+    "$oid": "64bfc759bd52c83505125b04"
+  },
+  "department_id": {
+    "$oid": "64c74edf875766bb25786fdc"
+  },
+  "office_id": {
+    "$oid": "64ef04a974ea9111a1f788ca"
+  },
+  "country_code": "+91",
+  "phone": {
+    "$numberLong": "5235325325"
+  },
+  "email": "cvbvcbist@mailinator.com",
+  "password": "$2a$05$YOLu1yuwFwmhmRauG3rhZONFgmTWBTchp7UfcZaAl3Vh98fnWAymS",
+  "creator_id": {
+    "$oid": "663a018219ca6c762eff23c5"
+  },
+  "profile_image": "1715077888388screenshot-presshop-mediahouse.web.app-2024.05.07-15_43_47.png",
+  "blockExpires": {
+    "$date": "2024-05-07T10:31:28.500Z"
+  },
+  "createdAt": {
+    "$date": "2024-05-07T10:31:28.506Z"
+  },
+  "updatedAt": {
+    "$date": "2024-05-07T10:31:28.506Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "66d68f5656e0c4b78e3b83c7"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": []
+  },
+  "subadmin_rights": {
+    "onboardEmployess": false,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": true,
+    "completeAccess": false,
+    "controlHopper": true,
+    "controlPublication": true,
+    "controlContent": true,
+    "viewRightOnly": true,
+    "other_rights": true
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2024-08-30T12:49:22.842Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "parteek",
+  "designation_id": {
+    "$oid": "64c74df3875766bb25786fd5"
+  },
+  "department_id": {
+    "$oid": "65e71d5e19b642a9f622805e"
+  },
+  "office_id": {
+    "$oid": "64ef04a974ea9111a1f788ca"
+  },
+  "country_code": "+917009656304",
+  "phone": {
+    "$numberLong": "7009656304"
+  },
+  "email": "parteek@grr.la",
+  "password": "$2a$05$CFDmGTlXsGeprEMDqs0.CelcmyVHGUryIKjbVI5tKVQ5XKAT4Ppwq",
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1725337430506cleint1 2.jpg",
+  "blockExpires": {
+    "$date": "2024-09-03T04:23:50.581Z"
+  },
+  "createdAt": {
+    "$date": "2024-09-03T04:23:50.587Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-03T04:23:50.587Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "66d694088071c0b78ff3a5fb"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": []
+  },
+  "subadmin_rights": {
+    "onboardEmployess": false,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": true,
+    "completeAccess": false,
+    "controlHopper": true,
+    "controlPublication": true,
+    "controlContent": true,
+    "viewRightOnly": true,
+    "other_rights": true
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2024-08-30T12:49:22.853Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "rishabh",
+  "designation_id": {
+    "$oid": "65e71da319b642a9f62280e8"
+  },
+  "department_id": {
+    "$oid": "65e71d5e19b642a9f622805e"
+  },
+  "office_id": {
+    "$oid": "64d1ed9fbd092c080d61df85"
+  },
+  "country_code": "+911234567890",
+  "phone": 1234567890,
+  "email": "rishabh@grr.la",
+  "password": "$2a$05$d/9wBRSBpYKKG1eax1WFVumILHycKBouWWuBYRXE/F9O3YiN4T0gW",
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1725338632807khana.jpeg",
+  "blockExpires": {
+    "$date": "2024-09-03T04:43:52.898Z"
+  },
+  "createdAt": {
+    "$date": "2024-09-03T04:43:52.906Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-03T04:43:52.906Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "66d696981e353107461d145e"
+  },
+  "employee_address": {
+    "type": "Point",
+    "coordinates": []
+  },
+  "subadmin_rights": {
+    "onboardEmployess": false,
+    "blockRemoveEmployess": false,
+    "assignNewEmployeeRights": false,
+    "completeAccess": true,
+    "controlHopper": true,
+    "controlPublication": true,
+    "controlContent": true,
+    "viewRightOnly": true,
+    "other_rights": true
+  },
+  "role": "subAdmin",
+  "status": "pending",
+  "verified": false,
+  "loginAttempts": 0,
+  "is_Contractsigned": false,
+  "is_Legal": false,
+  "is_Checkandapprove": false,
+  "forgotPassOTPExpire": {
+    "$date": "2024-09-03T04:53:36.666Z"
+  },
+  "isTempBlocked": false,
+  "isPermanentBlocked": false,
+  "complete_rights": false,
+  "name": "subadmin1",
+  "designation_id": {
+    "$oid": "64e5b32e31defcae9a3389c2"
+  },
+  "department_id": {
+    "$oid": "65e71d4e19b642a9f6228040"
+  },
+  "office_id": {
+    "$oid": "64ef04a974ea9111a1f788ca"
+  },
+  "country_code": "+44",
+  "phone": {
+    "$numberLong": "7894561230"
+  },
+  "email": "subadmin1@grr.la",
+  "password": "$2a$05$ilrWt/92tYvRcNaTOHB7s.1UYA2BUH.PiWuOxSe2GAi2JVLZ4KgXq",
+  "creator_id": {
+    "$oid": "64bfa693bc47606588a6c807"
+  },
+  "profile_image": "1725339288457images.jpeg",
+  "blockExpires": {
+    "$date": "2024-09-03T04:54:48.534Z"
+  },
+  "createdAt": {
+    "$date": "2024-09-03T04:54:48.541Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-03T04:54:48.541Z"
+  }
+}]
