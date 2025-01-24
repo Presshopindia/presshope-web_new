@@ -1434,7 +1434,6 @@ const FeeddetailCopy = (props) => {
                                         <span className="txt_bld">
                                           {fullName}
                                         </span>
-                                        .
                                       </h6>
                                       <h6 className="txt_light">
                                         Please select participants from the
@@ -1738,7 +1737,6 @@ const FeeddetailCopy = (props) => {
                                         <span className="txt_bld">
                                           {fullName}
                                         </span>
-                                        .
                                       </h6>
 
                                       <div className="crd chatting_itm sngl_cht d-flex align-items-start">
@@ -2585,7 +2583,6 @@ const FeeddetailCopy = (props) => {
                                         <span className="txt_bld">
                                           {fullName}
                                         </span>
-                                        .
                                       </h6>
                                       <h6 className="txt_light">
                                         Please select the Presshop team member

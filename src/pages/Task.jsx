@@ -1245,11 +1245,20 @@ const BroadcastedTask = () => {
       // const resp = await Get(`mediaHouse/live/expired/tasks?status=live&id=${type.type}`);
       // uploaded
       // const id = "677238a0d02b84d299e0dae7";
-      let resp = await Get(
-        `mediaHouse/getuploadedContentbyHoppers?task_id=${id}&limit=${limit}&offet=${
-          +(page - 1) * limit
-        }`
-      );
+      let resp = {};
+      if (id) {
+        resp = await Get(
+          `mediaHouse/getuploadedContentbyHoppers?task_id=${id}&limit=${limit}&offet=${
+            +(page - 1) * limit
+          }`
+        );
+      } else {
+        resp = await Get(
+          `mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${
+            +(page - 1) * limit
+          }`
+        );
+      }
 
       // const resp = await Get(
       //   `mediaHouse/getuploadedContentbyHoppers?task_id=${
@@ -1278,31 +1287,51 @@ const BroadcastedTask = () => {
     }
   };
   const handleBasket = (index, y, z) => {
-    setTaskDetails((oldTaskDetails) => {
-      return oldTaskDetails.map((task, i) => {
-        if (task?.basket_status) {
-          return i === index
-            ? { ...task, basket_status: !task.basket_status }
-            : task;
-        }
-        return i === index ? { ...task, basket_status: true } : task;
-      });
-    });
+    // setTaskDetails((oldTaskDetails) => {
+    //   return oldTaskDetails.map((task, i) => {
+    //     if (i === index) {
+    //       // Toggle basket_status
+    //       console.log("my basket status ---> status", task.basket_status);
+    //       return { ...task, basket_status: task.basket_status ? false : true };
+    //     }
+    //     return task;
+    //   });
+    // });
+    TaskDetails(liveTaskId);
+    // setTaskDetails((oldTaskDetails) => {
+    //   return oldTaskDetails.map((task, i) => {
+    //     console.log("asdsdhfgsdjf===fg", task.basket_status);
+    //     if (task?.basket_status) {
+    //       // TaskDetails();
+    //       console.log("inside basket ----> basket");
+    //       return i === index
+    //         ? { ...task, basket_status: !task.basket_status }
+    //         : task;
+    //     } else {
+    //       return i === index
+    //         ? {
+    //             ...task,
+    //             basket_status: task.basket_status ? task.basket_status : false,
+    //           }
+    //         : task;
+    //     }
+    //   });
+    // });
     console.log("yyyyyy------>", z);
   };
   const handleFavourite = (index, y) => {
     console.log("fav item added ---->  133454");
     try {
-      setTaskDetails((oldTaskDetails) => {
-        return oldTaskDetails.map((task, i) => {
-          console.log("fav item added ---->  121");
+      // setTaskDetails((oldTaskDetails) => {
+      //   return oldTaskDetails.map((task, i) => {
+      //     console.log("fav item added ---->  121");
 
-          return i === index
-            ? { ...task, favourite_status: !task.favourite_status }
-            : task;
-          console.log("fav item added ---->  125");
-        });
-      });
+      //     return i === index ? { ...task, favourite_status: true } : task;
+      //     console.log("fav item added ---->  125");
+      //   });
+      // });
+
+      TaskDetails(liveTaskId);
     } catch (error) {
       console.log("all errors -->", error);
     }
@@ -1315,7 +1344,7 @@ const BroadcastedTask = () => {
   //   console.log("yyyyyy------>", z);
   // };
   const [liveTaskId, setLiveTaskId] = useState(
-    localStorage.getItem("live_taskId")
+    localStorage.getItem("live_taskId") || "noid"
   );
 
   useEffect(() => {
@@ -2069,23 +2098,27 @@ const BroadcastedTask = () => {
                           bool_fav={
                             item?.favourite_status === "true" ? "false" : "true"
                           }
-                          content_id={item?.task_id?._id}
-                          task_content_id={item?.content_id}
+                          // content_id={item?.content_id}
+                          content_id={item?._id}
+                          task_content_id={item?._id || item?.task_id?._id}
                           taskContentId={item?._id}
                         />
                       </Col>
                     );
                   })}
-
-                <PaginationComp
-                  totalPage={totalPage}
-                  // path={`Uploaded-Content/${type?.type}`}
-                  path="task"
-                  // /task
-                  type="fav"
-                  setPage={setPage}
-                  page={page}
-                />
+                {totalPage ? (
+                  <PaginationComp
+                    totalPage={totalPage}
+                    // path={`Uploaded-Content/${type?.type}`}
+                    path="task"
+                    // /task
+                    type="fav"
+                    setPage={setPage}
+                    page={page}
+                  />
+                ) : (
+                  " "
+                )}
 
                 {/* <Col md={4}>
                   <Card className="homeFeedCard feed_single_crd photo-resize">

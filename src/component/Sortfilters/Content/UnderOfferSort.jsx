@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import closeic from "../../../assets/images/sortIcons/close.svg";
 import calendaric from "../../../assets/images/calendar.svg";
 import dailyic from "../../../assets/images/sortIcons/daily.svg";
@@ -7,16 +7,49 @@ import monthlyic from "../../../assets/images/sortIcons/monthly.svg";
 import lowestprcdic from "../../../assets/images/sortIcons/Lowest-rated.svg";
 import highestprcdic from "../../../assets/images/sortIcons/highest-rated.svg";
 import { initStateOfUnderOffer } from "../../staticData";
+import { Get, Patch, Post } from "../../../services/user.services";
+
+import { toast } from "react-toastify";
+import { add } from "lodash";
 
 const UnderOfferSort = ({ setContentUnderOffer, contentUnderOffer }) => {
+  const [locationValue, setLocationValue] = useState("");
+  const [locationData, setLocationData] = useState([]);
+  const [address, setAddress] = useState("");
+
+  // setAddress
+
   // Handle click-
   const handleClick = (type, value) => {
     if (type != "submit") {
       setContentUnderOffer({
         ...contentUnderOffer,
-        sort: { ...contentUnderOffer.sort, field: value },
+        sort: {
+          ...contentUnderOffer.sort,
+          field: value,
+          ...(locationValue ? { hopper_location: locationValue } : {}),
+        },
       });
     } else {
+      if (
+        contentUnderOffer?.sort?.price_range_to >>
+        contentUnderOffer?.sort?.price_range_from
+      )
+        return toast.error("Price2 should greater than price1");
+
+      // if (contentUnderOffer?.sort?.field == "location") {
+      //   setContentUnderOffer((prev) => ({
+      //     ...prev,
+      //     sort: {
+      //       ...prev.sort,
+      //       active: prev.sort.active === "true" ? "false" : "true",
+      //       sort: "false",
+      //       hopper_location: address || locationValue,
+      //     },
+      //   }));
+      //   setLocationData([]);
+      //   setLocationValue("");
+      // }
       setContentUnderOffer((prev) => ({
         ...prev,
         sort: {
@@ -25,12 +58,36 @@ const UnderOfferSort = ({ setContentUnderOffer, contentUnderOffer }) => {
           sort: "false",
         },
       }));
+      setLocationData([]);
+      setLocationValue("");
+    }
+  };
+  const handleGetdatalocation = async (locationValue) => {
+    try {
+      const resp = await Get(
+        `mediahouse/searchaddress?address=${locationValue}`
+      );
+      if (resp) {
+        console.log("location --->", resp.data);
+        setLocationData(resp.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      handleGetdatalocation(locationValue);
+    }, 1000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [locationValue]);
+
   return (
     <>
-      <div className="filter_wrap">
+      <div className="filter_wrap custm-fltr">
         <div className="srt_fltr_hdr">
           <img
             src={closeic}
@@ -68,12 +125,10 @@ const UnderOfferSort = ({ setContentUnderOffer, contentUnderOffer }) => {
         <div className="sort_list">
           <div
             className={`sort_item ${
-              contentUnderOffer?.sort?.field == "low_price_content"
-                ? "active"
-                : ""
+              contentUnderOffer?.sort?.field == "relevance" ? "active" : ""
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClick("sort", "low_price_content")}
+            onClick={() => handleClick("sort", "relevance")}
           >
             <svg
               width="18"
@@ -92,12 +147,11 @@ const UnderOfferSort = ({ setContentUnderOffer, contentUnderOffer }) => {
           </div>
           <div
             className={`sort_item ${
-              contentUnderOffer?.sort?.field == "high_price_content"
-                ? "active"
-                : ""
+              contentUnderOffer?.sort?.field == "latest_content" ? "active" : ""
             }`}
+            // high_price_content
             style={{ cursor: "pointer" }}
-            onClick={() => handleClick("sort", "high_price_content")}
+            onClick={() => handleClick("sort", "latest_content")}
           >
             <svg
               width="20"
@@ -136,10 +190,12 @@ const UnderOfferSort = ({ setContentUnderOffer, contentUnderOffer }) => {
           </div>
           <div
             className={`sort_item ${
-              contentUnderOffer?.sort?.field == "day" ? "active" : ""
+              contentUnderOffer?.sort?.field == "low_price_content"
+                ? "active"
+                : ""
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClick("sort", "day")}
+            onClick={() => handleClick("sort", "low_price_content")}
           >
             {/* <img src={dailyic} className="icn" alt="Daily" /> */}
             <svg
@@ -233,10 +289,12 @@ const UnderOfferSort = ({ setContentUnderOffer, contentUnderOffer }) => {
           </div> */}
           <div
             className={`sort_item ${
-              contentUnderOffer?.sort?.field == "week" ? "active" : ""
+              contentUnderOffer?.sort?.field == "high_price_content"
+                ? "active"
+                : ""
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClick("sort", "week")}
+            onClick={() => handleClick("sort", "high_price_content")}
           >
             {/* <img src={weeklyic} className="icn" alt="Weekly" /> */}
             <svg
@@ -280,10 +338,12 @@ const UnderOfferSort = ({ setContentUnderOffer, contentUnderOffer }) => {
           </div>
           <div
             className={`sort_item ${
-              contentUnderOffer?.sort?.field == "month" ? "active" : ""
+              contentUnderOffer?.sort?.field == "most_viewed_content"
+                ? "active"
+                : ""
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClick("sort", "month")}
+            onClick={() => handleClick("sort", "most_viewed_content")}
           >
             {/* <img src={monthlyic} className="icn" alt="Monthly" /> */}
             <svg
@@ -311,10 +371,10 @@ const UnderOfferSort = ({ setContentUnderOffer, contentUnderOffer }) => {
           </div>
           <div
             className={`sort_item ${
-              contentUnderOffer?.sort?.field == "year" ? "active" : ""
+              contentUnderOffer?.sort?.field == "images" ? "active" : ""
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClick("sort", "year")}
+            onClick={() => handleClick("sort", "images")}
           >
             {/* <img src={calendaric} className="icn" alt="yearly" /> */}
             <svg
@@ -338,10 +398,10 @@ const UnderOfferSort = ({ setContentUnderOffer, contentUnderOffer }) => {
           </div>
           <div
             className={`sort_item ${
-              contentUnderOffer?.sort?.field == "relevance" ? "active" : ""
+              contentUnderOffer?.sort?.field == "videos" ? "active" : ""
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClick("sort", "relevence")}
+            onClick={() => handleClick("sort", "videos")}
           >
             {/* <img src={calendaric} className="icn" alt="yearly" /> */}
             <svg
@@ -369,12 +429,10 @@ const UnderOfferSort = ({ setContentUnderOffer, contentUnderOffer }) => {
           </div>
           <div
             className={`sort_item ${
-              contentUnderOffer?.sort?.field == "mostviewcontent"
-                ? "active"
-                : ""
+              contentUnderOffer?.sort?.field == "recordings" ? "active" : ""
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClick("sort", "mostviewcontent")}
+            onClick={() => handleClick("sort", "recordings")}
           >
             {/* <img src={calendaric} className="icn" alt="yearly" /> */}
             <svg
@@ -418,10 +476,10 @@ const UnderOfferSort = ({ setContentUnderOffer, contentUnderOffer }) => {
           </div>
           <div
             className={`sort_item ${
-              contentUnderOffer?.sort?.field == "image" ? "active" : ""
+              contentUnderOffer?.sort?.field == "scans" ? "active" : ""
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClick("sort", "image")}
+            onClick={() => handleClick("sort", "scans")}
           >
             {/* <img src={calendaric} className="icn" alt="yearly" /> */}
             <svg
@@ -452,15 +510,15 @@ const UnderOfferSort = ({ setContentUnderOffer, contentUnderOffer }) => {
             <p className="sort_txt">Scans</p>
           </div>
           <div
-            className={`sort_item ${
-              contentUnderOffer?.sort?.field == "video" ? "active" : ""
+            className={`sort_item custm_filtrs ${
+              contentUnderOffer?.sort?.field == "price_range" ? "active" : ""
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClick("sort", "video")}
+            onClick={() => handleClick("sort", "price_range")}
           >
             {/* <img src={calendaric} className="icn" alt="yearly" /> */}
             <svg
-              width="20"
+              width="40"
               height="21"
               viewBox="0 0 20 21"
               fill="none"
@@ -478,32 +536,77 @@ const UnderOfferSort = ({ setContentUnderOffer, contentUnderOffer }) => {
 
             <div className="d-flex gap-3 align-items-center select-font">
               <p className="sort_txt">Price</p>
-              <div className="from_to_div">
-                <select name="" id="" className="form-select">
+              <div
+                className="from_to_div filter-input
+              "
+              >
+                <input
+                  className="form-control"
+                  type="number"
+                  placeholder="Enter price"
+                  onChange={(e) => {
+                    setContentUnderOffer({
+                      ...contentUnderOffer,
+                      sort: {
+                        ...contentUnderOffer.sort,
+                        price_range_to: e.target.value,
+                        // field: "price_range",
+                      },
+                    });
+                  }}
+                />
+                {/* <select name="" id="" className="form-select" onChange={()=>{ }}>
                   <option value="" selected>
                     From
                   </option>
                   <option value="">01</option>
                   <option value="">02</option>
-                </select>
+                </select> */}
               </div>
-              <div className="from_to_div">
-                <select name="" id="" className="form-select">
+              <div className="from_to_div filter-input">
+                {/* <select name="" id="" className="form-select">
                   <option value="" selected>
                     To
                   </option>
                   <option value="">01</option>
                   <option value="">02</option>
-                </select>
+                </select> */}
+                <input
+                  className="form-control"
+                  type="number"
+                  placeholder="Enter price"
+                  onChange={(e) => {
+                    if (
+                      contentUnderOffer?.sort?.price_range_to &&
+                      e.target.value >> contentUnderOffer?.sort?.price_range_to
+                    ) {
+                      setContentUnderOffer({
+                        ...contentUnderOffer,
+                        sort: {
+                          ...contentUnderOffer.sort,
+                          price_range_from: e?.target?.value,
+                        },
+                      });
+                    } else {
+                      setContentUnderOffer({
+                        ...contentUnderOffer,
+                        sort: {
+                          ...contentUnderOffer.sort,
+                          price_range_from: e?.target?.value,
+                        },
+                      });
+                    }
+                  }}
+                />
               </div>
             </div>
           </div>
           <div
-            className={`sort_item ${
-              contentUnderOffer?.sort?.field == "video" ? "active" : ""
+            className={`sort_item custm_filtrs ${
+              contentUnderOffer?.sort?.field == "location" ? "active" : ""
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClick("sort", "video")}
+            onClick={() => handleClick("sort", "location")}
           >
             {/* <img src={calendaric} className="icn" alt="yearly" /> */}
             <svg
@@ -527,18 +630,44 @@ const UnderOfferSort = ({ setContentUnderOffer, contentUnderOffer }) => {
               />
             </svg>
 
-            <div className="d-flex gap-3 align-items-center select-font">
+            <div className="d-flex gap-3 align-items-center select-font custm-fltr">
               <p className="sort_txt">Location</p>
-              <div className="from_to_div">
-                <select name="" id="" className="form-select">
+              <div className="from_to_div filter-input">
+                <input
+                  className="form-control"
+                  value={locationValue}
+                  placeholder="Search location"
+                  onChange={(e) => {
+                    setLocationValue(e?.target?.value);
+                  }}
+                />
+                {/* <select name="" id="" className="form-select">
                   <option value="" selected>
                     Choose
                   </option>
                   <option value="">01</option>
                   <option value="">02</option>
-                </select>
+                </select> */}
               </div>
             </div>
+          </div>
+          <div>
+            {locationData.length > 0
+              ? locationData.map((ele) => {
+                  return (
+                    <>
+                      <div
+                        onClick={() => {
+                          setAddress(ele?.address);
+                          setLocationValue(ele?.address);
+                        }}
+                      >
+                        {ele?.address}
+                      </div>
+                    </>
+                  );
+                })
+              : ""}
           </div>
         </div>
         <button

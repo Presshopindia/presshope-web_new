@@ -213,7 +213,7 @@ function Chatinternal(props) {
               // console.log("alll audio element----<>", curr);
               return (
                 <div className="baat_cheet">
-                  {curr?.type === "add" ? (
+                  {curr?.type === "add" && curr.user_id !== profileData._id ? (
                     <p className="usrAddedTxt mb-4">
                       <span>You added {curr?.addedMsg}</span>
                     </p>
@@ -233,14 +233,16 @@ function Chatinternal(props) {
                         className="usr_img"
                       />
                       <div className="postedcmnt_info">
-                        <h5>
-                          {`${curr?.user_info?.first_name} ${curr?.user_info?.last_name}`}
-                          <span className="text-secondary time">
-                            {moment(curr?.createdAt || curr?.chatDate).format(
-                              "h:mm A, D MMM YYYY"
-                            )}
-                          </span>
-                        </h5>
+                        {curr?.user_info && (
+                          <h5>
+                            {`${curr?.user_info?.first_name} ${curr?.user_info?.last_name}`}
+                            <span className="text-secondary time">
+                              {moment(curr?.createdAt || curr?.chatDate).format(
+                                "h:mm A, D MMM YYYY"
+                              )}
+                            </span>
+                          </h5>
+                        )}
                         <Typography className="comment_text">
                           {curr?.type === "text" && curr?.message}
                         </Typography>

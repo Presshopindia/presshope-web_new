@@ -36,11 +36,15 @@ const Chat = () => {
   const [taskId, setTaskId] = useState("");
   const [adminList, setAdminList] = useState([]);
   const [userList, setUserList] = useState([]);
-  const [senderId, setSenderId] = useState(
-    (localStorage.getItem("receiverId") &&
-      JSON.parse(localStorage.getItem("receiverId"))) ||
-      "64bfa693bc47606588a6c807"
-  );
+  // const [senderId, setSenderId] = useState(
+  //   (localStorage.getItem("receiverId") &&
+  //     JSON.parse(localStorage.getItem("receiverId"))) ||
+  //     "64bfa693bc47606588a6c807"
+  // );
+  const [senderId, setSenderId] = useState();
+  // (localStorage.getItem("receiverId") &&
+  //   JSON.parse(localStorage.getItem("receiverId"))) ||
+  //   "64bfa693bc47606588a6c807"
   const [fav, setFav] = useState(false);
   const [PublishedData, setPublishedData] = useState([]);
   const [hopperList, setHopperList] = useState([]);
@@ -126,7 +130,9 @@ const Chat = () => {
         // console.log("HELLO", updatedResp, profileData?.role);
         setGroup(updatedResp);
       }
-    } catch (eror) {}
+    } catch (error) {
+      console.log("all error data ----->", error);
+    }
   };
   useEffect(() => {
     getGroups();
@@ -230,6 +236,9 @@ const Chat = () => {
 
     window.scrollTo(0, 0);
   }, []);
+
+  console.log("all group data ", group);
+  console.log("all group data  groupIds ", groupIds);
 
   return (
     <>
@@ -374,8 +383,8 @@ const Chat = () => {
                                           }}
                                           zoom={7}
                                           mapContainerStyle={{
-                                            height: "65px",
-                                            width: "100px",
+                                            height: "40px",
+                                            width: "40px",
                                           }}
                                           options={{
                                             disableDefaultUI: true,
@@ -432,7 +441,8 @@ const Chat = () => {
                           return (
                             <div
                               className={`chat_usr_itm d-flex align-items-center ${
-                                groupIds?.contentId === curr?.content_id
+                                groupIds?.contentId === curr?.content_id &&
+                                groupIds?.room_id === curr?.room_id
                                   ? "active"
                                   : ""
                               }`}
@@ -543,57 +553,8 @@ const Chat = () => {
                             // console.log("all amins list ------>", curr);
                             return (
                               <div
-                                className="chat_usr_itm d-flex align-items-center"
-                                onClick={() => {
-                                  setSenderId(curr._id);
-                                  setShow({
-                                    content: false,
-                                    task: false,
-                                    presshop: true,
-                                  });
-                                }}
-                              >
-                                <div className="cht_inn w-100 d-flex align-items-center">
-                                  <div className="usr_img_wrp position-relative">
-                                    <img
-                                      src={
-                                        process.env.REACT_APP_ADMIN_IMAGE +
-                                        curr?.profile_image
-                                      }
-                                      alt="user image"
-                                    />
-                                    <div className="status">
-                                      <span className="active"></span>
-                                    </div>
-                                  </div>
-                                  <div className="cht_dtl d-flex justify-content-between w-100">
-                                    <div className="cht_txt d-flex flex-column">
-                                      <p className="usr_nme mb-0">
-                                        <a> {curr?.name}</a>
-                                        <a>
-                                          {curr.role === "admin" && (
-                                            <img
-                                              src={presshopchatic}
-                                              alt="Presshop logo"
-                                              className="ms-1"
-                                            />
-                                          )}
-                                        </a>
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                      {admins.length === 0 &&
-                        adminList
-                          .filter((obj1) => obj1.role === "admin")
-                          .map((curr) => {
-                            return (
-                              <div
-                                className={`chat_usr_itm d-flex align-items-center ${
-                                  curr?._id === senderId ? "active" : ""
+                                className={`d-flex align-items-center ${
+                                  curr._id == senderId ? "activeChat" : ""
                                 }`}
                                 onClick={() => {
                                   setSenderId(curr._id);
@@ -620,13 +581,68 @@ const Chat = () => {
                                   <div className="cht_dtl d-flex justify-content-between w-100">
                                     <div className="cht_txt d-flex flex-column">
                                       <p className="usr_nme mb-0">
-                                        <a> {curr?.name}</a>
+                                        <a>{curr?.name}</a>
+                                        <a>
+                                          {curr.role === "admin" && (
+                                            <img
+                                              src={presshopchatic}
+                                              alt="Presshop logo"
+                                              className="ms-1"
+                                            />
+                                          )}
+                                        </a>
                                       </p>
                                     </div>
-                                    <div>
-                                      {moment(curr?.updatedAt).format(
-                                        "h:mm A, D MMM YYYY"
-                                      )}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                      {admins.length === 0 &&
+                        adminList
+                          .filter((obj1) => obj1.role === "admin")
+                          .map((curr) => {
+                            return (
+                              <div
+                                className={`chat_usr_itm d-flex align-items-center ${
+                                  curr?._id === senderId
+                                    ? "active activeChat"
+                                    : ""
+                                }`}
+                                onClick={() => {
+                                  setSenderId(curr._id);
+                                  setShow({
+                                    content: false,
+                                    task: false,
+                                    presshop: true,
+                                  });
+                                }}
+                              >
+                                <div className="cht_inn w-100 d-flex align-items-center">
+                                  <div className="usr_img_wrp position-relative">
+                                    <img
+                                      src={
+                                        process.env.REACT_APP_ADMIN_IMAGE +
+                                        curr?.profile_image
+                                      }
+                                      alt="user image"
+                                    />
+                                    <div className="status">
+                                      <span className="active"></span>
+                                    </div>
+                                  </div>
+                                  <div className="cht_dtl d-flex justify-content-between w-100">
+                                    <div className="cht_txt d-flex flex-column">
+                                      <p className="usr_nme mb-0">
+                                        <a>{curr?.name}</a>
+                                      </p>
+                                    </div>
+                                    <div className="cht_time d-flex flex-column align-items-end">
+                                      <span className="msg_time">
+                                        {moment(curr?.updatedAt).format(
+                                          "h:mm A, D MMM YYYY"
+                                        )}
+                                      </span>
                                     </div>
                                   </div>
                                 </div>

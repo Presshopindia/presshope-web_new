@@ -10,7 +10,7 @@ import celebrity from "../assets/images/celebrity.svg";
 import exclusiveic from "../assets/images/exclusive.svg";
 import pdfic from "../assets/images/pdfic.svg";
 import docsic from "../assets/images/docsic.svg";
-import prslogo from "../assets/images/prs-logo.png";
+import prslogo from "../assets/images/presshop_new_logo.png";
 import reuters from "../assets/images/reuters.png";
 import shared from "../assets/images/share.png";
 import videoic from "../assets/images/video.svg";
@@ -83,6 +83,8 @@ const Basket = () => {
 
   const paymentintents = async (data) => {
     const UserDetails = JSON.parse(localStorage.getItem("user"));
+
+    console.log("all payment basket data --->  ---->", data);
     const paymentData = {
       data: [],
       product: [],
@@ -95,10 +97,22 @@ const Basket = () => {
       );
       // hopper_stripe_id = curr?.details?.hopper_id;
 
-      const task_original_price =
+      let task_original_price =
         +curr?.details?.photo_price ||
         +curr?.details?.video_price ||
         +curr?.details?.interview_price;
+
+      if (curr?.details?.type === "image") {
+        task_original_price = +curr?.details?.taskDetails?.hopper_photo_price;
+      } else if (curr?.details?.type === "video") {
+        task_original_price = +curr?.details?.taskDetails?.hopper_video_price;
+      } else if (curr?.details?.type === "audio") {
+        task_original_price =
+          +curr?.details?.taskDetails?.hopper_interview_price;
+      } else {
+        task_original_price =
+          +curr?.details?.taskDetails?.hopper_interview_price;
+      }
 
       let hooperPricePercentage;
 
@@ -126,9 +140,12 @@ const Basket = () => {
         +curr?.details?.original_ask_price || task_original_price;
       //  obj.offer=curr?.details?.offer;
       obj.offer = false;
-      obj.is_charity = curr?.details?.is_charity;
-      obj.charity = curr?.details?.charity || "";
-      obj.description = curr?.details?.heading;
+      obj.is_charity =
+        curr?.details?.is_charity || curr?.details?.taskDetails?.is_charity;
+      obj.charity =
+        curr?.details?.charity || curr?.details?.taskDetails?.charity || "";
+      obj.description =
+        curr?.details?.heading || curr?.details?.taskDetails?.heading;
       if (curr.type == "uploaded_content") {
         obj.application_fee = +hooperPricePercentage;
       } else {
@@ -152,22 +169,54 @@ const Basket = () => {
     });
 
     data?.forEach((curr, index) => {
-      const obj = {
-        price_data: {
-          currency: "gbp",
-          product_data: {
-            name: curr?.details?.heading,
-            metadata: {
-              customer_id: user?.stripe_customer_id,
-              amount: Number(curr?.details?.ask_price),
-              type: "content",
+      let obj = {};
+      if (curr?.type == "uploaded_content") {
+        obj = {
+          price_data: {
+            currency: "gbp",
+            product_data: {
+              name: curr?.details?.taskDetails?.heading,
+              metadata: {
+                customer_id: user?.stripe_customer_id,
+                // amount: Number(curr?.details?.ask_price),
+                amount:
+                  curr?.details?.type === "image"
+                    ? +curr?.details?.taskDetails?.hopper_photo_price
+                    : curr?.details?.type === "video"
+                    ? +curr?.details?.taskDetails?.hopper_video_price
+                    : +curr?.details?.taskDetails?.hopper_interview_price,
+                type: "content",
+              },
             },
+            // unit_amount: Number(curr?.details?.ask_price) * 100,
+            unit_amount:
+              (curr?.details?.type === "image"
+                ? +curr?.details?.taskDetails?.hopper_photo_price
+                : curr?.details?.type === "video"
+                ? +curr?.details?.taskDetails?.hopper_video_price
+                : +curr?.details?.taskDetails?.hopper_interview_price) * 100,
           },
-          unit_amount: Number(curr?.details?.ask_price) * 100,
-        },
-        quantity: 1,
-        tax_rates: ["txr_1Q54oaCf1t3diJjXVbYnv7sO"],
-      };
+          quantity: 1,
+          tax_rates: ["txr_1Q54oaCf1t3diJjXVbYnv7sO"],
+        };
+      } else {
+        obj = {
+          price_data: {
+            currency: "gbp",
+            product_data: {
+              name: curr?.details?.heading,
+              metadata: {
+                customer_id: user?.stripe_customer_id,
+                amount: Number(curr?.details?.hopper_ask_price),
+                type: "content",
+              },
+            },
+            unit_amount: Number(curr?.details?.hopper_ask_price) * 100,
+          },
+          quantity: 1,
+          tax_rates: ["txr_1Q54oaCf1t3diJjXVbYnv7sO"],
+        };
+      }
       paymentData.product.push(obj);
     });
 
@@ -192,6 +241,7 @@ const Basket = () => {
     //         ]
     //     }
     // ];
+    console.log("all data of payment =========>", paymentData);
 
     if (paymentData.product.length >= 1 && paymentData.data.length >= 1) {
       try {
@@ -248,10 +298,32 @@ const Basket = () => {
       // const amountDetails=data.
       let sum = 0;
       data.forEach((value, index) => {
-        const askingPrice =
-          value?.details?.ask_price ?? value?.details?.photo_price;
-        console.log("askingPrice", askingPrice);
-        sum += askingPrice;
+        console.log("value all --->", value);
+        let priceOfTaskUploaded = 0;
+        if (value?.type == "uploaded_content") {
+          if (value?.details?.type == "image") {
+            priceOfTaskUploaded =
+              value?.details?.taskDetails?.hopper_photo_price;
+          } else if (value?.details?.type == "video") {
+            priceOfTaskUploaded =
+              value?.details?.taskDetails?.hopper_videos_price;
+          } else if (value?.details?.type == "audio") {
+            priceOfTaskUploaded =
+              value?.details?.taskDetails?.hopper_interview_price;
+          }
+          sum += priceOfTaskUploaded;
+        } else {
+          const askingPrice =
+            value?.details?.ask_price ?? value?.details?.hopper_photo_price;
+          console.log("askingPrice", askingPrice);
+          sum += askingPrice;
+        }
+        //for task
+
+        //   const askingPrice =
+        //     value?.details?.ask_price ?? value?.details?.photo_price;
+        //   console.log("askingPrice", askingPrice);
+        //   sum += askingPrice;
       });
 
       let amountWithVat = sum * (120 / 100);
@@ -263,7 +335,9 @@ const Basket = () => {
         amountWithVat: amountWithVat,
         vatAmount,
       }));
-    } catch (error) {}
+    } catch (error) {
+      console.log("all error --->> ", error);
+    }
   }
 
   function capitaliseLetterPromocode(value) {
@@ -461,7 +535,31 @@ const Basket = () => {
                                       let imageAcToType = "";
                                       let videoAcToType = "";
                                       let docAcToType = "";
-
+                                      let priceOfTaskUploaded = 0;
+                                      let taskImage = "";
+                                      if (el?.details?.videothubnail) {
+                                        taskImage = el?.details?.videothubnail;
+                                      }
+                                      if (el?.details?.type == "image") {
+                                        imageAcToType = cameraic;
+                                        priceOfTaskUploaded =
+                                          el?.details?.taskDetails
+                                            ?.hopper_photo_price;
+                                      } else if (el?.details?.type == "video") {
+                                        videoAcToType = videoic;
+                                        priceOfTaskUploaded =
+                                          el?.details?.taskDetails
+                                            ?.hopper_videos_price;
+                                      } else if (el?.details?.type == "audio") {
+                                        docAcToType = docsic;
+                                        priceOfTaskUploaded =
+                                          el?.details?.taskDetails
+                                            ?.hopper_interview_price;
+                                      }
+                                      // console.log(
+                                      //   "ajdfghfdhg",
+                                      //   el?.details?.type
+                                      // );
                                       contentType.map((ele, index) => {
                                         if (ele.media_type == "image") {
                                           imageAcToType = cameraic;
@@ -524,7 +622,12 @@ const Basket = () => {
                                                   src={docsic}
                                                   className="cntnt-img content_img"
                                                 />
-                                              ) : null}
+                                              ) : (
+                                                <img
+                                                  src={taskImage}
+                                                  className="cntnt-img content_img"
+                                                />
+                                              )}
                                               <span className="cont_count">
                                                 {el?.content?.length || 0}
                                               </span>
@@ -540,7 +643,11 @@ const Basket = () => {
                                           </td>
                                           <td>
                                             <div className="desc">
-                                              <p>{el?.details?.heading}</p>
+                                              <p>
+                                                {el?.details?.heading ||
+                                                  el?.details?.taskDetails
+                                                    ?.heading}
+                                              </p>
                                             </div>
                                           </td>
                                           <td className="timedate_wrap">
@@ -694,10 +801,14 @@ const Basket = () => {
                                                 //       data?.chatdata?.amount
                                                 //     )
                                                 //   :
-                                                formatAmountInMillion(
-                                                  el?.details?.ask_price ||
-                                                    el?.details?.photo_price
-                                                )
+                                                el.type == "uploaded_content"
+                                                  ? formatAmountInMillion(
+                                                      priceOfTaskUploaded
+                                                    )
+                                                  : formatAmountInMillion(
+                                                      el?.details?.ask_price ||
+                                                        el?.details?.photo_price
+                                                    )
                                               }
                                               {/* {`£${formatAmountInMillion(data?.chatdata?.amount ? data?.chatdata?.amount : data?.details?.ask_price)}`} */}
                                             </p>

@@ -20,7 +20,7 @@ function DashBoardTabCards(props) {
         >
           <div className="list-in tab-card-wrap">
             <Row className="align-items-center">
-              <Col md={props?.before_discount_value ? 4 : 5}>
+              <Col md={props?.before_discount_value ? 5 : 5}>
                 <div className="d-flex align-items-center payment_camera_icon cntent_card_icon">
                   {props.image_type === "audio" ? (
                     <div div className="cstm_icn_wrpr">
@@ -104,7 +104,7 @@ function DashBoardTabCards(props) {
                 </div>
               </Col>
               {props?.before_discount_value ? (
-                <Col md={3}>
+                <Col md={2}>
                   <div className={`buyFeed_opt text-center btn-grp`}>
                     <span className="contentPrice_text dash-cntnt-price">
                       £{props?.before_discount_value}

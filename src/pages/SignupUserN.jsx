@@ -39,7 +39,9 @@ import { useDarkMode } from "../context/DarkModeContext";
 import Loader from "../component/Loader";
 import office from "../assets/images/office.svg";
 
-{/* <img src={office} alt="" /> */}
+{
+  /* <img src={office} alt="" /> */
+}
 
 const SignupUserN = () => {
   // Parse data from local storage
@@ -60,8 +62,8 @@ const SignupUserN = () => {
   const companyName = user?.company_name;
   const companyNumber = user?.company_number;
   const companyVat = user?.company_vat;
-  console.log("all value ---->1111",user)
-  console.log("all value ---->11115profileData",profileData)
+  console.log("all value ---->1111", user);
+  console.log("all value ---->11115profileData", profileData);
 
   const navigate = useNavigate();
   const [addOffice, setAddOffice] = useState({
@@ -83,7 +85,8 @@ const SignupUserN = () => {
       office_type_id: "option1",
     },
   });
-  const { name, number, vat, email, first_name, last_name, user_id } = useParams();
+  const { name, number, vat, email, first_name, last_name, user_id } =
+    useParams();
 
   // Define the initial state for onboardingUser
   const [onboardingUser, setOnboardingUser] = useState({
@@ -106,9 +109,9 @@ const SignupUserN = () => {
       allow_to_chat_externally: false,
       price_range: {
         minimum_price: 0,
-        maximum_price: 0
-      }
-    }
+        maximum_price: 0,
+      },
+    },
   });
   // Function to handle adding office details
   const AddOfficeDetails = async (e) => {
@@ -162,8 +165,7 @@ const SignupUserN = () => {
           office_details: { ...prev.office_details, [name]: value },
         }));
       }
-    }
-    else {
+    } else {
       setAddOffice((prev) => ({
         ...prev,
         office_details: { ...prev.office_details, [name]: value },
@@ -191,10 +193,11 @@ const SignupUserN = () => {
       ...prev,
       admin_rignts: {
         ...prev.admin_rignts,
-        price_range: { 
-          ...prev.admin_rignts.price_range, [name]: value 
+        price_range: {
+          ...prev.admin_rignts.price_range,
+          [name]: value,
         },
-      }
+      },
     }));
   };
 
@@ -284,8 +287,10 @@ const SignupUserN = () => {
   };
 
   const getProfile = async (user_id) => {
-    const data = await Post(`mediaHouse/getProfileAccordingUserId`, { user_id });
-    console.log("data-->", data?.data?.profile)
+    const data = await Post(`mediaHouse/getProfileAccordingUserId`, {
+      user_id,
+    });
+    console.log("data-->", data?.data?.profile);
     setOnboardingUser({
       ...onboardingUser,
       designation_id: data?.data?.profile?.designation_id?._id,
@@ -294,26 +299,29 @@ const SignupUserN = () => {
       profile_image: data?.data?.profile?.profile_image,
       phone: data?.data?.profile?.phone,
       country_code: data?.data?.profile?.country_code,
-    })
+    });
   };
-
 
   useEffect(() => {
     getOfficeType();
     getDepartmentType();
     getDesignation();
     getOfficeDetails(vat);
-    getProfile(user_id)
+    getProfile(user_id);
   }, []);
 
   const addUser = async (event) => {
     event.preventDefault();
     try {
       setLoading(true);
-      const res = await Patch(
-        `mediaHouse/complete/onboard/user/details`,
-        { ...onboardingUser, number, vat, first_name, last_name, status: "approved" }
-      );
+      const res = await Patch(`mediaHouse/complete/onboard/user/details`, {
+        ...onboardingUser,
+        number,
+        vat,
+        first_name,
+        last_name,
+        status: "approved",
+      });
       if (res) {
         navigate("/login");
         setLoading(false);
@@ -385,34 +393,33 @@ const SignupUserN = () => {
     });
   };
 
-
   const phoneInputRef1 = useRef(null);
   useEffect(() => {
-    const phoneInput = document.querySelector('.p_1');
+    const phoneInput = document.querySelector(".p_1");
     const inputElement = phoneInputRef1.current;
 
     const handleFocus = () => {
       inputElement.focus();
     };
-    phoneInput.addEventListener('click', handleFocus);
+    phoneInput.addEventListener("click", handleFocus);
 
     return () => {
-      phoneInput.removeEventListener('click', handleFocus);
+      phoneInput.removeEventListener("click", handleFocus);
     };
   }, []);
 
   const phoneInputRef2 = useRef(null);
   useEffect(() => {
-    const phoneInput = document.querySelector('.p_2');
+    const phoneInput = document.querySelector(".p_2");
     const inputElement = phoneInputRef2.current;
 
     const handleFocus = () => {
       inputElement.focus();
     };
-    phoneInput.addEventListener('click', handleFocus);
+    phoneInput.addEventListener("click", handleFocus);
 
     return () => {
-      phoneInput.removeEventListener('click', handleFocus);
+      phoneInput.removeEventListener("click", handleFocus);
     };
   }, []);
 
@@ -488,7 +495,12 @@ const SignupUserN = () => {
                       </div>
 
                       <div className="officeDetails sign_section">
-                        <Form onSubmit={(e) => { e.preventDefault(); toast.success("Office added successfully") }}>
+                        <Form
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            toast.success("Office added successfully");
+                          }}
+                        >
                           <p className="onbrdheading sign_hdng">
                             Office details
                           </p>
@@ -619,8 +631,8 @@ const SignupUserN = () => {
                                   value={addOffice?.office_details?.phone}
                                   maxLength={10}
                                   onChange={(e) => {
-                                    if(e.target.value<=10){
-                                    handleOfficeChange(e);
+                                    if (e.target.value <= 10) {
+                                      handleOfficeChange(e);
                                     }
                                   }}
                                   ref={phoneInputRef1}
@@ -660,7 +672,11 @@ const SignupUserN = () => {
                               </Form.Group>
                             </Col>
                           </Row>
-                          <Button className="w-100 theme_btn" variant="primary" type="submit">
+                          <Button
+                            className="w-100 theme_btn"
+                            variant="primary"
+                            type="submit"
+                          >
                             Save
                           </Button>
                         </Form>
@@ -838,10 +854,12 @@ const SignupUserN = () => {
                                   placeholder=" phone"
                                   name="phone"
                                   onChange={(e) =>
-                                    e.target.value?.length <= 15 ? setOnboardingUser((pre) => ({
-                                      ...pre,
-                                      phone: e.target.value,
-                                    })) : ""
+                                    e.target.value?.length <= 15
+                                      ? setOnboardingUser((pre) => ({
+                                          ...pre,
+                                          phone: e.target.value,
+                                        }))
+                                      : ""
                                   }
                                   ref={phoneInputRef2}
                                 />
@@ -955,11 +973,14 @@ const SignupUserN = () => {
                                         name="minimum_price"
                                         placeholder="No min"
                                         value={
-                                          onboardingUser?.admin_rignts?.price_range?.minimum_price
+                                          onboardingUser?.admin_rignts
+                                            ?.price_range?.minimum_price
                                         }
                                         onChange={handlePriceRange}
-                                        disabled={!onboardingUser?.admin_rignts
-                                          .allowed_to_purchase_content}
+                                        disabled={
+                                          !onboardingUser?.admin_rignts
+                                            .allowed_to_purchase_content
+                                        }
                                       />
                                     </Form.Group>
                                   </div>
@@ -971,11 +992,14 @@ const SignupUserN = () => {
                                         name="maximum_price"
                                         placeholder="No max"
                                         value={
-                                          onboardingUser?.admin_rignts?.price_range?.maximum_price
+                                          onboardingUser?.admin_rignts
+                                            ?.price_range?.maximum_price
                                         }
                                         onChange={handlePriceRange}
-                                        disabled={!onboardingUser?.admin_rignts
-                                          .allowed_to_purchase_content}
+                                        disabled={
+                                          !onboardingUser?.admin_rignts
+                                            .allowed_to_purchase_content
+                                        }
                                       />
                                     </Form.Group>
                                   </div>
@@ -1007,7 +1031,10 @@ const SignupUserN = () => {
                   <span className="shape rd_crcl pos_abs"></span>
                   <div className="left-side text-center news-img">
                     <img src={accessCenter} alt="" />
-                    <h2>Let's start delivering <span className="txt_bld">news</span></h2>
+                    <h2>
+                      Let's start delivering{" "}
+                      <span className="txt_bld">news</span>
+                    </h2>
                   </div>
                 </div>
               </Col>

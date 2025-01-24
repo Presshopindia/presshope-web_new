@@ -17,7 +17,9 @@ function DashBoardSortCard(props) {
                                 <div className="Card_Wrapper d-flex align-items-center flex-column">
                                     <img className="list_card_img_top" src={props.imgtab} alt="1" />
                                     <div className="review_content_wrap d-flex justify-content-between align-content-center">
-                                        <span className="rateView-type_icons"><span className="volCount">1</span><img className="" src={props.reviewType} /></span>
+                                        <span className="rateView-type_icons">
+                                            <span className="volCount">1</span>
+                                            <img className="" src={props.reviewType} /></span>
                                         <span className="rateView-type dflt"><img className="" src={props.reviewTypetwo} /></span>
                                     </div>
                                     <div className=" d-flex align-items-start flex-column px-2">

@@ -697,12 +697,12 @@ const Contenttables = () => {
                                 //  console.log("userinfo ----->  allVat------->",allVat);
                                 return (
                                   <tr>
-                                    <td className="content_img_td">
+                                    <td className="content_img_td position-relative add-icons-box">
                                       {
                                         <Link
                                           to={`/purchased-content-detail/${curr?.transaction_id}`}
                                         >
-                                          <div className="tbl_cont_wrp">
+                                          <div className="tbl_cont_wrp noGrid">
                                             <img
                                               src={
                                                 curr?.content[0]?.media_type ===
@@ -718,9 +718,47 @@ const Contenttables = () => {
                                               }
                                               className="content_img"
                                             />
-                                            <span className="cont_count">
+                                            {/* <span className="cont_count">
                                               {curr?.content.length}
-                                            </span>
+                                            </span> */}
+                                          </div>
+                                          <div className="tableContentTypeIcons">
+                                            {/* {image.length > 0 && ( */}
+                                            <div class="post_icns_cstm_wrp camera-ico">
+                                              <div class="post_itm_icns dtl_icns">
+                                                <span class="count">1</span>
+                                                <img
+                                                  class="feedMediaType iconBg"
+                                                  src={cameraic}
+                                                  alt=""
+                                                />
+                                              </div>
+                                            </div>
+                                            {/* )} */}
+                                            {/* {video.length > 0 && ( */}
+                                            <div class="post_icns_cstm_wrp video-ico">
+                                              <div class="post_itm_icns dtl_icns">
+                                                <span class="count">1</span>
+                                                <img
+                                                  class="feedMediaType iconBg"
+                                                  src={videoic}
+                                                  alt=""
+                                                />
+                                              </div>
+                                            </div>
+                                            {/* )} */}
+                                            {/* {audio.length > 0 && ( */}
+                                            <div class="post_icns_cstm_wrp audio-ico">
+                                              <div class="post_itm_icns dtl_icns">
+                                                <span class="count">1</span>
+                                                <img
+                                                  class="feedMediaType iconBg"
+                                                  src={interviewic}
+                                                  alt=""
+                                                />
+                                              </div>
+                                            </div>
+                                            {/* )} */}
                                           </div>
                                         </Link>
                                       }
@@ -1184,9 +1222,9 @@ const Contenttables = () => {
                                     )
                                   }
                                 >
-                                  <td className="content_img_td">
+                                  <td className="content_img_td position-relative add-icons-box">
                                     {
-                                      <div className="tbl_cont_wrp">
+                                      <div className="tbl_cont_wrp noGrid">
                                         <img
                                           src={
                                             curr?.content_id?.content[0]
@@ -1207,11 +1245,45 @@ const Contenttables = () => {
                                           }
                                           className="content_img"
                                         />
-                                        <span className="cont_count">
+                                        {/* <span className="cont_count">
                                           {curr?.content_id?.content?.length}
-                                        </span>
+                                        </span> */}
                                       </div>
                                     }
+                                    <div className="tableContentTypeIcons">
+                                      <div class="post_icns_cstm_wrp camera-ico">
+                                        <div class="post_itm_icns dtl_icns">
+                                          <span class="count">1</span>
+                                          <img
+                                            class="feedMediaType iconBg"
+                                            src={cameraic}
+                                            alt=""
+                                          />
+                                        </div>
+                                      </div>
+                                      <div class="post_icns_cstm_wrp video-ico">
+                                        <div class="post_itm_icns dtl_icns">
+                                          <span class="count">1</span>
+                                          <img
+                                            class="feedMediaType iconBg"
+                                            src={videoic}
+                                            alt=""
+                                          />
+                                        </div>
+                                      </div>
+                                      {/* <div class="post_icns_cstm_wrp audio-ico">
+                                        <div class="post_itm_icns dtl_icns">
+                                          <span class="count">
+                                            1
+                                          </span>
+                                          <img
+                                            class="feedMediaType iconBg"
+                                            src={interviewic}
+                                            alt=""
+                                          />
+                                        </div>
+                                      </div> */}
+                                    </div>
                                   </td>
                                   <td className="timedate_wrap">
                                     <p className="timedate">
@@ -1453,7 +1525,7 @@ const Contenttables = () => {
                                       )
                                     }
                                   >
-                                    <td className="content_img_td">
+                                    <td className="content_img_td position-relative add-icons-box">
                                       <div className="tbl_cont_wrp">
                                         <img
                                           src={
@@ -1477,6 +1549,40 @@ const Contenttables = () => {
                                           }
                                           className="content_img"
                                         />
+                                      </div>
+                                      <div className="tableContentTypeIcons">
+                                        <div class="post_icns_cstm_wrp camera-ico">
+                                          <div class="post_itm_icns dtl_icns">
+                                            <span class="count">1</span>
+                                            <img
+                                              class="feedMediaType iconBg"
+                                              src={cameraic}
+                                              alt=""
+                                            />
+                                          </div>
+                                        </div>
+                                        <div class="post_icns_cstm_wrp video-ico">
+                                          <div class="post_itm_icns dtl_icns">
+                                            <span class="count">1</span>
+                                            <img
+                                              class="feedMediaType iconBg"
+                                              src={videoic}
+                                              alt=""
+                                            />
+                                          </div>
+                                        </div>
+                                        {/* <div class="post_icns_cstm_wrp audio-ico">
+                                          <div class="post_itm_icns dtl_icns">
+                                            <span class="count">
+                                              1
+                                            </span>
+                                            <img
+                                              class="feedMediaType iconBg"
+                                              src={interviewic}
+                                              alt=""
+                                            />
+                                          </div>
+                                        </div> */}
                                       </div>
                                     </td>
                                     <td className="timedate_wrap">
@@ -1540,7 +1646,7 @@ const Contenttables = () => {
                                     </td>
                                     <td>{curr?.hopper_details?.address}</td>
                                     <td>
-                                      <div className="tbl_cont_wrp">
+                                      <div className="hpr_dt">
                                         <img
                                           src={
                                             curr?.hopper_details?.avatar_details
@@ -1551,9 +1657,9 @@ const Contenttables = () => {
                                                   ?.avatar_details?.avatar
                                               : null
                                           }
-                                          className="content_img"
+                                          className="big_img"
                                         />
-                                        <p className="hpr_nme txt_mdm">
+                                        <p className="hpr_nme">
                                           {curr?.hopper_details?.user_name}
                                         </p>
                                       </div>
@@ -1846,103 +1952,158 @@ const Contenttables = () => {
                             <tr>
                               <th className="">Hopper</th>
                               <th className="text-left">Published content</th>
-                              <th>Number of Content</th>
+                              <th>Number of content</th>
                             </tr>
                           </thead>
                           <tbody>
                             {hopperContri
                               ?.filter((el) => el._id != null)
-                              ?.map((el) => (
-                                <tr
-                                  className="clickable"
-                                  onClick={() =>
-                                    navigate(`/hopper-content/${el?._id?._id}`)
-                                  }
-                                >
-                                  <td>
-                                    <div className="hpr_dt hopper_table hopper-image">
-                                      <img
-                                        src={
-                                          process.env.REACT_APP_AVATAR_IMAGE +
-                                          el?._id?.avatar_id?.avatar
-                                        }
-                                        alt="Hopper"
-                                        className="big_img"
-                                      />
-                                      <p className="hpr_nme">
-                                        <span className="txt_light">
-                                          {el?._id?.user_name}
-                                        </span>
-                                      </p>
-                                    </div>
-                                  </td>
-                                  <td className="content_wrap more_contnt_wrap">
-                                    <div className="content_imgs_wrap align-items-start">
-                                      <div className="content_imgs hoppers-imagessss">
-                                        {el?.data?.slice(0, 6).map((curr) => {
-                                          return curr?.content?.[0]
-                                            ?.media_type === "image" ? (
-                                            <img
-                                              src={
-                                                curr?.content?.[0]?.watermark ||
-                                                process.env
-                                                  .REACT_APP_CONTENT_MEDIA +
-                                                  curr?.content?.[0]?.media
-                                              }
-                                              className="content_img"
-                                            />
-                                          ) : (
-                                            ""
-                                          );
-                                        })}
+                              ?.map((el) => {
+                                console.log("all element data ---> -->", el);
+
+                                let audio = [];
+                                let video = [];
+                                let image = [];
+                                let doc = [];
+
+                                el?.data.forEach((item) => {
+                                  const contentArray = item.content;
+
+                                  audio = [
+                                    ...audio,
+                                    ...(contentArray?.filter(
+                                      (item) => item.media_type === "audio"
+                                    ) || []),
+                                  ];
+
+                                  video = [
+                                    ...video,
+                                    ...(contentArray?.filter(
+                                      (item) => item.media_type === "video"
+                                    ) || []),
+                                  ];
+
+                                  image = [
+                                    ...image,
+                                    ...(contentArray?.filter(
+                                      (item) => item.media_type === "image"
+                                    ) || []),
+                                  ];
+
+                                  doc = [
+                                    ...doc,
+                                    ...(contentArray?.filter(
+                                      (item) =>
+                                        item.media_type === "pdf" ||
+                                        item.media_type === "doc"
+                                    ) || []),
+                                  ];
+                                });
+
+                                console.log("Audio:", audio);
+                                console.log("Video:", video);
+                                console.log("Image:", image);
+                                console.log("Documents:", doc);
+
+                                return (
+                                  <tr
+                                    className="clickable"
+                                    onClick={() =>
+                                      navigate(
+                                        `/hopper-content/${el?._id?._id}`
+                                      )
+                                    }
+                                  >
+                                    <td>
+                                      <div className="hpr_dt hopper_table hopper-image">
+                                        <img
+                                          src={
+                                            process.env.REACT_APP_AVATAR_IMAGE +
+                                            el?._id?.avatar_id?.avatar
+                                          }
+                                          alt="Hopper"
+                                          className="big_img"
+                                        />
+                                        <p className="hpr_nme">
+                                          <span className="txt_light">
+                                            {el?._id?.user_name}
+                                          </span>
+                                        </p>
                                       </div>
-                                      <div className="content_imgs align-items-center">
-                                        <BsEye />
-                                        <span className="text-pink txt_mdm">
-                                          View content
-                                        </span>
+                                    </td>
+                                    <td className="content_wrap more_contnt_wrap">
+                                      <div className="content_imgs_wrap align-items-start">
+                                        <div className="content_imgs hoppers-imagessss">
+                                          {el?.data?.slice(0, 4).map((curr) => {
+                                            return curr?.content?.[0]
+                                              ?.media_type === "image" ? (
+                                              <img
+                                                src={
+                                                  curr?.content?.[0]
+                                                    ?.watermark ||
+                                                  process.env
+                                                    .REACT_APP_CONTENT_MEDIA +
+                                                    curr?.content?.[0]?.media
+                                                }
+                                                className="content_img"
+                                              />
+                                            ) : (
+                                              ""
+                                            );
+                                          })}
+                                        </div>
+                                        <div className="content_imgs align-items-center">
+                                          <BsEye />
+                                          <span className="text-pink txt_mdm">
+                                            View content
+                                          </span>
+                                        </div>
                                       </div>
-                                    </div>
-                                  </td>
-                                  <td class="text-left number-content">
-                                    {/* <img
+                                    </td>
+                                    <td class="text-left number-content">
+                                      {/* <img
                                       src={cameraic}
                                       alt="shared"
                                       class="icn"
                                       aria-label="Shared"
                                       data-mui-internal-clone-element="true"
                                     /> */}
-                                    <div className="numcnt">
-                                      <span
-                                        aria-label="Photo"
-                                        class=""
-                                        data-mui-internal-clone-element="true"
-                                      >
-                                        5
-                                        <img
-                                          src="/static/media/camera.cf7d2b5f4e7f53ae710938e9e9cb00e2.svg"
-                                          alt="Photo"
-                                          class="icn"
-                                        />{" "}
-                                      </span>
-                                    </div>
-                                    <div className="numcnt">
-                                      <span
-                                        aria-label="Photo"
-                                        class=""
-                                        data-mui-internal-clone-element="true"
-                                      >
-                                        5
-                                        <img
-                                          src="/static/media/interview.66042bc612bde3cff584f337894ff004.svg"
-                                          alt="Photo"
-                                          class="icn"
-                                        />{" "}
-                                      </span>
-                                    </div>
-                                  </td>
-                                </tr>
-                              ))}
+                                      {image.length > 0 && (
+                                        <div className="numcnt">
+                                          <span
+                                            aria-label="Photo"
+                                            class=""
+                                            data-mui-internal-clone-element="true"
+                                          >
+                                            {image.length}
+                                            <img
+                                              src="/static/media/camera.cf7d2b5f4e7f53ae710938e9e9cb00e2.svg"
+                                              alt="Photo"
+                                              class="icn"
+                                            />{" "}
+                                          </span>
+                                        </div>
+                                      )}
+                                      {audio.length > 0 && (
+                                        <div className="numcnt">
+                                          <span
+                                            aria-label="Photo"
+                                            class=""
+                                            data-mui-internal-clone-element="true"
+                                          >
+                                            {audio.length}
+                                            <img
+                                              src="/static/media/interview.66042bc612bde3cff584f337894ff004.svg"
+                                              alt="Photo"
+                                              class="icn"
+                                            />{" "}
+                                          </span>
+                                        </div>
+                                      )}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
                           </tbody>
                         </table>
                         {hopperContri?.length > 0 && (

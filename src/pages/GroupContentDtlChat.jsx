@@ -40,6 +40,7 @@ import NoProfile from "../assets/images/blank-profile-picture.png";
 import usric from "../assets/images/menu-icons/user.svg";
 import audioic from "../assets/images/audimg.svg";
 import socketInternal from "../InternalSocket";
+import { toast } from "react-toastify";
 
 const GroupContentDtlChat = (props) => {
   const [data, setData] = useState();
@@ -69,7 +70,7 @@ const GroupContentDtlChat = (props) => {
   const GetUserList = async () => {
     const resp = await Post(`mediaHouse/getMediahouseUser`);
     if (resp) {
-      setUserList(resp.data.response);
+      setUserList(resp?.data?.response);
     }
   };
 
@@ -141,10 +142,10 @@ const GroupContentDtlChat = (props) => {
       let obj = {
         type: "add",
         users: selectedIds,
-        content_id: localStorage.getItem("contentId")?.replace(/^"+|"+$/g, ""), // Remove extra quotes
-        room_id: localStorage.getItem("roomId")?.replace(/^"+|"+$/g, ""),
-        // content_id: localStorage.getItem("contentId"),
-        // room_id: localStorage.getItem("roomId"),
+        // content_id: localStorage.getItem("contentId")?.replace(/^"+|"+$/g, ""), // Remove extra quotes
+        // room_id: localStorage.getItem("roomId")?.replace(/^"+|"+$/g, ""),
+        content_id: props?.params?.contentId,
+        room_id: props?.params?.room_id,
       };
       console.log("all content viewcheck 1234");
 
@@ -178,7 +179,8 @@ const GroupContentDtlChat = (props) => {
         // toast.success('Group chat initiated');
       }
     } catch (error) {
-      // console.log(error, `<<<<<socket error`);
+      toast.error(error?.response?.data?.message);
+      console.log(error, `<<<<<socket error`);
       // Handle errors
     }
   };
@@ -210,20 +212,20 @@ const GroupContentDtlChat = (props) => {
         !localStorage.getItem("roomId") &&
         !localStorage.getItem("contentId")
       ) {
-        console.log("all content view ----->contentId return");
+        // console.log("all content view ----->contentId return");
         return;
       }
-      console.log("all content viewcheck 123");
+      // console.log("all content viewcheck 123");
       let obj = {
         type: "remove",
         users: [id],
-        content_id: localStorage.getItem("contentId")?.replace(/^"+|"+$/g, ""), // Remove extra quotes
-        room_id: localStorage.getItem("roomId")?.replace(/^"+|"+$/g, ""),
-        // content_id: localStorage.getItem("contentId"),
-        // room_id: localStorage.getItem("roomId"),
+        // content_id: localStorage.getItem("contentId")?.replace(/^"+|"+$/g, ""), // Remove extra quotes
+        // room_id: localStorage.getItem("roomId")?.replace(/^"+|"+$/g, ""),
+        content_id: props?.params?.contentId,
+        room_id: props?.params?.room_id,
       };
-      console.log("all content viewcheck 1234");
-      console.log("for demo");
+      // console.log("all content viewcheck 1234");
+      // console.log("for demo");
       const resp = await Post("mediaHouse/deleteinternalGroupChatMH", obj);
       // window.location.reload();
       if (resp) {
@@ -630,16 +632,17 @@ const GroupContentDtlChat = (props) => {
                                   (item) =>
                                     `${curr?.first_name} ${curr?.last_name}` ===
                                       item?.addedMsg && item.type == "add"
-                                ) && (
-                                  <button
-                                    // className="remove-btn"
-                                    onClick={() => {
-                                      handleRemovechatuser(curr._id);
-                                      setRemoveUserId(curr?._id);
-                                    }}
-                                  >
-                                    Remove
-                                  </button>
+                                  // ) && (
+                                  //   <button
+                                  //     // className="remove-btn"
+                                  //     onClick={() => {
+                                  //       handleRemovechatuser(curr._id);
+                                  //       setRemoveUserId(curr?._id);
+                                  //     }}
+                                  //   >
+                                  //     Remove
+                                  //   </button>
+                                  // )}
                                 )}
                               </span>
                             </div>

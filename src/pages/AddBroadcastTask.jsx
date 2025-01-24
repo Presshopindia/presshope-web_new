@@ -525,12 +525,23 @@ const AddBroadcastTask = (props) => {
                         minTime
                       }
                       // disabled={!end_date}
+                      // renderInput={(params) => (
+                      //   <TextField
+                      //     {...params}
+                      //     error={false}
+                      //     placeholder="HH:MM"
+                      //     readonly
+                      //   />
+                      // )}
                       renderInput={(params) => (
                         <TextField
                           {...params}
                           error={false}
-                          placeholder="HH:MM"
-                          readonly
+                          inputProps={{
+                            ...params.inputProps,
+                            placeholder: "HH:MM", // Override the placeholder
+                            readOnly: true, // Ensure the input is read-only
+                          }}
                         />
                       )}
                     />

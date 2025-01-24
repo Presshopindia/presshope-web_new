@@ -56,6 +56,8 @@ import RatingReview from "../RatingReview";
 import OnboardUserN from "../OnboardUserN";
 import SignupUserN from "../SignupUserN";
 import AutoInvoice from "../AutoInvoice";
+import TaskInvoice from "../TaskInvoice";
+
 // import LoginUserN from "../LoginUserN";
 import FAQPostLogin from "../postlogin/FAQPostLogin";
 import ManagePaymentslogin from "../ManagePaymentslogin";
@@ -240,6 +242,7 @@ function RouteAll() {
           <Route path="/signup-user-n/:name/:number/:vat/:email/:first_name/:last_name/:user_id" element={<SignupUserN />} />
           {/* <Route path="/login-user-n" element={<LoginUserN />} /> */}
           <Route path="/auto-invoice/:id" element={<AutoInvoice />} />
+          <Route path="/task-invoice/:id" element={<TaskInvoice />} />
           <Route path="/basket" element={<Basket />} />
           <Route path="/invoice/:id" element={<Invoice />} />
           <Route path="/faq-post" element={<FAQPostLogin />} />

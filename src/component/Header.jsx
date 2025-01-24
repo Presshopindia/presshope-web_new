@@ -172,6 +172,8 @@ const Header = () => {
     profileData,
     cartCount,
     setCartCount,
+    navColor,
+    setNavColor,
   } = useDarkMode();
   console.log("profile data admin ----->>>>>", profileData);
   useEffect(() => {
@@ -343,25 +345,57 @@ const Header = () => {
                 <Nav className="me-auto center-links nav_inn align-items-center">
                   <NavLink
                     to={"/dashboard/exclusive"}
-                    className="nav-link dashboard"
+                    // className="nav-link dashboard"
+                    className={`nav-link ${
+                      navColor == "/dashboard/exclusive" ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      // localStorage.removeItem("backBtnVisibility");
+                      setNavColor("/dashboard/exclusive");
+                    }}
                   >
                     Dashboard
                   </NavLink>
                   <NavLink
                     to={"/published-content"}
-                    className="nav-link"
-                    onClick={() => localStorage.removeItem("backBtnVisibility")}
+                    // className="nav-link"
+                    // onClick={() => localStorage.removeItem("backBtnVisibility")}
+                    className={`nav-link ${
+                      navColor == "/published-content" ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      localStorage.removeItem("backBtnVisibility");
+                      setNavColor("/published-content");
+                    }}
                   >
                     Feed
                   </NavLink>
                   <NavLink
                     to={"/content/exclusive/published/favourited"}
-                    className="nav-link"
+                    // className="nav-link"
+                    className={`nav-link ${
+                      navColor == "/content/exclusive/published/favourited"
+                        ? "active"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      localStorage.removeItem("backBtnVisibility");
+                      setNavColor("/content/exclusive/published/favourited");
+                    }}
                   >
                     Content
                   </NavLink>
                   {/* <NavLink to={"/broadcasted-taks"} className="nav-link"> */}
-                  <NavLink to={`/task`} className="nav-link">
+                  <NavLink
+                    to={`/task`}
+                    //  className="nav-link"
+                    className={`nav-link ${
+                      navColor == "/task" ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      setNavColor("/task");
+                    }}
+                  >
                     Tasks
                   </NavLink>
                   {/* <Tooltip title="Coming soon">
@@ -370,19 +404,41 @@ const Header = () => {
                     </NavLink>
                   </Tooltip> */}
                   <NavLink
-                    onClick={() => localStorage.removeItem("backBtnVisibility")}
                     to={"/chat"}
-                    className="position-relative nav-link messages_countWrap"
+                    // className="position-relative nav-link messages_countWrap"
+                    className={`position-relative nav-link messages_countWrap ${
+                      navColor == "/chat" ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      setNavColor("/chat");
+                      localStorage.removeItem("backBtnVisibility");
+                    }}
                   >
                     Chat
                   </NavLink>
-                  <NavLink to={"/reports/content"} className="nav-link">
+                  <NavLink
+                    to={"/reports/content"}
+                    //  className="nav-link"
+                    className={`nav-link ${
+                      navColor == "/reports/content" ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      setNavColor("/reports/content");
+                    }}
+                  >
                     Reports
                   </NavLink>
                   <NavLink
                     to={"/accounts"}
-                    className="nav-link"
-                    onClick={() => localStorage.removeItem("backBtnVisibility")}
+                    // className="nav-link"
+                    // onClick={() => localStorage.removeItem("backBtnVisibility")}
+                    className={`nav-link ${
+                      navColor == "/accounts" ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      setNavColor("/accounts");
+                      localStorage.removeItem("backBtnVisibility");
+                    }}
                   >
                     Accounts
                   </NavLink>
@@ -719,6 +775,47 @@ const Header = () => {
                                           {curr?.title}
                                         </p>
                                         <p className="notf_txt">{curr?.body}</p>
+                                        {curr?.promo_code_link ? (
+                                          <button
+                                            className="notify_clear clear-btn"
+                                            onClick={() => {
+                                              let promoCode =
+                                                curr?.promo_code_link;
+                                              console.log(
+                                                "Promo Code:",
+                                                promoCode
+                                              );
+
+                                              if (promoCode) {
+                                                navigator.clipboard
+                                                  .writeText(promoCode)
+                                                  .then(() => {
+                                                    console.log(
+                                                      "Promo code copied !"
+                                                    );
+                                                    toast.success(
+                                                      "Promo code copied !"
+                                                    );
+                                                  })
+                                                  .catch((err) => {
+                                                    console.error(
+                                                      "Failed to copy promo code:",
+                                                      err
+                                                    );
+                                                  });
+                                              } else {
+                                                console.error(
+                                                  "Promo code is undefined"
+                                                );
+                                              }
+                                            }}
+                                          >
+                                            {/* {curr?.promo_code_link} */}
+                                            Copy Promo Code link
+                                          </button>
+                                        ) : (
+                                          ""
+                                        )}
                                         {curr?.content_link ? (
                                           <button
                                             // className="notf_txt"

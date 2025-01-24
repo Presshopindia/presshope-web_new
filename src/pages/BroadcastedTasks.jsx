@@ -1122,6 +1122,7 @@ import {
 import AddBroadcastTask from "./AddBroadcastTask";
 import DbFooter from "../component/DbFooter";
 // import audioic from "../assets/images/audio-icon.svg";
+import favouritedic from "../assets/images/favouritestar.svg";
 import audioic from "../assets/images/audimg.svg";
 
 import { Get } from "../services/user.services";
@@ -1285,6 +1286,28 @@ const BroadcastedTask = () => {
       setLoading(false);
     }
   };
+  const handleBasket = () => {
+    try {
+      const taskid = query?.get("taskId");
+      console.log();
+      if (taskid) {
+        TaskDetails(taskid);
+      }
+    } catch (error) {
+      console.log("all error bugs", error);
+    }
+  };
+  const handleFavourite = () => {
+    try {
+      const taskid = query?.get("taskId");
+      console.log();
+      if (taskid) {
+        TaskDetails(taskid);
+      }
+    } catch (error) {
+      console.log("all error bugs", error);
+    }
+  };
 
   useEffect(() => {
     const taskid = query?.get("taskId");
@@ -1399,6 +1422,8 @@ const BroadcastedTask = () => {
                                 ? curr.content[0]?.thumbnail ||
                                   process.env.REACT_APP_CONTENT_MEDIA +
                                     curr.content[0]?.thumbnail
+                                : curr?.content[0]?.media_type === "image"
+                                ? curr?.content[0]?.watermark
                                 : curr.content[0]?.media_type === "audio"
                                 ? audioic
                                 : curr.content[0]?.media ||
@@ -1513,6 +1538,8 @@ const BroadcastedTask = () => {
                               ? curr.content[0]?.media_type === "video"
                                 ? process.env.REACT_APP_CONTENT_MEDIA +
                                   curr.content[0]?.thumbnail
+                                : curr?.content[0]?.media_type === "image"
+                                ? curr?.content[0]?.watermark
                                 : curr.content[0]?.media_type === "audio"
                                 ? audioic
                                 : curr.content[0]?.media
@@ -1730,6 +1757,7 @@ const BroadcastedTask = () => {
                               {curr?.type === "image" ? (
                                 <img
                                   src={
+                                    curr?.watermark ||
                                     curr?.videothubnail ||
                                     process.env.REACT_APP_UPLOADED_CONTENT +
                                       curr?.imageAndVideo
@@ -1989,7 +2017,7 @@ const BroadcastedTask = () => {
                         }
                         type_tag={item?.category_details[0]?.name}
                         basket={() => handleBasket(index, "task")}
-                        basketValue={item.basket_status}
+                        basketValue={item?.basket_status}
                         allContent={item?.task_id?.content}
                         type_img={item?.category_details[0]?.icon}
                         feedHead={item.task_id.task_description}
@@ -1999,18 +2027,21 @@ const BroadcastedTask = () => {
                         feedLocation={item.task_id.location}
                         contentPrice={`${formatAmountInMillion(
                           item?.type === "image"
-                            ? item?.task_id?.photo_price
+                            ? item?.task_id?.hopper_photo_price
                             : item?.type === "audio"
-                            ? item?.task_id?.interview_price || 0
+                            ? item?.task_id?.hopper_interview_price || 0
                             : item?.type === "video"
-                            ? item?.task_id?.videos_price || 0
+                            ? item?.task_id?.hopper_videos_price || 0
                             : null
                         )}`}
                         favourite={() => handleFavourite(index, "task")}
                         bool_fav={
                           item.favourite_status === "true" ? "false" : "true"
                         }
-                        content_id={item?.task_id?._id}
+                        // content_id={item?.task_id?._id}
+                        content_id={item?._id}
+                        task_content_id={item?._id || item?.task_id?._id}
+                        taskContentId={item?._id}
                       />
                     </Col>
                   );

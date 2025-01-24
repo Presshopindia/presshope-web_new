@@ -3371,10 +3371,10 @@ import socketServer from "../socket.config";
 import { SlMagnifierAdd } from "react-icons/sl";
 import ViewContent from "../component/ViewContent";
 import heart from "../assets/images/heart.svg";
+import { toast } from "react-toastify";
 
 const Feeddetail = (props) => {
   const [isRecording, setIsRecording] = useState(false);
-
   const [selectedIds, setSelectedIds] = useState([]);
   const param = useParams();
   const navigate = useNavigate();
@@ -3407,6 +3407,7 @@ const Feeddetail = (props) => {
   const [room_idForContent, setRoom_idForContent] = useState("");
   const [roomDetails, setRoomDetails] = useState();
   const [show, setShow] = useState(false);
+  const [showAudio, setShowAudio] = useState(false);
   const target = useRef(null);
   const [show1, setShow1] = useState(false);
   const handleClose = () => setShow1(false);
@@ -3837,8 +3838,9 @@ const Feeddetail = (props) => {
   };
 
   const onStopRecording = async (recordedBlob) => {
-    setIsRecording(false);
+    // setIsRecording(false);
     try {
+      if (!recordedBlob?.blob) return;
       const formData = new FormData();
       formData.append("path", "profileImg");
       formData.append("media", recordedBlob?.blob);
@@ -3935,7 +3937,8 @@ const Feeddetail = (props) => {
         });
       }
     } catch (error) {
-      // console.log(error, `<<<<<socketServer error`);
+      toast.error(error?.response?.data?.message);
+      console.log(error, `<<<<<socketServer error`);
       // Handle errors
     }
   };
@@ -4028,16 +4031,20 @@ const Feeddetail = (props) => {
 
   const ChatList = async () => {
     try {
-      const resp = await Get(
-        `mediaHouse/openChatsMH?room_id=${chatContentIds?.room_id}`
-      );
-      if (resp) {
-        localStorage.setItem("contentId", JSON.stringify(param.id));
-        localStorage.setItem("type", "content");
-        localStorage.setItem("roomId", chatContentIds?.room_id || "");
-        localStorage.removeItem("receiverId");
-        localStorage.setItem("tabName", JSON.stringify("internal"));
-        setMessage(resp?.data?.response?.data);
+      if (chatContentIds?.room_id) {
+        const resp = await Get(
+          `mediaHouse/openChatsMH?room_id=${chatContentIds?.room_id}`
+        );
+        if (resp) {
+          localStorage.setItem("contentId", JSON.stringify(param.id));
+          localStorage.setItem("type", "content");
+          localStorage.setItem("roomId", chatContentIds?.room_id || "");
+          localStorage.removeItem("receiverId");
+          localStorage.setItem("tabName", JSON.stringify("internal"));
+          setMessage(resp?.data?.response?.data);
+        }
+      } else {
+        // toast.error("Select participants first");
       }
     } catch (error) {
       // Handle errors
@@ -4180,7 +4187,7 @@ const Feeddetail = (props) => {
     }
   }, [messages, tabSelect, isShowBuyMessage, isShowOffer]);
 
-  // console.log("messages ----------->", messages);
+  console.log("messages ----------->", messages);
   // console.log("isShowBuyMessage ----------->", isShowBuyMessage, isShowOffer);
 
   async function getCountOfBasketItems() {
@@ -4234,6 +4241,8 @@ const Feeddetail = (props) => {
   };
 
   console.log("all internal messages ------>12345", message);
+  console.log("all internal profile data ------>12345", profileData);
+
   return (
     <>
       {loading && <Loader />}
@@ -4955,7 +4964,6 @@ const Feeddetail = (props) => {
                                         <span className="txt_bld">
                                           {fullName}
                                         </span>
-                                        .
                                       </h6>
                                       <h6 className="txt_light">
                                         Please select participants from the
@@ -4977,7 +4985,8 @@ const Feeddetail = (props) => {
                                         ref={chatBoxInternalRef}
                                         // chatBoxInternalRef
                                       >
-                                        {curr?.type === "add" ? (
+                                        {curr?.type === "add" &&
+                                        curr.user_id !== profileData._id ? (
                                           <p className="usrAddedTxt mb-4">
                                             <span>
                                               You added {curr?.addedMsg}
@@ -4990,70 +4999,91 @@ const Feeddetail = (props) => {
                                             </span>
                                           </p>
                                         ) : (
-                                          <div className="crd" key={curr.id}>
-                                            <div className="img">
-                                              <img
-                                                src={
-                                                  curr.user_info?.profile_image
-                                                }
-                                                alt="user"
-                                              />
-                                            </div>
-                                            <div className="postedcmnt_info">
-                                              <h5>
-                                                {`${curr?.user_info?.first_name} ${curr?.user_info?.last_name}`}
-                                                <span className="text-secondary time">
-                                                  {moment(
-                                                    curr?.createdAt
-                                                  ).format(`DD MMM YYYY`)}
-                                                  ,{" "}
-                                                  {moment(
-                                                    curr.createdAt
-                                                  ).format(`hh:mm A`)}
-                                                </span>
-                                              </h5>
-                                              <Typography className="comment_text">
-                                                {curr.type === "text" &&
-                                                  curr.message}
-                                              </Typography>
-
-                                              <div
-                                                onClick={() => handleShow(curr)}
-                                                className="exp"
-                                              >
-                                                {curr.type === "image" && (
+                                          curr?.user_info && (
+                                            <div className="crd" key={curr.id}>
+                                              {curr?.user_info && (
+                                                <div className="img">
                                                   <img
-                                                    src={curr.message}
-                                                    className="msgContent"
-                                                    alt="content"
+                                                    src={
+                                                      curr.user_info
+                                                        ?.profile_image
+                                                    }
+                                                    alt="user"
                                                   />
+                                                </div>
+                                              )}
+                                              <div className="postedcmnt_info">
+                                                {curr?.user_info && (
+                                                  <h5>
+                                                    {`${curr?.user_info?.first_name} ${curr?.user_info?.last_name}`}
+                                                    <span className="text-secondary time">
+                                                      {moment(
+                                                        curr?.createdAt
+                                                      ).format(`DD MMM YYYY`)}
+                                                      ,{" "}
+                                                      {moment(
+                                                        curr.createdAt
+                                                      ).format(`hh:mm A`)}
+                                                    </span>
+                                                  </h5>
                                                 )}
-                                              </div>
+                                                <Typography className="comment_text">
+                                                  {curr.type === "text" &&
+                                                    curr.message}
+                                                </Typography>
 
-                                              <div>
-                                                {curr.type === "video" && (
-                                                  <video
-                                                    src={curr.message}
-                                                    className="msgContent"
-                                                    controls
-                                                    alt="video content"
-                                                    controlsList="nodownload"
-                                                  ></video>
-                                                )}
-                                              </div>
+                                                <div
+                                                  onClick={() =>
+                                                    handleShow(curr)
+                                                  }
+                                                  className="exp"
+                                                >
+                                                  {curr.type === "image" && (
+                                                    <img
+                                                      src={curr.message}
+                                                      className="msgContent"
+                                                      alt="content"
+                                                    />
+                                                  )}
+                                                </div>
 
-                                              <div>
-                                                {curr.type === "audio" && (
-                                                  <audio
-                                                    src={curr.message}
-                                                    controls
-                                                    alt="audio content"
-                                                    controlsList="nodownload"
-                                                  ></audio>
-                                                )}
+                                                <div>
+                                                  {curr.type === "video" && (
+                                                    <video
+                                                      src={curr.message}
+                                                      className="msgContent"
+                                                      controls
+                                                      alt="video content"
+                                                      controlsList="nodownload"
+                                                    ></video>
+                                                  )}
+                                                </div>
+
+                                                <div>
+                                                  {curr.type === "audio" ? (
+                                                    <audio
+                                                      src={curr.message}
+                                                      controls
+                                                      alt="audio content"
+                                                      controlsList="nodownload"
+                                                    ></audio>
+                                                  ) : curr.type ===
+                                                    "recording" ? (
+                                                    <>
+                                                      <audio
+                                                        src={curr.message}
+                                                        controls
+                                                        alt="audio content"
+                                                        controlsList="nodownload"
+                                                      ></audio>
+                                                    </>
+                                                  ) : (
+                                                    ""
+                                                  )}
+                                                </div>
                                               </div>
                                             </div>
-                                          </div>
+                                          )
                                         )}
                                       </div>
                                     ))}
@@ -5099,7 +5129,9 @@ const Feeddetail = (props) => {
                                         </div>
                                         <Button
                                           ref={target}
-                                          onClick={() => setShow(!show)}
+                                          onClick={() =>
+                                            setShowAudio(!showAudio)
+                                          }
                                         >
                                           <BsMic className="chatMicIcn" />
                                         </Button>
@@ -5113,7 +5145,7 @@ const Feeddetail = (props) => {
                                       <div>
                                         <Overlay
                                           target={target.current}
-                                          show={show}
+                                          show={showAudio}
                                           placement="top"
                                           className=""
                                         >
@@ -5123,7 +5155,9 @@ const Feeddetail = (props) => {
                                                 <h5>Record Audio</h5>
                                                 <div
                                                   className="close-btn clickable"
-                                                  onClick={() => setShow(false)}
+                                                  onClick={() =>
+                                                    setShowAudio(false)
+                                                  }
                                                 >
                                                   <svg
                                                     width="13"
@@ -5163,7 +5197,12 @@ const Feeddetail = (props) => {
                                                 </Button>
                                                 <Button
                                                   className="rec_aud_btn"
-                                                  onClick={onStopRecording}
+                                                  onClick={() => {
+                                                    setIsRecording(
+                                                      (old) => !old
+                                                    );
+                                                  }}
+                                                  // onClick={onStopRecording}
                                                   disabled={!isRecording}
                                                 >
                                                   {" "}
@@ -5185,7 +5224,7 @@ const Feeddetail = (props) => {
                                                   className="sendrecBtn"
                                                   onClick={(e) => {
                                                     handleButtonClick(e);
-                                                    setShow(!show);
+                                                    setShowAudio(!showAudio);
                                                   }}
                                                 >
                                                   Send
@@ -5342,19 +5381,19 @@ const Feeddetail = (props) => {
                                                 `${curr?.first_name} ${curr?.last_name}` ==
                                                   item?.addedMsg &&
                                                 item?.type == "add"
-                                            // ) ? (
-                                            //   <button
-                                            //     className="bg-secondary text-white rounded"
-                                            //     onClick={() => {
-                                            //       RemoveChatUser(curr?._id);
-                                            //       console.log(
-                                            //         "all data should print ---> "
-                                            //       );
-                                            //     }}
-                                            //   >
-                                            //     remove
-                                            //   </button>
-                                            // ) : (
+                                              // ) ? (
+                                              //   <button
+                                              //     className="bg-secondary text-white rounded"
+                                              //     onClick={() => {
+                                              //       RemoveChatUser(curr?._id);
+                                              //       console.log(
+                                              //         "all data should print ---> "
+                                              //       );
+                                              //     }}
+                                              //   >
+                                              //     remove
+                                              //   </button>
+                                              // ) : (
                                             )}
                                           </div>
                                         );
@@ -5388,7 +5427,6 @@ const Feeddetail = (props) => {
                                         <span className="txt_bld">
                                           {fullName}
                                         </span>
-                                        .
                                       </h6>
 
                                       <div className="crd chatting_itm sngl_cht d-flex align-items-start">
@@ -6283,7 +6321,6 @@ const Feeddetail = (props) => {
                                         <span className="txt_bld">
                                           {fullName}
                                         </span>
-                                        .
                                       </h6>
                                       <h6 className="txt_light">
                                         Please select the Presshop team member
@@ -6893,7 +6930,7 @@ const Feeddetail = (props) => {
             variant="primary"
             type="submit"
           >
-            <div className="link_white" onClick={() => handleButtonClick()}>
+            <div className="link_white" onClick={(e) => handleButtonClick(e)}>
               Send
             </div>
           </Button>

@@ -147,6 +147,9 @@ const Dashboard = () => {
       }
       setDashCount(resp.data);
       if (resp) {
+        setDashboardSort({
+          type: "",
+        });
         setLoading(false);
       }
     } catch (error) {
@@ -286,6 +289,20 @@ const Dashboard = () => {
   useEffect(() => {
     FavContent();
   }, [dashboardSort.time]);
+
+  useEffect(() => {
+    if (contentUnderOfferSort) {
+      console.log(
+        "all sort data ---> --->contentunderoffer",
+        contentUnderOfferSort
+      );
+      // setContentUnderOfferSort("");
+    }
+    if (favouritedContentSort) {
+      console.log("all sort data ---> --->favrated", favouritedContentSort);
+      setFavouritedContentSort("");
+    }
+  }, [contentUnderOfferSort, favouritedContentSort]);
 
   return (
     <>
@@ -850,7 +867,10 @@ const Dashboard = () => {
                               .map((curr) => {
                                 const Content = curr
                                   ? curr?.content[0]?.media_type === "video"
-                                    ? curr?.content[0]?.thumbnail
+                                    ? process.env.REACT_APP_UPLOADED_CONTENT +
+                                      curr?.content[0]?.thumbnail
+                                    : curr?.content[0]?.media_type === "image"
+                                    ? curr?.content[0]?.watermark
                                     : curr?.content[0]?.media_type === "audio"
                                     ? audioicsm
                                     : curr?.content[0]?.media

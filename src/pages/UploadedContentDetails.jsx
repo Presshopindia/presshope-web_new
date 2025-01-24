@@ -73,7 +73,7 @@ const socket = io.connect("https://uat.presshop.live:3005");
 
 const UploadedContentDetails = (props) => {
   const [isRecording, setIsRecording] = useState(false);
-  const { profileData } = useDarkMode();
+  const { profileData, setCartCount } = useDarkMode();
 
   const userImage = profileData?.hasOwnProperty("admin_detail")
     ? profileData?.admin_detail?.admin_profile
@@ -140,6 +140,7 @@ const UploadedContentDetails = (props) => {
 
   // Extract the 'task_content_id' parameter
   const taskContentId = searchParams.get("task_content_id");
+  const taskContentType = searchParams.get("task_content_type");
 
   // External Chat
   // useEffect(() => {
@@ -173,6 +174,7 @@ const UploadedContentDetails = (props) => {
         setRoom_idForContent(resp.data.details.room_id);
         const resp1 = await Post(`mediaHouse/getAllchat`, {
           room_id: resp.data.details.room_id,
+          room_type: "individual",
         });
         if (resp1 && resp1.data && resp1.data.response) {
           // setMessages(resp1.data.response);
@@ -184,18 +186,29 @@ const UploadedContentDetails = (props) => {
       console.error("API request error:", error);
     }
   };
+
+  async function getCountOfBasketItems() {
+    try {
+      const res = await Get(`mediaHouse/getBasketDataCount`);
+
+      console.log("count", res?.data?.data);
+      setCartCount(res?.data?.data || 0);
+    } catch (error) {
+      console.log("basketcountError", error);
+    }
+  }
   // Add to basket-
   const AddToBasket = async (element, type) => {
     try {
-      console.log("dataType", element);
+      console.log("dataType", element._id);
       // return
       let obj = {};
 
       if (type == "task") {
         obj = {
           type: "uploaded_content",
-          uploaded_content: element?.content_id,
-          post_id: element?.task_id?._id,
+          uploaded_content: element?._id,
+          post_id: element?._id || element?.task_id?._id,
           name: "hello",
           content: element?.task_id?.content?.map((el) => {
             return {
@@ -457,7 +470,7 @@ const UploadedContentDetails = (props) => {
         commission: 0,
       };
       const resp1 = await Post("mediahouse/applicationfee", obj2);
-      console.log("hello chala mere api ---> --->131");
+      console.log("hello chala mere api ---> --->131", resp1);
 
       obj1.application_fee = resp1?.data?.data;
       // obj1.stripe_account_id = resp1?.data?.stripe_account_id;
@@ -778,6 +791,7 @@ const UploadedContentDetails = (props) => {
   const getMessages = async (room) => {
     const resp1 = await Post(`mediaHouse/getAllchat`, {
       room_id: room?.roomsdetails?.room_id,
+      room_type: "individual",
     });
     if (resp1) {
       setMessages(resp1?.data?.response);
@@ -789,10 +803,18 @@ const UploadedContentDetails = (props) => {
   // })
 
   const stripePayment = async (curr) => {
+    console.log("all paid data ---->money", UserDetails);
+    console.log("all paid data ---->money cuuuuuuu", curr);
+    let totalAmount = 0;
+    selectedItems.forEach((ele) => {
+      totalAmount += Number(ele.amount);
+    });
     let obj = {
+      items: selectedItems,
       image_id: curr?.image_id,
-      customer_id: UserDetails.stripe_customer_id,
-      amount: curr?.media?.amount,
+      customer_id: UserDetails?.stripe_customer_id,
+      stripe_account_id: curr?.sender_id?.stripe_account_id || "no data",
+      amount: totalAmount || curr?.media?.amount,
       type: "task_content",
       task_id: taskDetails?._id,
     };
@@ -822,9 +844,29 @@ const UploadedContentDetails = (props) => {
   };
 
   const DownloadContent = async (id) => {
-    const resp = await Get(`mediahouse/image_pathdownload?image_id=${id}`);
-    if (resp) {
-      const filename = resp.data.message.slice(85);
+    const url =
+      "https://uat.presshop.live:5019/mediahouse/image_pathdownload?image_id=67906d80203ec0bc89189923&type=uploaded_content";
+
+    // Create a temporary anchor element
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "download.zip"; // Optional: Set a default name for the downloaded file
+    document.body.appendChild(anchor);
+
+    // Trigger the download
+    anchor.click();
+
+    // Remove the anchor element
+    document.body.removeChild(anchor);
+
+    return;
+
+    const resp = await Get(
+      "mediahouse/image_pathdownload?image_id=67906d80203ec0bc89189923&type=uploaded_content"
+    );
+
+    if (resp?.data?.message) {
+      const filename = resp?.data?.message.slice(85);
       fetch(resp.data.message)
         .then((response) => response.blob())
         .then((blob) => {
@@ -861,8 +903,41 @@ const UploadedContentDetails = (props) => {
       });
     }
   };
+  const handleBasket = (i, type) => {
+    if (type == "more") {
+      setMoreContent((prev) => {
+        const allContent = [...prev];
+        allContent[i]["basket_status"] =
+          allContent[i]["basket_status"] === "true" ? "false" : "true";
+        return allContent;
+      });
+    } else if (type == "related") {
+      setRelatedContent((prev) => {
+        const allContent = [...prev];
+        allContent[i]["basket_status"] =
+          allContent[i]["basket_status"] === "true" ? "false" : "true";
+        return allContent;
+      });
+    }
+  };
+
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  const handleSelectionChange = (item, isChecked) => {
+    setSelectedItems((prev) => {
+      if (isChecked) {
+        // Add the item if it is checked
+        return [...prev, item];
+      } else {
+        // Remove the item if it is unchecked
+        return prev.filter((selectedItem) => selectedItem._id !== item._id);
+      }
+    });
+  };
 
   console.log("all task item data-->", data);
+  console.log("message ---->messages", messages);
+  console.log("all items that are checked --->", selectedItems);
 
   return (
     <>
@@ -1033,11 +1108,12 @@ const UploadedContentDetails = (props) => {
                                         <video
                                           controls
                                           className="slider-vddo"
-                                          src={
-                                            process.env
-                                              .REACT_APP_UPLOADED_CONTENT +
-                                            curr?.media
-                                          }
+                                          // src={
+                                          //   process.env
+                                          //     .REACT_APP_UPLOADED_CONTENT +
+                                          //   curr?.media
+                                          // }
+                                          src={curr?.watermark}
                                         />
                                       ) : (
                                         <embed
@@ -1248,15 +1324,27 @@ const UploadedContentDetails = (props) => {
                                 <button
                                   className="red-btn"
                                   onClick={() => {
+                                    navigate(
+                                      `/task-invoice/${data?._id}?taskContentId=${taskContentId}`
+                                    );
                                     console.log(
                                       "button -------> ----> -----> onClick"
                                     );
-                                    Payment(
-                                      +data?.task_id?.hopper_photo_price,
-                                      data?._id,
-                                      false,
-                                      0
-                                    );
+                                    const contentCost =
+                                      data?.type == "image"
+                                        ? data?.task_id?.hopper_photo_price
+                                        : data?.type == "video"
+                                        ? data?.task_id?.hopper_videos_price
+                                        : data?.type == "audio"
+                                        ? data?.task_id?.hopper_interview_price
+                                        : "";
+                                    // Payment(
+                                    //   +data?.task_id?.hopper_photo_price,
+                                    //   +contentCost,
+                                    //   data?._id,
+                                    //   false,
+                                    //   0
+                                    // );
                                   }}
                                 >
                                   £{" "}
@@ -1264,7 +1352,7 @@ const UploadedContentDetails = (props) => {
                                     ? data?.task_id?.hopper_photo_price
                                     : data?.type == "video"
                                     ? data?.task_id?.hopper_videos_price
-                                    : data?.type == "interview"
+                                    : data?.type == "audio"
                                     ? data?.task_id?.hopper_interview_price
                                     : ""}
                                 </button>
@@ -1311,7 +1399,6 @@ const UploadedContentDetails = (props) => {
                                         <span className="txt_bld">
                                           {fullName}
                                         </span>
-                                        .
                                       </h6>
                                       <h6 className="txt_light">
                                         Please select participants from the
@@ -1624,7 +1711,6 @@ const UploadedContentDetails = (props) => {
                                         <span className="txt_bld">
                                           {fullName}
                                         </span>
-                                        .
                                       </h6>
                                     </div>
                                     <div className="chat_msgs_scrl chatting">
@@ -1783,22 +1869,8 @@ const UploadedContentDetails = (props) => {
                                                         ? "Image"
                                                         : "Audio"}
                                                     </p>
-                                                    <div className="content_uplded position-relative">
-                                                      <span className="cont_tp">
-                                                        <img
-                                                          src={
-                                                            curr?.media
-                                                              ?.mime === "image"
-                                                              ? photoic
-                                                              : curr?.media
-                                                                  ?.mime ===
-                                                                "video"
-                                                              ? videoic
-                                                              : interviewic
-                                                          }
-                                                          alt="Content type"
-                                                        />
-                                                      </span>
+                                                    {/* <div className="content_uplded position-relative vido_cnt">
+                                                    
                                                       {curr?.media?.mime ===
                                                       "image" ? (
                                                         <img
@@ -1844,29 +1916,312 @@ const UploadedContentDetails = (props) => {
                                                           />
                                                         </div>
                                                       )}
+                                                    </div> */}
+                                                    {/* <div className="content_uplded position-relative vido_cnt">
+                                                      {curr?.media?.map(
+                                                        (item, index) => (
+                                                          <>
+                                                            {!item.paid_status ? (
+                                                              <div
+                                                                key={
+                                                                  item?._id ||
+                                                                  index
+                                                                }
+                                                                className="media-item"
+                                                              >
+                                                                <label className="checkbox-label">
+                                                                  <input
+                                                                    type="checkbox"
+                                                                    className="media-checkbox"
+                                                                    onChange={(
+                                                                      e
+                                                                    ) => {
+                                                                      handleSelectionChange(
+                                                                        item,
+                                                                        e.target
+                                                                          .checked
+                                                                      );
+                                                                      console.log(
+                                                                        `Checkbox for media ${
+                                                                          item?._id ||
+                                                                          index
+                                                                        } is ${
+                                                                          e
+                                                                            .target
+                                                                            .checked
+                                                                        }`
+                                                                      );
+                                                                    }}
+                                                                  />
+                                                         
+                                                                </label>
+
+                                                                {item?.mime ===
+                                                                "image" ? (
+                                                                  <img
+                                                                 
+                                                                    src={`${item?.thumbnail_url}`}
+                                                                    className="usr_upld_cont"
+                                                                    alt={`Content Image ${
+                                                                      index + 1
+                                                                    }`}
+                                                                  />
+                                                                ) : item?.mime ===
+                                                                  "video" ? (
+                                                                  <video
+                                                                    controls
+                                                                    className="slider-vddo"
+                                                                    
+                                                                    src={`${item?.thumbnail_url}`}
+                                                                  />
+                                                                ) : item?.mime ===
+                                                                    "audio" ||
+                                                                  item?.mime ==
+                                                                    "" ? (
+                                                                  <div>
+                                                                    <img
+                                                                      src={
+                                                                        audioic
+                                                                      }
+                                                                      alt={`Audio ${item?._id}`}
+                                                                      className="slider-img"
+                                                                      onClick={
+                                                                        toggleAudio
+                                                                      }
+                                                                    />
+                                                                    <audio
+                                                                      controls
+                                                                      src={`${item?.thumbnail_url}`}
+                                                                      type="audio/mpeg"
+                                                                      className="slider-audio"
+                                                                      ref={
+                                                                        audioRef
+                                                                      }
+                                                                    />
+                                                                  </div>
+                                                                ) : (
+                                                                  <p>
+                                                                    Unsupported
+                                                                    media type
+                                                                  </p>
+                                                                )}
+                                                              </div>
+                                                            ) : (
+                                                              ""
+                                                            )}
+                                                          </>
+                                                        )
+                                                      )}
+                                                    </div> */}
+                                                    <div className="content_uplded position-relative vido_cnt">
+                                                      {curr?.media?.map(
+                                                        (item, index) => (
+                                                          <>
+                                                            {!item.paid_status ? (
+                                                              <div
+                                                                key={
+                                                                  item?._id ||
+                                                                  index
+                                                                }
+                                                                className="media-item"
+                                                              >
+                                                                <label className="checkbox-label">
+                                                                  <input
+                                                                    type="checkbox"
+                                                                    className="media-checkbox"
+                                                                    onChange={(
+                                                                      e
+                                                                    ) => {
+                                                                      // Handle checkbox state change here
+                                                                      handleSelectionChange(
+                                                                        item,
+                                                                        e.target
+                                                                          .checked
+                                                                      );
+                                                                      console.log(
+                                                                        `Checkbox for media ${
+                                                                          item?._id ||
+                                                                          index
+                                                                        } is ${
+                                                                          e
+                                                                            .target
+                                                                            .checked
+                                                                        }`
+                                                                      );
+                                                                    }}
+                                                                  />
+                                                                  {/* <span>
+                                                                Select
+                                                              </span> */}
+                                                                </label>
+
+                                                                {item?.mime ===
+                                                                "image" ? (
+                                                                  <img
+                                                                    // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
+                                                                    src={`${item?.thumbnail_url}`}
+                                                                    className="usr_upld_cont"
+                                                                    alt={`Content Image ${
+                                                                      index + 1
+                                                                    }`}
+                                                                  />
+                                                                ) : item?.mime ===
+                                                                  "video" ? (
+                                                                  <video
+                                                                    controls
+                                                                    className="slider-vddo"
+                                                                    // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
+                                                                    src={`${item?.thumbnail_url}`}
+                                                                  />
+                                                                ) : item?.mime ===
+                                                                    "audio" ||
+                                                                  item?.mime ==
+                                                                    "" ? (
+                                                                  <div>
+                                                                    <img
+                                                                      src={
+                                                                        audioic
+                                                                      }
+                                                                      alt={`Audio ${item?._id}`}
+                                                                      className="slider-img"
+                                                                      onClick={
+                                                                        toggleAudio
+                                                                      }
+                                                                    />
+                                                                    <audio
+                                                                      controls
+                                                                      // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
+                                                                      src={`${item?.thumbnail_url}`}
+                                                                      type="audio/mpeg"
+                                                                      className="slider-audio"
+                                                                      ref={
+                                                                        audioRef
+                                                                      }
+                                                                    />
+                                                                  </div>
+                                                                ) : (
+                                                                  <p>
+                                                                    Unsupported
+                                                                    media type
+                                                                  </p>
+                                                                )}
+                                                              </div>
+                                                            ) : (
+                                                              <>
+                                                                {item?.mime ===
+                                                                "image" ? (
+                                                                  <img
+                                                                    // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
+                                                                    src={`${item?.thumbnail_url}`}
+                                                                    className="usr_upld_cont"
+                                                                    alt={`Content Image ${
+                                                                      index + 1
+                                                                    }`}
+                                                                  />
+                                                                ) : item?.mime ===
+                                                                  "video" ? (
+                                                                  <video
+                                                                    controls
+                                                                    className="slider-vddo"
+                                                                    // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
+                                                                    src={`${item?.thumbnail_url}`}
+                                                                  />
+                                                                ) : item?.mime ===
+                                                                    "audio" ||
+                                                                  item?.mime ==
+                                                                    "" ? (
+                                                                  <div>
+                                                                    <img
+                                                                      src={
+                                                                        audioic
+                                                                      }
+                                                                      alt={`Audio ${item?._id}`}
+                                                                      className="slider-img"
+                                                                      onClick={
+                                                                        toggleAudio
+                                                                      }
+                                                                    />
+                                                                    <audio
+                                                                      controls
+                                                                      // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
+                                                                      src={`${item?.thumbnail_url}`}
+                                                                      type="audio/mpeg"
+                                                                      className="slider-audio"
+                                                                      ref={
+                                                                        audioRef
+                                                                      }
+                                                                    />
+                                                                  </div>
+                                                                ) : (
+                                                                  <p>
+                                                                    Unsupported
+                                                                    media type
+                                                                  </p>
+                                                                )}
+
+                                                                <div className="usr_upld_opts">
+                                                                  <button
+                                                                    className="theme_btn"
+                                                                    onClick={() =>
+                                                                      DownloadContent(
+                                                                        item?.image_id
+                                                                      )
+                                                                    }
+                                                                  >
+                                                                    Download
+                                                                  </button>
+                                                                </div>
+                                                              </>
+                                                            )}
+                                                          </>
+                                                        )
+                                                      )}
                                                     </div>
+
                                                     <div className="usr_upld_opts">
                                                       {curr?.paid_status !==
                                                       true ? (
-                                                        <button
-                                                          className="theme_btn"
-                                                          onClick={() => {
-                                                            if (
-                                                              taskExpireDiff >=
-                                                              1
-                                                            ) {
-                                                              successToasterFun(
-                                                                "This task has been expired"
-                                                              );
-                                                            } else {
-                                                              stripePayment(
-                                                                curr
-                                                              );
-                                                            }
-                                                          }}
-                                                        >
-                                                          Buy
-                                                        </button>
+                                                        <div className="d-flex">
+                                                          <button
+                                                            className="theme_btn me-2"
+                                                            onClick={() => {
+                                                              if (
+                                                                taskExpireDiff >=
+                                                                1
+                                                              ) {
+                                                                successToasterFun(
+                                                                  "This task has been expired"
+                                                                );
+                                                              } else {
+                                                                stripePayment(
+                                                                  curr
+                                                                );
+                                                              }
+                                                            }}
+                                                          >
+                                                            Buy
+                                                          </button>
+
+                                                          <button
+                                                            className="theme_btn"
+                                                            onClick={() => {
+                                                              if (
+                                                                taskExpireDiff >=
+                                                                1
+                                                              ) {
+                                                                successToasterFun(
+                                                                  "This task has been expired"
+                                                                );
+                                                              } else {
+                                                                stripePayment(
+                                                                  curr
+                                                                );
+                                                              }
+                                                            }}
+                                                          >
+                                                            Add to basket
+                                                          </button>
+                                                        </div>
                                                       ) : (
                                                         ""
                                                       )}
@@ -1878,6 +2233,7 @@ const UploadedContentDetails = (props) => {
                                                         )}
                                                       {curr?.request_sent ===
                                                         null && (
+                                                        // taskExpireDiff >= 1 &&
                                                         <button
                                                           className="secondary_btn"
                                                           onClick={() => {
@@ -2023,7 +2379,7 @@ const UploadedContentDetails = (props) => {
                                                     </div>
                                                     <p className="mb-0 msg auto_press_msg">
                                                       Has requested for more
-                                                      content from{" "}
+                                                      content from abhishek{" "}
                                                       {
                                                         curr?.sender_id
                                                           ?.user_name
@@ -2205,7 +2561,6 @@ const UploadedContentDetails = (props) => {
                                         <span className="txt_bld">
                                           {fullName}
                                         </span>
-                                        .
                                       </h6>
                                       <h6 className="txt_light">
                                         Please select the Presshop team member
@@ -2407,7 +2762,7 @@ const UploadedContentDetails = (props) => {
                     {relatedContent?.map((item, index) => {
                       return (
                         <Col md={3}>
-                          <ContentFeedCard
+                          {/* <ContentFeedCard
                             feedImg={
                               item?.type === "image"
                                 ? item.videothubnail ||
@@ -2468,6 +2823,83 @@ const UploadedContentDetails = (props) => {
                                 : "true"
                             }
                             content_id={item._id}
+                           
+                            task_content_id={item?._id || item?.task_id?._id}
+                            taskContentId={item?._id}
+                          /> */}
+                          <ContentFeedCard
+                            feedImg={
+                              item?.type === "image"
+                                ? item?.videothubnail ||
+                                  process.env.REACT_APP_UPLOADED_CONTENT +
+                                    item?.imageAndVideo
+                                : item?.type === "video"
+                                ? item?.videothubnail ||
+                                  process.env.REACT_APP_UPLOADED_CONTENT +
+                                    item?.videothubnail
+                                : item?.type === "audio"
+                                ? audioic
+                                : null
+                            }
+                            type={"task"}
+                            postcount={1}
+                            feedTypeImg1={
+                              item?.type === "image"
+                                ? cameraic
+                                : item?.type === "audio"
+                                ? interviewic
+                                : item?.type === "video"
+                                ? videoic
+                                : null
+                            }
+                            user_avatar={
+                              item?.avatar_details?.[0]?.avatar
+                                ? process.env.REACT_APP_AVATAR_IMAGE +
+                                  item?.avatar_details?.[0]?.avatar
+                                : item?.avatar_detals?.[0]?.avatar
+                                ? process.env.REACT_APP_AVATAR_IMAGE +
+                                  item?.avatar_detals?.[0]?.avatar
+                                : ""
+                            }
+                            author_Name={item?.hopper_id?.user_name}
+                            // lnkto={`/content-details/${item?._id}`}
+                            lnkto={`/content-details/${item?._id}?task_content_id=${item?.content_id}`}
+                            viewTransaction="View details"
+                            viewDetail={`/content-details/${item?._id}?task_content_id=${item?.content_id}`}
+                            fvticns={
+                              item?.favourite_status === "true"
+                                ? favouritedic
+                                : favic
+                            }
+                            type_tag={item?.category_details[0]?.name}
+                            basket={() => handleBasket(index, "related")}
+                            basketValue={item?.basket_status}
+                            allContent={item?.task_id?.content}
+                            type_img={item?.category_details[0]?.icon}
+                            feedHead={item?.task_id?.task_description}
+                            feedTime={moment(item?.createdAt).format(
+                              " hh:mm A, DD MMM YYYY"
+                            )}
+                            feedLocation={item?.task_id?.location}
+                            contentPrice={`${formatAmountInMillion(
+                              item?.type === "image"
+                                ? item?.task_id?.hopper_photo_price || 0
+                                : item?.type === "audio"
+                                ? item?.task_id?.hopper_interview_price || 0
+                                : item?.type === "video"
+                                ? item?.task_id?.hopper_videos_price || 0
+                                : null
+                            )}`}
+                            favourite={() => handleFavourite(index, "related")}
+                            bool_fav={
+                              item?.favourite_status === "true"
+                                ? "false"
+                                : "true"
+                            }
+                            // content_id={item?.content_id}
+                            content_id={item?._id}
+                            task_content_id={item?._id || item?.task_id?._id}
+                            taskContentId={item?._id}
                           />
                         </Col>
                       );
@@ -2507,9 +2939,15 @@ const UploadedContentDetails = (props) => {
                   </div>
                   <Row className="">
                     {moreContent.slice(0, 4)?.map((item, index) => {
+                      if (index == 0) {
+                        console.log(
+                          "all more content check 12334____-___------>",
+                          item
+                        );
+                      }
                       return (
                         <Col md={3}>
-                          <ContentFeedCard
+                          {/* <ContentFeedCard
                             feedImg={
                               item?.type === "image"
                                 ? item.videothubnail ||
@@ -2539,6 +2977,8 @@ const UploadedContentDetails = (props) => {
                               item?.avatar_detals[0]?.avatar
                             }
                             author_Name={item?.hopper_id?.user_name}
+                            basket={() => handleBasket(index, "more")}
+                            basketValue={item?.basket_status}
                             lnkto={`/content-details/${item?._id}`}
                             viewTransaction="View details"
                             viewDetail={`/content-details/${item?._id}`}
@@ -2547,6 +2987,7 @@ const UploadedContentDetails = (props) => {
                                 ? favouritedic
                                 : favic
                             }
+                            allContent={item?.task_id?.content}
                             type_tag={item?.category_details[0]?.name}
                             type_img={item?.category_details[0]?.icon}
                             feedHead={item.task_id.task_description}
@@ -2569,7 +3010,84 @@ const UploadedContentDetails = (props) => {
                                 ? "false"
                                 : "true"
                             }
-                            content_id={item._id}
+                      
+                            content_id={item?._id}
+                            taskc_ontent_id={item?._id || item?.task_id?._id}
+                            taskContentId={item?._id}
+                          /> */}
+                          <ContentFeedCard
+                            feedImg={
+                              item?.type === "image"
+                                ? item?.videothubnail ||
+                                  process.env.REACT_APP_UPLOADED_CONTENT +
+                                    item?.imageAndVideo
+                                : item?.type === "video"
+                                ? item?.videothubnail ||
+                                  process.env.REACT_APP_UPLOADED_CONTENT +
+                                    item?.videothubnail
+                                : item?.type === "audio"
+                                ? audioic
+                                : null
+                            }
+                            type={"task"}
+                            postcount={1}
+                            feedTypeImg1={
+                              item?.type === "image"
+                                ? cameraic
+                                : item?.type === "audio"
+                                ? interviewic
+                                : item?.type === "video"
+                                ? videoic
+                                : null
+                            }
+                            user_avatar={
+                              item?.avatar_details?.[0]?.avatar
+                                ? process.env.REACT_APP_AVATAR_IMAGE +
+                                  item?.avatar_details?.[0]?.avatar
+                                : item?.avatar_detals?.[0]?.avatar
+                                ? process.env.REACT_APP_AVATAR_IMAGE +
+                                  item?.avatar_detals?.[0]?.avatar
+                                : ""
+                            }
+                            author_Name={item?.hopper_id?.user_name}
+                            // lnkto={`/content-details/${item?._id}`}
+                            lnkto={`/content-details/${item?._id}?task_content_id=${item?.content_id}`}
+                            viewTransaction="View details"
+                            viewDetail={`/content-details/${item?._id}?task_content_id=${item?.content_id}`}
+                            fvticns={
+                              item?.favourite_status === "true"
+                                ? favouritedic
+                                : favic
+                            }
+                            type_tag={item?.category_details[0]?.name}
+                            basket={() => handleBasket(index, "more")}
+                            basketValue={item?.basket_status}
+                            allContent={item?.task_id?.content}
+                            type_img={item?.category_details[0]?.icon}
+                            feedHead={item?.task_id?.task_description}
+                            feedTime={moment(item?.createdAt).format(
+                              " hh:mm A, DD MMM YYYY"
+                            )}
+                            feedLocation={item?.task_id?.location}
+                            contentPrice={`${formatAmountInMillion(
+                              item?.type === "image"
+                                ? item?.task_id?.hopper_photo_price || 0
+                                : item?.type === "audio"
+                                ? item?.task_id?.hopper_interview_price || 0
+                                : item?.type === "video"
+                                ? item?.task_id?.hopper_videos_price || 0
+                                : null
+                            )}`}
+                            favourite={() => handleFavourite(index, "more")}
+                            bool_fav={
+                              item?.favourite_status === "true"
+                                ? "false"
+                                : "true"
+                            }
+                            // content_id={item?.content_id}
+                            content_id={item?._id}
+                            task_content_id={item?._id || item?.task_id?._id}
+                            taskContentId={item?._id}
                           />
                         </Col>
                       );

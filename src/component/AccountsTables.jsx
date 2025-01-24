@@ -251,7 +251,7 @@ const AccountsTables = () => {
                                     <td className="content_wrap more_contnt_wrap">
                                       <div className="content_imgs_wrap">
                                         <div className="content_imgs">
-                                          {curr?.content_id[0] && curr?.content_id[0]?.content?.map((curr) => {
+                                          {curr?.content_id[0] && curr?.content_id[0]?.content?.slice(0, 5).map((curr) => {
                                             return (
                                               curr?.media_type === "image" ? <img src={process.env.REACT_APP_CONTENT_MEDIA + curr?.media} className="content_img" />
                                                 : curr?.media_type === "video" ? <img src={process.env.REACT_APP_CONTENT_MEDIA + curr?.thumbnail} className="content_img" />

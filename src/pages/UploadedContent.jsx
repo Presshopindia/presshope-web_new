@@ -101,7 +101,7 @@ const UploadedContent = () => {
       setLoading(false);
     }
   };
-
+  const [taskTotalPage, setTaskTotalPage] = useState(0);
   const UploadedContents = async () => {
     setLoading(true);
 
@@ -127,6 +127,8 @@ const UploadedContent = () => {
       }
       setUpld_Content(resp.data.data);
       setTotalPage(Math.ceil(resp.data?.count / limit));
+      setTaskTotalPage(Math.ceil(resp.data?.count / limit));
+
       if (resp) {
         setLoading(false);
       }
@@ -217,6 +219,8 @@ const UploadedContent = () => {
       });
     }
   };
+
+  console.log("total page in upload content--->", totalPage);
 
   return (
     <>
@@ -388,7 +392,8 @@ const UploadedContent = () => {
                                     curr.ask_price || 0
                                   )}`}
                                   viewTransaction={"View details"}
-                                  viewDetail={`/Feeddetail/content/${curr._id}`}
+                                  // viewDetail={`/Feeddetail/content/${curr._id}`}
+                                  viewDetail={`/content-details/${curr?._id}?task_content_id=${curr?.content_id}`}
                                   feedTypeImg1={
                                     imageCount > 0 ? cameraic : null
                                   }
@@ -898,11 +903,11 @@ const UploadedContent = () => {
                                 feedLocation={item.task_id.location}
                                 contentPrice={`${formatAmountInMillion(
                                   item?.type === "image"
-                                    ? item?.task_id?.photo_price
+                                    ? item?.task_id?.hopper_photo_price
                                     : item?.type === "audio"
-                                    ? item?.task_id?.interview_price || 0
+                                    ? item?.task_id?.hopper_interview_price || 0
                                     : item?.type === "video"
-                                    ? item?.task_id?.videos_price || 0
+                                    ? item?.task_id?.hopper_videos_price || 0
                                     : null
                                 )}`}
                                 favourite={() =>
@@ -918,7 +923,10 @@ const UploadedContent = () => {
                                 basket={() => handleBasket(index, "upload")}
                                 basketValue={item?.basket_status}
                                 allContent={item?.task_id?.content}
-                                task_content_id={item?.task_id._id}
+                                // task_content_id={item?.task_id._id}
+                                task_content_id={
+                                  item?._id || item?.task_id?._id
+                                }
                               />
                             </Col>
                           );
@@ -931,7 +939,7 @@ const UploadedContent = () => {
           </Row>
           {
             <PaginationComp
-              totalPage={totalPage}
+              totalPage={taskTotalPage || totalPage}
               path={`Uploaded-Content/${type?.type}`}
               type="fav"
               setPage={setPage}

@@ -42,6 +42,9 @@ const RecentActivity = ({
   active,
 }) => {
   // const [active, setActive] = useState("");
+  const [locationValue, setLocationValue] = useState("");
+  const [locationData, setLocationData] = useState([]);
+  const [address, setAddress] = useState("");
   const [filterName, setFilterName] = useState("");
   const [categoryData, setCategoryData] = useState([]);
 
@@ -93,6 +96,35 @@ const RecentActivity = ({
     }
   }
 
+  const handleGetdatalocation = async (locationValue) => {
+    try {
+      console.log("all location value ------>", locationValue);
+      const resp = await Get(
+        `mediahouse/searchaddress?address=${locationValue}`
+      );
+      if (resp) {
+        console.log("location --->", resp.data);
+        setLocationData(resp.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      handleGetdatalocation(locationValue);
+    }, 1000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [locationValue]);
+
+  useEffect(() => {
+    handleClickTime("location", address || locationValue);
+    // handleClick("location", address);
+  }, [address]);
+
   useEffect(() => {
     fetch();
   }, []);
@@ -131,7 +163,7 @@ const RecentActivity = ({
               active === "most_viewed" ? "active" : null
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("most_viewed", "most_viewed")}
+            onClick={() => handleClickTime("filter", "most_viewed")}
           >
             {/* <img src={calendaric} className="icn" alt="Most Viewed" /> */}
             <svg
@@ -152,11 +184,9 @@ const RecentActivity = ({
         </div>
         <div className="sort_list">
           <div
-            className={`sort_item ${
-              active === "most_popular" ? "active" : null
-            }`}
+            className={`sort_item ${active === "Latest" ? "active" : null}`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("most_popular", "most_popular")}
+            onClick={() => handleClickTime("filter", "Latest")}
           >
             {/* <img src={calendaric} className="icn" alt="Most Popular" /> */}
             <svg
@@ -201,7 +231,7 @@ const RecentActivity = ({
               active === "lowest_priced" ? "active" : null
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("lowest_priced", "lowest_priced")}
+            onClick={() => handleClickTime("filter", "lowest_priced")}
           >
             {/* <img src={calendaric} className="icn" alt="Lowest Priced" /> */}
             <svg
@@ -298,10 +328,10 @@ const RecentActivity = ({
         <div className="sort_list sort_cnt">
           <div
             className={`sort_item ${
-              active === "lowest_priced" ? "active" : null
+              active === "highest_priced" ? "active" : null
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("lowest_priced", "lowest_priced")}
+            onClick={() => handleClickTime("filter", "highest_priced")}
           >
             {/* <img src={calendaric} className="icn" alt="Lowest Priced" /> */}
             <svg
@@ -348,10 +378,10 @@ const RecentActivity = ({
         <div className="sort_list sort_cnt">
           <div
             className={`sort_item ${
-              active === "lowest_priced" ? "active" : null
+              active === "most_viewed_content" ? "active" : null
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("lowest_priced", "lowest_priced")}
+            onClick={() => handleClickTime("filter", "most_viewed_content")}
           >
             {/* <img src={calendaric} className="icn" alt="Lowest Priced" /> */}
             <svg
@@ -381,11 +411,9 @@ const RecentActivity = ({
 
         <div className="sort_list sort_cnt">
           <div
-            className={`sort_item ${
-              active === "lowest_priced" ? "active" : null
-            }`}
+            className={`sort_item ${active === "images" ? "active" : null}`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("lowest_priced", "lowest_priced")}
+            onClick={() => handleClickTime("filter", "images")}
           >
             {/* <img src={calendaric} className="icn" alt="Lowest Priced" /> */}
             <svg
@@ -411,11 +439,9 @@ const RecentActivity = ({
 
         <div className="sort_list sort_cnt">
           <div
-            className={`sort_item ${
-              active === "lowest_priced" ? "active" : null
-            }`}
+            className={`sort_item ${active === "videos" ? "active" : null}`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("lowest_priced", "lowest_priced")}
+            onClick={() => handleClickTime("filter", "videos")}
           >
             {/* <img src={calendaric} className="icn" alt="Lowest Priced" /> */}
             <svg
@@ -445,11 +471,9 @@ const RecentActivity = ({
 
         <div className="sort_list sort_cnt">
           <div
-            className={`sort_item ${
-              active === "lowest_priced" ? "active" : null
-            }`}
+            className={`sort_item ${active === "recordings" ? "active" : null}`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("lowest_priced", "lowest_priced")}
+            onClick={() => handleClickTime("filter", "recordings")}
           >
             {/* <img src={calendaric} className="icn" alt="Lowest Priced" /> */}
             <svg
@@ -483,11 +507,9 @@ const RecentActivity = ({
 
         <div className="sort_list sort_cnt">
           <div
-            className={`sort_item ${
-              active === "lowest_priced" ? "active" : null
-            }`}
+            className={`sort_item ${active === "scans" ? "active" : null}`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("lowest_priced", "lowest_priced")}
+            onClick={() => handleClickTime("filter", "scans")}
           >
             {/* <img src={calendaric} className="icn" alt="Lowest Priced" /> */}
             <svg
@@ -576,16 +598,42 @@ const RecentActivity = ({
             </svg>
 
             <div className="d-flex gap-3 align-items-center select-font">
-              <p className="sort_txt">Location</p>
-              <div className="from_to_div">
-                <select name="" id="" className="form-select">
+              <p className="sort_txt">Location search</p>
+              <div className="from_to_div filter-input">
+                <input
+                  className="form-control"
+                  value={locationValue}
+                  placeholder="Search location"
+                  onChange={(e) => {
+                    setLocationValue(e?.target?.value);
+                  }}
+                />
+                {/* <select name="" id="" className="form-select">
                   <option value="" selected>
                     Choose
                   </option>
                   <option value="">01</option>
                   <option value="">02</option>
-                </select>
+                </select> */}
               </div>
+            </div>
+            <div>
+              {locationData.length > 0
+                ? locationData.map((ele) => {
+                    return (
+                      <>
+                        <div
+                          onClick={() => {
+                            setAddress(ele?.address);
+                            setLocationValue(ele?.address);
+                          }}
+                        >
+                          {ele?.address}
+                        </div>
+                      </>
+                    );
+                  })
+                : ""}
             </div>
           </div>
         </div>
@@ -676,10 +724,10 @@ const RecentActivity = ({
 
           <div
             className={`sort_item ${
-              active === "sourced_tasks" ? "active" : null
+              active === "favourited_content" ? "active" : null
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("contentType", "sourced_tasks")}
+            onClick={() => handleClickTime("contentType", "favourited_content")}
           >
             {/* <img src={exclusiveic} className="icn" alt="Sourced Tasks" /> */}
             <svg
@@ -700,9 +748,13 @@ const RecentActivity = ({
           </div>
 
           <div
-            className={`sort_item ${active === "celebrity" ? "active" : null}`}
+            className={`sort_item ${
+              active === "content_under_offer" ? "active" : null
+            }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("contentType", "celebrity")}
+            onClick={() =>
+              handleClickTime("contentType", "content_under_offer")
+            }
           >
             {/* <img src={exclusiveic} className="icn" alt="Celebrity" /> */}
             <svg
@@ -727,10 +779,12 @@ const RecentActivity = ({
 
           <div
             className={`sort_item ${
-              active === "under_offer" ? "active" : null
+              active === "content_ourced_from_Tasks" ? "active" : null
             }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("contentType", "under_offer")}
+            onClick={() =>
+              handleClickTime("contentType", "content_ourced_from_Tasks")
+            }
           >
             <svg
               width="21"
@@ -765,9 +819,11 @@ const RecentActivity = ({
           </div>
 
           <div
-            className={`sort_item ${active === "political" ? "active" : null}`}
+            className={`sort_item ${
+              active === "exclusive_content" ? "active" : null
+            }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("contentType", "political")}
+            onClick={() => handleClickTime("contentType", "exclusive_content")}
           >
             {/* <img src={exclusiveic} className="icn" alt="Political" /> */}
             <svg
@@ -788,9 +844,11 @@ const RecentActivity = ({
           </div>
 
           <div
-            className={`sort_item ${active === "crime" ? "active" : null}`}
+            className={`sort_item ${
+              active === "shared_content" ? "active" : null
+            }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("contentType", "crime")}
+            onClick={() => handleClickTime("contentType", "shared_content")}
           >
             {/* <img src={exclusiveic} className="icn" alt="Crime" /> */}
             <svg
@@ -835,9 +893,11 @@ const RecentActivity = ({
           </div>
 
           <div
-            className={`sort_item ${active === "business" ? "active" : null}`}
+            className={`sort_item ${
+              active === "latest_content" ? "active" : null
+            }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("contentType", "business")}
+            onClick={() => handleClickTime("contentType", "latest_content")}
           >
             {/* <img src={exclusiveic} className="icn" alt="Business" /> */}
             <svg
@@ -876,9 +936,11 @@ const RecentActivity = ({
           </div>
 
           <div
-            className={`sort_item ${active === "fashion" ? "active" : null}`}
+            className={`sort_item ${
+              active === "celebrity_content" ? "active" : null
+            }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("contentType", "fashion")}
+            onClick={() => handleClickTime("contentType", "celebrity_content")}
           >
             {/* <img src={exclusiveic} className="icn" alt="Fashion" /> */}
             <svg
@@ -903,9 +965,11 @@ const RecentActivity = ({
           </div>
 
           <div
-            className={`sort_item ${active === "sports" ? "active" : null}`}
+            className={`sort_item ${
+              active === "political_content" ? "active" : null
+            }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("contentType", "sports")}
+            onClick={() => handleClickTime("contentType", "political_content")}
           >
             {/* <img src={exclusiveic} className="icn" alt="Sports" /> */}
             <svg
@@ -924,9 +988,11 @@ const RecentActivity = ({
           </div>
 
           <div
-            className={`sort_item ${active === "general" ? "active" : null}`}
+            className={`sort_item ${
+              active === "crime_content" ? "active" : null
+            }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("contentType", "general")}
+            onClick={() => handleClickTime("contentType", "crime_content")}
           >
             {/* <img src={exclusiveic} className="icn" alt="General" /> */}
             <svg
@@ -945,9 +1011,11 @@ const RecentActivity = ({
           </div>
 
           <div
-            className={`sort_item ${active === "racism" ? "active" : null}`}
+            className={`sort_item ${
+              active === "business_content" ? "active" : null
+            }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("contentType", "racism")}
+            onClick={() => handleClickTime("contentType", "business_content")}
           >
             {/* <img src={exclusiveic} className="icn" alt="Racism" /> */}
             <svg
@@ -974,9 +1042,11 @@ const RecentActivity = ({
           </div>
 
           <div
-            className={`sort_item ${active === "accident" ? "active" : null}`}
+            className={`sort_item ${
+              active === "fashion_content" ? "active" : null
+            }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("contentType", "accident")}
+            onClick={() => handleClickTime("contentType", "fashion_content")}
           >
             {/* <img src={exclusiveic} className="icn" alt="Accident" /> */}
             <svg
@@ -996,9 +1066,11 @@ const RecentActivity = ({
           </div>
 
           <div
-            className={`sort_item ${active === "accident" ? "active" : null}`}
+            className={`sort_item ${
+              active === "sports_content" ? "active" : null
+            }`}
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickTime("contentType", "accident")}
+            onClick={() => handleClickTime("contentType", "sports_content")}
           >
             {/* <img src={exclusiveic} className="icn" alt="Accident" /> */}
             <svg
@@ -1017,7 +1089,6 @@ const RecentActivity = ({
             </svg>
             <p className="sort_txt">Sports content</p>
           </div>
-
         </div>
         <button
           className="fltr_btn mt-3"

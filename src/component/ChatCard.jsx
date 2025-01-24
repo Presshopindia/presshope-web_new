@@ -37,7 +37,7 @@ import presshopchatic from "../assets/images/chat_logo.png";
 import dltIcn from "../assets/images/dlt.svg";
 
 import { auth, storage } from "../firebase";
-import { Get, Post } from "../services/user.services";
+import { Get, Patch, Post } from "../services/user.services";
 import Loader from "./Loader";
 import { useDarkMode } from "../context/DarkModeContext";
 import { Container, Modal, Overlay } from "react-bootstrap";
@@ -452,11 +452,16 @@ function ChatCard(props) {
     }
   };
 
-  const handleSendClick = (event) => {
+  const handleSendClick = async (event) => {
     event.preventDefault();
     if (roomDetails?.room_id) {
       handleSend();
     }
+    const obj = {
+      admin_id: props?.senderId,
+      dateAndTime: new Date().toISOString(),
+    };
+    const chatDataUpdate = await Patch("mediaHouse/chatdatetime", obj);
   };
 
   useEffect(() => {
@@ -652,7 +657,8 @@ function ChatCard(props) {
                           disabled={isRecording}
                         >
                           {" "}
-                          <BsPlay fontSize={"20px"} /> Start
+                          <BsPlay fontSize={"20px"} />
+                          Start
                         </Button>
                         {/* <Button
                           className="rec_aud_btn"
@@ -688,7 +694,7 @@ function ChatCard(props) {
                           disabled={!isRecording}
                         >
                           {" "}
-                          <BsPause fontSize={"20px"} />
+                          {/* <BsPause fontSize={"20px"} /> */}
                           send
                         </Button>
                         {/* <button

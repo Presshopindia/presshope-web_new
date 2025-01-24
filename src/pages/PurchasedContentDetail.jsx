@@ -1,5 +1,5 @@
 import { React, useState, useEffect, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation, useNavigate } from "react-router-dom";
 // import HeaderN from "../component/HeaderN"
 import imgs from "../assets/images/imgn6.jpg";
 import img2 from "../assets/images/img2.webp";
@@ -61,6 +61,11 @@ const PurchasedContentDetail = () => {
   const [openContent, setOpenContent] = useState(false);
   const [showContent, setShowContent] = useState({});
   const [imageSize, setImageSize] = useState({ height: 0, width: 0 });
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
+
+  const pageno = queryParams.get("page");
 
   const getTransactionDetails = async () => {
     setLoading(true);
@@ -69,13 +74,13 @@ const PurchasedContentDetail = () => {
       setContentId(res?.data?.resp?.content_id?._id);
       if (res) {
         setTransactionDetails(res?.data?.resp);
-        setShowContent(res?.data?.resp?.content_id?.content?.[0])
+        setShowContent(res?.data?.resp?.content_id?.content?.[0]);
 
         if (res?.data?.resp?.content_id?.content?.[0]?.media_type == "image") {
           const img = new Image();
           img.src = res?.data?.resp?.content_id?.content?.[0]?.watermark;
           img.onload = function () {
-            setImageSize({ height: img.height, width: img.width })
+            setImageSize({ height: img.height, width: img.width });
           };
         }
 
@@ -87,7 +92,7 @@ const PurchasedContentDetail = () => {
         const resp2 = await Post(`mediaHouse/relatedContent`, {
           tag_id: [res?.data?.resp.content_id?.tag_ids[0]?._id],
           hopper_id: res?.data?.resp?.hopper_id?._id,
-          category_id: res?.data?.resp?.category_id?._id
+          category_id: res?.data?.resp?.category_id?._id,
         });
         setRelatedContent(resp2.data.content);
 
@@ -161,7 +166,7 @@ const PurchasedContentDetail = () => {
       if (resp) {
         getTransactionDetails();
       }
-    } catch (error) { }
+    } catch (error) {}
   };
 
   // recent activity
@@ -183,7 +188,6 @@ const PurchasedContentDetail = () => {
     recentActivity();
   }, [contentId]);
 
-
   const audioRef = useRef(null);
 
   const toggleAudio = () => {
@@ -198,7 +202,10 @@ const PurchasedContentDetail = () => {
   };
 
   const DownloadContent = async (id) => {
-    window.open(`${process.env.REACT_APP_BASE_URL}mediahouse/image_pathdownload?image_id=${id}&type=content`, "_blank");
+    window.open(
+      `${process.env.REACT_APP_BASE_URL}mediahouse/image_pathdownload?image_id=${id}&type=content`,
+      "_blank"
+    );
   };
 
   return (
@@ -212,9 +219,24 @@ const PurchasedContentDetail = () => {
               <div className="feedsMain_wrap">
                 <div className="feedsContainer">
                   <div className="feedContent_header">
-                    <Link className="back_link" onClick={() => history.back()}>
-                      <BsArrowLeft className="text-pink" /> Back{" "}
-                    </Link>
+                    <div
+                      className="back_link"
+                      style={{ pointer: "cursor" }}
+                      onClick={() => {
+                        const lastUrl =
+                          sessionStorage.getItem("lastPageWithQuery");
+                        console.log("lasturl ---> ", lastUrl);
+                        if (lastUrl) {
+                          navigate(lastUrl);
+                          sessionStorage.removeItem("lastPageWithQuery");
+                        } else {
+                          navigate(-1);
+                        }
+                      }}
+                    >
+                      <BsArrowLeft className="text-pink" />
+                      Back{" "}
+                    </div>
                   </div>
                   <Row className="">
                     <Col md={8}>
@@ -222,41 +244,6 @@ const PurchasedContentDetail = () => {
                         <CardContent className="card-content position-relative">
                           <div className="photo-resize">
                             <div className="post_icns_cstm_wrp">
-                              {Audio && Audio.length > 0 && (
-                                <div className="post_itm_icns dtl_icns">
-                                  {Audio && Audio.length > 0 && (
-                                    <span className="count">
-                                      {Audio && Audio.length > 0 && Audio.length}
-                                    </span>
-                                  )}
-
-                                  {Audio && Audio.length > 0 && (
-                                    <img
-                                      className="feedMediaType iconBg"
-                                      src={interviewic}
-                                      alt=""
-                                    />
-                                  )}
-                                </div>
-                              )}
-
-                              {Video && Video.length > 0 && (
-                                <div className="post_itm_icns dtl_icns">
-                                  {Video && Video.length > 0 && (
-                                    <span className="count">
-                                      {Video && Video.length > 0 && Video.length}
-                                    </span>
-                                  )}
-                                  {Video && Video.length > 0 && (
-                                    <img
-                                      className="feedMediaType iconBg"
-                                      src={videoic}
-                                      alt=""
-                                    />
-                                  )}
-                                </div>
-                              )}
-
                               {images && images.length > 0 && (
                                 <div className="post_itm_icns dtl_icns">
                                   {images && images.length > 0 && (
@@ -276,6 +263,45 @@ const PurchasedContentDetail = () => {
                                   )}
                                 </div>
                               )}
+
+                              {Video && Video.length > 0 && (
+                                <div className="post_itm_icns dtl_icns">
+                                  {Video && Video.length > 0 && (
+                                    <span className="count">
+                                      {Video &&
+                                        Video.length > 0 &&
+                                        Video.length}
+                                    </span>
+                                  )}
+                                  {Video && Video.length > 0 && (
+                                    <img
+                                      className="feedMediaType iconBg"
+                                      src={videoic}
+                                      alt=""
+                                    />
+                                  )}
+                                </div>
+                              )}
+                              {Audio && Audio.length > 0 && (
+                                <div className="post_itm_icns dtl_icns">
+                                  {Audio && Audio.length > 0 && (
+                                    <span className="count">
+                                      {Audio &&
+                                        Audio.length > 0 &&
+                                        Audio.length}
+                                    </span>
+                                  )}
+
+                                  {Audio && Audio.length > 0 && (
+                                    <img
+                                      className="feedMediaType iconBg"
+                                      src={interviewic}
+                                      alt=""
+                                    />
+                                  )}
+                                </div>
+                              )}
+
                               {Pdf && Pdf.length > 0 && (
                                 <div className="post_itm_icns dtl_icns">
                                   {Pdf && Pdf.length > 0 && (
@@ -323,7 +349,12 @@ const PurchasedContentDetail = () => {
                                 <SlMagnifierAdd />
                               </div>
                             </div>
-                            <ViewContent openContent={openContent} setOpenContent={setOpenContent} showContent={showContent} imageSize={imageSize} />
+                            <ViewContent
+                              openContent={openContent}
+                              setOpenContent={setOpenContent}
+                              showContent={showContent}
+                              imageSize={imageSize}
+                            />
                             <Swiper
                               spaceBetween={50}
                               slidesPerView={1}
@@ -334,12 +365,26 @@ const PurchasedContentDetail = () => {
                               focusableElements="pagination"
                               nested={true}
                               onSlideChange={(e) => {
-                                setShowContent(transactionDetails?.content_id?.content[e.activeIndex])
-                                if (transactionDetails?.content_id?.content[e.activeIndex]?.media_type == "image") {
+                                setShowContent(
+                                  transactionDetails?.content_id?.content[
+                                    e.activeIndex
+                                  ]
+                                );
+                                if (
+                                  transactionDetails?.content_id?.content[
+                                    e.activeIndex
+                                  ]?.media_type == "image"
+                                ) {
                                   const img = new Image();
-                                  img.src = transactionDetails?.content_id?.content[e.activeIndex]?.watermark;
+                                  img.src =
+                                    transactionDetails?.content_id?.content[
+                                      e.activeIndex
+                                    ]?.watermark;
                                   img.onload = function () {
-                                    setImageSize({ height: img.height, width: img.width })
+                                    setImageSize({
+                                      height: img.height,
+                                      width: img.width,
+                                    });
                                   };
                                 }
                               }}
@@ -366,7 +411,12 @@ const PurchasedContentDetail = () => {
                                             />
                                             <audio
                                               controls
-                                              src={curr?.watermark || process.env.REACT_APP_CONTENT_MEDIA + curr?.media}
+                                              src={
+                                                curr?.watermark ||
+                                                process.env
+                                                  .REACT_APP_CONTENT_MEDIA +
+                                                  curr?.media
+                                              }
                                               type="audio/mpeg"
                                               className="slider-audio"
                                               ref={audioRef}
@@ -382,7 +432,11 @@ const PurchasedContentDetail = () => {
                                         )}
                                         {curr?.media_type === "pdf" && (
                                           <embed
-                                            src={`${process.env.REACT_APP_CONTENT_MEDIA + curr?.media}`}
+                                            src={`${
+                                              process.env
+                                                .REACT_APP_CONTENT_MEDIA +
+                                              curr?.media
+                                            }`}
                                             type="application/pdf"
                                             width="100%"
                                             height="500"
@@ -483,7 +537,8 @@ const PurchasedContentDetail = () => {
                                     <span>
                                       <MdOutlineWatchLater />
                                       {moment(
-                                        transactionDetails?.content_id?.createdAt
+                                        transactionDetails?.content_id
+                                          ?.createdAt
                                       ).format(`hh:mm A, DD MMMM YYYY`)}
                                     </span>
                                   ) : (
@@ -523,14 +578,16 @@ const PurchasedContentDetail = () => {
                                   <div className="">
                                     <img
                                       src={
-                                        transactionDetails?.content_id?.category_id?.icon
+                                        transactionDetails?.content_id
+                                          ?.category_id?.icon
                                       }
                                       className="exclusive-img"
                                       alt=""
                                     />
                                     <span className="txt_catg_licn">
                                       {
-                                        transactionDetails?.content_id?.category_id?.name
+                                        transactionDetails?.content_id
+                                          ?.category_id?.name
                                       }
                                     </span>
                                   </div>
@@ -559,8 +616,12 @@ const PurchasedContentDetail = () => {
                                 <span className="fnt-bold">License</span>
 
                                 {transactionDetails?.type === "content" &&
-                                  transactionDetails?.content_id?.Vat?.find((el) => el?.purchased_mediahouse_id == JSON.parse(localStorage.getItem("user"))?._id)?.purchased_content_type ==
-                                  "shared" ? (
+                                transactionDetails?.content_id?.Vat?.find(
+                                  (el) =>
+                                    el?.purchased_mediahouse_id ==
+                                    JSON.parse(localStorage.getItem("user"))
+                                      ?._id
+                                )?.purchased_content_type == "shared" ? (
                                   <div className="">
                                     <img
                                       src={sharedic}
@@ -592,17 +653,32 @@ const PurchasedContentDetail = () => {
                             </div> */}
                             <div className="foot d-flex gap-5 justify-content-between align-items-center foot-button">
                               <Link to={``}>
-                                <Button disabled={true} className="greyBtn custm_grey_btn">
-                                  {console.log("transactionDetails ----------->>>>>>>>>>>>>",transactionDetails)}
-                                  £{formatAmountInMillion(+(transactionDetails?.amount - transactionDetails?.Vat))}
+                                <Button
+                                  disabled={true}
+                                  className="greyBtn custm_grey_btn"
+                                >
+                                  {console.log(
+                                    "transactionDetails ----------->>>>>>>>>>>>>",
+                                    transactionDetails
+                                  )}
+                                  £
+                                  {formatAmountInMillion(
+                                    +(
+                                      transactionDetails?.amount -
+                                      transactionDetails?.Vat
+                                    )
+                                  )}
                                 </Button>
                               </Link>
                               <Link to={``}>
-                                <Button variant="primary" onClick={() =>
-                                  DownloadContent(
-                                    transactionDetails?.content_id?._id
-                                  )
-                                }>
+                                <Button
+                                  variant="primary"
+                                  onClick={() =>
+                                    DownloadContent(
+                                      transactionDetails?.content_id?._id
+                                    )
+                                  }
+                                >
                                   Download
                                 </Button>
                               </Link>
@@ -633,10 +709,11 @@ const PurchasedContentDetail = () => {
                                 to={`/invoice/${id}`}
                                 // className="link view_link"
                                 className="text-danger"
-                                style={{color:"red"}}
+                                style={{ color: "red" }}
                               >
                                 {transactionDetails?.invoiceNumber}
-                              </Link></h6>
+                              </Link>
+                            </h6>
                           </div>
                         </div>
                         <hr />
@@ -664,7 +741,12 @@ const PurchasedContentDetail = () => {
                             <h6>Amount</h6>
                             <h6>
                               £
-                              {formatAmountInMillion(transactionDetails?.amount - (transactionDetails?.Vat != 0 ? transactionDetails?.Vat : transactionDetails?.original_Vatamount))}
+                              {formatAmountInMillion(
+                                transactionDetails?.amount -
+                                  (transactionDetails?.Vat != 0
+                                    ? transactionDetails?.Vat
+                                    : transactionDetails?.original_Vatamount)
+                              )}
                             </h6>
                           </div>
                         </div>
@@ -674,7 +756,9 @@ const PurchasedContentDetail = () => {
                             <h6>
                               £
                               {formatAmountInMillion(
-                                transactionDetails?.Vat != 0 ? transactionDetails?.Vat : transactionDetails?.original_Vatamount
+                                transactionDetails?.Vat != 0
+                                  ? transactionDetails?.Vat
+                                  : transactionDetails?.original_Vatamount
                               )}
                             </h6>
                           </div>
@@ -902,7 +986,10 @@ const PurchasedContentDetail = () => {
                           />
                         )}
                       </div> */}
-                      <Link to={`/related-content/tags/${transactionDetails?.hopper_id?._id}/${transactionDetails?.content_id?.category_id?._id}`} className="next_link">
+                      <Link
+                        to={`/related-content/tags/${transactionDetails?.hopper_id?._id}/${transactionDetails?.content_id?.category_id?._id}`}
+                        className="next_link"
+                      >
                         View all
                         <BsArrowRight className="text-pink" />
                       </Link>
@@ -940,13 +1027,13 @@ const PurchasedContentDetail = () => {
                               feedImg={
                                 curr?.content[0]?.media_type === "video"
                                   ? curr?.content[0]?.watermark ||
-                                  process.env.REACT_APP_CONTENT_MEDIA +
-                                  curr?.content[0]?.thumbnail
-                                  : curr?.content[0]?.media_type === "audio"
-                                    ? audioic
-                                    : curr?.content[0]?.watermark ||
                                     process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.media
+                                      curr?.content[0]?.thumbnail
+                                  : curr?.content[0]?.media_type === "audio"
+                                  ? audioic
+                                  : curr?.content[0]?.watermark ||
+                                    process.env.REACT_APP_CONTENT_MEDIA +
+                                      curr?.content[0]?.media
                               }
                               // feedType={contentVideo}
                               feedTag={"Most Viewed"}
@@ -968,22 +1055,21 @@ const PurchasedContentDetail = () => {
                               // feedTime={moment(curr?.updatedAt).format(
                               //   "DD MMMM YYYY"
                               // )}
-                             feedTime={moment(item.createdAt).format(" hh:mm A, DD MMM YYYY")}
-
-
+                              feedTime={moment(item.createdAt).format(
+                                " hh:mm A, DD MMM YYYY"
+                              )}
                               content_id={curr._id}
-                              basket={() =>{
-
+                              basket={() => {
                                 //  handleBasket(index, i)
                                 // console.log("success")
                                 getTransactionDetails();
-                              }
-
-                              }
+                              }}
                               basketValue={curr.basket_status}
                               allContent={curr?.content}
                               feedLocation={curr.location}
-                              contentPrice={formatAmountInMillion(curr?.ask_price)}
+                              contentPrice={formatAmountInMillion(
+                                curr?.ask_price
+                              )}
                               feedTypeImg1={imageCount > 0 ? cameraic : null}
                               postcount={imageCount > 0 ? imageCount : null}
                               feedTypeImg2={videoCount > 0 ? videoic : null}
@@ -1024,7 +1110,10 @@ const PurchasedContentDetail = () => {
                           />
                         )}
                       </div> */}
-                      <Link to={`/more-content/${transactionDetails?.hopper_id?._id}`} className="next_link">
+                      <Link
+                        to={`/more-content/${transactionDetails?.hopper_id?._id}`}
+                        className="next_link"
+                      >
                         View all
                         <BsArrowRight className="text-pink" />
                       </Link>
@@ -1064,20 +1153,28 @@ const PurchasedContentDetail = () => {
                               feedImg={
                                 curr?.content[0]?.media_type === "video"
                                   ? process.env.REACT_APP_CONTENT_MEDIA +
-                                  curr?.content[0]?.thumbnail
+                                    curr?.content[0]?.thumbnail
                                   : curr?.content[0]?.media_type === "audio"
-                                    ? audioic
-                                    : curr?.content[0]?.watermark ||
+                                  ? audioic
+                                  : curr?.content[0]?.watermark ||
                                     process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.media
+                                      curr?.content[0]?.media
                               }
                               // postcount={curr?.content?.length}
-                            
+
                               feedType={contentVideo}
-                              feedTag={curr?.sales_prefix ? `${curr?.sales_prefix} ${curr?.discount_percent}% Off` : curr?.content_view_type == "mostpopular" ? "Most Popular" : curr?.content_view_type == "mostviewed" ? "Most viewed" : null}
+                              feedTag={
+                                curr?.sales_prefix
+                                  ? `${curr?.sales_prefix} ${curr?.discount_percent}% Off`
+                                  : curr?.content_view_type == "mostpopular"
+                                  ? "Most Popular"
+                                  : curr?.content_view_type == "mostviewed"
+                                  ? "Most viewed"
+                                  : null
+                              }
                               user_avatar={
                                 process.env.REACT_APP_AVATAR_IMAGE +
-                                curr?.hopper_id?.avatar_id?.avatar ||
+                                  curr?.hopper_id?.avatar_id?.avatar ||
                                 authorimg
                               }
                               author_Name={curr.hopper_id?.user_name}
@@ -1086,26 +1183,25 @@ const PurchasedContentDetail = () => {
                               }
                               type_tag={curr?.type}
                               feedHead={curr.heading}
-                              feedTime={moment(curr?.published_time_date).format("hh:mm A, DD MMM YYYY")}
+                              feedTime={moment(
+                                curr?.published_time_date
+                              ).format("hh:mm A, DD MMM YYYY")}
                               feedLocation={curr.location}
-                              contentPrice={formatAmountInMillion(curr.ask_price)}
+                              contentPrice={formatAmountInMillion(
+                                curr.ask_price
+                              )}
                               // feedTypeImg={curr.content[0].media_type === "audio" ? interviewic : cameraic}
                               fvticns={
                                 curr?.favourite_status === "true"
                                   ? favouritedic
                                   : favic
                               }
-
-
                               content_id={curr._id}
-                              basket={() =>{
-
+                              basket={() => {
                                 //  handleBasket(index, i)
-                                console.log("success")
+                                console.log("success");
                                 getTransactionDetails();
-                              }
-
-                              }
+                              }}
                               basketValue={curr.basket_status}
                               allContent={curr?.content}
                               feedTypeImg1={imageCount > 0 ? cameraic : null}

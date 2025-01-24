@@ -1407,7 +1407,6 @@ const NewFeeddetail = (props) => {
                                         <span className="txt_bld">
                                           {fullName}
                                         </span>
-                                        .
                                       </h6>
                                       <h6 className="txt_light">
                                         Please select participants from the
@@ -1736,7 +1735,6 @@ const NewFeeddetail = (props) => {
                                         <span className="txt_bld">
                                           {fullName}
                                         </span>
-                                        .
                                       </h6>
                                       <h6 className="txt_light">
                                         Please click the 'Offer' button to make
@@ -2419,7 +2417,6 @@ const NewFeeddetail = (props) => {
                                         <span className="txt_bld">
                                           {fullName}
                                         </span>
-                                        .
                                       </h6>
                                       <h6 className="txt_light">
                                         Please select the Presshop team member

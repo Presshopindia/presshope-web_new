@@ -69,7 +69,7 @@ const BroadcastedTrackings = (props) => {
     try {
       const resp = await Get(
         `mediaHouse/live/expired/tasks?status=live&id=${
-          id || taskId || param.id
+          id || taskId || param?.id
         }`
       );
       setDeadline(resp.data.tasks.deadline_date);
@@ -132,16 +132,33 @@ const BroadcastedTrackings = (props) => {
     <>
       {loading && <Loader />}
       {param.id && (
-        <div className="">
-          <Link
-            className="back_link mb-3"
-            onClick={() => {
-              window.history.back();
-            }}
-          >
-            <BsArrowLeft className="text-pink" /> Back{" "}
-          </Link>
+        <div
+          className="back_link"
+          style={{ pointer: "cursor" }}
+          onClick={() => {
+            const lastUrl = sessionStorage.getItem("lastPageWithQuery");
+            console.log("lasturl ---> ", lastUrl);
+            if (lastUrl) {
+              navigate(lastUrl);
+              sessionStorage.removeItem("lastPageWithQuery");
+            } else {
+              navigate(-1);
+            }
+          }}
+        >
+          <BsArrowLeft className="text-pink" />
+          Back{" "}
         </div>
+        // <div className="">
+        //   <Link
+        //     className="back_link mb-3"
+        //     onClick={() => {
+        //       window.history.back();
+        //     }}
+        //   >
+        //     <BsArrowLeft className="text-pink" /> Back{" "}
+        //   </Link>
+        // </div>
       )}
       <div className="trackingList_wrap">
         <Row>

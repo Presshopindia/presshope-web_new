@@ -9,9 +9,10 @@ export const DarkModeProvider = ({ children }) => {
     localStorage.getItem("darkMode") === "enabled"
   );
   const [profileData, setProfileData] = useState({});
+  const [navColor, setNavColor] = useState("");
   const [profileChange, setProfileChange] = useState(false);
   const [cartCount, setCartCount] = useState(0);
-  const [adminPreRegistrationEmail,setAdminPreRegistrationEmail]=useState("")
+  const [adminPreRegistrationEmail, setAdminPreRegistrationEmail] = useState("")
   // const [onBoardData, setOnBoardData] = useState({});
 
   const [registrationDetails, setRegistrationDetails] = useState({
@@ -60,7 +61,9 @@ export const DarkModeProvider = ({ children }) => {
         cartCount,
         setCartCount,
         adminPreRegistrationEmail,
-        setAdminPreRegistrationEmail
+        setAdminPreRegistrationEmail,
+        navColor,
+        setNavColor
         // onBoardData,
         // setOnBoardData,
       }}

@@ -1,7 +1,13 @@
 import { Card, Tooltip, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { BsArrowLeft } from "react-icons/bs";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useLocation,
+  useSearchParams,
+} from "react-router-dom";
 import audioic from "../assets/images/audimg.svg";
 import audioicon from "../assets/images/audio-icon.svg";
 import calendericn from "../assets/images/calendarnic.svg";
@@ -25,6 +31,7 @@ const moment = require("moment");
 
 import { Button, Col, Container, Row } from "react-bootstrap";
 import TopSearchesTipsCard from "../component/card/TopSearchesTipsCard";
+import { Get, Patch, Post } from "../services/user.services";
 
 import DbFooter from "../component/DbFooter";
 
@@ -32,7 +39,6 @@ import { useElements, useStripe } from "@stripe/react-stripe-js";
 import calendar from "../assets/images/calendar.svg";
 import Loader from "../component/Loader";
 import { UserDetails } from "../component/Utils";
-import { Post } from "../services/user.services";
 import { useDarkMode } from "../context/DarkModeContext";
 import {
   appliedPromoodeValue,
@@ -40,10 +46,13 @@ import {
   successToasterFun,
 } from "../component/commonFunction";
 
-const AutoInvoice = () => {
+const TaskInvoice = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
+  const [taskData, setTaskData] = useState({});
+  const [taskDataType, setTaskDataType] = useState("");
+
   const [promoCode, setPromoCode] = useState({
     value: "",
     code: "",
@@ -53,18 +62,35 @@ const AutoInvoice = () => {
   });
 
   const { profileData } = useDarkMode();
+  const param = useParams();
   const user = profileData;
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location?.search);
+  const taskContentId = searchParams.get("taskContentId");
+  console.log(taskDataType, "location?.search---->", taskData);
+  console.log("location?.search----price>", data?.hopper_videos_price);
 
   const ContentByID = async () => {
     setLoading(true);
     try {
-      const resp = await Post(`mediaHouse/view/published/content`, {
-        id: id,
-      });
+      console.log("all data getUpload--->1");
+      const resp = await Get(
+        `mediaHouse/getuploadedContentbyHoppers?_id=${param.id}&contentId=${taskContentId}`
+      );
+      setData(resp.data.data[0]);
+      console.log("all data getUpload--->", resp.data);
+      setTaskData(resp.data.data[0]);
+      setTaskDataType(resp.data.data[0].type);
+
+      // const getHoppers = await Get(`mediaHouse/findacceptedtasks?task_id=${Livetask?.data?.tasks?.find?.((el) => el?._id == resp.data.data[0]?.task_id?._id)?._id}&receiver_id=${User && User._id || User.id}&type=task_content`);
+      // setRoomDetails(resp.data.data[0]);
+
+      // const liveTasks = await Get(`mediaHouse/live/expired/tasks?status=live&id=${Livetask?.data?.tasks?.find?.((el) => el?._id == resp.data.data[0]?.task_id?._id)?._id}`)
+      setData(resp.data.data[0]?.task_id);
       setLoading(false);
-      setData(resp.data);
+      // setData(resp.data);
     } catch (error) {
-      // console.log(error);
+      console.log("my error 0890==>", error);
       setLoading(false);
     }
   };
@@ -80,40 +106,77 @@ const AutoInvoice = () => {
   };
 
   const paymentintents = async (curr) => {
+    console.log("paymenthello payment  ");
     console.log(UserDetails, "hello payment  ", UserDetails);
     console.log(UserDetails, "hello payment data ", data);
     console.log("payment_content", curr);
+    const amount_paid_for_payment =
+      (+(taskDataType == "image"
+        ? data?.hopper_photo_price
+        : taskDataType == "video"
+        ? data?.hopper_videos_price
+        : taskDataType == "audio"
+        ? data?.hopper_interview_price
+        : 0) *
+        100) /
+      120;
     const obj1 = {
-      image_id: curr?.content?._id,
+      image_id: param.id,
       customer_id: UserDetails.stripe_customer_id,
       // amount: +(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price),
       amount:
         +data?.chatdata?.amount ||
         data?.content?.original_ask_price ||
-        +(data?.chatdata?.amount
-          ? data?.chatdata?.amount
-          : data?.content?.ask_price),
-      type: curr.hasOwnProperty("content") ? "content" : "task",
-      original_ask_price: data?.content?.original_ask_price,
+        amount_paid_for_payment,
+      type: "task",
+      task_id: taskData.task_id._id,
+      original_ask_price: +(taskDataType == "image"
+        ? data?.hopper_photo_price
+        : taskDataType == "video"
+        ? data?.hopper_videos_price
+        : taskDataType == "audio"
+        ? data?.hopper_interview_price
+        : 0),
+      //  data?.content?.original_ask_price,
       offer: false,
       is_charity: data?.content?.is_charity,
       charity: data?.content?.charity,
-      description: data?.content?.heading,
+      description: data?.heading,
     };
+
+    console.log("all deatails--->", obj1);
+    // return;
 
     setLoading(true);
     try {
       const obj2 = {
-        type: "content",
-        product_id: curr?.content?._id,
-        amount_paid:
-          +data?.chatdata?.amount ||
-          data?.content?.original_ask_price ||
-          +(data?.chatdata?.amount
-            ? data?.chatdata?.amount
-            : data?.content?.ask_price),
+        type: "uploaded_content",
+        task_id: taskData?.task_id?._id,
+        product_id: param?.id,
+        // amount_paid:
+        //   +data?.chatdata?.amount ||
+        //   data?.content?.original_ask_price ||
+        //   +(data?.chatdata?.amount
+        //     ? data?.chatdata?.amount
+        //     : data?.content?.ask_price),
+        // amount_paid: +(taskDataType == "image"
+        //   ? data?.hopper_photo_price
+        //   : taskDataType == "video"
+        //   ? data?.hopper_videos_price
+        //   : taskDataType == "audio"
+        //   ? data?.hopper_interview_price
+        //   : 0),
+        amount_paid: amount_paid_for_payment,
         commission:
-          +(data?.chatdata?.amount || data?.content?.original_ask_price) / 5,
+          +(taskDataType == "image"
+            ? data?.hopper_photo_price
+            : taskDataType == "video"
+            ? data?.hopper_videos_price
+            : taskDataType == "audio"
+            ? data?.hopper_interview_price
+            : 0) / 5,
+        // commission:
+        //   +(data?.chatdata?.amount || data?.content?.original_ask_price) / 5,
       };
       const resp1 = await Post("mediahouse/applicationfee", obj2);
       obj1.application_fee = resp1?.data?.data;
@@ -125,12 +188,12 @@ const AutoInvoice = () => {
 
       // Add coupon code
       if (promoCode.code) {
-        obj1.coupon = promoCode.code;
+        obj1.coupon = promoCode?.code;
       }
 
       const resp = await Post("mediahouse/createPayment", obj1);
       setLoading(false);
-      window.open(resp.data.url, "_blank");
+      window.open(resp?.data?.url, "_blank");
     } catch (error) {
       setLoading(false);
       successToasterFun(error?.response?.data?.errors?.msg);
@@ -181,16 +244,16 @@ const AutoInvoice = () => {
   };
 
   const navigate = useNavigate();
-  useEffect(() => {
-    if (
-      data &&
-      data?.content?.purchased_mediahouse.find(
-        (el) => el === JSON.parse(localStorage.getItem("user"))?._id
-      )
-    ) {
-      navigate("/");
-    }
-  }, [data, navigate]);
+  // useEffect(() => {
+  //   if (
+  //     data &&
+  //     data?.content?.purchased_mediahouse.find(
+  //       (el) => el === JSON.parse(localStorage.getItem("user"))?._id
+  //     )
+  //   ) {
+  //     navigate("/");
+  //   }
+  // }, [data, navigate]);
 
   useEffect(() => {
     window.addEventListener("focus", () => {
@@ -202,7 +265,7 @@ const AutoInvoice = () => {
       });
   }, []);
 
-  console.log("all autoinvoice data --> --->data", data);
+  console.log("all autoinvoice data --> --->data", taskDataType);
 
   return (
     <>
@@ -280,7 +343,7 @@ const AutoInvoice = () => {
                       </Col>
 
                       <Col md={6}>
-                        <div className="ads-card invoiceToCard">
+                        <div className="ads-card">
                           <div className="myflex">
                             <span>
                               <p className="from">To</p>
@@ -355,24 +418,20 @@ const AutoInvoice = () => {
                                           }}
                                         >
                                           <div className="tbl_cont_wrp">
-                                            {data?.content?.content[0]
-                                              ?.media_type === "image" ? (
+                                            {data?.content[0]?.media_type ===
+                                            "image" ? (
                                               <img
                                                 src={
-                                                  data?.content?.content[0]
-                                                    ?.watermark
+                                                  data?.content[0]?.watermark
                                                 }
                                                 className="cntnt-img"
                                                 alt="img"
                                               />
-                                            ) : data?.content?.content[0]
-                                                ?.media_type === "video" ? (
+                                            ) : data?.content[0]?.media_type ===
+                                              "video" ? (
                                               <img
                                                 src={
-                                                  process.env
-                                                    .REACT_APP_CONTENT_MEDIA +
-                                                  data?.content?.content?.[0]
-                                                    ?.thumbnail
+                                                  data?.content?.[0]?.thumbnail
                                                 }
                                                 className="cntnt-img"
                                               />
@@ -382,22 +441,21 @@ const AutoInvoice = () => {
                                                 src={audioic}
                                                 className="cntnt-img"
                                               />
-                                            ) : data?.content?.content[0]
-                                                ?.media_type === "pdf" ? (
+                                            ) : data?.content[0]?.media_type ===
+                                              "pdf" ? (
                                               <img
                                                 src={docsic}
                                                 className="cntnt-img"
                                               />
                                             ) : null}
                                             <span className="cont_count">
-                                              {data?.content?.content?.length ||
-                                                0}
+                                              {data?.content?.length || 0}
                                             </span>
                                           </div>
                                         </td>
                                         <td>
                                           <div className="desc">
-                                            <p>{data?.content?.heading}</p>
+                                            <p>{data?.heading}</p>
                                           </div>
                                         </td>
                                         <td className="timedate_wrap">
@@ -406,34 +464,34 @@ const AutoInvoice = () => {
                                               src={watchic}
                                               className="icn_time"
                                             />
-                                            {moment(
-                                              data?.content?.createdAt
-                                            ).format("h:mm:A")}
+                                            {moment(data?.createdAt).format(
+                                              "h:mm:A"
+                                            )}
                                           </p>
                                           <p className="timedate">
                                             <img
                                               src={calendar}
                                               className="icn_time"
                                             />
-                                            {moment(
-                                              data?.content?.createdAt
-                                            ).format("DD MMM YYYY")}
+                                            {moment(data?.createdAt).format(
+                                              "DD MMM YYYY"
+                                            )}
                                           </p>
                                         </td>
 
                                         <td className="text-center">
                                           <Tooltip
                                             title={
-                                              data?.content?.content[0]
-                                                ?.media_type == "image"
+                                              data?.content[0]?.media_type ==
+                                              "image"
                                                 ? "Photo"
-                                                : data?.content?.content[0]
+                                                : data?.content[0]
                                                     ?.media_type == "audio"
                                                 ? "Audio"
-                                                : data?.content?.content[0]
+                                                : data?.content[0]
                                                     ?.media_type == "video"
                                                 ? "Video"
-                                                : data?.content?.content[0]
+                                                : data?.content[0]
                                                     ?.media_type == "pdf"
                                                 ? "Pdf"
                                                 : "Scan"
@@ -441,16 +499,16 @@ const AutoInvoice = () => {
                                           >
                                             <img
                                               src={
-                                                data?.content?.content[0]
-                                                  ?.media_type == "image"
+                                                data?.content[0]?.media_type ==
+                                                "image"
                                                   ? cameraic
-                                                  : data?.content?.content[0]
+                                                  : data?.content[0]
                                                       ?.media_type == "audio"
                                                   ? audioicon
-                                                  : data?.content?.content[0]
+                                                  : data?.content[0]
                                                       ?.media_type == "pdf"
                                                   ? docsic
-                                                  : data?.content?.content[0]
+                                                  : data?.content[0]
                                                       ?.media_type == "video"
                                                   ? videoic
                                                   : null
@@ -464,7 +522,7 @@ const AutoInvoice = () => {
                                         <td className="text-center">
                                           <Tooltip
                                             title={
-                                              data?.content?.type == "shared"
+                                              data?.type == "shared"
                                                 ? "Shared"
                                                 : "Exclusive"
                                             }
@@ -484,12 +542,16 @@ const AutoInvoice = () => {
                                         <td className="text-center">
                                           <Tooltip
                                             title={
-                                              data?.content?.category_id?.name
+                                              // taskData?.category_details?.name
+                                              taskData?.category_details?.[0]
+                                                ?.name
                                             }
                                           >
                                             <img
                                               src={
-                                                data?.content?.category_id?.icon
+                                                // taskData?.category_details?.icon
+                                                taskData?.category_details?.[0]
+                                                  ?.icon
                                               }
                                               className="tbl_ic"
                                               alt="Content category"
@@ -506,9 +568,13 @@ const AutoInvoice = () => {
                                             }}
                                           >
                                             {`£${formatAmountInMillion(
-                                              data?.chatdata?.amount
-                                                ? data?.chatdata?.amount
-                                                : data?.content?.ask_price
+                                              taskDataType == "image"
+                                                ? data?.hopper_photo_price
+                                                : taskDataType == "video"
+                                                ? data?.hopper_videos_price
+                                                : taskDataType == "audio"
+                                                ? data?.hopper_interview_price
+                                                : ""
                                             )}`}
                                           </p>
                                         </td>
@@ -581,9 +647,13 @@ const AutoInvoice = () => {
                                       <span>
                                         £
                                         {formatAmountInMillion(
-                                          data?.chatdata?.amount
-                                            ? data?.chatdata?.amount
-                                            : data?.content?.ask_price
+                                          taskDataType == "image"
+                                            ? data?.hopper_photo_price
+                                            : taskDataType == "video"
+                                            ? data?.hopper_videos_price
+                                            : taskDataType == "audio"
+                                            ? data?.hopper_interview_price
+                                            : ""
                                         )}
                                       </span>
                                     </div>
@@ -661,15 +731,26 @@ const AutoInvoice = () => {
                                         £
                                         {!promoCode?.off
                                           ? formatAmountInMillion(
-                                              +(data?.chatdata?.amount
-                                                ? data?.chatdata?.amount
-                                                : data?.content?.ask_price)
+                                              // +(data?.chatdata?.amount
+                                              //   ? data?.chatdata?.amount
+                                              //   : data?.content?.ask_price)
+                                              taskDataType == "image"
+                                                ? data?.hopper_photo_price
+                                                : taskDataType == "video"
+                                                ? data?.hopper_videos_price
+                                                : taskDataType == "audio"
+                                                ? data?.hopper_interview_price
+                                                : 0
                                             )
                                           : formatAmountInMillion(
                                               appliedPromoodeValue(
-                                                +(data?.chatdata?.amount
-                                                  ? data?.chatdata?.amount
-                                                  : data?.content?.ask_price),
+                                                taskDataType == "image"
+                                                  ? data?.hopper_photo_price
+                                                  : taskDataType == "video"
+                                                  ? data?.hopper_videos_price
+                                                  : taskDataType == "audio"
+                                                  ? data?.hopper_interview_price
+                                                  : 0,
                                                 promoCode.off
                                               )
                                             )}
@@ -685,15 +766,23 @@ const AutoInvoice = () => {
                                         £
                                         {!promoCode?.off
                                           ? formatAmountInMillion(
-                                              +(data?.chatdata?.amount
-                                                ? data?.chatdata?.amount
-                                                : data?.content?.ask_price) / 5
+                                              +(taskDataType == "image"
+                                                ? data?.hopper_photo_price
+                                                : taskDataType == "video"
+                                                ? data?.hopper_videos_price
+                                                : taskDataType == "audio"
+                                                ? data?.hopper_interview_price
+                                                : 0) / 5
                                             )
                                           : formatAmountInMillion(
                                               appliedPromoodeValue(
-                                                +(data?.chatdata?.amount
-                                                  ? data?.chatdata?.amount
-                                                  : data?.content?.ask_price),
+                                                +(taskDataType == "image"
+                                                  ? data?.hopper_photo_price
+                                                  : taskDataType == "video"
+                                                  ? data?.hopper_videos_price
+                                                  : taskDataType == "audio"
+                                                  ? data?.hopper_interview_price
+                                                  : 0),
                                                 promoCode.off
                                               ) / 5
                                             )}
@@ -737,25 +826,41 @@ const AutoInvoice = () => {
                                         £
                                         {!promoCode?.off
                                           ? formatAmountInMillion(
-                                              +(data?.chatdata?.amount
-                                                ? data?.chatdata?.amount
-                                                : data?.content?.ask_price) +
-                                                +(data?.chatdata?.amount
-                                                  ? data?.chatdata?.amount
-                                                  : data?.content?.ask_price) /
+                                              +(taskDataType == "image"
+                                                ? data?.hopper_photo_price
+                                                : taskDataType == "video"
+                                                ? data?.hopper_videos_price
+                                                : taskDataType == "audio"
+                                                ? data?.hopper_interview_price
+                                                : 0) +
+                                                +(taskDataType == "image"
+                                                  ? data?.hopper_photo_price
+                                                  : taskDataType == "video"
+                                                  ? data?.hopper_videos_price
+                                                  : taskDataType == "audio"
+                                                  ? data?.hopper_interview_price
+                                                  : 0) /
                                                   5
                                             )
                                           : formatAmountInMillion(
                                               appliedPromoodeValue(
-                                                +(data?.chatdata?.amount
-                                                  ? data?.chatdata?.amount
-                                                  : data?.content?.ask_price),
+                                                +(taskDataType == "image"
+                                                  ? data?.hopper_photo_price
+                                                  : taskDataType == "video"
+                                                  ? data?.hopper_videos_price
+                                                  : taskDataType == "audio"
+                                                  ? data?.hopper_interview_price
+                                                  : 0),
                                                 promoCode.off
                                               ) +
                                                 appliedPromoodeValue(
-                                                  +(data?.chatdata?.amount
-                                                    ? data?.chatdata?.amount
-                                                    : data?.content?.ask_price),
+                                                  +(taskDataType == "image"
+                                                    ? data?.hopper_photo_price
+                                                    : taskDataType == "video"
+                                                    ? data?.hopper_videos_price
+                                                    : taskDataType == "audio"
+                                                    ? data?.hopper_interview_price
+                                                    : 0),
                                                   promoCode.off
                                                 ) /
                                                   5
@@ -781,25 +886,41 @@ const AutoInvoice = () => {
                                         £
                                         {!promoCode?.off
                                           ? formatAmountInMillion(
-                                              +(data?.chatdata?.amount
-                                                ? data?.chatdata?.amount
-                                                : data?.content?.ask_price) +
-                                                +(data?.chatdata?.amount
-                                                  ? data?.chatdata?.amount
-                                                  : data?.content?.ask_price) /
+                                              +(taskDataType == "image"
+                                                ? data?.hopper_photo_price
+                                                : taskDataType == "video"
+                                                ? data?.hopper_videos_price
+                                                : taskDataType == "audio"
+                                                ? data?.hopper_interview_price
+                                                : 0) +
+                                                +(taskDataType == "image"
+                                                  ? data?.hopper_photo_price
+                                                  : taskDataType == "video"
+                                                  ? data?.hopper_videos_price
+                                                  : taskDataType == "audio"
+                                                  ? data?.hopper_interview_price
+                                                  : 0) /
                                                   5
                                             )
                                           : formatAmountInMillion(
                                               appliedPromoodeValue(
-                                                +(data?.chatdata?.amount
-                                                  ? data?.chatdata?.amount
-                                                  : data?.content?.ask_price),
+                                                +(taskDataType == "image"
+                                                  ? data?.hopper_photo_price
+                                                  : taskDataType == "video"
+                                                  ? data?.hopper_videos_price
+                                                  : taskDataType == "audio"
+                                                  ? data?.hopper_interview_price
+                                                  : 0),
                                                 promoCode.off
                                               ) +
                                                 appliedPromoodeValue(
-                                                  +(data?.chatdata?.amount
-                                                    ? data?.chatdata?.amount
-                                                    : data?.content?.ask_price),
+                                                  +(taskDataType == "image"
+                                                    ? data?.hopper_photo_price
+                                                    : taskDataType == "video"
+                                                    ? data?.hopper_videos_price
+                                                    : taskDataType == "audio"
+                                                    ? data?.hopper_interview_price
+                                                    : 0),
                                                   promoCode.off
                                                 ) /
                                                   5
@@ -830,25 +951,41 @@ const AutoInvoice = () => {
                     £
                     {!promoCode?.off
                       ? formatAmountInMillion(
-                          +(data?.chatdata?.amount
-                            ? data?.chatdata?.amount
-                            : data?.content?.ask_price) +
-                            +(data?.chatdata?.amount
-                              ? data?.chatdata?.amount
-                              : data?.content?.ask_price) /
+                          +(taskDataType == "image"
+                            ? data?.hopper_photo_price
+                            : taskDataType == "video"
+                            ? data?.hopper_videos_price
+                            : taskDataType == "audio"
+                            ? data?.hopper_interview_price
+                            : 0) +
+                            +(taskDataType == "image"
+                              ? data?.hopper_photo_price
+                              : taskDataType == "video"
+                              ? data?.hopper_videos_price
+                              : taskDataType == "audio"
+                              ? data?.hopper_interview_price
+                              : 0) /
                               5
                         )
                       : formatAmountInMillion(
                           appliedPromoodeValue(
-                            +(data?.chatdata?.amount
-                              ? data?.chatdata?.amount
-                              : data?.content?.ask_price),
+                            +(taskDataType == "image"
+                              ? data?.hopper_photo_price
+                              : taskDataType == "video"
+                              ? data?.hopper_videos_price
+                              : taskDataType == "audio"
+                              ? data?.hopper_interview_price
+                              : 0),
                             promoCode.off
                           ) +
                             appliedPromoodeValue(
-                              +(data?.chatdata?.amount
-                                ? data?.chatdata?.amount
-                                : data?.content?.ask_price),
+                              +(taskDataType == "image"
+                                ? data?.hopper_photo_price
+                                : taskDataType == "video"
+                                ? data?.hopper_videos_price
+                                : taskDataType == "audio"
+                                ? data?.hopper_interview_price
+                                : 0),
                               promoCode.off
                             ) /
                               5
@@ -871,25 +1008,41 @@ const AutoInvoice = () => {
                     Pay £
                     {!promoCode?.off
                       ? formatAmountInMillion(
-                          +(data?.chatdata?.amount
-                            ? data?.chatdata?.amount
-                            : data?.content?.ask_price) +
-                            +(data?.chatdata?.amount
-                              ? data?.chatdata?.amount
-                              : data?.content?.ask_price) /
+                          +(taskDataType == "image"
+                            ? data?.hopper_photo_price
+                            : taskDataType == "video"
+                            ? data?.hopper_videos_price
+                            : taskDataType == "audio"
+                            ? data?.hopper_interview_price
+                            : 0) +
+                            +(taskDataType == "image"
+                              ? data?.hopper_photo_price
+                              : taskDataType == "video"
+                              ? data?.hopper_videos_price
+                              : taskDataType == "audio"
+                              ? data?.hopper_interview_price
+                              : 0) /
                               5
                         )
                       : formatAmountInMillion(
                           appliedPromoodeValue(
-                            +(data?.chatdata?.amount
-                              ? data?.chatdata?.amount
-                              : data?.content?.ask_price),
+                            +(taskDataType == "image"
+                              ? data?.hopper_photo_price
+                              : taskDataType == "video"
+                              ? data?.hopper_videos_price
+                              : taskDataType == "audio"
+                              ? data?.hopper_interview_price
+                              : 0),
                             promoCode.off
                           ) +
                             appliedPromoodeValue(
-                              +(data?.chatdata?.amount
-                                ? data?.chatdata?.amount
-                                : data?.content?.ask_price),
+                              +(taskDataType == "image"
+                                ? data?.hopper_photo_price
+                                : taskDataType == "video"
+                                ? data?.hopper_videos_price
+                                : taskDataType == "audio"
+                                ? data?.hopper_interview_price
+                                : 0),
                               promoCode.off
                             ) /
                               5
@@ -934,4 +1087,4 @@ const AutoInvoice = () => {
   );
 };
 
-export default AutoInvoice;
+export default TaskInvoice;

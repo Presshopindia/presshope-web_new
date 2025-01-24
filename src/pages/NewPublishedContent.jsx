@@ -430,7 +430,7 @@ const NewPublishedContent = (props) => {
               </div>
             </Col>
           </Row>
-          <div className="mt-0">
+          <div className="mt-0 feedTrendingSearchWrap">
             <TopSearchesTipsCard />
           </div>
         </Container>

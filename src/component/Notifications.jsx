@@ -20,6 +20,7 @@ const Notifications = (props) => {
       setData(res?.data?.data);
       setCount(res?.data?.count);
       // console.log(res, `<---------respone of notification`)
+      // console.log("all nofication message -->", res?.data?.data);
     } catch (err) {
       console.log(`<---------err`, err);
     }
@@ -35,13 +36,14 @@ const Notifications = (props) => {
         getNotification();
       }
     } catch (err) {
-      // console.log(err, `<---------err`)
+      console.log(err, `<---------err`);
     }
   };
 
   useEffect(() => {
     getNotification();
   }, []);
+  console.log(data, `notification data  ---------> ------->`);
 
   return (
     <>

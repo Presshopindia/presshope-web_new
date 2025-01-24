@@ -51,11 +51,16 @@ const FavouritedContent = () => {
   const [favContent, setFavContent] = useState(initStateOfFavouriteContent);
 
   const FavouriteContent = async () => {
+    console.log("kjhvfdgkjfgkjfhfgkjfhgkj");
+
     setLoading(true);
     try {
       const payload = {
         sort: favContent.sort.field,
         category: favContent.filter.category,
+        price_range_to: favContent.sort.price_range_to,
+        price_range_from: favContent.sort.price_range_from,
+        hopper_location: favContent.sort.hopper_location,
         type: favContent.filter.type,
         favContent: favContent.filter.favContent,
         latestContent: favContent.filter.latestContent,
@@ -65,7 +70,7 @@ const FavouritedContent = () => {
 
       const resp = await Post("mediaHouse/favourites", payload);
       const category = await Get("mediaHouse/getCategoryType?type=content");
-      console.log("categoryData", resp);
+      console.log("categoryDatacategoryData  ------> categoryData  --->", resp);
       setTotalPage(Math.ceil(resp?.data?.response?.totalCount / limit));
       setFavContent({
         ...favContent,
@@ -76,6 +81,7 @@ const FavouritedContent = () => {
         setLoading(false);
       }
     } catch (error) {
+      console.log("fav content error ----->  --->", error);
       setLoading(false);
     }
   };
@@ -116,6 +122,11 @@ const FavouritedContent = () => {
     });
   };
 
+  // console.log("all fav content -------->", favContent);
+  useEffect(() => {
+    console.log("all file should run");
+    FavouriteContent();
+  }, []);
   return (
     <>
       {loading && <Loader />}

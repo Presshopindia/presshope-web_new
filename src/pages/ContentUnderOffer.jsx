@@ -44,9 +44,16 @@ const ContentUnderOffer = () => {
   const offeredContent = async () => {
     setLoading(true);
     try {
+      console.log(
+        "contentUnderOffer.sort.hopper_location,",
+        contentUnderOffer.sort.hopper_location
+      );
       const payload = {
         limit: 20,
         sort_for_under_offer: contentUnderOffer.sort.field,
+        price_range_from: contentUnderOffer.sort.price_range_from,
+        price_range_to: contentUnderOffer.sort.price_range_to,
+        hopper_location: contentUnderOffer.sort.hopper_location,
         category: contentUnderOffer.filter.category,
         type: contentUnderOffer.filter.type,
         favContent: contentUnderOffer.filter.favContent,

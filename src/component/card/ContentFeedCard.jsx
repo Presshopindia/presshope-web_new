@@ -33,7 +33,7 @@ function ContentFeedCard(props) {
       if (props?.type == "task") {
         obj = {
           type: "uploaded_content",
-          uploaded_content: props.task_content_id,
+          uploaded_content: props?.taskContentId || props?.content_id,
         };
       } else {
         obj = {
@@ -116,7 +116,7 @@ function ContentFeedCard(props) {
 
         obj = {
           type: "uploaded_content",
-          uploaded_content: props?.content_id,
+          uploaded_content: props?.task_content_id,
           post_id: props?.task_content_id,
           content: props?.allContent?.map((el) => {
             return {

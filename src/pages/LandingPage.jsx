@@ -55,7 +55,7 @@ import "swiper/css";
 import DbFooter from "../component/DbFooter";
 import HeaderNPost from "../component/HeaderNPost";
 import { Get } from "../services/user.services";
-import { useNavigate ,useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const LandingPage = () => {
   const token = localStorage.getItem("token");
@@ -64,12 +64,10 @@ const LandingPage = () => {
   const [queryObject, setqueryObject] = useState({});
   const [activeHeader, setActiveHeader] = useState("");
   const navigate = useNavigate();
-  const mylocation=useLocation();
-
-
+  const mylocation = useLocation();
 
   // const params = new URLSearchParams(mylocation?.search);
-  console.log("myLocation",queryObject)
+  console.log("myLocation", queryObject);
   const targetRefs = {
     div1: useRef(null),
     div2: useRef(null),
@@ -79,35 +77,33 @@ const LandingPage = () => {
   };
 
   const scrollToDiv = (divName) => {
-      console.log("divname",divName);
-      setActiveHeader(divName);
-      targetRefs[divName].current.scrollIntoView({ behavior: 'smooth' });
+    console.log("divname", divName);
+    setActiveHeader(divName);
+    targetRefs[divName].current.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const params = new URLSearchParams(mylocation.search);
-     const queryObject1 = {};
-    console.log("keyVal",params.name);
+    const queryObject1 = {};
+    console.log("keyVal", params.name);
     for (const [key, value] of params.entries()) {
-  
       queryObject1[key] = value;
     }
     // Object.keys(object1).length
-    if(Object.keys(queryObject1).length>0){
-      setActiveHeader(queryObject1?.q)
-      console.log("queryObject1?.q",(queryObject1?.q).toString());
+    if (Object.keys(queryObject1).length > 0) {
+      setActiveHeader(queryObject1?.q);
+      console.log("queryObject1?.q", (queryObject1?.q).toString());
       scrollToDiv((queryObject1?.q).toString());
     }
 
-    setqueryObject(queryObject1)
-    
-  },[mylocation])
+    setqueryObject(queryObject1);
+  }, [mylocation]);
   // console.log("queryObject123",queryObject)
   useEffect(() => {
-  if(queryObject?.q){
-    scrollToDiv(queryObject?.q);
-  }
-  },[queryObject])
+    if (queryObject?.q) {
+      scrollToDiv(queryObject?.q);
+    }
+  }, [queryObject]);
   const FAQ = async () => {
     // console.log(faqSearch);
     const resp = await Get(
@@ -117,8 +113,8 @@ const LandingPage = () => {
   };
 
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     FAQ();
@@ -127,9 +123,17 @@ const LandingPage = () => {
   return (
     <>
       {!token ? (
-        <HeaderN scrollToDiv={scrollToDiv} activeHeader={activeHeader} Navigate={navigate}/>
+        <HeaderN
+          scrollToDiv={scrollToDiv}
+          activeHeader={activeHeader}
+          Navigate={navigate}
+        />
       ) : (
-        <HeaderNPost scrollToDiv={scrollToDiv} activeHeader={activeHeader} Navigate={navigate}/>
+        <HeaderNPost
+          scrollToDiv={scrollToDiv}
+          activeHeader={activeHeader}
+          Navigate={navigate}
+        />
       )}
       <div className="landingWrap">
         <section className="newsDelivered" ref={targetRefs.div1}>
@@ -310,7 +314,11 @@ const LandingPage = () => {
                     </Col>
                   </Row>
                   <div className="martketActn viewDemo mt-4 text-end">
-                    <Button className="btn_bld" variant="secondary" onClick={() => navigate("/all-tutorials")}>
+                    <Button
+                      className="btn_bld"
+                      variant="secondary"
+                      onClick={() => navigate("/all-tutorials")}
+                    >
                       <BsPlay className="me-1" /> View Demo
                     </Button>
                   </div>
@@ -739,7 +747,7 @@ const LandingPage = () => {
           </Container>
           <span className="shape yl_crcl pos_abs"></span>
           <span className="shape yl_crcl_md pos_abs"></span>
-          <span className="shape bl_crcl pos_abs"></span>
+          {/* <span className="shape bl_crcl pos_abs"></span> */}
           <span className="shape redcrcl pos_abs"></span>
           <span className="shape bl_tri pos_abs"></span>
         </section>

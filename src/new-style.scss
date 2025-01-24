@@ -102,7 +102,8 @@ body .page-wrap {
     gap: 3px;
     align-items: center;
     padding: 2px;
-    img{
+
+    img {
       width: 100%;
     }
   }
@@ -489,4 +490,20 @@ a.special_card_design {
   height: auto;
   width: 50px;
   object-fit: cover;
+}
+
+.content_uplded.vido_cnt .media-item {
+  position: relative;
+  width: fit-content;
+
+  .media-checkbox {
+    position: absolute;
+    top: 11px;
+    right: 20px;
+    border-radius: 31px;
+    left: unset;
+    width: 18px;
+    border-radius: 10px;
+    height: 18px;
+  }
 }

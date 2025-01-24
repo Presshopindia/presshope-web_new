@@ -143,7 +143,7 @@ const Tasktables = () => {
         setLoading(false);
       }
     } catch (error) {
-      // console.log(error)
+      console.log(error);
       setLoading(false);
     }
   };
@@ -280,7 +280,7 @@ const Tasktables = () => {
                                     <td className="timedate_wrap">
                                       <p className="timedate">
                                         <img src={watch} className="icn_time" />
-                                        {moment(curr.createdAt).format(
+                                        {moment(curr?.createdAt).format(
                                           "hh:mm A"
                                         )}
                                       </p>
@@ -298,11 +298,11 @@ const Tasktables = () => {
                                       <p className="desc_ht">{curr?.heading}</p>
                                     </td>
                                     <td className="address_wrap">
-                                      {curr.location}
+                                      {curr?.location}
                                     </td>
                                     <td className="text-center">
                                       <div className="type_wrp d-flex flex-column align-items-center">
-                                        {curr.need_photos === true && (
+                                        {curr?.need_photos === true && (
                                           <Tooltip title="Photo">
                                             <img
                                               src={camera}
@@ -576,7 +576,7 @@ const Tasktables = () => {
                                     )
                                   }
                                 >
-                                  <td className="content_img_td">
+                                  <td className="content_img_td position-relative add-icons-box">
                                     <div className="tbl_cont_wrp">
                                       <img
                                         src={
@@ -586,6 +586,40 @@ const Tasktables = () => {
                                         }
                                         className="content_img"
                                       />
+                                    </div>
+                                    <div className="tableContentTypeIcons">
+                                      <div class="post_icns_cstm_wrp camera-ico">
+                                        <div class="post_itm_icns dtl_icns">
+                                          <span class="count">1</span>
+                                          <img
+                                            class="feedMediaType iconBg"
+                                            src={cameraic}
+                                            alt=""
+                                          />
+                                        </div>
+                                      </div>
+                                      <div class="post_icns_cstm_wrp video-ico">
+                                        <div class="post_itm_icns dtl_icns">
+                                          <span class="count">1</span>
+                                          <img
+                                            class="feedMediaType iconBg"
+                                            src={videoic}
+                                            alt=""
+                                          />
+                                        </div>
+                                      </div>
+                                      {/* <div class="post_icns_cstm_wrp audio-ico">
+                                          <div class="post_itm_icns dtl_icns">
+                                            <span class="count">
+                                              1
+                                            </span>
+                                            <img
+                                              class="feedMediaType iconBg"
+                                              src={interviewic}
+                                              alt=""
+                                            />
+                                          </div>
+                                        </div> */}
                                     </div>
                                   </td>
                                   <td className="timedate_wrap">

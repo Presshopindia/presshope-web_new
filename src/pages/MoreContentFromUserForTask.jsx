@@ -45,20 +45,24 @@ import { formatAmountInMillion } from "../component/commonFunction";
 const MoreContentFromUserForTask = () => {
   const [moreContent, setMoreContent] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { hopper_id, task_id } = useParams()
+  const { hopper_id, task_id } = useParams();
 
   const ContentByID = async () => {
     try {
-      setLoading(true)
-      const resp1 = await Post(`mediaHouse/MoreContentforTask`, {hopper_id, task_id, limit: 50});
+      setLoading(true);
+      const resp1 = await Post(`mediaHouse/MoreContentforTask`, {
+        hopper_id,
+        task_id,
+        limit: 50,
+      });
       setMoreContent(resp1.data.content);
 
       if (resp1) {
-        setLoading(false)
+        setLoading(false);
       }
     } catch (error) {
       // console.log(error);
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -69,10 +73,19 @@ const MoreContentFromUserForTask = () => {
   const handleFavourite = (i) => {
     setMoreContent((prev) => {
       const allContent = [...prev];
-      allContent[i]["favourite_status"] = allContent[i]["favourite_status"] === "true" ? "false" : "true";
-      return allContent
-    })
-  }
+      allContent[i]["favourite_status"] =
+        allContent[i]["favourite_status"] === "true" ? "false" : "true";
+      return allContent;
+    });
+  };
+  const handleBasket = (i) => {
+    setMoreContent((prev) => {
+      const allContent = [...prev];
+      allContent[i]["basket_status"] =
+        allContent[i]["basket_status"] === "true" ? "false" : "true";
+      return allContent;
+    });
+  };
 
   return (
     <>
@@ -104,40 +117,78 @@ const MoreContentFromUserForTask = () => {
                   </div>
                   <Row className="">
                     {moreContent?.map((item, index) => {
-
-                        return (
-                          <Col md={3}>
-                            <ContentFeedCard
+                      return (
+                        <Col md={3}>
+                          <ContentFeedCard
                             feedImg={
-                              item?.type === "image" ?
-                                item.videothubnail || process.env.REACT_APP_UPLOADED_CONTENT + item.imageAndVideo
-                                : item?.type === "video" ?
-                                  item.videothubnail || process.env.REACT_APP_UPLOADED_CONTENT + item.videothubnail
-                                  : item?.type === "audio" ? audioic : null
+                              item?.type === "image"
+                                ? item.videothubnail ||
+                                  process.env.REACT_APP_UPLOADED_CONTENT +
+                                    item.imageAndVideo
+                                : item?.type === "video"
+                                ? item.videothubnail ||
+                                  process.env.REACT_APP_UPLOADED_CONTENT +
+                                    item.videothubnail
+                                : item?.type === "audio"
+                                ? audioic
+                                : null
                             }
                             type={"task"}
                             postcount={1}
-                            feedTypeImg1={item?.type === "image" ? cameraic : item?.type === "audio" ? interviewic : item?.type === "video" ? videoic : null}
-                            user_avatar={process.env.REACT_APP_AVATAR_IMAGE + item?.avatar_detals[0]?.avatar}
+                            feedTypeImg1={
+                              item?.type === "image"
+                                ? cameraic
+                                : item?.type === "audio"
+                                ? interviewic
+                                : item?.type === "video"
+                                ? videoic
+                                : null
+                            }
+                            user_avatar={
+                              process.env.REACT_APP_AVATAR_IMAGE +
+                              item?.avatar_detals[0]?.avatar
+                            }
                             author_Name={item?.hopper_id?.user_name}
                             lnkto={`/content-details/${item?._id}`}
+                            basket={() => handleBasket(index)}
+                            basketValue={item?.basket_status}
                             // lnkto={`/Feeddetail/content/${item._id}uploaded`}
                             viewTransaction="View details"
                             viewDetail={`/content-details/${item?._id}`}
-                            fvticns={item.favourite_status === "true" ? favouritedic : favic}
+                            fvticns={
+                              item.favourite_status === "true"
+                                ? favouritedic
+                                : favic
+                            }
                             type_tag={item?.category_details[0]?.name}
                             type_img={item?.category_details[0]?.icon}
                             feedHead={item.task_id.task_description}
-                            feedTime={moment(item.createdAt).format(" hh:mm A, DD MMM YYYY")}
+                            feedTime={moment(item.createdAt).format(
+                              " hh:mm A, DD MMM YYYY"
+                            )}
                             feedLocation={item.task_id.location}
-                            contentPrice={`${formatAmountInMillion(item?.type === "image" ? item?.task_id?.photo_price : item?.type === "audio" ? (item?.task_id?.interview_price || 0) : item?.type === "video" ? (item?.task_id?.videos_price || 0) : null)}`}
+                            contentPrice={`${formatAmountInMillion(
+                              item?.type === "image"
+                                ? item?.task_id?.photo_price
+                                : item?.type === "audio"
+                                ? item?.task_id?.interview_price || 0
+                                : item?.type === "video"
+                                ? item?.task_id?.videos_price || 0
+                                : null
+                            )}`}
                             favourite={() => handleFavourite(index)}
-                            bool_fav={item.favourite_status === "true" ? "false" : "true"}
-                            content_id={item._id}
+                            bool_fav={
+                              item.favourite_status === "true"
+                                ? "false"
+                                : "true"
+                            }
+                            content_id={item?._id}
+                            task_content_id={item?._id || item?.task_id?._id}
+                            taskContentId={item?._id}
                           />
-                          </Col>
-                        );
-                      })}
+                        </Col>
+                      );
+                    })}
                   </Row>
                 </div>
               </div>

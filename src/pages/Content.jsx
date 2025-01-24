@@ -1431,14 +1431,16 @@ const ContentPage = () => {
                                                         ?.watermark
                                                     : item?.task_id?.content[0]
                                                         ?.media_type == "video"
-                                                    ? curr?.content[0]?.thumbnail.startsWith(
+                                                    ? item?.task_id?.content[0]?.thumbnail.startsWith(
                                                         "https"
                                                       )
-                                                      ? curr?.content[0]
+                                                      ? item?.task_id
+                                                          ?.content[0]
                                                           ?.thumbnail
                                                       : process.env
                                                           .REACT_APP_CONTENT_MEDIA +
-                                                        curr?.content[0]
+                                                        item?.task_id
+                                                          ?.content[0]
                                                           ?.thumbnail
                                                     : null
                                                 }

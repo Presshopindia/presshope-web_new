@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { Row, Col, Container, Form } from "react-bootstrap";
 import { Card, Typography, Button, Tooltip } from "@mui/material";
 import {
@@ -56,6 +56,10 @@ import { formatAmountInMillion, receiveLastTwoDigits } from "./commonFunction";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { PaginationComp } from "./Pagination";
+import { AiFillCaretDown } from "react-icons/ai";
+import BroadCastedFilter from "./Sortfilters/Dashboard/BroadcastedFilters";
+import BroadCastedSort from "./Sortfilters/Dashboard/BroadcastedSort";
+import FundsinvestedFilter from "./Sortfilters/Dashboard/FundsinvestedFilter";
 
 const DashboardTables = () => {
   const navigate = useNavigate();
@@ -65,10 +69,30 @@ const DashboardTables = () => {
   const [data, setData] = useState();
   const [dataset, setDatadata] = useState([]);
   const [activeState, setActiveState] = useState("");
+  const [allFilterData, setAllFilterData] = useState({
+    filterdata: [],
+    allcategoryData: [],
+    category: [],
+    sortData: "",
+    price_range1: "",
+    price_range2: "",
+    location_search: "",
+    toggle_filter: false,
+    toggle_sort: false,
+  });
+
+  // setAllFilterData
   // Content Purchased Online-
   const [openContentPuchased, setOpenContentPuchased] = useState(false);
   const handleCloseContentPurchased = (values) => {
     setOpenContentPuchased(values);
+    setAllFilterData((prev) => {
+      return {
+        ...prev,
+        toggle_filter: true,
+        toggle_sort: true,
+      };
+    });
   };
 
   // Broadcast task-
@@ -127,9 +151,23 @@ const DashboardTables = () => {
         type: "content_purchased_online",
         limit: contentOnlineLimit,
         offset: (contentOnlinePage - 1) * contentOnlineLimit,
+        allQuery: allFilterData,
+      });
+      const category = await Get("mediaHouse/getCategoryType?type=content");
+      setAllFilterData({
+        ...allFilterData,
+        allcategoryData: category?.data?.data,
       });
       if (res) {
         setData(res?.data);
+        setAllFilterData({
+          ...allFilterData,
+          istotalFund: false,
+          toggle_filter: false,
+          toggle_sort: false,
+
+          // allcategoryData: category?.data?.data,
+        });
         console.log(
           "all task data ---> ----> ----->",
           res?.data?.broad_casted_tasks_details?.task
@@ -147,6 +185,20 @@ const DashboardTables = () => {
               res?.data?.total_fund_invested?.count / contentOnlineLimit
             )
           );
+          setAllFilterData({
+            ...allFilterData,
+            istotalFund: false,
+            filterdata: [],
+            category: [],
+            sortData: "",
+            price_range1: "",
+            price_range2: "",
+            location_search: "",
+            toggle_filter: false,
+            toggle_sort: false,
+
+            // allcategoryData: category?.data?.data,
+          });
         }
       }
     } catch (error) {}
@@ -157,6 +209,15 @@ const DashboardTables = () => {
     //  const a ="2023-08-19T08:29:33.118Z"
     //  console.log(moment(a).format("DD MMM, YYYY"))
   }, [filterSortValue, contentOnlinePage]);
+  useEffect(() => {
+    console.log(
+      "all jhfjfhkjhfksdjhfkjdfhdkjsh--->",
+      allFilterData?.istotalFund
+    );
+    if (allFilterData.istotalFund) {
+      getData();
+    }
+  }, [allFilterData.istotalFund]);
 
   // data for Content purchased online
 
@@ -165,12 +226,17 @@ const DashboardTables = () => {
   const getDetailData = async () => {
     try {
       setLoading(true);
+      const allFilterdataToSend = { ...allFilterData };
+
+      delete allFilterdataToSend.allcategoryData;
       const resp = await Get(
         `mediaHouse/Content/Count?limit=${contentOnlineLimit}&offset=${
           (contentOnlinePage - 1) * contentOnlineLimit
         }&${
           filterSortField ? `${filterSortField}=${filterSortValue || ""}` : ""
-        }&month=${month ? month : ""}&year=${year ? year : ""}`
+        }&month=${month ? month : ""}&year=${
+          year ? year : ""
+        }&allQuery=${encodeURIComponent(JSON.stringify(allFilterdataToSend))}`
       );
       if (resp) {
         if (param?.type == "content_purchased_online") {
@@ -187,7 +253,22 @@ const DashboardTables = () => {
   };
   useEffect(() => {
     getDetailData();
-  }, [filterSortValue, contentOnlinePage]);
+    setAllFilterData((prev) => {
+      return {
+        ...prev,
+        toggle_filter: false,
+        toggle_sort: false,
+      };
+    });
+  }, [filterSortValue, contentOnlinePage, allFilterData?.toggle_filter]);
+  const currentlocation = useLocation();
+  useEffect(() => {
+    // console.log("Current Location:", currentlocation);
+    sessionStorage.setItem(
+      "lastPageWithQuery",
+      `${currentlocation.pathname}${currentlocation.search}`
+    );
+  }, [currentlocation.pathname, currentlocation.search]);
 
   const Navigate = () => {
     navigate(`/published-content`);
@@ -207,6 +288,17 @@ const DashboardTables = () => {
   useEffect(() => {
     purchasedContent();
   }, []);
+
+  const [openSortComponent, setOpenSortComponent] = useState(false);
+  const [openFilterComponent, setOpenFilterComponent] = useState(false);
+
+  const handleCloseFilterComponent = (values) => {
+    setOpenFilterComponent(values);
+  };
+
+  const handleCloseSortComponent = (values) => {
+    setOpenSortComponent(values);
+  };
 
   return (
     <>
@@ -238,8 +330,34 @@ const DashboardTables = () => {
                         <Typography className="tbl_hdng">
                           Total funds invested
                         </Typography>
-                        <div className="tbl_rt">
-                          <div className="fltrs_prnt">
+                        <div className="tbl_rt sorting_wrap d-flex align-items-center">
+                          <div className="feedSorting me-4">
+                            <div className="fltrs_prnt top_fltr">
+                              <p className="lbl_fltr">Filter</p>
+                              <button
+                                className="sortTrigger"
+                                onClick={() => {
+                                  setOpenFilterComponent(true);
+                                }}
+                              >
+                                Filter <AiFillCaretDown />
+                              </button>
+                              {openFilterComponent && (
+                                <FundsinvestedFilter
+                                  closeSortComponent={
+                                    handleCloseFilterComponent
+                                  }
+                                  closeFilterComponent={
+                                    handleCloseFilterComponent
+                                  }
+                                  setAllFilterData={setAllFilterData}
+                                  allFilterData={allFilterData}
+                                  // feedMultiFilter={handleMultiFilter}
+                                />
+                              )}
+                            </div>
+                          </div>
+                          {/* <div className="fltrs_prnt">
                             <Button
                               className="sort_btn"
                               onClick={() => {
@@ -257,6 +375,31 @@ const DashboardTables = () => {
                                 closeSortComponent={handleCloseFundsInvested}
                               />
                             )}
+                          </div> */}
+
+                          <div className="feedSorting">
+                            <div className="fltrs_prnt top_fltr">
+                              <p className="lbl_fltr">Sort</p>
+                              <Button
+                                className="sort_btn"
+                                onClick={() => {
+                                  setOpenFundsInevested(true);
+                                }}
+                              >
+                                Sort
+                                <BsChevronDown />
+                              </Button>
+                              {openFundsInvested && (
+                                <Fundsinvested
+                                  active={activeState}
+                                  setActive={setActiveState}
+                                  rangeTimeValues={fundsTimeValuesHandler}
+                                  closeSortComponent={handleCloseFundsInvested}
+                                  setAllFilterData={setAllFilterData}
+                                  allFilterData={allFilterData}
+                                />
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -338,7 +481,7 @@ const DashboardTables = () => {
                                     )
                                   }
                                 >
-                                  <td className="content_img_td">
+                                  <td className="content_img_td position-relative add-icons-box">
                                     <Link>
                                       <div className="tbl_cont_wrp">
                                         <img
@@ -369,13 +512,58 @@ const DashboardTables = () => {
                                           }
                                           className="content_img"
                                         />
-                                        <span className="cont_count">
+                                        {/* <span className="cont_count">
                                           {data?.content_ids[0]?.content
                                             .length || 0}
-                                        </span>
+                                        </span> */}
+                                      </div>
+                                      <div className="tableContentTypeIcons">
+                                        {image.length > 0 && (
+                                          <div class="post_icns_cstm_wrp camera-ico">
+                                            <div class="post_itm_icns dtl_icns">
+                                              <span class="count">
+                                                {image.length}
+                                              </span>
+                                              <img
+                                                class="feedMediaType iconBg"
+                                                src={cameraic}
+                                                alt=""
+                                              />
+                                            </div>
+                                          </div>
+                                        )}
+                                        {video.length > 0 && (
+                                          <div class="post_icns_cstm_wrp video-ico">
+                                            <div class="post_itm_icns dtl_icns">
+                                              <span class="count">
+                                                {video.length}
+                                              </span>
+                                              <img
+                                                class="feedMediaType iconBg"
+                                                src={videoic}
+                                                alt=""
+                                              />
+                                            </div>
+                                          </div>
+                                        )}
+                                        {audio.length > 0 && (
+                                          <div class="post_icns_cstm_wrp audio-ico">
+                                            <div class="post_itm_icns dtl_icns">
+                                              <span class="count">
+                                                {audio.length}
+                                              </span>
+                                              <img
+                                                class="feedMediaType iconBg"
+                                                src={interviewic}
+                                                alt=""
+                                              />
+                                            </div>
+                                          </div>
+                                        )}
                                       </div>
                                     </Link>
                                   </td>
+
                                   <td className="timedate_wrap">
                                     <p className="timedate">
                                       <img src={watchic} className="icn_time" />
@@ -507,6 +695,51 @@ const DashboardTables = () => {
                         <Typography className="tbl_hdng">
                           Broadcasted Tasks
                         </Typography>
+                        <div className="sorting_wrap d-flex">
+                          <div className="feedSorting me-4">
+                            <div className="fltrs_prnt top_fltr">
+                              <p className="lbl_fltr">Filter</p>
+                              <button
+                                className="sortTrigger"
+                                onClick={() => {
+                                  setOpenFilterComponent(true);
+                                }}
+                              >
+                                Filter <AiFillCaretDown />
+                              </button>
+                              {openFilterComponent && (
+                                <BroadCastedFilter
+                                  closeBroadcastTask={
+                                    handleCloseFilterComponent
+                                  }
+                                  setAllFilterData={setAllFilterData}
+                                  allFilterData={allFilterData}
+                                  // feedMultiFilter={handleMultiFilter}
+                                />
+                              )}
+                            </div>
+                          </div>
+                          <div className="feedSorting">
+                            <div className="fltrs_prnt top_fltr">
+                              <p className="lbl_fltr">Sort</p>
+                              <button
+                                className="sortTrigger"
+                                onClick={() => {
+                                  setOpenSortComponent(true);
+                                }}
+                              >
+                                Sort <AiFillCaretDown />
+                              </button>
+                              {openSortComponent && (
+                                <BroadCastedSort
+                                  closeSortComponent={handleCloseSortComponent}
+                                  allFilterData={allFilterData}
+                                  setAllFilterData={setAllFilterData}
+                                />
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                       <div className="fix_ht_table">
                         <table
@@ -533,6 +766,19 @@ const DashboardTables = () => {
                             {data?.broad_casted_tasks_details &&
                               data?.broad_casted_tasks_details?.task.map(
                                 (curr) => {
+                                  console.log("all map data ===>", curr);
+                                  let imageCount = 0;
+                                  let audioCount = 0;
+                                  let videoCount = 0;
+                                  curr?.content.forEach((ele, indx) => {
+                                    if (ele?.media_type == "image") {
+                                      imageCount++;
+                                    } else if (ele.media_type == "video") {
+                                      videoCount++;
+                                    } else if (ele.media_type == "audio") {
+                                      audioCount++;
+                                    }
+                                  });
                                   return (
                                     <tr
                                       onClick={() =>
@@ -542,9 +788,9 @@ const DashboardTables = () => {
                                       }
                                       style={{ cursor: "pointer" }}
                                     >
-                                      <td className="content_img_td">
+                                      <td className="content_img_td position-relative add-icons-box">
                                         <Link>
-                                          <div className="tbl_cont_wrp">
+                                          <div className="tbl_cont_wrp cnt_online_img noGrid">
                                             {curr?.content.length === 0 ? (
                                               <div className="mapInput1 td_mp1">
                                                 <style>
@@ -591,16 +837,17 @@ const DashboardTables = () => {
                                                 </GoogleMap>
                                               </div>
                                             ) : (
-                                              <>
+                                              <div className="tbl_cont_wrp">
                                                 {curr?.content[0]
                                                   ?.media_type === "image" ? (
                                                   <img
                                                     src={
-                                                      curr?.content[0]?.media
+                                                      curr?.content?.[0]
+                                                        ?.watermark
                                                     }
                                                     className="content_img"
                                                   />
-                                                ) : curr?.content[0]
+                                                ) : curr?.content?.[0]
                                                     ?.media_type === "video" ? (
                                                   <img
                                                     src={
@@ -609,17 +856,59 @@ const DashboardTables = () => {
                                                     }
                                                     className="content_img"
                                                   />
-                                                ) : curr?.content[0]
+                                                ) : curr?.content?.[0]
                                                     ?.media_type === "audio" ? (
                                                   audioic
                                                 ) : (
                                                   ""
                                                 )}
-                                                <span className="cont_count">
+                                                {/* <span className="cont_count">
                                                   {curr?.content.length}
-                                                </span>
-                                              </>
+                                                </span> */}
+                                              </div>
                                             )}
+                                          </div>
+                                          <div className="tableContentTypeIcons">
+                                            {imageCount > 0 && (
+                                              <div class="post_icns_cstm_wrp camera-ico">
+                                                <div class="post_itm_icns dtl_icns">
+                                                  <span class="count">
+                                                    {imageCount}
+                                                  </span>
+                                                  <img
+                                                    class="feedMediaType iconBg"
+                                                    src={cameraic}
+                                                    alt=""
+                                                  />
+                                                </div>
+                                              </div>
+                                            )}
+                                            {videoCount > 0 && (
+                                              <div class="post_icns_cstm_wrp video-ico">
+                                                <div class="post_itm_icns dtl_icns">
+                                                  <span class="count">
+                                                    {videoCount}
+                                                  </span>
+                                                  <img
+                                                    class="feedMediaType iconBg"
+                                                    src={videoic}
+                                                    alt=""
+                                                  />
+                                                </div>
+                                              </div>
+                                            )}
+                                            {/* <div class="post_icns_cstm_wrp audio-ico">
+                                                  <div class="post_itm_icns dtl_icns">
+                                                    <span class="count">
+                                                      1
+                                                    </span>
+                                                    <img
+                                                      class="feedMediaType iconBg"
+                                                      src={interviewic}
+                                                      alt=""
+                                                    />
+                                                  </div>
+                                                </div> */}
                                           </div>
                                         </Link>
                                       </td>
@@ -803,7 +1092,7 @@ const DashboardTables = () => {
                         mb="10px"
                       >
                         <Typography className="tbl_hdng">
-                          Content purchased online
+                          Content purchased online check
                         </Typography>
                         <div className="tbl_rt">
                           <div className="fltrs_prnt">
@@ -821,6 +1110,8 @@ const DashboardTables = () => {
                                 closeContentPurchased={
                                   handleCloseContentPurchased
                                 }
+                                setAllFilterData={setAllFilterData}
+                                allFilterData={allFilterData}
                                 rangeTimeValuesPurchasedContent={
                                   handlePurchasedContentValue
                                 }
@@ -932,51 +1223,65 @@ const DashboardTables = () => {
                                     className="clickable"
                                     onClick={() =>
                                       navigate(
-                                        `/purchased-content-detail/${curr?._id}`
+                                        `/purchased-content-detail/${curr?._id}?page=${contentOnlinePage}`
                                       )
                                     }
                                   >
                                     <td className="content_img_td position-relative add-icons-box">
                                       <Link>
-                                        <div className="tbl_cont_wrp cnt_online_img">
+                                        <div className="tbl_cont_wrp cnt_online_img noGrid">
                                           <img
                                             src={contentSource}
                                             className="content_img"
                                           />
-                                          <span className="cont_count">
+                                          {/* <span className="cont_count">
                                             {curr?.content_id &&
                                               `${curr?.content_id?.content?.length}`}
-                                          </span>
+                                          </span> */}
                                         </div>
-                                        <div class="post_icns_cstm_wrp camera-ico">
-                                          <div class="post_itm_icns dtl_icns">
-                                            <span class="count">1</span>
-                                            <img
-                                              class="feedMediaType iconBg"
-                                              src={cameraic}
-                                              alt=""
-                                            />
-                                          </div>
-                                        </div>
-                                        <div class="post_icns_cstm_wrp video-ico">
-                                          <div class="post_itm_icns dtl_icns">
-                                            <span class="count">1</span>
-                                            <img
-                                              class="feedMediaType iconBg"
-                                              src={videoic}
-                                              alt=""
-                                            />
-                                          </div>
-                                        </div>
-                                        <div class="post_icns_cstm_wrp audio-ico">
-                                          <div class="post_itm_icns dtl_icns">
-                                            <span class="count">1</span>
-                                            <img
-                                              class="feedMediaType iconBg"
-                                              src={interviewic}
-                                              alt=""
-                                            />
-                                          </div>
+                                        <div className="tableContentTypeIcons">
+                                          {image.length > 0 && (
+                                            <div class="post_icns_cstm_wrp camera-ico">
+                                              <div class="post_itm_icns dtl_icns">
+                                                <span class="count">
+                                                  {image.length}
+                                                </span>
+                                                <img
+                                                  class="feedMediaType iconBg"
+                                                  src={cameraic}
+                                                  alt=""
+                                                />
+                                              </div>
+                                            </div>
+                                          )}
+                                          {video.length > 0 && (
+                                            <div class="post_icns_cstm_wrp video-ico">
+                                              <div class="post_itm_icns dtl_icns">
+                                                <span class="count">
+                                                  {video.length}
+                                                </span>
+                                                <img
+                                                  class="feedMediaType iconBg"
+                                                  src={videoic}
+                                                  alt=""
+                                                />
+                                              </div>
+                                            </div>
+                                          )}
+                                          {audio.length > 0 && (
+                                            <div class="post_icns_cstm_wrp audio-ico">
+                                              <div class="post_itm_icns dtl_icns">
+                                                <span class="count">
+                                                  {audio.length}
+                                                </span>
+                                                <img
+                                                  class="feedMediaType iconBg"
+                                                  src={interviewic}
+                                                  alt=""
+                                                />
+                                              </div>
+                                            </div>
+                                          )}
                                         </div>
                                       </Link>
                                     </td>
@@ -1040,13 +1345,23 @@ const DashboardTables = () => {
                                     </td>
 
                                     <td className="text-center">
-                                      {curr?.content_id?.Vat?.find(
-                                        (el) =>
-                                          el?.purchased_mediahouse_id ==
-                                          JSON.parse(
-                                            localStorage.getItem("user")
-                                          )?._id
-                                      )?.purchased_content_type == "shared" ? (
+                                      {curr?.content_id?.Vat?.find((el) => {
+                                        const user = JSON.parse(
+                                          localStorage.getItem("user")
+                                        );
+                                        const idToCompare =
+                                          user.role === "MediaHouse"
+                                            ? user._id
+                                            : user.mediaHouseId;
+                                        return (
+                                          el?.purchased_mediahouse_id ===
+                                          idToCompare
+                                        );
+                                        // el?.purchased_mediahouse_id ==
+                                        // JSON.parse(
+                                        //   localStorage.getItem("user").role=="user"?localStorage.getItem("user").media_house_id:localStorage.getItem("user")._id
+                                        // )?._id
+                                      })?.purchased_content_type == "shared" ? (
                                         <Tooltip title="Shared">
                                           <img
                                             src={sharedic}

@@ -114,6 +114,7 @@ const Accounts = () => {
   });
 
   const [accountCount, setAccountCount] = useState();
+  const [activeKey, setActiveKey] = useState();
   const [openFilterComponent, setOpenFilterComponent] = useState(false);
   const [transaction_details, setTransaction_Details] = useState([]);
   const [vatDetails, setVatDetails] = useState([]);
@@ -159,6 +160,13 @@ const Accounts = () => {
   const parsedContent = query.get("content") || "false";
   const parsedPaymentMade = query.get("payment_made") || "false";
   const parsedPaymentPending = query.get("payment_pending") || "false";
+  const activeKeygraph = query.get("activekey") || "tasks";
+
+  useEffect(() => {
+    if (activeKeygraph) {
+      setActiveKey(activeKeygraph);
+    }
+  }, [activeKeygraph]);
 
   useEffect(() => {
     setAccountSortFilter({
@@ -1972,9 +1980,15 @@ const Accounts = () => {
                             )}
                           </div>
                           <Tabs
-                            defaultActiveKey="tasks"
+                            // defaultActiveKey="tasks"
+                            activeKey={activeKeygraph || activeKey}
                             id="uncontrolled-tab-example"
                             className="mb-3"
+                            onSelect={(k) => {
+                              console.log("all active key", k);
+                              navigate(`/accounts?activekey=${k}`);
+                              setActiveKey(k);
+                            }}
                           >
                             <Tab
                               eventKey="tasks"
@@ -2043,7 +2057,7 @@ const Accounts = () => {
               </div>
             </Col>
           </Row>
-          <div className="mt-4">
+          <div className="mt-4 topSearchWrapPadding">
             <TopSearchesTipsCard />
           </div>
         </Container>

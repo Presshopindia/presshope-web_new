@@ -290,6 +290,16 @@ const TaskReports = ({ timeValuesProps }) => {
                 "Dec",
               ],
             },
+            yaxis: {
+              tickAmount: 10, // Number of ticks on the Y-axis
+              min: 0, // Minimum value
+              max: 100, // Maximum value
+              labels: {
+                formatter: function (val) {
+                  return Math.round(val);
+                },
+              },
+            },
           },
           series: [
             {

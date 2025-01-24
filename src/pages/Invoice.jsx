@@ -16,7 +16,6 @@ import celebrity from "../assets/images/celebrity.svg";
 import exclusiveic from "../assets/images/exclusive.svg";
 import pdfic from "../assets/images/pdfic.svg";
 import docsic from "../assets/images/docsic.svg";
-import prslogo from "../assets/images/prs-logo.png";
 import reuters from "../assets/images/reuters.png";
 import shared from "../assets/images/share.png";
 import videoic from "../assets/images/video.svg";
@@ -84,17 +83,17 @@ const Invoice = () => {
                   <div className="dash-tabs invoice-lft">
                     <Row>
                       <Col md={6}>
-                        
-                                 
 
-                      <div className="ftr-left">
-                  <img src={logo} alt="Presshop" className="footer-logo" />
-                  <img
+
+
+                        <div className="ftr-left">
+                          <img src={logo} alt="Presshop" className="footer-logo" />
+                          {/* <img
                     src={logoDark}
                     alt="Presshop"
                     className="footer-logo darkLogo"
-                  />
-                </div>
+                  /> */}
+                        </div>
 
 
 
@@ -246,24 +245,24 @@ const Invoice = () => {
                                                   alt="img"
                                                 />
                                               ) : data?.content_id?.content[0]
-                                                  ?.media_type === "video" ? (
+                                                ?.media_type === "video" ? (
                                                 <img
                                                   src={
                                                     data.content[0].watermark ||
                                                     process.env
                                                       .REACT_APP_CONTENT_MEDIA +
-                                                      data.content[0].thumbnail
+                                                    data.content[0].thumbnail
                                                   }
                                                   className="cntnt-img"
                                                 />
                                               ) : data?.content_id?.content[0]
-                                                  ?.media_type === "audio" ? (
+                                                ?.media_type === "audio" ? (
                                                 <img
                                                   src={audioic}
                                                   className="cntnt-img"
                                                 />
                                               ) : data?.content_id?.content[0]
-                                                  ?.media_type === "pdf" ? (
+                                                ?.media_type === "pdf" ? (
                                                 <img
                                                   src={docsic}
                                                   className="cntnt-img"
@@ -309,15 +308,15 @@ const Invoice = () => {
                                                 ?.media_type == "image"
                                                 ? "Photo"
                                                 : data?.content_id?.content[0]
-                                                    ?.media_type == "Audio"
-                                                ? audioicon
-                                                : data?.content_id?.content[0]
+                                                  ?.media_type == "Audio"
+                                                  ? audioicon
+                                                  : data?.content_id?.content[0]
                                                     ?.media_type == "Pdf"
-                                                ? "Pdf"
-                                                : data?.content_id?.content[0]
-                                                    ?.media_type == "Video"
-                                                ? "Video"
-                                                : "Scan"
+                                                    ? "Pdf"
+                                                    : data?.content_id?.content[0]
+                                                      ?.media_type == "Video"
+                                                      ? "Video"
+                                                      : "Scan"
                                             }
                                           >
                                             <img
@@ -326,15 +325,15 @@ const Invoice = () => {
                                                   ?.media_type == "image"
                                                   ? cameraic
                                                   : data?.content_id?.content[0]
-                                                      ?.media_type == "audio"
-                                                  ? audioicon
-                                                  : data?.content_id?.content[0]
+                                                    ?.media_type == "audio"
+                                                    ? audioicon
+                                                    : data?.content_id?.content[0]
                                                       ?.media_type == "pdf"
-                                                  ? docsic
-                                                  : data?.content_id?.content[0]
-                                                      ?.media_type == "video"
-                                                  ? videoic
-                                                  : null
+                                                      ? docsic
+                                                      : data?.content_id?.content[0]
+                                                        ?.media_type == "video"
+                                                        ? videoic
+                                                        : null
                                               }
                                               className="tbl_ic"
                                               alt="camera"
@@ -352,7 +351,7 @@ const Invoice = () => {
                                                     localStorage.getItem("user")
                                                   )?._id
                                               )?.purchased_content_type ==
-                                              "shared"
+                                                "shared"
                                                 ? "Shared"
                                                 : "Exclusive"
                                             }
@@ -368,7 +367,7 @@ const Invoice = () => {
                                                       )
                                                     )?._id
                                                 )?.purchased_content_type ==
-                                                "shared"
+                                                  "shared"
                                                   ? shared
                                                   : exclusiveic
                                               }
@@ -404,19 +403,18 @@ const Invoice = () => {
                                               marginRight: "5px",
                                             }}
                                           >
-                                            {`£${
-                                              formatAmountInMillion(
-                                                data?.content_id?.Vat?.find(
-                                                  (el) =>
-                                                    el?.purchased_mediahouse_id ==
-                                                    JSON.parse(
-                                                      localStorage.getItem(
-                                                        "user"
-                                                      )
-                                                    )?._id
-                                                )?.amount_without_Vat
-                                              ) || data?.amount - data?.Vat
-                                            }`}
+                                            {`£${formatAmountInMillion(
+                                              data?.content_id?.Vat?.find(
+                                                (el) =>
+                                                  el?.purchased_mediahouse_id ==
+                                                  JSON.parse(
+                                                    localStorage.getItem(
+                                                      "user"
+                                                    )
+                                                  )?._id
+                                              )?.amount_without_Vat
+                                            ) || data?.amount - data?.Vat
+                                              }`}
                                           </p>
                                         </td>
                                       </tr>
@@ -435,8 +433,8 @@ const Invoice = () => {
                                         £
                                         {formatAmountInMillion(
                                           data?.amount -
-                                            (data?.Vat ||
-                                              data?.original_Vatamount)
+                                          (data?.Vat ||
+                                            data?.original_Vatamount)
                                         )}
                                       </span>
                                     </div>

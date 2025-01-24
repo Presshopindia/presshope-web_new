@@ -43,7 +43,10 @@ const CommonSort = ({
             height="17px"
             className="icn close"
             alt="Close"
-            onClick={() => setDashboardSort({ type: "" })}
+            onClick={() => {
+              setDashboardSort({ type: "" });
+              setSortState("");
+            }}
           />
           <p className="hdng">Sort</p>
           <div className="notf_icn_wrp" onClick={handleClearSort}>
@@ -262,8 +265,11 @@ const CommonSort = ({
 
             <p className="sort_txt">View yearly</p>
           </div>
+          <button className="fltr_btn mt-3" onClick={handleApplyClick}>
+            Apply
+          </button>
 
-          <div className="sort_item">
+          {/* <div className="sort_item">
             <svg
               width="21"
               height="15"
@@ -311,7 +317,7 @@ const CommonSort = ({
                 </select>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
