@@ -26,7 +26,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-src/pages/Signup.jsx
 
 .history
 .history/src/pages/AllContents_20230206173632.jsx
