@@ -1,0 +1,90 @@
+  .resp_hdr{
+
+  
+  .navbar {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+  }
+  
+  .menu-bars {
+    // margin-left: 2rem;
+    font-size: 2rem;
+    background: none;
+  }
+  
+  .nav-menu {
+    background-color: #000;
+    width: 250px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    transition: 850ms;
+    z-index: 99;
+    overflow-y: auto;
+  }
+  
+  .nav-menu.active {
+    right: 0;
+    transition: 350ms;
+    padding: 10px !important;
+  }
+  
+  .nav-text {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 8px 0 8px 16px;
+    list-style: none;
+    height: 60px;
+  }
+  
+  .nav-text a {
+    text-decoration: none;
+    color: #fff;
+    font-family: "AirbnbMedium";
+    font-size: 18px;
+    width: 95%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 0px;
+    
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+  
+  .nav-text:hover {
+    border-radius: 4px;
+    background-color: #ec4e54;
+  }
+  .nav-text.nme:hover a{
+    color: white !important;
+  }
+  .usr_lg_name .msg-count {
+    top: -15px !important;
+}
+  
+  .nav-menu-items {
+    width: 100%;
+    padding: 0;
+    list-style-type:none ;
+  }
+  
+  .navbar-toggle {
+    /* background-color: var(--navBg); */
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  // span {
+  //   margin-left: 16px;
+  // }
+}

@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "new-presshop-mediahouse",
+    "staging": "new-presshop-mediahouse"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}

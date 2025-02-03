@@ -1,0 +1,605 @@
+import React, { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom';
+// import HeaderN from "../component/HeaderN"
+import imgs from "../assets/images/imgn6.jpg";
+import img2 from "../assets/images/img2.webp";
+import avatar from "../assets/images/avatar.png";
+import { Container, Row, Col, Form } from "react-bootstrap";
+import ContentFeedCard from '../component/card/ContentFeedCard'
+import exclusive from '../assets/images/exclusive.png';
+import { Button, Card, CardContent, Typography } from "@mui/material";
+import { BsArrowRight, BsArrowLeft, BsMic, BsChevronDown } from "react-icons/bs";
+import feedcontimg from '../assets/images/imgn6.jpg'
+import { AiOutlineStar } from "react-icons/ai";
+import authorimg from '../assets/images/profile.webp'
+import { MdOutlineWatchLater, MdAdd } from "react-icons/md";
+import Tab from 'react-bootstrap/Tab';
+import RecentActivityDF from "../component/Sortfilters/Dashboard/RecentActivity";
+
+import audioic from "../assets/images/audimg.svg";
+import Tabs from 'react-bootstrap/Tabs';
+import { IoCallOutline } from "react-icons/io5";
+import imgprofile from '../assets/images/profile.webp'
+import { AiOutlinePlus } from "react-icons/ai";
+import InputGroup from 'react-bootstrap/InputGroup';
+import inpimg from '../assets/images/profile.webp'
+import contentCamera from '../assets/images/contentCamera.svg';
+import contentVideo from '../assets/images/contentVideo.svg';
+import { VscDeviceCameraVideo } from "react-icons/vsc";
+import TopSearchesTipsCard from "../component/card/TopSearchesTipsCard";
+import { SlLocationPin } from "react-icons/sl";
+import Header from "../component/Header";
+import DbFooter from "../component/DbFooter";
+import { Get, Patch, Post } from '../services/user.services';
+import moment from 'moment/moment';
+import { toast } from 'react-toastify';
+import shared from '../assets/images/share.png';
+import Loader from '../component/Loader';
+import RelatedMoreContentSort from "../component/Sortfilters/Dashboard/RelatedMoreContentSort";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import contentimg from "../assets/images/Contentdetail/content3.png";
+import favic from "../assets/images/favouritestar.svg";
+import videoic from "../assets/images/video.svg";
+import interviewic from "../assets/images/interview.svg";
+import cameraic from "../assets/images/camera.svg";
+
+const ContentunderofferdetailN = () => {
+
+  const [openRecentActivity, setOpenRecentActivity] = useState(false);
+  const handleCloseRecentActivity = (values) => {
+    setOpenRecentActivity(values)
+  }
+
+
+  const [recentActivityValues, setRecentActivityValues] = useState({
+    field: "",
+    value: ""
+  })
+  const handleRecentActivityValue = (value) => {
+    setRecentActivityValues({ field: value.field, value: value.values })
+  }
+
+  return (
+    <>
+      {/* {loading && <Loader />} */}
+      <Header />
+      <div className="page-wrap feed-detail">
+        <Container fluid>
+          <Row>
+            <Col md={12}>
+              <div className="feedsMain_wrap">
+                <div className="feedsContainer">
+                  <div className="feedContent_header">
+                    <Link to={"/Content-Under-Offer"} className='back_link'><BsArrowLeft className='text-pink' /> Back </Link>
+                  </div>
+                  <Row className=''>
+                    <Col md={8}>
+                      <Card className="feeddetail-card left-card">
+                        <CardContent className="card-content position-relative">
+                          <div className="post_itm_icns">
+                            <p className="count">
+                              2
+                            </p>
+                            <img className="feedMediaType iconBg" src={cameraic} alt="" />
+                          </div>
+
+                          <div className="post_itm_icns another">
+                            <p className="count">
+                              3
+                            </p>
+                            <img className="feedMediaType iconBg" src={videoic} alt="" />
+                          </div>
+
+                          <div className="post_itm_icns right">
+                            <img className="feedMediaType iconBg" src={favic} alt="" />
+                          </div>
+
+                          <Swiper
+                            spaceBetween={50}
+                            slidesPerView={1}
+                            navigation
+                            // navigation={true}
+                            slidesPerGroupSkip={1}
+                            focusableElements="pagination"
+                            nested={true}
+                            pagination={{ clickable: true }}
+                            onSlideChange={() => console.log('slide change')}
+                            onSwiper={(swiper) => console.log(swiper)}>
+                            <SwiperSlide>
+                              <img src={contentimg} alt="" />
+                            </SwiperSlide>
+                            <SwiperSlide>
+                              <img src={contentimg} alt="" />
+                            </SwiperSlide>
+
+                            {/* )
+                            })} */}
+                          </Swiper>
+                          <div className="feedTitle_content">
+                            <h1 className='feedTitle'>Ramsdale creates history once again by stopping Drogba's goal</h1>
+                            <p className='feed_descrptn'>Vivamus sit amet commodo risus. Ut dictum rutrum lacinia. Ut at nunc a mi facilisis ornare. Nullam arcu odio, volutpat at sem volutpat, imperdiet maximus nisi. Curabitur elit nulla, dictum a congue a, maximus vel elit. Donec dapibus est dapibus odio consectetur, a auctor erat tristique. Cras sed mattis ipsum. </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Col>
+                    <Col md={4}>
+                      <Card className="feeddetail-card h-100 content-info">
+                        <CardContent className="card-content">
+                          <div className="sub-content">
+                            <div className="heading w-100 d-flex align-items-center justify-content-between">
+                              <Typography className="txt_bld"> Content info</Typography>
+                              <div className="favourite">
+                                <AiOutlineStar />
+                                <span>Favourite</span>
+                              </div>
+                            </div>
+                          </div>
+                          {/* <hr /> */}
+                          <div className="content">
+                            <div className="sub-content">
+                              <div className="item d-flex justify-content-between align-items-center">
+                                <span className="fnt-bold">Author</span>
+                                <div className="item-in-right">
+                                  <img src={authorimg} alt="" />
+                                  <span className='hpr_nme'>pseudonymous</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="sub-content">
+                              <div className="item d-flex justify-content-between align-items-center">
+                                <span className="fnt-bold">Location</span>
+                                <div className="item-in-right loc">
+                                  <span><SlLocationPin /> <div>Emirates stadium, Hornsey, London N7 7AJ</div></span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="sub-content">
+                              <div className="item d-flex justify-content-between align-items-center">
+                                <span className="fnt-bold">TimeStamp</span>
+                                <div className="item-in-right loc">
+                                  <span><MdOutlineWatchLater />12:36 PM, 10 Oct, 2021</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="sub-content tags_wrp">
+                              <div className="item d-flex justify-content-between align-items-center">
+                                <span className="fnt-bold">Hashtags</span>
+                                <div>
+                                  <div className="item-in-right hashtag-wrap">
+                                    <span className="mr">#football</span>
+                                    <span className="mr">#Sports</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="sub-content">
+                              <div className="item d-flex justify-content-between align-items-center">
+                                <span className="fnt-bold">Category</span>
+                                <div className="">
+                                  <span className='txt_catg_licn'>Sport</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="sub-content">
+                              <div className="item d-flex justify-content-between align-items-center">
+                                <span className="fnt-bold">License</span>
+                                <div className="">
+                                  <img src={exclusive} className="exclusive-img" alt="" />
+                                  <span className='txt_catg_licn'>Exlusive</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="foot cont-info-actions d-flex justify-content-between align-items-center">
+                              <Link><Button variant='secondary'>Offer</Button></Link>
+                              <Link> <Button variant='primary'>� 500</Button></Link>
+                              {/* <Link> <Button variant='primary'>Paid</Button></Link> */}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Col>
+                    <Col md={12} className='feed_dtl_chat_wrap'>
+                      <div className="chat-tabs-wrap">
+                        <Tabs
+                          defaultActiveKey="internal"
+                          id="chat-tabs"
+                          className="mb-3 tbs">
+                          <Tab eventKey="internal" title="Internal Chat" defaultActiveKey="internal" className=" show">
+                            <div className="tab-data active">
+                              <Row>
+                                <Col md={9}>
+                                  <div className="feed_dtl_msgs">
+                                    <div className="crd position-relative">
+                                      <div className="img">
+                                        <img src={imgprofile} alt="user" />
+                                      </div>
+                                      <div className="postedcmnt_info">
+                                        <h5>Harold Morton <span className="text-secondary time">1:54PM</span></h5>
+                                        <Typography className='comment_text'>
+                                          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae expedita dicta a, culpa labore vitae? Doloribus earum, exercitationem culpa, maiores dolores ipsam iure inventore suscipit accusantium dicta alias omnis at.
+                                        </Typography>
+                                      </div>
+                                      <div className="msg-line">
+                                        <span>
+                                          New Messages
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="crd">
+                                      <div className="img">
+                                        <img src={imgprofile} alt="user" />
+                                      </div>
+                                      <div className="postedcmnt_info">
+                                        <h5>Sally Smith<span className="text-secondary time">1:54PM</span></h5>
+                                        <Typography className='comment_text'>
+                                          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae expedita dicta a, culpa labore vitae? Doloribus earum, exercitationem culpa, maiores dolores ipsam iure inventore suscipit accusantium dicta alias omnis at.
+                                        </Typography>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="inpt typeMsg_inp mt-2">
+                                    <img src={inpimg} alt="" />
+                                    <InputGroup className="">
+                                      <Form.Control
+                                        placeholder="Type here..."
+                                        aria-describedby="basic-addon1"
+                                      />
+                                    </InputGroup>
+                                    <div className="chatIn-options">
+                                      <MdAdd />
+                                      <VscDeviceCameraVideo />
+                                      <IoCallOutline />
+                                      <BsMic />
+                                      <span className='chatIn-send'>
+                                        <BsArrowRight />
+                                      </span>
+                                    </div>
+                                  </div>
+                                </Col>
+                                <Col md={3}>
+                                  <div className="tab_in_card">
+                                    <div className="tab_in_card-heading d-flex justify-content-between align-items-center">
+                                      <h4>Participants</h4>
+                                      <div className="icon text-white">
+                                        <AiOutlinePlus />
+                                      </div>
+                                    </div>
+                                    <div className="tab_in_card_items">
+                                      <div className="img">
+                                        <img src={imgprofile} alt="user" />
+                                        <span>Selena Reed</span>
+                                      </div>
+                                      <div className="dots">
+                                        <Link className='view_chat'>View</Link>
+                                      </div>
+                                    </div>
+                                    <div className="tab_in_card_items">
+                                      <div className="img">
+                                        <img src={imgprofile} alt="user" />
+                                        <span>Ayesha Patel</span>
+                                      </div>
+                                      <div className="dots">
+                                        <Link className='view_chat'>View</Link>
+                                      </div>
+                                    </div>
+                                    <div className="tab_in_card_items">
+                                      <div className="img">
+                                        <img src={imgprofile} alt="user" />
+                                        <span>James Anant</span>
+                                      </div>
+                                      <div className="dots">
+                                        <Link className='view_chat'>View</Link>
+                                      </div>
+                                    </div>
+                                    <div className='text-end'>
+                                      <Link className='view_Allchat'>View all <BsArrowRight className='text-pink' /></Link>
+                                    </div>
+                                  </div>
+                                </Col>
+                              </Row>
+                            </div>
+                          </Tab>
+                          <Tab eventKey="external" title="External Chat" >
+                            <div className="tab-data active">
+                              <Row>
+                                <Col md={9}>
+                                  <div className="feed_dtl_msgs">
+                                    <div className="crd position-relative">
+                                      <div className="img">
+                                        <img src={imgprofile} alt="user" />
+                                      </div>
+                                      <div className="postedcmnt_info">
+                                        <h5>John Gengxin <span className="text-secondary time">1:54PM</span></h5>
+                                        <Typography className='comment_text'>
+                                          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae expedita dicta a, culpa labore vitae? Doloribus earum, exercitationem culpa, maiores dolores ipsam iure inventore suscipit accusantium dicta alias omnis at.
+                                        </Typography>
+                                      </div>
+                                      <div className="msg-line">
+                                        <span>
+                                          New Messages
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="crd">
+                                      <div className="img">
+                                        <img src={imgprofile} alt="user" />
+                                      </div>
+                                      <div className="postedcmnt_info">
+                                        <h5>John Gengxin <span className="text-secondary time">1:54PM</span></h5>
+                                        <Typography className='comment_text'>
+                                          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae expedita dicta a, culpa labore vitae? Doloribus earum, exercitationem culpa, maiores dolores ipsam iure inventore suscipit accusantium dicta alias omnis at.
+                                        </Typography>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {/* <div className="inpt typeMsg_inp mt-2">
+                                    <img src={inpimg} alt="" />
+                                    <InputGroup className="mb-3">
+                                      <Form.Control
+                                        placeholder="Type here..."
+                                        aria-describedby="basic-addon1"
+                                      />
+                                    </InputGroup>
+                                    <div className="chatIn-options">
+                                      <MdAdd />
+                                      <BsMic />
+                                      <span className='chatIn-send'>
+                                        <BsArrowRight />
+                                      </span>
+                                    </div>
+                                  </div> */}
+                                </Col>
+                                <Col md={3}>
+                                  <div className="tab_in_card">
+                                    <div className="tab_in_card-heading d-flex justify-content-between align-items-center">
+                                      <h4>Participants</h4>
+                                      <div className="icon text-white">
+                                        <AiOutlinePlus />
+                                      </div>
+                                    </div>
+                                    <div className="tab_in_card_items">
+                                      <div className="img">
+                                        <img src={imgprofile} alt="user" />
+                                        <span>John Gengxin</span>
+                                      </div>
+                                      <div className="dots">
+                                        <Link className='view_chat'>View</Link>
+                                      </div>
+                                    </div>
+                                    <div className="tab_in_card_items">
+                                      <div className="img">
+                                        <img src={imgprofile} alt="user" />
+                                        <span>John Gengxin</span>
+                                      </div>
+                                      <div className="dots">
+                                        <Link className='view_chat'>View</Link>
+                                      </div>
+                                    </div>
+                                    <div className="tab_in_card_items">
+                                      <div className="img">
+                                        <img src={imgprofile} alt="user" />
+                                        <span>John Gengxin</span>
+                                      </div>
+                                      <div className="dots">
+                                        <Link className='view_chat'>View</Link>
+                                      </div>
+                                    </div>
+                                    <div className='text-end'>
+                                      <Link className='view_Allchat'>View all <BsArrowRight className='text-pink' /></Link>
+                                    </div>
+                                  </div>
+                                </Col>
+                              </Row>
+                            </div>
+                          </Tab>
+                          <Tab eventKey="presshopchat" title="Presshop Chat" >
+                            <div className="tab-data active">
+                              <Row>
+                                <Col md={9}>
+                                  <div className="feed_dtl_msgs">
+                                    <div className="crd position-relative">
+                                      <div className="img">
+                                        <img src={imgprofile} alt="user" />
+                                      </div>
+                                      <div className="postedcmnt_info">
+                                        <h5>John Gengxin <span className="text-secondary time">1:54PM</span></h5>
+                                        <Typography className='comment_text'>
+                                          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae expedita dicta a, culpa labore vitae? Doloribus earum, exercitationem culpa, maiores dolores ipsam iure inventore suscipit accusantium dicta alias omnis at.
+                                        </Typography>
+                                      </div>
+                                      <div className="msg-line">
+                                        <span>
+                                          New Messages
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="crd">
+                                      <div className="img">
+                                        <img src={imgprofile} alt="user" />
+                                      </div>
+                                      <div className="postedcmnt_info">
+                                        <h5>John Gengxin <span className="text-secondary time">1:54PM</span></h5>
+                                        <Typography className='comment_text'>
+                                          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae expedita dicta a, culpa labore vitae? Doloribus earum, exercitationem culpa, maiores dolores ipsam iure inventore suscipit accusantium dicta alias omnis at.
+                                        </Typography>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div className="inpt typeMsg_inp mt-2">
+                                    <img src={inpimg} alt="" />
+                                    <InputGroup className="mb-3">
+                                      <Form.Control
+                                        placeholder="Type here..."
+                                        aria-describedby="basic-addon1"
+                                      />
+                                    </InputGroup>
+                                    <div className="chatIn-options">
+                                      <MdAdd />
+                                      <BsMic />
+                                      <span className='chatIn-send'>
+                                        <BsArrowRight />
+                                      </span>
+                                    </div>
+                                  </div>
+                                </Col>
+                                <Col md={3}>
+                                  <div className="tab_in_card">
+                                    <div className="tab_in_card-heading d-flex justify-content-between align-items-center">
+                                      <h4>Participants</h4>
+                                      <div className="icon text-white">
+                                        <AiOutlinePlus />
+                                      </div>
+                                    </div>
+                                    <div className="tab_in_card_items">
+                                      <div className="img">
+                                        <img src={imgprofile} alt="user" />
+                                        <span>John Gengxin</span>
+                                      </div>
+                                      <div className="dots">
+                                        <Link className='view_chat'>View</Link>
+                                      </div>
+                                    </div>
+                                    <div className="tab_in_card_items">
+                                      <div className="img">
+                                        <img src={imgprofile} alt="user" />
+                                        <span>John Gengxin</span>
+                                      </div>
+                                      <div className="dots">
+                                        <Link className='view_chat'>View</Link>
+                                      </div>
+                                    </div>
+                                    <div className="tab_in_card_items">
+                                      <div className="img">
+                                        <img src={imgprofile} alt="user" />
+                                        <span>John Gengxin</span>
+                                      </div>
+                                      <div className="dots">
+                                        <Link className='view_chat'>View</Link>
+                                      </div>
+                                    </div>
+                                    <div className='text-end'>
+                                      <Link className='view_Allchat'>View all <BsArrowRight className='text-pink' /></Link>
+                                    </div>
+                                  </div>
+                                </Col>
+                              </Row>
+                            </div>
+                          </Tab>
+                        </Tabs>
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
+                <div className="feedsContainer">
+                  <div className="feedContent_header">
+                    <h1>Related content</h1>
+                    <div className='d-flex align-items-center'>
+                      <div className="fltrs_prnt me-3 ht_sort">
+                        <Button className='sort_btn' onClick={() => { setOpenRecentActivity(true); }}>
+                          Sort
+                          <BsChevronDown />
+                        </Button>
+                        {openRecentActivity && <RecentActivityDF closeRecentActivity={handleCloseRecentActivity} recentActivityValues={handleRecentActivityValue} />}
+                      </div>
+                      <Link to="/related-content" className='next_link'>View all<BsArrowRight className='text-pink' /></Link>
+                    </div>
+                  </div>
+                  <Row className=''>
+                    <Col md={3}>
+                      <ContentFeedCard lnkto={""} feedImg={audioic} feedType={contentVideo} feedTag={"Most Viewed"} userAvatar={imgs} authorName={"Pseudonymous"}
+                        type_img={exclusive} type_tag={"Exclusive"}
+                        feedHead={"lorem ipsum"} fvticns={favic} feedTypeImg={cameraic} postcount={2} feedTypeImg2={interviewic} postcount2={3}
+                        feedTime={"12:36 PM, 10 Oct 2022"} feedLocation={"Grenfell Tower, London"} contentPrice={"�500"}
+                      />
+                    </Col>
+
+                    <Col md={3}>
+                      <ContentFeedCard lnkto={""} feedImg={audioic} feedType={contentVideo} feedTag={"Most Viewed"} userAvatar={imgs} authorName={"Pseudonymous"}
+                        type_img={exclusive} type_tag={"Exclusive"}
+                        feedHead={"lorem ipsum"} fvticns={favic} feedTypeImg={cameraic} postcount={2} feedTypeImg2={interviewic} postcount2={3}
+                        feedTime={"12:36 PM, 10 Oct 2022"} feedLocation={"Grenfell Tower, London"} contentPrice={"�500"}
+                      />
+                    </Col>
+
+                    <Col md={3}>
+                      <ContentFeedCard lnkto={""} feedImg={audioic} feedType={contentVideo} feedTag={"Most Viewed"} userAvatar={imgs} authorName={"Pseudonymous"}
+                        type_img={exclusive} type_tag={"Exclusive"}
+                        feedHead={"lorem ipsum"} fvticns={favic} feedTypeImg={cameraic} postcount={2} feedTypeImg2={videoic} postcount2={3}
+                        feedTime={"12:36 PM, 10 Oct 2022"} feedLocation={"Grenfell Tower, London"} contentPrice={"�500"}
+                      />
+                    </Col>
+
+                    <Col md={3}>
+                      <ContentFeedCard lnkto={""} feedImg={audioic} feedType={contentVideo} feedTag={"Most Viewed"} userAvatar={imgs} authorName={"Pseudonymous"}
+                        type_img={exclusive} type_tag={"Exclusive"}
+                        feedHead={"lorem ipsum"} fvticns={favic} feedTypeImg={cameraic} postcount={2} feedTypeImg2={interviewic} postcount2={3}
+                        feedTime={"12:36 PM, 10 Oct 2022"} feedLocation={"Grenfell Tower, London"} contentPrice={"�500"}
+                      />
+                    </Col>
+                  </Row>
+                </div>
+
+                <div className="feedsContainer" >
+                  <div className="feedContent_header">
+                    <h1>More content from Pseudynoumos</h1>
+                    <div className='d-flex align-items-center'>
+                      <div className="fltrs_prnt me-3 ht_sort">
+                        <Button className='sort_btn' onClick={() => { setOpenRecentActivity(true); }}>
+                          Sort
+                          <BsChevronDown />
+                        </Button>
+                        {openRecentActivity && <RecentActivityDF closeRecentActivity={handleCloseRecentActivity} recentActivityValues={handleRecentActivityValue} />}
+                      </div>
+                      <Link to="/more-content" className='next_link'>View all<BsArrowRight className='text-pink' /></Link>
+                    </div>
+                  </div>
+                  <Row className=''>
+                    <Col md={3}>
+                      <ContentFeedCard lnkto={""} feedImg={audioic} feedType={contentVideo} feedTag={"Most Viewed"} userAvatar={imgs} authorName={"Pseudonymous"}
+                        type_img={exclusive} type_tag={"Exclusive"}
+                        feedHead={"Heading"}
+                        fvticns={favic} feedTypeImg={cameraic} postcount={2} feedTypeImg2={videoic} postcount2={3}
+                        feedTime={"12:36 PM, 10 Oct 2022"} feedLocation={"Grenfell Tower, London"} contentPrice={"�328"}
+                      />
+                    </Col>
+
+                    <Col md={3}>
+                      <ContentFeedCard lnkto={""} feedImg={audioic} feedType={contentVideo} feedTag={"Most Viewed"} userAvatar={imgs} authorName={"Pseudonymous"}
+                        type_img={exclusive} type_tag={"Exclusive"}
+                        feedHead={"Heading"}
+                        fvticns={favic} feedTypeImg={cameraic} postcount={2} feedTypeImg2={interviewic} postcount2={3}
+                        feedTime={"12:36 PM, 10 Oct 2022"} feedLocation={"Grenfell Tower, London"} contentPrice={"�328"}
+                      />
+                    </Col>
+
+                    <Col md={3}>
+                      <ContentFeedCard lnkto={""} feedImg={audioic} feedType={contentVideo} feedTag={"Most Viewed"} userAvatar={imgs} authorName={"Pseudonymous"}
+                        type_img={exclusive} type_tag={"Exclusive"}
+                        feedHead={"Heading"}
+                        fvticns={favic} feedTypeImg={cameraic} postcount={2} feedTypeImg2={videoic} postcount2={3}
+                        feedTime={"12:36 PM, 10 Oct 2022"} feedLocation={"Grenfell Tower, London"} contentPrice={"�328"}
+                      />
+                    </Col>
+
+                    <Col md={3}>
+                      <ContentFeedCard lnkto={""} feedImg={audioic} feedType={contentVideo} feedTag={"Most Viewed"} userAvatar={imgs} authorName={"Pseudonymous"}
+                        type_img={exclusive} type_tag={"Exclusive"}
+                        feedHead={"Heading"} fvticns={favic} feedTypeImg={cameraic} postcount={2} feedTypeImg2={interviewic} postcount2={3}
+                        feedTime={"12:36 PM, 10 Oct 2022"} feedLocation={"Grenfell Tower, London"} contentPrice={"�328"}
+                      />
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </div >
+      <DbFooter />
+    </>
+  )
+}
+
+export default ContentunderofferdetailN

@@ -1,0 +1,509 @@
+@import "~bootstrap/scss/bootstrap";
+
+$theme-blue: #202090;
+$theme-light-blue: #8ad7f8;
+$theme-orange: #f38b30;
+$white: #fff;
+$body-text: #000;
+$text-grey: #6c757d;
+$btn-border-radius: 8px;
+$header-bg: #000;
+$bg-grey: #f3f5f4;
+$clr-warning: #ffc107;
+$light-dark-grey: #e5e8e5;
+$rating-clr: #3f4e4c;
+$danger: #ec4e54;
+$danger-light: #dc354512;
+$m-00: #ffc964;
+$black: #000;
+$extra-light-grey: #f3f3f4;
+$dark-grey: #7d8d8b;
+$theme-color: #ec4e54;
+$txt-bold: "AirbnbBold";
+$txt-mdm: "AirbnbMedium";
+$border-color: #dee7e6;
+$hdng-size: 40px;
+$Box-shadow: 0px 2px 6px rgba(81, 97, 95, 0.217126);
+$input-border: #858585;
+// fonts
+
+@font-face {
+  font-family: "AirbnbLight";
+  /*Can be any text*/
+  src: local("AirbnbCereal_W_Bk"),
+    url("../src/assets/fonts/airbnb-cereal-font/AirbnbCereal_W_Lt.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "AirbnbMedium";
+  /*Can be any text*/
+  src: local("AirbnbCereal_W_Md"),
+    url("../src/assets/fonts/airbnb-cereal-font/AirbnbCereal_W_Md.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "AirbnbBold";
+  /*Can be any text*/
+  src: local("AirbnbCereal_W_Bd"),
+    url("../src/assets/fonts/airbnb-cereal-font/AirbnbCereal_W_Bd.ttf") format("truetype");
+}
+
+body .page-wrap {
+  padding: 40px 40px 0px 40px;
+}
+
+.Sort_list-card {
+  box-shadow: none !important;
+}
+
+.Card_Wrapper {
+  // width: 120px;
+  // height: 120px;
+  // border-radius: 14px;
+  // box-shadow: $Box-shadow;
+  // background-color: #ffff;
+  // background: $white;
+  // position: relative;
+
+  .list_card_img_top {
+    width: 100%;
+    height: 100px;
+    border-radius: 18px;
+    object-fit: cover;
+    padding: 8px;
+  }
+
+  .tab-card-txt_sort {
+    font-size: 9px;
+    font-family: "AirbnbBold" !important;
+    color: $black;
+  }
+
+  .review_content_wrap {
+    max-width: calc(100% - 20px);
+    min-width: calc(100% - 20px);
+    width: 95px;
+    position: absolute;
+    top: 15px;
+    left: 10px;
+  }
+
+  .rateView-type_icons {
+    background: rgba(63, 78, 76, 0.696484);
+    backdrop-filter: blur(1.35914px);
+
+    border-radius: 5px;
+    height: 25px;
+    width: 27px;
+    display: inline-block;
+    text-align: center;
+    line-height: 18px;
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    padding: 2px;
+
+    img {
+      width: 100%;
+    }
+  }
+}
+
+.feedtype_icon_Sort,
+.buyFeed_opt {
+  display: flex;
+  align-items: center;
+
+  img {
+    height: 12px;
+    width: 12px;
+  }
+
+  .small_bid_txt {
+    font-family: $txt-bold;
+    font-size: 9px;
+    line-height: 12px;
+    margin-left: 5px;
+    font-family: "AirbnbMedium" !important;
+  }
+}
+
+.theme-btn-small {
+  border-color: $theme-color !important;
+  background-color: $danger !important;
+  border-radius: 5px !important;
+  color: $white !important;
+  padding: 2px 4px !important;
+  font-family: "AirbnbMedium" !important;
+  font-size: 9px !important;
+  line-height: 9px !important;
+}
+
+// --Purchase_card_content-
+
+.feedsContainer.feedpurchaseContent,
+.feedUploadedContent,
+.feedUSourcedContent,
+.feedPsharedContent {
+  .view_transaction_dtl {
+    color: $danger;
+    font-family: $txt-mdm;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .offeredPrice_btn {
+    display: none;
+  }
+}
+
+.feedpurchaseContent,
+.feedUSourcedContent .contentPrice_btn {
+  background-color: #f3f5f4 !important;
+  color: #4c4c4c !important;
+}
+
+.DashBoardsort_wrapper_tab {
+  .theme-btn-small {
+    background-color: $black !important;
+    color: $white !important;
+    outline: none !important;
+    border: none !important;
+  }
+}
+
+.feedTags_search {
+  padding: 40px 40px 0px;
+}
+
+// --Favourite-content--
+
+.dash-tabs.Sort_tab_cart {
+  .view-all {
+    text-decoration: unset;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #000;
+  }
+}
+
+// --content-under-offer--
+.feedOfferContent {
+  .offeredPrice_btn {
+    background-color: $black;
+    color: #fff !important;
+    font-family: "AirbnbBold" !important;
+    border-radius: 10px !important;
+  }
+
+  .offered-badge {
+    font-family: $txt-mdm;
+    font-size: 10px;
+    line-height: 32px;
+    position: absolute;
+    top: -9px;
+    left: 13px;
+    text-align: center;
+    color: #ffffff;
+    text-transform: lowercase;
+  }
+}
+
+// --uploaded-content--
+
+// -Admin_popup_modal-
+
+.modal_wrapper,
+.user_login_dtl {
+  border-radius: 20px;
+
+  .my-modal {
+    width: 650px;
+    max-width: 650px;
+  }
+
+  .administrator_checkbox {
+    .MuiFormControlLabel-label {
+      // font-family: $txt-light;
+      font-size: 11.5px;
+      line-height: 18px;
+      letter-spacing: 0.4px;
+      color: $body-text;
+    }
+  }
+
+  .text_condition {
+    // font-family: $txt-mdm;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0.4px;
+    color: $body-text;
+  }
+
+  .modal-title {
+    font-size: 2.5rem !important;
+    font-family: $txt-mdm !important;
+    letter-spacing: 0.4px !important;
+    color: $black !important;
+  }
+
+  .modal-header {
+    border: none;
+  }
+
+  .modal-body {
+    border: none;
+  }
+
+  .form-group {
+    position: relative;
+
+    img {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+
+    img.view_pass {
+      position: absolute;
+      right: 11px;
+      top: 12px;
+      left: unset;
+      color: $dark-grey;
+      height: 16px;
+      width: 16px;
+    }
+
+    svg.view_pass {
+      position: absolute;
+      right: 11px;
+      top: 12px;
+      left: unset;
+      color: $dark-grey;
+      height: 16px;
+      width: 16px;
+    }
+
+    &>input {
+      padding: 10px 16px 10px 35px;
+      border-radius: 12px;
+    }
+
+    &>.form-control {
+      padding: 10px 16px 10px 40px;
+      height: 40px;
+    }
+
+    &>.MuiInputBase-root {
+      padding: 10px 16px 10px 35px;
+      height: 40px;
+      border-radius: 13px;
+      font-size: 14px;
+    }
+
+    .MuiSelect-select {
+      padding-left: 0;
+    }
+
+    ::placeholder {
+      font-family: $txt-mdm;
+      font-size: 13px;
+      line-height: 18px;
+      letter-spacing: 0.4px;
+      color: #7d8d8b;
+    }
+  }
+}
+
+// --Content_chat_Details--
+
+.main_content_container {
+  .content_img_wrapper {
+    border-radius: 20px;
+  }
+
+  img.card_img_top {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 20px;
+    object-fit: cover;
+  }
+}
+
+.content_info_wrapper {
+  .favourite-btn {
+    border-radius: 9px;
+    font-family: $txt-mdm;
+    font-size: 14px;
+    text-align: center;
+
+    .user_login_dtl {
+      .form-group {
+        position: relative;
+
+        img.privacy {
+          position: absolute;
+        }
+      }
+    }
+
+    letter-spacing: 0.2px;
+    color: #ffffff;
+  }
+}
+
+// --onboard_successs_css--
+
+.onboar_success {
+  .txt-success {
+    color: $black;
+    font-weight: bold;
+  }
+
+  .txt-success-link {
+    a {
+      color: $theme-color;
+      font-weight: 900;
+      letter-spacing: 0.2px;
+      // font-size: $txt-bold;
+    }
+  }
+
+  .top_txt {
+    p {
+      font-size: $txt-mdm;
+    }
+  }
+
+  .video_badge {
+    position: absolute;
+    top: 50%;
+    right: calc(50% - 10%);
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+  }
+
+  .onboardIntro_success_info {
+    .player-wrapper {
+      border-radius: 10px;
+      height: 100%;
+      width: 100%;
+    }
+
+    .obSuccess_img {
+      border-radius: 10px;
+      width: 100%;
+    }
+  }
+
+  .dashCard-heading {
+    .view-all {
+      color: $black;
+    }
+  }
+
+  .admin_badge {
+    background-color: #ec4e54 !important;
+    font-size: 12px;
+    color: #ffff !important;
+    text-align: center;
+    border-radius: 4px;
+    padding: 4px 14px;
+    line-height: 12px;
+    position: absolute;
+    margin-left: 10px;
+    display: inline-block;
+  }
+}
+
+// -Forget_password_--
+
+.login_stepsWrap.left-pdng.forget_pass_wrap {
+  padding-bottom: 0px;
+}
+
+// .login_stepsWrap.left-pdng.forget_pass_wrap {
+//   height: 0px;
+//   overflow: visible;
+// }
+
+.user_login_dtl {
+  .forget_password_btn {
+    display: inline-block;
+    margin-top: 50px;
+  }
+}
+
+.anthr_office_check>.MuiCheckbox-root {
+  padding: 0px 9px;
+}
+
+.anthr_office_check {
+  margin-bottom: 25px;
+}
+
+// .currentPic.up_img_iput{
+
+// }
+
+a.special_card_design {
+  height: 140px !important;
+}
+
+.favourite-tabs .tab-pane {
+  min-height: 338px;
+  overflow-x: hidden !important;
+  overflow-y: auto;
+}
+
+.excluse_wrap .exclusive_shrd_wrap {
+  border-bottom: 1px solid #dee7e6;
+  border-radius: 0 !important;
+}
+
+.excluse_wrap a:last-child .exclusive_shrd_wrap:last-child {
+  border-bottom: unset !important;
+}
+
+.cntent_card_icon .post_icns_cstm_wrp {
+  position: absolute;
+  top: 8px !important;
+  left: 4px !important;
+}
+
+.number-content span {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.number-content img.icn {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+}
+
+.invoice-lft img.footer-logo {
+  height: auto;
+  width: 50px;
+  object-fit: cover;
+}
+
+.content_uplded.vido_cnt .media-item {
+  position: relative;
+  width: fit-content;
+
+  .media-checkbox {
+    position: absolute;
+    top: 11px;
+    right: 20px;
+    border-radius: 31px;
+    left: unset;
+    width: 18px;
+    border-radius: 10px;
+    height: 18px;
+  }
+}

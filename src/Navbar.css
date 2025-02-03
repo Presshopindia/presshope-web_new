@@ -1,0 +1,73 @@
+.resp_hdr .navbar {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.resp_hdr .menu-bars {
+  font-size: 2rem;
+  background: none;
+}
+.resp_hdr .nav-menu {
+  background-color: #000;
+  width: 250px;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  right: -100%;
+  transition: 850ms;
+  z-index: 99;
+  overflow-y: auto;
+}
+.resp_hdr .nav-menu.active {
+  right: 0;
+  transition: 350ms;
+  padding: 10px !important;
+}
+.resp_hdr .nav-text {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding: 8px 0 8px 16px;
+  list-style: none;
+  height: 60px;
+}
+.resp_hdr .nav-text a {
+  text-decoration: none;
+  color: #fff;
+  font-family: "AirbnbMedium";
+  font-size: 18px;
+  width: 95%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 0px;
+  word-wrap: break-word;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+          hyphens: auto;
+}
+.resp_hdr .nav-text:hover {
+  border-radius: 4px;
+  background-color: #ec4e54;
+}
+.resp_hdr .nav-text.nme:hover a {
+  color: white !important;
+}
+.resp_hdr .usr_lg_name .msg-count {
+  top: -15px !important;
+}
+.resp_hdr .nav-menu-items {
+  width: 100%;
+  padding: 0;
+  list-style-type: none;
+}
+.resp_hdr .navbar-toggle {
+  /* background-color: var(--navBg); */
+  width: 100%;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}/*# sourceMappingURL=Navbar.css.map */
