@@ -64,6 +64,7 @@ const Signup = () => {
     number: "",
     vat: "",
     phone: "",
+    company_name: ""
   });
   const [loading, setLoading] = useState(false);
   const { adminPreRegistrationEmail, setAdminPreRegistrationEmail } =
@@ -124,6 +125,22 @@ const Signup = () => {
       }
     } catch (error) {}
   };
+
+    // Check company name function-
+    const checkCompanyName = async (value) => {
+      try {
+        const resp = await Post(`mediaHouse/checkcompanyvalidation`, {
+          key: "company_name",
+          value,
+        });
+        if (resp.data.data === "Data exist") {
+          setErrorData({
+            ...errorData,
+            company_name: "This company name already exists.",
+          });
+        }
+      } catch (error) {}
+    };
 
   // Handle company change-
   const handleCompanyChange = (event) => {
@@ -836,6 +853,11 @@ const Signup = () => {
                                       name="company_name"
                                       required
                                       onChange={(e) => {
+                                        checkCompanyName(e.target.value);
+                                        setErrorData({
+                                          ...errorData,
+                                          company_name: "",
+                                        });
                                         handleCompanyChange(e);
                                       }}
                                       placeholder="Company name *"
@@ -844,10 +866,14 @@ const Signup = () => {
                                           ?.company_name
                                       }
                                     />
+                                    {errorData?.company_name && (
+                                      <span className="errorInput">
+                                        {errorData?.company_name}
+                                      </span>
+                                    )}
                                   </Form.Group>
                                 </Col>
                                 <Col md={6}>
-                                  {console.log("AdminDetails", AdminDetails)}
                                   <Form.Group className="form-group">
                                     <img src={ComputerPic} alt="" />
                                     <Select
@@ -876,7 +902,7 @@ const Signup = () => {
                                     </Select>
                                   </Form.Group>
                                 </Col>
-                                <Col md={6} sm={12} xs={12}>
+                                <Col md={6} sm={12} xs={12} style={{marginTop: errorData?.company_name ? "0.5rem" : 0}}>
                                   <Form.Group className="form-group">
                                     <img src={hash} alt="company" />
                                     <Form.Control
@@ -898,10 +924,6 @@ const Signup = () => {
                                           ...errorData,
                                           number: "",
                                         });
-
-                                        // if (inputValue) {
-                                        //   handleCompanyChange(e);
-                                        // }
                                         handleCompanyChange(e);
                                       }}
                                       placeholder="Company number *"
@@ -924,7 +946,7 @@ const Signup = () => {
                                     )}
                                   </Form.Group>
                                 </Col>
-                                <Col md={6} sm={12} xs={12}>
+                                <Col md={6} sm={12} xs={12} style={{marginTop: errorData?.company_name ? "0.5rem" : 0}}>
                                   <Form.Group className="form-group">
                                     <img src={Receipt} alt="company" />
                                     <Form.Control
@@ -1510,17 +1532,11 @@ const Signup = () => {
                                   />
                                   {AdminDetails.administrator_details.phone
                                     .length < 10 ? (
-                                    <span
-                                      style={{ color: "red" }}
-                                      className="eml_txt_dngr"
-                                    >
+                                    <span className="errorInput">
                                       Mobile number should 10 digit
                                     </span>
                                   ) : errorData.phone ? (
-                                    <span
-                                      style={{ color: "red" }}
-                                      className="eml_txt_dngr"
-                                    >
+                                    <span className="errorInput" >
                                       This mobile number already exists.
                                     </span>
                                   ) : (
@@ -1697,7 +1713,7 @@ const Signup = () => {
                             >
                               Next
                             </Button>
-                            <h6 className="text-center mt-3">1 of 4</h6>
+                            <h6 className="text-center mt-3">1 of 3</h6>
                           </div>
                         </Form>
                       )}
