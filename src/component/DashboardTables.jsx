@@ -1092,7 +1092,7 @@ const DashboardTables = () => {
                         mb="10px"
                       >
                         <Typography className="tbl_hdng">
-                          Content purchased online check
+                          Content purchased online
                         </Typography>
                         <div className="tbl_rt">
                           <div className="fltrs_prnt">

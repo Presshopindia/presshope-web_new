@@ -196,13 +196,7 @@ const Purchasedcontent = () => {
                     </h1>
                   </div>
                   <Row className="">
-                    {purchaseContent?.data
-                      ?.filter((el) =>
-                        el.purchased_mediahouse.includes(
-                          JSON.parse(localStorage.getItem("user"))?._id
-                        )
-                      )
-                      ?.map((item, index) => {
+                    {purchaseContent?.data?.map((item, index) => {
                         const Audio = item?.content?.filter(
                           (item) => item?.media_type === "audio"
                         );

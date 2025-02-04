@@ -134,6 +134,20 @@ const ContentPage = () => {
     }
   };
 
+  const [ userId, setUserId ] = useState(null);
+  const getProfileData = async () => {
+    try {
+      const data = await Get("mediahouse/getProfile");
+      const user_id = data.data.profile.role === "User_mediaHouse" ? data.data.profile.media_house_id._id : data.data.profile._id;
+      setUserId(user_id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getProfileData()
+  }, [])
   const ContentSourced = async () => {
     const resp = await Get(`mediahouse/getlistoduploadedcontent`);
     setContent_Sourced(resp.data.response);
@@ -944,17 +958,11 @@ const ContentPage = () => {
                       activeKey={params?.tab1}
                     >
                       <Tab eventKey="exclusive" title="Exclusive">
-                        {pur_content &&
-                          pur_content
-                            ?.filter((el) =>
-                              el.purchased_mediahouse.includes(
-                                JSON.parse(localStorage.getItem("user"))?._id
-                              )
-                            )
-                            ?.map((item, index) => {
+                        {pur_content?.slice(0, 2)?.map((item, index) => {
                               return (
                                 <Link
                                   to={`/purchased-content-detail/${item?.transaction_id}`}
+                                  key={item._id}
                                 >
                                   <DashBoardTabCards
                                     imgcount={item.image_count}
@@ -999,10 +1007,7 @@ const ContentPage = () => {
                                       formatAmountInMillion(
                                         +item?.Vat?.find(
                                           (el) =>
-                                            el?.purchased_mediahouse_id ==
-                                            JSON.parse(
-                                              localStorage.getItem("user")
-                                            )?._id
+                                            el?.purchased_mediahouse_id == userId
                                         )?.amount
                                       ) || 0
                                     }`}
@@ -1011,14 +1016,11 @@ const ContentPage = () => {
                               );
                             })}
                       </Tab>
+                      {
+                        console.log("userId", userId)
+                      }
                       <Tab eventKey="shared" title="Shared">
-                        {pur_content &&
-                          pur_content
-                            ?.filter((el) =>
-                              el.purchased_mediahouse.includes(
-                                JSON.parse(localStorage.getItem("user"))?._id
-                              )
-                            )
+                        {pur_content
                             ?.slice(0, 2)
                             .map((item, index) => {
                               return (
@@ -1047,10 +1049,7 @@ const ContentPage = () => {
                                       formatAmountInMillion(
                                         +item?.Vat?.find(
                                           (el) =>
-                                            el?.purchased_mediahouse_id ==
-                                            JSON.parse(
-                                              localStorage.getItem("user")
-                                            )?._id
+                                            el?.purchased_mediahouse_id == userId
                                         )?.amount
                                       ) || 0
                                     }`}
