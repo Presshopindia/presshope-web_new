@@ -51,7 +51,7 @@ const OnboardUserN = () => {
                                                     If you are not the administrator, please enter your details below, and send your onboarding request to your company administrator. Once the administrator onboards, and assigns user rights to you, you can then log onto the <b>presshop</b> platform
                                                 </Typography>
                                                 <Typography variant="body2" className="mb-0">
-                                                    If you have any questions regarding the onboarding process, please <a className="link">chat</a> with our helpful team members, or send us an <a className="link">email</a>
+                                                    If you have any questions regarding the onboarding process, please <Link className="link" to="/contact-us">chat</Link> with our helpful team members, or send us an <a className="link">email</a>
                                                 </Typography>
                                             </div>
                                         </div>

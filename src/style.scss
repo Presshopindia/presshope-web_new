@@ -12753,3 +12753,9 @@ audio {
   width: 15px !important;
   height: auto !important;
 }
+.circular_red_dot {
+  height: 12px;
+  width: 12px;
+  background-color: $theme-color;
+  border-radius: 100%;
+}

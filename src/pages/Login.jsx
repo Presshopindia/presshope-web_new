@@ -4,39 +4,31 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Link, useNavigate,useLocation } from "react-router-dom";
 import Typography from "@mui/material/Typography";
-// import HeaderN from "../component/HeaderN";
 import loginimg from "../assets/images/login-img.png";
 import { Post } from "../services/user.services";
 import { toast } from "react-toastify";
 import user from "../assets/images/user.svg";
 import lock from "../assets/images/sortIcons/lock.svg";
-import eye from "../assets/images/sortIcons/custom.svg";
 import Footerlandingpage from "../component/Footerlandingpage";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
 import Loader from "../component/Loader";
-import { useDarkMode } from "../context/DarkModeContext";
 import LoginHeader from "../component/LoginHeader";
-//import io from "socket.io-client";
-//const socket = io.connect("https://betazone.promaticstechnologies.com:3005");
 
 const Login = () => {
   const [deviceId, setDeviceId] = useState("");
   const navigate = useNavigate();
   const location=useLocation();
-  console.log("all location ---->",location);
   const queryParams = new URLSearchParams(location.search); 
-  const emailIdAdmin = queryParams.get("emailId");
+  const email = queryParams.get("email") || "";
+
+  console.log(queryParams, "queryParams")
   const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState({
-    email: "",
+    email,
     password: "",
   });
- if(emailIdAdmin){    setCredentials((old) => {
-  return { ...old, email: emailIdAdmin };
-});}
-  const { setProfileChange } = useDarkMode();
 
   const [visibility, setVisibility] = useState(false);
   const Credentials = (e) => {

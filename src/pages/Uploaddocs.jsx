@@ -193,46 +193,15 @@ const Uploaddocs = () => {
                       <Row>
                         <Col md={9}>
                           <ul className="docs_list">
-                            {docList &&
-                              docList.map((curr) => {
+                            {
+                              docList?.map((curr) => {
                                 return (
-                                  <li>
+                                  <li key={curr?._id}  style={{display:"flex", alignItems:"center"}}>
                                     {curr?.selected !== true ? (
-                                      <span className="doc_items_ic doc_uplded doc-check">
-                                        {/* <FormControlLabel
-                                          className="check_label me-0"
-                                          control={<Checkbox />}
-                                          checked={false}
-                                        /> */}
-                                        <FormControlLabel
-                                          className="check_label me-0"
-                                          control={
-                                            <span
-                                              style={{
-                                                display: "inline-block",
-                                                width: "12px", // size of the dot
-                                                height: "12px",
-                                                borderRadius: "50%",
-                                                backgroundColor: "red",
-                                                marginRight: "8px", // spacing between the dot and label text
-                                              }}
-                                            />
-                                          }
-                                          // label={
-                                          //   <span
-                                          //     style={{
-                                          //       color: "red",
-                                          //       fontSize: "12px",
-                                          //     }}
-                                          //   >
-                                          //     doc
-                                          //   </span>
-                                          // }
-                                        />
+                                      <span className="doc_items_ic doc_uplded doc-check circular_red_dot">
                                       </span>
                                     ) : (
                                       <span className="doc_items_ic doc_uplded doc-check">
-                                        {/* <BsFillCheckCircleFill /> */}
                                         <FormControlLabel
                                           className="check_label me-0"
                                           control={<Checkbox />}
@@ -257,8 +226,7 @@ const Uploaddocs = () => {
                                 placeholder="Select Documents"
                                 onChange={(e) => setType(e.target.value)}
                               >
-                                {docList &&
-                                  docList.map((curr) => (
+                                {docList?.map((curr) => (
                                     <MenuItem value={curr._id} key={curr._id}>
                                       <input
                                         type="file"

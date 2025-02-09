@@ -100,8 +100,15 @@ const UserDetailsPopup = (props) => {
     const Formdata = new FormData();
     Formdata.append("path", "user");
     Formdata.append("media", file);
-    const filepath = await Post("mediaHouse/uploadUserMedia", Formdata);
-    setDetails({ ...details, profile_image: filepath.data.path });
+    setLoading(true);
+    try{
+      const filepath = await Post("mediaHouse/uploadUserMedia", Formdata);
+      setDetails({ ...details, profile_image: filepath.data.path });
+      setLoading(false);
+    }
+    catch(error) {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -287,8 +294,7 @@ const UserDetailsPopup = (props) => {
                               >
                                 Select Designation
                               </MenuItem>
-                              {designation &&
-                                designation.map((value, index) => (
+                              {designation?.map((value) => (
                                   <MenuItem key={value._id} value={value._id}>
                                     {value.name}
                                   </MenuItem>
@@ -312,10 +318,9 @@ const UserDetailsPopup = (props) => {
                               >
                                 Select office name *
                               </MenuItem>
-                              {office &&
-                                office.map((value, index) => {
+                              {office?.map((value) => {
                                   return (
-                                    <MenuItem value={value._id}>
+                                    <MenuItem value={value._id} key={value._id}>
                                       {value.name}
                                     </MenuItem>
                                   );
@@ -346,10 +351,9 @@ const UserDetailsPopup = (props) => {
                               >
                                 Select Department
                               </MenuItem>
-                              {departmentTypes &&
-                                departmentTypes.map((value, index) => {
+                              {departmentTypes?.map((value) => {
                                   return (
-                                    <MenuItem value={value._id}>
+                                    <MenuItem value={value._id} key={value._id}>
                                       {value.name}
                                     </MenuItem>
                                   );
@@ -366,13 +370,6 @@ const UserDetailsPopup = (props) => {
                           alt=""
                           className={details?.profile_image ? "uploaded" : ""}
                         />
-                        {/* <img
-                          className="uploaded"
-                          src={addPic}
-                          alt=""
-                        /> */}
-                        {/* <span className="mt-2 d-block">Add profile pic</span> */}
-
                         <input
                           type="file"
                           required

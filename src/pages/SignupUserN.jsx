@@ -27,7 +27,7 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import { debounce } from "lodash";
+import { debounce, first } from "lodash";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 
 import { Link, useParams } from "react-router-dom";
@@ -85,12 +85,11 @@ const SignupUserN = () => {
       office_type_id: "option1",
     },
   });
-  const { name, number, vat, email, first_name, last_name, user_id } =
-    useParams();
+  const { name, number, vat, email, first_name, last_name, user_id } = useParams();
 
   // Define the initial state for onboardingUser
   const [onboardingUser, setOnboardingUser] = useState({
-    full_name: `${first_name} ${last_name}` || "",
+    full_name: last_name || "",
     designation_id: "",
     profile_image: "",
     office_id: "",
@@ -132,7 +131,6 @@ const SignupUserN = () => {
         });
         if (resp) {
           setOnboard(true);
-          // toast.success("Office Added");
           localStorage.setItem(
             "OfficeDetails",
             JSON.stringify({
@@ -157,7 +155,6 @@ const SignupUserN = () => {
     const name = event.target.name;
     const value = event.target.value;
 
-    // console.log("name, value12312", name, value, value.length);
     if (name === "phone") {
       if (value.length <= 15) {
         setAddOffice((prev) => ({
@@ -172,8 +169,6 @@ const SignupUserN = () => {
       }));
     }
   };
-
-  // console.log("addOffice123123", addOffice);
 
   // Function to handle admin rights changes
   const handleAdminRights = (event) => {
@@ -262,7 +257,6 @@ const SignupUserN = () => {
   const getOfficeDetails = async (vat) => {
     const list = await Get(`mediaHouse/getOfficeDetail?company_vat=${vat}`);
     if (list) {
-      // console.log(list, `<<<<<<<<<<<<<<`);
       setOfficeNames(list.data.data);
     }
   };
@@ -325,12 +319,9 @@ const SignupUserN = () => {
       if (res) {
         navigate("/login");
         setLoading(false);
-        // console.log(res, `,<<<<<<<after onboard`);
       }
     } catch (error) {
       setLoading(false);
-      // console.log(error);
-      // Handle errors here
     }
   };
 

@@ -111,7 +111,7 @@ const Login = () => {
                         </Typography>
                         <Typography variant="body2" className="mb-0">
                           If you have any questions regarding the onboarding
-                          process, please <a className="link">chat</a> with our
+                          process, please <Link className="link" to="/contact-us">chat</Link> with our
                           helpful team members, or send us an{" "}
                           <a
                             className="link"
