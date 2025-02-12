@@ -97,7 +97,6 @@ const UploadedContent = () => {
       setTotalPage(Math.ceil(resp.data?.count / limit));
       setLoading(false);
     } catch (error) {
-      console.log(error);
       setLoading(false);
     }
   };
@@ -133,7 +132,6 @@ const UploadedContent = () => {
         setLoading(false);
       }
     } catch (error) {
-      // console.log(error);
       setLoading(false);
     }
   };
@@ -167,7 +165,6 @@ const UploadedContent = () => {
       setLoading(false);
     }
   };
-  console.log("taskDetailstaskDetailstaskDetailstaskDetails", taskDetails);
 
   const handleFavourite = (i, type) => {
     if (type == "publish") {
@@ -211,7 +208,6 @@ const UploadedContent = () => {
       });
     } else if (type == "task") {
       setTaskDetails((prev) => {
-        console.log("all prev data --->", prev);
         const allContent = [...prev];
         allContent[i]["basket_status"] =
           allContent[i]["basket_status"] === "true" ? "false" : "true";
@@ -219,8 +215,6 @@ const UploadedContent = () => {
       });
     }
   };
-
-  console.log("total page in upload content--->", totalPage);
 
   return (
     <>
@@ -939,7 +933,7 @@ const UploadedContent = () => {
           </Row>
           {
             <PaginationComp
-              totalPage={taskTotalPage || totalPage}
+              totalPage={totalPage || taskTotalPage}
               path={`Uploaded-Content/${type?.type}`}
               type="fav"
               setPage={setPage}

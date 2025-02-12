@@ -37,7 +37,7 @@ function DashBoardPayment(props) {
                   {/* <span>2</span> */}
                   <div class="post_icns_cstm_wrp">
                     <div class="post_itm_icns dtl_icns">
-                      <span class="count">1</span>
+                      <span class="count">{props?.imageCount}</span>
                       <img
                         class="feedMediaType iconBg"
                         src={Camera}

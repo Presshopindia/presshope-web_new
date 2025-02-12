@@ -1313,6 +1313,9 @@ const Dashboard = () => {
                               tabcard2={moment(curr?.createdAt)?.format(
                                 `hh:mm A, DD MMM YYYY`
                               )}
+                              imageCount={curr?.image_count}
+                              videoCount={curr?.video_count}
+                              audioCount={curr?.audio_count}
                             />
                           </Link>
                         );
@@ -1456,12 +1459,7 @@ const Dashboard = () => {
                           </div>
                         </div>
                         <div className="scrolling">
-                          {recentUploaded &&
-                            recentUploaded.map((curr) => {
-                              console.log(
-                                "countssss",
-                                curr?.content_id?.image_count
-                              );
+                          {recentUploaded?.map((curr) => {
                               return (
                                 <Link
                                   to={`/Feeddetail/content/${curr?.content_id?._id}`}

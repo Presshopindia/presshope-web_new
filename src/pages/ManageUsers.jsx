@@ -1,16 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import HeaderN from "../component/HeaderN";
+import moment from "moment";
 import DbFooter from "../component/DbFooter";
 import { Container, Row, Col } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
-import follower from "../assets/images/follower.svg";
-import hash from "../assets/images/hash.svg";
-import Receipt from "../assets/images/Receipt.svg";
-import accessCenter from "../assets/images/accessCenter.png";
 import office from "../assets/images/office.svg";
 import chair from "../assets/images/chair.svg";
 import location from "../assets/images/location.svg";
-import call from "../assets/images/call.svg";
 import website from "../assets/images/sortIcons/political.svg";
 import addPic from "../assets/images/add-square.svg";
 import userLogo from "../assets/images/user.svg";
@@ -23,74 +18,49 @@ import {
   Button,
   MenuItem,
   Select,
-  FormControl,
-  InputLabel,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { Get, Patch, Post } from "../services/user.services";
+import { Get, Post } from "../services/user.services";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import Header from "../component/Header";
 import manageusers from "../assets/images/login-images/manage-users.svg";
 import lockic from "../assets/images/sortIcons/lock.svg";
-import { BsArrowLeft, BsEye, BsEyeSlash } from "react-icons/bs";
-import callic from "../assets/images/call.svg";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { useDarkMode } from "../context/DarkModeContext";
 import PhoneInput from "react-phone-number-input";
 import Loader from "../component/Loader";
-import { initStateOfAddUserInManageUser, manageUserTopHeading, newInitStataOfAddUserInManageUser } from "../component/staticData";
-import ComputerPic from "../assets/images/computer.svg";
 import editProfileIcn from "../assets/images/editProfileIc.svg";
 import userImg from "../assets/images/profile_img.png";
 import followersic from "../assets/images/follower.svg";
-import calendaric from "../assets/images/calendar.svg";
-import person from "../assets/images/user.svg";
-import officeic from "../assets/images/office.svg";
-import departmentic from "../assets/images/chair.svg";
-import emailic from "../assets/images/mail.svg";
 import calendar from "../assets/images/calendar.svg";
-import userImg2 from "../assets/images/user2.jpg";
-import moment from "moment";
 import { parsePhoneNumber } from "libphonenumber-js";
 import { formattingUserData, successToasterFun } from "../component/commonFunction";
+import { initStateOfAddUserInManageUser, manageUserTopHeading, newInitStataOfAddUserInManageUser } from "../component/staticData";
 
 const ManageUsers = () => {
-  const { profileData } = useDarkMode();
-  const user = profileData;
-  const [url, setUrl] = useState();
-  const [cnfm_password, setCnfmPassword] = useState("");
-  const [officedetails, setOfficeDetails] = useState();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [cnfmPassword, setCnfmPassword] = useState("");
+  const [officeDetails, setOfficeDetails] = useState();
   const [visibility1, setVisibility1] = useState(false);
   const [visibility2, setVisibility2] = useState(false);
-  const [submit, setSubmit] = useState(false);
   const [show, setShow] = useState(false);
-  const [addedUsers, setAddedUsers] = useState([]);
   const [departmentTypes, setDepartmentTypes] = useState([]);
   const [designation, setDesignation] = useState([]);
   const [officeNames, setOfficeNames] = useState([]);
-  const [removal_reason, setRemovalReason] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [removeUser, setRemoveUser] = useState({
-    user_id: "option1",
-    reason_for_removal: "option1",
-    confirm_removal: false,
-  });
-  const [userIds, setUserId] = useState(null);
-
   const [userDetails, setUserDetails] = useState(initStateOfAddUserInManageUser);
 
-  const userProfileView=useRef();
+  const { profileData: user } = useDarkMode();
+  const userProfileView = useRef();
 
   const getDesignation = async () => {
     const list = await Get(`mediaHouse/getCategoryType?type=designation`);
     setDesignation(list.data.data);
-    console.log("Designation", list.data.data)
   };
 
   const getDepartmentType = async () => {
     const list = await Get("mediaHouse/getDepartmentType");
     setDepartmentTypes(list.data.data);
-    console.log("Department", list.data.data)
   };
 
   const ConfirmPassword = async (e) => {
@@ -98,8 +68,8 @@ const ManageUsers = () => {
     setLoading(true);
 
     try {
-      if (userDetails.admin_password !== cnfm_password) {
-        toast.error("Password doesn't match")
+      if (userDetails.admin_password !== cnfmPassword) {
+        setErrorMessage("Password doesn't match");
         setLoading(false);
 
       } else {
@@ -107,20 +77,13 @@ const ManageUsers = () => {
           password: userDetails.admin_password,
         });
         if (confirm) {
-      // toast.error(error.message)
-      console.log("confirm",confirm)
-
           setShow(true);
           setLoading(false);
         }
       }
     } catch (error) {
       setLoading(false);
-      // toast.error(error?.message);
-      console.log("errorData",error)
-      toast.error(error?.response?.data?.error?.msg || error.message)
-
-      // console.log(error, "<000000000")
+      setErrorMessage(error?.response?.data?.error?.msg || error.message)
     }
     setLoading(false);
 
@@ -188,6 +151,7 @@ const ManageUsers = () => {
       }));
     }
     else {
+      setErrorMessage("");
       setUserDetails((prev) => ({
         ...prev,
         [name]: value,
@@ -195,94 +159,16 @@ const ManageUsers = () => {
     }
   };
 
-  const handleCheck = (e) => {
-    setUserDetails((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.checked,
-    }));
-  };
-
   const AddUser = async (e) => {
     e.preventDefault();
-    // const formdata = new FormData();
-    // for (const key in userDetails) {
-    //   formdata.append(key, userDetails[key]);
-    // }
-
     setLoading(true);
 
     try {
-      if (userDetails.admin_password !== cnfm_password) {
-        // toast.error("Password doesn't match")
-      } else {
-        const resp = await Post("mediaHouse/ManageUser", userDetails);
-        if (resp) {
-          setUserDetails(initStateOfAddUserInManageUser);
-          setUrl()
-          setCnfmPassword("");
-          toast.success('User added successfully')
-          setLoading(false);
-        }
-      }
-    } catch (error) {
+      setUserDetails(initStateOfAddUserInManageUser);
+      setCnfmPassword("");
+      toast.success('User added successfully')
       setLoading(false);
-      // console.log(error, "<------error")
-    }
-  };
-
-  const SelectUser = async (id) => {
-    try {
-      const resp = await Get(`mediaHouse/getdesignatedUSer?role=${id}`);
-      if (resp) {
-        setAddedUsers(resp.data.response);
-      }
     } catch (error) {
-      // console.log(error, "<---------error")
-    }
-  };
-
-  const handleRemoveUser = (e) => {
-    setRemoveUser((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const RemovalReason = async () => {
-    const resp = await Get(`mediaHouse/find`);
-    setRemovalReason(resp.data.payment);
-  };
-
-  const RemoveUser = async (e) => {
-    e.preventDefault();
-    setSubmit(true);
-
-    const obj = {
-      user_id: removeUser.user_id,
-      reason_for_removal: removeUser.reason_for_removal,
-    };
-
-    setLoading(true);
-
-    try {
-      if (
-        removeUser.reason_for_removal &&
-        removeUser.user_id === "option1" &&
-        removeUser.reason_for_removal === "option1"
-      ) {
-      } else {
-        const resp = await Patch(`mediaHouse/deleteadduser`, obj);
-        setLoading(false);
-        setRemoveUser({
-          user_id: "",
-          reason_for_removal: "",
-          confirm_removal: false,
-        })
-        toast.success("User deleted successfully")
-        SelectUser(userIds);
-      }
-    } catch (error) {
-      // console.log(error, "<---------error")
       setLoading(false);
     }
   };
@@ -291,7 +177,6 @@ const ManageUsers = () => {
     getDepartmentType();
     getDesignation();
     Profile(0);
-    RemovalReason();
   }, []);
 
   const phoneInputRef = useRef(null);
@@ -314,11 +199,6 @@ const ManageUsers = () => {
     setLoading(true);
     try {
       const response = await Post("mediaHouse/uploadUserMedia", formData);
-      // setUserDetails((prev) => ({
-      //   ...prev,
-      //   profile_image: response.data.path,
-      // }));
-
       setMultiUser((prev) => {
         const updatedUsers = [...prev];
         updatedUsers[i].profile_image = response.data.path;
@@ -384,7 +264,6 @@ const ManageUsers = () => {
       }
     }
     catch (error) {
-      console.log(error)
       setLoading(false);
     }
   }
@@ -396,23 +275,21 @@ const ManageUsers = () => {
       setGetUserProfile(null)
       const data = await Post(`mediaHouse/getProfileAccordingUserId`, { user_id });
       const newData = await formattingUserData(data?.data?.profile);
-      console.log("New data", newData) 
       setGetUserProfile(newData)
       setLoading(false);
     }
     catch (error) {
-      console.log(error);
       setLoading(false);
     }
   }
 
-  useEffect(()=>{
-    if(getUserProfile){
-     userProfileView.current?.scrollIntoView({ behavior: 'smooth' });
+  useEffect(() => {
+    if (getUserProfile) {
+      userProfileView.current?.scrollIntoView({ behavior: 'smooth' });
     }
 
-     
-  },[getUserProfile])
+
+  }, [getUserProfile])
 
   const updateSingleUserProfile = (e, type) => {
     if (type == "deleted") {
@@ -451,7 +328,7 @@ const ManageUsers = () => {
   const handleUpdateSingleUserDetail = async () => {
     try {
       setLoading(true);
-      const data = await Post(`mediaHouse/updateMultipleUser`, { user_data: [getUserProfile] });
+      await Post(`mediaHouse/updateMultipleUser`, { user_data: [getUserProfile] });
       if (getUserProfile?.is_deleted) {
         setGetUsers((prev) => {
           let updatedData = [...prev];
@@ -466,7 +343,6 @@ const ManageUsers = () => {
       successToasterFun("Updated successfully")
     }
     catch (error) {
-      console.log(error);
       setLoading(false);
     }
   }
@@ -476,7 +352,7 @@ const ManageUsers = () => {
       const phoneNumber = parsePhoneNumber(`${callingCode}`);
       return phoneNumber?.country;
     } catch (error) {
-      console.error("Error parsing phone number:", error);
+      return
     }
   }
 
@@ -492,7 +368,7 @@ const ManageUsers = () => {
     else {
       setMultiUser((prev) => {
         let updatedItem = [...prev];
-        return updatedItem = updatedItem?.filter((el) => el.uniqueId !== id)
+        return updatedItem?.filter((el) => el.uniqueId !== id)
       })
     }
   }
@@ -524,14 +400,12 @@ const ManageUsers = () => {
     try {
       setLoading(true);
       const data = await Post(`mediaHouse/addMultipleUser`, { user_data: multiUser });
-      console.log("data -->", data?.data?.data)
       setLoading(false);
       setMultiUser([]);
       setGetUsers([...getUsers, ...data?.data?.data])
       successToasterFun("All users added successfully")
     }
     catch (error) {
-      console.log(error);
       setLoading(false);
     }
   }
@@ -573,27 +447,16 @@ const ManageUsers = () => {
                                       onChange={handleChange}
                                       placeholder="Enter password *"
                                     />
-                                    {!visibility1 && (
-                                      <div
-                                        color="#000"
-                                        className="pass_ic_wrap"
-                                        onClick={() => {
-                                          setVisibility1(true);
-                                        }}
-                                      >
-                                        <BsEyeSlash />
-                                      </div>
-                                    )}
-                                    {visibility1 && (
-                                      <div
-                                        color="#000"
-                                        className="pass_ic_wrap"
-                                        onClick={() => {
-                                          setVisibility1(false);
-                                        }}
-                                      >
-                                        <BsEye />
-                                      </div>
+
+                                    <div className="pass_ic_wrap">
+                                      {
+                                        visibility1 ? <BsEye onClick={() => setVisibility1(false)} /> : <BsEyeSlash onClick={() => setVisibility1(true)} />
+                                      }
+                                    </div>
+                                  {errorMessage && (
+                                      <span className="errorInput">
+                                        {errorMessage}
+                                      </span>
                                     )}
                                   </Form.Group>
                                 </Col>
@@ -603,37 +466,23 @@ const ManageUsers = () => {
                                     <Form.Control
                                       type={!visibility2 ? "password" : "text"}
                                       disabled={show}
-                                      value={cnfm_password}
+                                      value={cnfmPassword}
                                       className="rnd"
                                       name="password"
                                       required
-                                      onChange={(e) =>
-                                        setCnfmPassword(e.target.value)
+                                      onChange={(e) => {
+                                        setCnfmPassword(e.target.value);
+                                        setErrorMessage("");
+                                      }
                                       }
                                       placeholder="Confirm password *"
                                     />
-                                    {!visibility2 && (
-                                      <div
-                                        color="#000"
-                                        className="pass_ic_wrap"
-                                        onClick={() => {
-                                          setVisibility2(true);
-                                        }}
-                                      >
-                                        <BsEyeSlash />
-                                      </div>
-                                    )}
-                                    {visibility2 && (
-                                      <div
-                                        color="#000"
-                                        className="pass_ic_wrap"
-                                        onClick={() => {
-                                          setVisibility2(false);
-                                        }}
-                                      >
-                                        <BsEye />
-                                      </div>
-                                    )}
+
+                                    <div className="pass_ic_wrap">
+                                      {
+                                        visibility2 ? <BsEye onClick={() => setVisibility2(false)} /> : <BsEyeSlash onClick={() => setVisibility2(true)} />
+                                      }
+                                    </div>
                                   </Form.Group>
                                 </Col>
                                 <div className="stepFooter">
@@ -666,7 +515,7 @@ const ManageUsers = () => {
                                     type="text"
                                     className=""
                                     disabled
-                                    value={officedetails?.name}
+                                    value={officeDetails?.name}
                                     name="name"
                                   />
                                 </Form.Group>
@@ -678,7 +527,7 @@ const ManageUsers = () => {
                                     type="text"
                                     className=""
                                     disabled
-                                    value={officedetails?.office_type_id?.name}
+                                    value={officeDetails?.office_type_id?.name}
                                     name="office_name"
                                   />
                                 </Form.Group>
@@ -690,7 +539,7 @@ const ManageUsers = () => {
                                     className="addr_custom_inp w-100"
                                     disabled
                                     value={
-                                      officedetails?.address?.complete_address
+                                      officeDetails?.address?.complete_address
                                     }
                                   />
                                 </Form.Group>
@@ -702,7 +551,7 @@ const ManageUsers = () => {
                                     type="number"
                                     className=""
                                     disabled
-                                    value={officedetails?.address?.pincode}
+                                    value={officeDetails?.address?.pincode}
                                     name="pincode"
                                   />
                                 </Form.Group>
@@ -713,7 +562,7 @@ const ManageUsers = () => {
                                   <Form.Control
                                     type="text"
                                     className=""
-                                    value={officedetails?.address?.city}
+                                    value={officeDetails?.address?.city}
                                     name="city"
                                     disabled
                                   />
@@ -725,7 +574,7 @@ const ManageUsers = () => {
                                   <Form.Control
                                     type="text"
                                     className=""
-                                    value={officedetails?.address?.country}
+                                    value={officeDetails?.address?.country}
                                     name="United Kingdom"
                                     disabled
                                   />
@@ -738,16 +587,16 @@ const ManageUsers = () => {
                                     className="input_nmbr"
                                     placeholder="Phone"
                                     name="phone"
-                                    value={officedetails?.phone}
+                                    value={officeDetails?.phone}
                                     maxLength={15}
                                   />
                                   <PhoneInput
                                     className="f_1 cntry_code"
                                     international
-                                    countryCallingCodeEditable={false}
+                                    countryCallingCodeEditable={true}
                                     name="country_code"
-                                    value={officedetails?.country_code}
-                                    defaultCountry={`${getCountryCodeFromCallingCode(officedetails?.country_code + officedetails?.phone)}`}
+                                    value={officeDetails?.country_code}
+                                    defaultCountry={`${getCountryCodeFromCallingCode(officeDetails?.country_code + officeDetails?.phone) || "IN"}`}
                                   />
                                 </div>
                               </Col>
@@ -761,7 +610,7 @@ const ManageUsers = () => {
                                     placeholder="Website"
                                     name="website"
                                     required
-                                    value={officedetails?.website}
+                                    value={officeDetails?.website}
                                   />
                                 </Form.Group>
                               </Col>
@@ -779,10 +628,10 @@ const ManageUsers = () => {
                                     >
                                       Select office
                                     </MenuItem>
-                                    {officeNames &&
-                                      officeNames.map((value, index) => {
+                                    {officeNames?.map((value, index) => {
                                         return (
                                           <MenuItem
+                                            key={value?._id}
                                             onClick={() => {
                                               Profile(index);
                                               getUsersOfOffice(value?._id)
@@ -806,11 +655,7 @@ const ManageUsers = () => {
                                 <Col md={12}>
                                   <div className="tbl_crd vt_dtl_wrp">
                                     <div className="">
-                                      <div
-                                        className="d-flex justify-content-between align-items-center tbl_hdr"
-                                        px="20px"
-                                        mb="10px"
-                                      >
+                                      <div className="d-flex justify-content-between align-items-center tbl_hdr">
                                         <p className="onbrdheading sign_hdng">
                                           Edit users
                                         </p>
@@ -818,8 +663,6 @@ const ManageUsers = () => {
                                       <div className="fix_ht_table">
                                         <table
                                           width="100%"
-                                          mx="20px"
-                                          variant="simple"
                                           className="common_table vat_dtls"
                                         >
                                           <thead>
@@ -827,15 +670,15 @@ const ManageUsers = () => {
                                               <th className="cnt_prchsd_th">User</th>
                                               <th>Rights</th>
                                               <th>Edit purchase range</th>
-                                              <th>Remove user</th>
+                                              <th>Status</th>
                                             </tr>
                                           </thead>
                                           <tbody>
                                             {
-                                              getUsers?.map((el, i) => <tr>
+                                              getUsers?.map((el, i) => <tr key={el?._id}>
                                                 <td className="">
                                                   <div className="image-wrap d-flex align-items-center">
-                                                    <img src={el?.profile_image || userImg}></img>
+                                                    <img src={el?.profile_image || userImg} alt="Profile Image" />
                                                     <Link
                                                       to="#"
                                                       className="link view_link d-flex align-items-center"
@@ -853,11 +696,12 @@ const ManageUsers = () => {
                                                       <img
                                                         src={calendar}
                                                         className="icn_time"
+                                                        alt="Calendar"
                                                       />
                                                       {moment(el?.createdAt).format("DD MMM YYYY")}
                                                     </p>
                                                     <p className="text_light">
-                                                      London
+                                                      {el?.email}
                                                     </p>
                                                   </div>
                                                 </td>
@@ -940,7 +784,7 @@ const ManageUsers = () => {
                                                     onChange={(e) => handleUpdateUsers("is_deleted", e.target.checked, i, "delete")}
                                                     control={<Checkbox />}
                                                     name=""
-                                                    label=""
+                                                    label={el?.is_deleted ? "Blocked" : "Unblocked"}
                                                   />
                                                 </td>
                                               </tr>)
@@ -950,25 +794,23 @@ const ManageUsers = () => {
                                       </div>
                                     </div>
                                   </div>
-                                  <div className="stepFooter" onClick={() => handleUpdateAllUsers()}>
+                                  <div className="stepFooter">
                                     <Button
                                       className="w-100 mt_25"
                                       variant="primary"
+                                      onClick={() => handleUpdateAllUsers()}
                                     >
                                       Save
                                     </Button>
                                   </div>
-                                  {/* <p className="red_text">Add new user</p> */}
                                 </Col>
                               </div>
                               : <p className="red_text" style={{ marginTop: "-2rem" }}>
                                 Please select office to view existing users or add a new user by clicking below. Thank you.
                               </p>
                           }
-
-                          {/* Add multi users */}
                           {
-                            multiUser?.length === 0 && <p className="red_text clickable" onClick={() => handleMultiUser("first_add")}>Add new user</p>
+                            multiUser?.length === 0 && <button className="red_text clickable bg-none" onClick={() => handleMultiUser("first_add")}>Add new user</button>
                           }
                           {
                             multiUser?.map((el, i) => <div key={i}>
@@ -1246,99 +1088,10 @@ const ManageUsers = () => {
 
                       {getUserProfile && (
                         <Form >
-                          <div className="adminDetails sign_section" ref ={userProfileView}>
+                          <div className="adminDetails sign_section" ref={userProfileView}>
                             <p className="onbrdheading sign_hdng">
                               User profile
                             </p>
-                            <Row>
-                              <Col md={12}>
-                                <Row>
-                                  <Col md={6}>
-                                    <Form.Group className="mb-4 form-group">
-                                      <img src={chair} alt="" />
-                                      <Select
-                                        className="w-100 slct_sign"
-                                        name="office_name"
-                                        defaultValue={"option1"}
-                                        onChange={(e) => {
-                                          SelectUser(e.target.value)
-                                          setUserId(e.target.value)
-                                        }
-                                        }
-                                      >
-                                        <MenuItem
-                                          className="selectPlaceholder"
-                                          disabled
-                                          value="option1"
-                                        >
-                                          Select office
-                                        </MenuItem>
-                                        {officeNames &&
-                                          officeNames.map((value) => {
-                                            return (
-                                              <MenuItem value={value._id}>
-                                                {value.name}
-                                              </MenuItem>
-                                            );
-                                          })}
-                                      </Select>
-                                    </Form.Group>
-                                  </Col>
-                                  <Col md={6}>
-                                    <Form.Group className="mb-4 form-group">
-                                      <img src={user} alt="" />
-                                      <Select
-                                        className="w-100 slct_sign"
-                                        name="user_id"
-                                        onChange={handleRemoveUser}
-                                        value={removeUser.user_id}
-                                      >
-                                        <MenuItem
-                                          className="selectPlaceholder"
-                                          disabled
-                                          value="option1"
-                                        >
-                                          Select user
-                                        </MenuItem>
-                                        {addedUsers &&
-                                          addedUsers.map((item) => {
-                                            return (
-                                              <MenuItem value={item._id}>
-                                                {item.first_name +
-                                                  " " +
-                                                  item.last_name}
-                                              </MenuItem>
-                                            );
-                                          })}
-                                      </Select>
-                                    </Form.Group>
-                                  </Col>
-                                </Row>
-                              </Col>
-                              <Col md={12} className="mb-3 position-relative">
-                                <FormControlLabel
-                                  className="check_label"
-                                  control={<Checkbox />}
-                                  value={removeUser.confirm_removal}
-                                  onChange={(e) => {
-                                    setRemoveUser((prev) => ({
-                                      ...prev,
-                                      confirm_removal: e.target.checked,
-                                    }));
-                                  }}
-                                  name="confirm_removal"
-                                  label="Please check the box to confirm the removal of the selected user from the Presshop platform"
-                                />
-                                {submit && !removeUser.confirm_removal && (
-                                  <span
-                                    className="req_inp"
-                                    style={{ color: "red" }}
-                                  >
-                                    *
-                                  </span>
-                                )}
-                              </Col>
-                            </Row> 
                             <Row>
                               <Col md={12}>
                                 <div className="profile_img manage_prfle">
@@ -1374,7 +1127,7 @@ const ManageUsers = () => {
                               <Col xs={12} md={6} sm={6} className="rw_inn_flex mb-0">
                                 <label>Onboarded on</label>
                                 <Form.Group className="mb-4 form-group manage_clendr">
-                                  <img className="privacy inp_icn" src={calendaric} alt="" />
+                                  <img className="privacy inp_icn" src={calendar} alt="" />
                                   <Form.Control
                                     type="text"
                                     disabled
@@ -1386,7 +1139,7 @@ const ManageUsers = () => {
                               <Col xs={12} md={6} sm={6} className="rw_inn_flex mb-0">
                                 <label>First name</label>
                                 <Form.Group className="mb-4 form-group">
-                                  <img src={person} alt="" />
+                                  <img src={userLogo} alt="" />
                                   <Form.Control
                                     type="text"
                                     size="sm"
@@ -1401,7 +1154,7 @@ const ManageUsers = () => {
                               <Col xs={12} md={6} sm={6} className="rw_inn_flex mb-0">
                                 <label>Last name</label>
                                 <Form.Group className="mb-4 form-group">
-                                  <img className="privacy icn" src={person} alt="" />
+                                  <img className="privacy icn" src={userLogo} alt="" />
                                   <Form.Control
                                     type="text"
                                     className=""
@@ -1438,7 +1191,7 @@ const ManageUsers = () => {
                               <Col xs={12} md={6} sm={6} className="rw_inn_flex mb-0">
                                 <label>Department</label>
                                 <Form.Group className="mb-4 form-group">
-                                  <img src={departmentic} alt="" />
+                                  <img src={chair} alt="" />
                                   <Select
                                     className="w-100 slct_sign"
                                     name="department_type"
@@ -1488,7 +1241,7 @@ const ManageUsers = () => {
                                           country_code: e,
                                         }));
                                       }}
-                                      defaultCountry={`${getCountryCodeFromCallingCode(getUserProfile?.country_code + getUserProfile?.phone)}`}
+                                      defaultCountry={`${getCountryCodeFromCallingCode(getUserProfile?.country_code + getUserProfile?.phone) || "IN"}`}
                                     />
                                   </div>
                                 </div>
@@ -1496,7 +1249,7 @@ const ManageUsers = () => {
                               <Col xs={12} md={6} sm={6} className="rw_inn_flex">
                                 <label>Email address</label>
                                 <Form.Group className="mb-4 form-group">
-                                  <img className="privacy icn" src={emailic} alt="" />
+                                  <img className="privacy icn" src={mail} alt="" />
                                   <Form.Control
                                     type="text"
                                     name="email"

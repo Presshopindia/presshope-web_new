@@ -3,23 +3,19 @@ import { Container, Row, Col } from "react-bootstrap";
 import facebook from "../assets/images/facebook.svg";
 import linkedin from "../assets/images/linkedin.svg";
 import instagram from "../assets/images/instagram.svg";
-import google from "../assets/images/google.svg";
 import twitter from "../assets/images/twitter.svg";
 import { MdOutlineEmail } from "react-icons/md";
 import { SlGlobe } from "react-icons/sl";
 import logo from "../assets/images/footer_logo.png";
-import { Button } from "@mui/material";
 import { BsCheckSquare } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import playstore from "../assets/images/googlePlay.png";
 import appstore from "../assets/images/appStore.png";
-import { FiMail, FiSearch } from "react-icons/fi";
-// import emailic from "../assets/images/mail.svg";
 import emailic from "../assets/images/mail.svg";
-import { toast } from "react-toastify";
+import { toast, Slide } from "react-toastify";
 import { Post } from "../services/user.services";
 import Loader from "./Loader";
-import { Slide } from 'react-toastify';
+
 const Footerlandingpage = ({ scrollToDiv }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,19 +27,15 @@ const Footerlandingpage = ({ scrollToDiv }) => {
   const sendEmail = async () => {
     setLoading(true);
     try {
-      if (email === "") {
+      if (!email) {
         toast.error("Please add your email to subscribe.");
         setLoading(false);
         return;
       }
 
-      const body = {
-        email: email,
-      };
-      const resp = await Post(`mediaHouse/addemail`, body);
+      await Post(`mediaHouse/addemail`, {email, for: "marketplace"});
       setEmail("");
       setLoading(false);
-      // toast.success("Subscription successful! Thank you for subscribing.");
       toast.success('Brilliant! Thank you for subscribing.', {
         position: "top-right",
         autoClose: 3000,
@@ -55,7 +47,6 @@ const Footerlandingpage = ({ scrollToDiv }) => {
         theme: "colored",
         transition: Slide,
       });
-      // console.log(resp);
     } catch (error) {
       setLoading(false);
     }
@@ -77,8 +68,6 @@ const Footerlandingpage = ({ scrollToDiv }) => {
               </Col>
               <Col lg={7}>
                 <div className="footernewsLetter position-relative">
-                  {/* <FiSearch className="searchIcon" /> */}
-                  {/* <FiMail className="searchIcon" /> */}
                   <img className="searchIcon icn" src={emailic} alt="" />
                   <input
                     type="text"

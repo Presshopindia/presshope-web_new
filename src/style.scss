@@ -11273,6 +11273,13 @@ p.red_text {
   padding-top: 15px;
 }
 
+.red_text {
+  font-size: 14px;
+  font-family: "AirbnbMedium" !important;
+  color: #ec4e54;
+  padding-top: 15px;
+}
+
 .manage_prfle img {
   width: 110px;
   height: 110px;
@@ -12758,4 +12765,9 @@ audio {
   width: 12px;
   background-color: $theme-color;
   border-radius: 100%;
+}
+
+.bg-none {
+  background: none;
+  border: none;
 }

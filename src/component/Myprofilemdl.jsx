@@ -160,15 +160,13 @@ const Myprofilemdl = (props) => {
   // Example function to get country code from calling code
   function getCountryCodeFromCallingCode(callingCode) {
     try {
-      console.log("Callingcode", callingCode)
       const phoneNumber = parsePhoneNumber(`${callingCode}`);
+      console.log("phoneNumber", phoneNumber)
       return phoneNumber?.country;
     } catch (error) {
-      console.log("Error parsing phone number:", error.message);
+      return;
     }
   }
-
-  console.log("Profile", profile)
 
   return (
     <>
@@ -442,7 +440,7 @@ const Myprofilemdl = (props) => {
                       required
                       countryCallingCodeEditable={true}
                       name="country_code"
-                      defaultCountry={`${getCountryCodeFromCallingCode(profile?.role == "User_mediaHouse" || profile?.role == "Adduser" ? profile?.country_code + profile?.phone : profile?.admin_detail?.country_code + profile?.phone)}`}
+                      defaultCountry={`${getCountryCodeFromCallingCode(profile?.role == "User_mediaHouse" || profile?.role == "Adduser" ? profile?.country_code + profile?.phone : profile?.admin_detail?.country_code + profile?.phone) || "IN"}`}
                       value={profile?.role == "User_mediaHouse" || profile?.role == "Adduser" ? profile?.country_code : profile?.admin_detail?.country_code}
                       onChange={(value) => {
                         profile?.role == "User_mediaHouse" || profile?.role == "Adduser" ? setProfile((prevProfile) => ({

@@ -71,8 +71,9 @@ const Header = () => {
   const handleShow = () => setModalShow(!modalShow);
 
   const SignOut = () => {
-    const logout = localStorage.clear();
+    localStorage.clear();
     navigate("/landing-page");
+    window.location.reload();
     // toast.success("Logged Out")
   };
 
