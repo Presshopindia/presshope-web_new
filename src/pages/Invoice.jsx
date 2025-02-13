@@ -144,8 +144,7 @@ const Invoice = () => {
                           <h4>Presshop Media UK Limited</h4>
                           <p>
                             167-169, Great Portland Street, <br />
-                            London, <br />
-                            W1W 5PF
+                            London, W1W 5PF
                           </p>
                           <p>Company # 13522872</p>
                           <p> VAT # 450 5678 83</p>
