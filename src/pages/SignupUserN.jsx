@@ -38,6 +38,7 @@ import Header from "../component/Header";
 import { useDarkMode } from "../context/DarkModeContext";
 import Loader from "../component/Loader";
 import office from "../assets/images/office.svg";
+import { parsePhoneNumber } from "libphonenumber-js";
 
 {
   /* <img src={office} alt="" /> */
@@ -413,6 +414,16 @@ const SignupUserN = () => {
       phoneInput.removeEventListener("click", handleFocus);
     };
   }, []);
+
+
+  function getCountryCodeFromCallingCode(callingCode) {
+    try {
+      const phoneNumber = parsePhoneNumber(`${callingCode}`);
+      return phoneNumber?.country;
+    } catch (error) {
+      return
+    }
+  }
 
   return (
     <>
@@ -847,9 +858,9 @@ const SignupUserN = () => {
                                   onChange={(e) =>
                                     e.target.value?.length <= 15
                                       ? setOnboardingUser((pre) => ({
-                                          ...pre,
-                                          phone: e.target.value,
-                                        }))
+                                        ...pre,
+                                        phone: e.target.value,
+                                      }))
                                       : ""
                                   }
                                   ref={phoneInputRef2}
@@ -861,7 +872,7 @@ const SignupUserN = () => {
                                   required
                                   name="country_code"
                                   value={onboardingUser?.country_code}
-                                  // defaultCountry={`${onboardingUser?.country_code + onboardingUser?.phone}`}
+                                  defaultCountry={`${getCountryCodeFromCallingCode(onboardingUser?.country_code + onboardingUser?.phone) || "IN"}`}
                                   onChange={(e) => {
                                     setOnboardingUser((pre) => ({
                                       ...pre,
