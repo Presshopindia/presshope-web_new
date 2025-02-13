@@ -133,7 +133,7 @@ const ContactusPost = () => {
                       {" "}
                       {/* <a className="link">message</a>, an{" "} */}
                       an 
-                      <a className="link"> email</a>, or simply{" "}
+                      <a className="link" href="mailto:hello@presshop.co.uk" target="_blank"> email</a>, or simply{" "}
                       <Link to={"/chat"} className="link">chat</Link> with one of our live team
                       members. We don't use Bots because we believe in keeping
                       everything real.
@@ -207,19 +207,16 @@ const ContactusPost = () => {
                         <label className="cmn_lbl mbl_nmb_lbl">
                           Mobile number
                         </label>
-                        <div className="number_inp_wrap contct disabled">
-                          <input
-                            value={
-                              details?.country_code +
-                              " " +
-                              details?.contact_number
-                            }
+                        <Form.Group className="form-group position-relative">
+                          <img className="frnt_ic call_icon_img" src={callic} alt="" />
+                          <Form.Control
+                            type="text"
+                            disabled
+                            className="rnd"
+                            value={`${details?.country_code} ${details?.contact_number}`}
                             name="phone"
                           />
-                          <div className="call_ic">
-                            <img src={callic} alt="" />
-                          </div>
-                        </div>
+                        </Form.Group>
                       </div>
                     </div>
                     <Row>

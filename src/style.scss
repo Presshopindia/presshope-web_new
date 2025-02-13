@@ -5640,6 +5640,10 @@ input[type="number"] {
     color: $black;
     font-size: 13px;
   }
+  .call_icon_img {
+    width: 19px;  /* Adjust icon size */
+    height: 19px;
+  }
 }
 
 .number_inp_wrap.disabled {

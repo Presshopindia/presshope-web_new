@@ -41,16 +41,13 @@ const DbFooter = () => {
                   <p className="ftr_adr">
                     167-169 Great Portland Street,
                     <br />
-                    London
-                    <br />
-                    W1W 5PF
+                    London, W1W 5PF
                     <br />
                   </p>
                   <div className="contantUsby">
                     <span>
                       <MdOutlineEmail />
                       hello@presshop.co.uk
-
                     </span>
                     <span>
                       <SlGlobe />
@@ -184,7 +181,7 @@ const DbFooter = () => {
                                 to="/landing-page?q=div1"
                                 className="active nav-link"
                               >
-                                About Presshop
+                                About PressHop
                               </NavLink>
                               {/* <Link to={"/landing-page?q=div1"}>
                                 About Presshop
@@ -208,7 +205,7 @@ const DbFooter = () => {
                               <Link to={"/post-login-tandc"}>Legal T&Cs</Link>
                               <Link to={"/privacy-policy"}>Privacy Policy</Link>
                               <Link to={"/contact-us-post"}>
-                                Contact Presshop
+                                Contact PressHop
                               </Link>
                               <Link to={"/login"}>Log in</Link>
                             </div>
@@ -226,7 +223,7 @@ const DbFooter = () => {
                         <img src={playstore} alt="" />
                       </div>
                       <h6 className="copyrText mt-1 mb-0">
-                        © 2024 Presshop UK. All rights reserved.
+                        © 2024 PressHop UK. All rights reserved.
                       </h6>
                     </Col>
                   </Row>

@@ -403,7 +403,7 @@ const ManageUsers = () => {
       setLoading(false);
       setMultiUser([]);
       setGetUsers([...getUsers, ...data?.data?.data])
-      successToasterFun("All users added successfully")
+      successToasterFun("New user added successfully")
     }
     catch (error) {
       setLoading(false);

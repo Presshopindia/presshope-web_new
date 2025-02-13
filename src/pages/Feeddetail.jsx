@@ -4794,30 +4794,7 @@ const Feeddetail = (props) => {
                             </div>
                             <div className="foot cont-info-actions d-flex gap-5 justify-content-between align-items-center">
                               {messages && messages.length === 0 ? (
-                                data?.sales_prefix ? (
-                                  <Button
-                                    variant={
-                                      data?.sales_prefix ? "" : "secondary"
-                                    }
-                                    onClick={() => {
-                                      const message = `
-                                      Welcome ${username}
-                                      - Thank you for your interest in this content!
-                                      It's already been generously discounted, so further negotiations are not possible at this time.
-                                      However, if you have any questions or need assistance, feel free to click on the Presshop Chat
-                                      to connect with one of our friendly team members - Cheers!
-                                    `;
-                                      successToasterFun(message);
-                                    }}
-                                    className={
-                                      data?.sales_prefix ? "greyBtn" : ""
-                                    }
-                                    // disabled={data?.sales_prefix ? true : loading}
-                                  >
-                                    Offer
-                                  </Button>
-                                ) : (
-                                  <Button
+                                <Button
                                     variant={
                                       data?.sales_prefix ? "" : "secondary"
                                     }
@@ -4827,20 +4804,19 @@ const Feeddetail = (props) => {
                                         "offer_started"
                                       ) {
                                         setTabSelect("external");
-                                        Start_Offer();
-                                        setMessages((old) => [...old]);
+                                        // Start_Offer();
+                                        // setMessages((old) => [...old]);
                                       }
                                     }}
                                     className={
                                       data?.sales_prefix ? "greyBtn" : ""
                                     }
-                                    disabled={
-                                      data?.sales_prefix ? true : loading
-                                    }
+                                    // disabled={
+                                    //   data?.sales_prefix ? true : loading
+                                    // }
                                   >
                                     Offer
                                   </Button>
-                                )
                               ) : messages?.length === 1 ? (
                                 <Button
                                   onClick={() => {
@@ -5445,11 +5421,22 @@ const Feeddetail = (props) => {
                                               )}
                                             </span>
                                           </h5>
-                                          <Typography className="comment_text">
-                                            Please click the 'Offer' button to
-                                            make an offer, or simply click 'Buy'
-                                            to purchase the content
-                                          </Typography>
+                                          { 
+                                            data?.sales_prefix ? (
+                                              <Typography className="comment_text">
+                                                Thank you for your interest in this content! It's already been generously discounted, 
+                                                so further negotiations are not possible at this time. However, if you have any questions 
+                                                or need assistance, feel free to click on the Presshop Chat to connect with one of our 
+                                                friendly team members - Cheers!
+                                              </Typography>
+                                            ):(
+                                            <Typography className="comment_text">
+                                              Please click the 'Offer' button to
+                                              make an offer, or simply click 'Buy'
+                                              to purchase the content
+                                            </Typography>
+                                            )
+                                          }
                                         </div>
                                       </div>
                                     </div>

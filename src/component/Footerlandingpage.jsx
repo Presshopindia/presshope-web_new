@@ -86,7 +86,10 @@ const Footerlandingpage = ({ scrollToDiv }) => {
                 <div className="presshopInfo">
                   <h6 className="font-bold">Presshop Media UK Limited</h6>
                   <p className="mb-0">
-                    167-169 Great Portland Street,<br />London<br />W1W 5PF<br />
+                    167-169 Great Portland Street,
+                    <br />
+                    London, W1W 5PF
+                    <br />
                   </p>
                   <div className="contantUsby">
                     <span>

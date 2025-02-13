@@ -413,6 +413,16 @@ const Chat = () => {
                                           </p>
                                         </div>
                                       </div>
+                                      <div>
+                                    <span className="cht_time d-flex flex-column align-items-end">
+                                      {" "}
+                                      {curr?.updatedAt
+                                        ? moment(
+                                            curr?.updatedAt
+                                          ).format("h:mm A, D MMM YYYY")
+                                        : ""}
+                                    </span>
+                                  </div>
                                     </div>
                                   </div>
                                 );

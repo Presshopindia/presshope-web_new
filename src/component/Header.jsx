@@ -1098,9 +1098,9 @@ const Header = () => {
                             alt="my profile"
                             className="menu_img"
                           />
-                          Contact &nbsp;
-                          <span style={{ fontSize: "16px" }}> PRESS</span>
-                          <span className="italicTxt italicTxtP">HOP</span>
+                          Contact PressHop
+                          {/* <span style={{ fontSize: "16px" }}> Press</span>
+                          <span className="italicTxt italicTxtP">Hop</span> */}
                         </div>
                         <MdKeyboardArrowRight />
                       </Dropdown.Item>
