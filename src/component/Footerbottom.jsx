@@ -8,7 +8,7 @@ const Footerbottom = () => {
             <Container fluid className="">
                 <div className="copyright">
                     <Typography className="text-center">
-                        Copyright © 2024 Presshop UK. All Rights Reserved.
+                        Copyright © 2024 PressHop UK. All Rights Reserved.
                     </Typography>
                 </div>
             </Container>

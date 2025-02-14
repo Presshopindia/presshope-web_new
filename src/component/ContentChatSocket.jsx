@@ -198,7 +198,7 @@ function ContentChatSocket(props) {
                 </div>
                 <div className="cht_txt postedcmnt_info">
                   <h5>
-                    {"Presshop"}
+                    {"PressHop"}
                     <span className="text-secondary time">
                       {moment().format(
                         // curr?.createdAt
@@ -230,7 +230,7 @@ function ContentChatSocket(props) {
                       </div>
                       <div className="cht_txt postedcmnt_info">
                         <h5>
-                          Presshop
+                        PressHop
                           <span className="text-secondary time">
                             {moment(curr?.createdAt).format(
                               "h:mm A, D MMM YYYY"
@@ -436,7 +436,7 @@ function ContentChatSocket(props) {
                           </div>
                           <div className="cht_txt postedcmnt_info">
                             <h5>
-                              Presshop
+                            PressHop
                               <span className="text-secondary time">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -501,7 +501,7 @@ function ContentChatSocket(props) {
                         <div className="cht_txt postedcmnt_info">
                           <div className="d-flex align-items-center msg-worries">
                             <h5 className="usr_name mb-0">
-                              Presshop
+                            PressHop
                               <span className="text-secondary time">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -541,7 +541,7 @@ function ContentChatSocket(props) {
                         <div className="cht_txt postedcmnt_info">
                           <div className="d-flex align-items-center msg-worries">
                             <h5 className="usr_name mb-0">
-                              Presshop
+                            PressHop
                               <span className="text-secondary time">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -587,7 +587,7 @@ function ContentChatSocket(props) {
                         <div className="cht_txt postedcmnt_info rating-update">
                           <div className="d-flex align-items-center msg-worries">
                             <h5 className="usr_name mb-0">
-                              Presshop
+                            PressHop
                               <span className="text-secondary time">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -596,7 +596,7 @@ function ContentChatSocket(props) {
                             </h5>
                           </div>
                           <p className="mb-0 msg auto_press_msg">
-                            Please rate your experience with Presshop
+                            Please rate your experience with PressHop
                           </p>
                           <div className="usr_reviews">
                             <Rating
@@ -778,7 +778,7 @@ function ContentChatSocket(props) {
                                 controlId="exampleForm.ControlTextarea1"
                               >
                                 <Form.Control
-                                  placeholder="We hope you're enjoying your experience with Presshop. Please share your feedback with us. Your insights will help us enhance both your experience, and the quality of our service. Thank you"
+                                  placeholder="We hope you're enjoying your experience with PressHop. Please share your feedback with us. Your insights will help us enhance both your experience, and the quality of our service. Thank you"
                                   as="textarea"
                                   rows={3}
                                   onChange={(e) => setReview(e.target.value)}
@@ -823,7 +823,7 @@ function ContentChatSocket(props) {
                       <div className="cht_txt postedcmnt_info">
                         <div className="d-flex align-items-center msg-worries">
                           <h5 className="usr_name mb-0">
-                            Presshop
+                          PressHop
                             <span className="text-secondary time">
                               {moment(curr?.createdAt).format(
                                 "h:mm A, D MMM YYYY"

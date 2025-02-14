@@ -327,7 +327,7 @@ const Tandc = () => {
                               value="option1"
                               inputProps={{ "aria-label": "Option 1" }}
                               onChange={handleChange}
-                              label="I agree to Presshop's Terms and Conditions & Privacy Policy."
+                              label="I agree to PressHop's Terms and Conditions & Privacy Policy."
                             />
                           </div>
                         </div>

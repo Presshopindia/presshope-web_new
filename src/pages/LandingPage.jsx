@@ -145,11 +145,11 @@ const LandingPage = () => {
                     News delivered straight to your desktop
                   </p>
                   <p className="landing_cstm_txt">
-                    Presshop is an easy-to-use platform that connects the public
+                  PressHop is an easy-to-use platform that connects the public
                     directly with the press.
                   </p>
                   <p className="landing_cstm_txt cstm_mb">
-                    By using the Presshop App, users (we call them Hoppers) can
+                    By using the PressHop App, users (we call them Hoppers) can
                     shoot pics, videos, etc they see around themselves in their
                     everyday lives, and can sell the content directly to the
                     press at the click of a button. Registered local &
@@ -466,7 +466,7 @@ const LandingPage = () => {
                                 </div>
                               </Accordion.Header>
                               <Accordion.Body>
-                                Through Presshop, publications can access live,
+                                Through PressHop, publications can access live,
                                 periodical reports that help them take more
                                 informed decisions. They can view detailed and
                                 up-to-date reports on content purchased, and
@@ -497,7 +497,7 @@ const LandingPage = () => {
                                 efficient use of AI tech and our trained human
                                 team members. This verification process is
                                 critical, as it ensures that only authentic and
-                                real content is uploaded on Presshop at all
+                                real content is uploaded on PressHop at all
                                 times.
                               </Accordion.Body>
                             </Accordion.Item>
@@ -539,7 +539,7 @@ const LandingPage = () => {
                               <Accordion.Body>
                                 Publications can instantly chat with the Hoppers
                                 on our platform, discuss, negotiate, and buy the
-                                content. Since Presshop is a multi user, multi
+                                content. Since PressHop is a multi user, multi
                                 office platform, publications can also chat
                                 internally across offices with other team
                                 members.
@@ -559,12 +559,12 @@ const LandingPage = () => {
                               </Accordion.Header>
                               <Accordion.Body>
                                 For all content that our publications buy on
-                                Presshop, they can pay the Hoppers directly and
+                                PressHop, they can pay the Hoppers directly and
                                 safely through the platform. Payments can be
                                 made by debit /credit cards, bank transfers,
                                 PayPal, and Google Pay, using the Stripe payment
                                 gateway. Once the payment is received, the
-                                Presshop watermark on the content is
+                                PressHop watermark on the content is
                                 automatically removed, allowing the publication
                                 to use the content exclusively or on a shared
                                 basis.

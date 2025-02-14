@@ -1978,7 +1978,7 @@ const BroadcastedTask = () => {
                 <Row>
                   <Col sm={12}>
                     <div className="feedPreviews d-flex justify-content-between broadcast-heading">
-                      <h2>Uploaded content task</h2>
+                      <h2>Uploaded content</h2>
                       <div className="sorting_wrap d-flex">
                         <div className="feedSorting me-4">
                           <div className="fltrs_prnt top_fltr">
@@ -2043,7 +2043,7 @@ const BroadcastedTask = () => {
                       console.log("task details content --->", item);
                     }
                     return (
-                      <Col lg={3} md={4} sm={6}>
+                      <Col lg={4} sm={6}>
                         <ContentFeedCard
                           feedImg={
                             item?.type === "image"

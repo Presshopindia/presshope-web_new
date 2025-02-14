@@ -12140,7 +12140,14 @@ body .page-wrap {
   font-size: 11.5px;
   line-height: 18px;
   letter-spacing: 0.4px;
-  color: #000;
+  color: #4b4b4b;
+}
+.modal_wrapper .administrator_checkbox .MuiFormControlLabel-label.label-gray,
+.user_login_dtl .administrator_checkbox .MuiFormControlLabel-label.label-gray {
+  font-size: 11.5px;
+  line-height: 18px;
+  letter-spacing: 0.4px;
+  color: #4b4b4b;
 }
 .modal_wrapper .text_condition,
 .user_login_dtl .text_condition {

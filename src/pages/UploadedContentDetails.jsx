@@ -1724,7 +1724,7 @@ const UploadedContentDetails = (props) => {
                                           <div className="cht_txt">
                                             <div className="d-flex align-items-center">
                                               <p className="usr_name mb-0">
-                                                Presshop
+                                              PressHop
                                               </p>
                                               <p className="cht_time mb-0">
                                                 {moment(
@@ -2286,7 +2286,7 @@ const UploadedContentDetails = (props) => {
                                                   <div className="cht_txt">
                                                     <div className="d-flex align-items-center">
                                                       <p className="usr_name mb-0">
-                                                        Presshop
+                                                        PressHop
                                                       </p>
                                                       <p className="cht_time mb-0">
                                                         {moment(
@@ -2399,7 +2399,7 @@ const UploadedContentDetails = (props) => {
                                                   <div className="cht_txt">
                                                     <div className="d-flex align-items-center">
                                                       <p className="usr_name mb-0">
-                                                        Presshop
+                                                        PressHop
                                                       </p>
                                                       <p className="cht_time mb-0">
                                                         {moment(
@@ -2476,7 +2476,7 @@ const UploadedContentDetails = (props) => {
                                                     <div className="cht_txt">
                                                       <div className="d-flex align-items-center">
                                                         <p className="usr_name mb-0">
-                                                          Presshop
+                                                          PressHop
                                                         </p>
                                                         <p className="cht_time mb-0">
                                                           {moment(
@@ -2550,7 +2550,7 @@ const UploadedContentDetails = (props) => {
                             </div>
                           </Tab>
 
-                          <Tab eventKey="presshop" title="Presshop Chat">
+                          <Tab eventKey="presshop" title="PressHop Chat">
                             <div className="tab-data active">
                               <Row>
                                 <Col md={9}>
@@ -2563,7 +2563,7 @@ const UploadedContentDetails = (props) => {
                                         </span>
                                       </h6>
                                       <h6 className="txt_light">
-                                        Please select the Presshop team member
+                                        Please select the PressHop team member
                                         you wish to speak to from the
                                         participants box on the right.{" "}
                                       </h6>

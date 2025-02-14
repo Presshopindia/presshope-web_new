@@ -584,7 +584,7 @@ const UploadedContentDetails = () => {
                               </Row>
                             </div>
                           </Tab>
-                          <Tab eventKey="presshopchat" title="Presshop Chat">
+                          <Tab eventKey="presshopchat" title="PressHop Chat">
                             <div className="tab-data">
                               <Row>
                                 <Col md={9}>

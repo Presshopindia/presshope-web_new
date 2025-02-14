@@ -503,7 +503,7 @@ function ChatCard(props) {
           <div className="chatting_header">
             <p className="mb-0">
               {/* Presshop chat */}
-              Presshop Chat
+              PressHop Chat
             </p>
           </div>
 

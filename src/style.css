@@ -16109,6 +16109,7 @@ button.MuiButton-secondary {
 .priceOffer_wrap .sm-tiles {
   padding: 6px 6px;
   width: 100%;
+  font-weight:700;
 }
 
 .broadcasted_uploads .scrolling {
@@ -19878,7 +19879,7 @@ input[type=number] {
 }
 
 .singleTask_detail.sngl_wrp {
-  height: 467px;
+  height: 480px;
 }
 
 .taskcard_body .mapView div:first-child {
@@ -22728,7 +22729,7 @@ button.sort_btn.small_sort_btn {
 
 .singleTask_detail .taskUploads_media small,
 .singleTask_detail .taskUploads_media .small {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 16px;
 }
 

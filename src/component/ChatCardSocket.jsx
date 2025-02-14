@@ -314,7 +314,7 @@ function ChatCardSocket(props) {
                   <img src={presshopchatic} alt="User" className="usr_img" />
                   <div className="cht_txt">
                     <div className="d-flex align-items-center">
-                      <p className="usr_name mb-0">Presshop</p>
+                      <p className="usr_name mb-0">PressHop</p>
                       <p className="cht_time mb-0">
                         {moment(roomDetails?.createdAt).format(
                           "h:mm A, D MMM YYYY"
@@ -469,7 +469,7 @@ function ChatCardSocket(props) {
                           />
                           <div className="cht_txt">
                             <div className="d-flex align-items-center">
-                              <p className="usr_name mb-0">Presshop</p>
+                              <p className="usr_name mb-0">PressHop</p>
                               <p className="cht_time mb-0">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -519,7 +519,7 @@ function ChatCardSocket(props) {
                                 {curr?.receiver_id?.first_name +
                                   " " +
                                   curr?.receiver_id?.last_name}
-                                {/* <img src={presshopchatic} alt="Presshop logo" className='ms-1' /> */}
+                                {/* <img src={presshopchatic} alt="PressHop logo" className='ms-1' /> */}
                               </p>
                               <p className="cht_time mb-0">
                                 {moment(curr?.createdAt).format(
@@ -544,7 +544,7 @@ function ChatCardSocket(props) {
                           />
                           <div className="cht_txt">
                             <div className="d-flex align-items-center">
-                              <p className="usr_name mb-0">Presshop</p>
+                              <p className="usr_name mb-0">PressHop</p>
                               <p className="cht_time mb-0">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -599,7 +599,7 @@ function ChatCardSocket(props) {
                             />
                             <div className="cht_txt">
                               <div className="d-flex align-items-center">
-                                <p className="usr_name mb-0">Presshop</p>
+                                <p className="usr_name mb-0">PressHop</p>
                                 <p className="cht_time mb-0">
                                   {moment(curr?.createdAt).format(
                                     "h:mm A, D MMM YYYY"

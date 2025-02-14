@@ -438,13 +438,13 @@ const UserDetailsPopup = (props) => {
                         Please enter your details above, and send your
                         onboarding request to your company administrator. Once
                         the administrator onboards, and assigns user rights to
-                        you, you can then log onto the <b>Presshop</b> platform
+                        you, you can then log onto the <b>PressHop</b> platform
                       </p>
                       {/* <p className="text_condition mb-0">
                       Please enter your details above, and send your onboarding
                       request to your company administrator. Once the
                       administrator onboards, and assigns user rights to you,
-                      you can then log onto the <b>Presshop</b> platform
+                      you can then log onto the <b>PressHop</b> platform
                     </p> */}
                       <p className="text_condition mb-0">
                         If you have any questions regarding the onboarding

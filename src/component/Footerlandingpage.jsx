@@ -63,7 +63,7 @@ const Footerlandingpage = ({ scrollToDiv }) => {
             <Row className="justify-content-between">
               <Col lg={5}>
                 <div className="ftr-left">
-                  <img src={logo} alt="Presshop" className="footer-logo" />
+                  <img src={logo} alt="PressHop" className="footer-logo" />
                 </div>
               </Col>
               <Col lg={7}>
@@ -131,7 +131,7 @@ const Footerlandingpage = ({ scrollToDiv }) => {
                     <Col md={3}>
                       <div className="aboutPress">
                         <Link onClick={() => scrollToDiv("div1")}>
-                          <span>About Presshop</span>
+                          <span>About PressHop</span>
                         </Link>
                         <Link onClick={() => scrollToDiv("div2")}>
                           Platform
@@ -171,7 +171,7 @@ const Footerlandingpage = ({ scrollToDiv }) => {
                   <Row className="align-items-center">
                     <Col sm={6}>
                       <h6 className="copyrText">
-                        © 2024 Presshop UK. All rights reserved.
+                        © 2024 PressHop UK. All rights reserved.
                       </h6>
                     </Col>
                     <Col sm={6}>

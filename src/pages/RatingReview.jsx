@@ -910,13 +910,13 @@ const RatingReview = () => {
                 <Col md={12} className="dash-tabs-wrap rtng_wrp_n pe-0">
                   <div className="dash-tabs pmnts_wrap">
                     <div className="card-heading no_border sub_heading">
-                      Rate and review Presshop
+                      Rate and review PressHop
                     </div>
                     <div className="rate_inner">
                       <div className="crd chatting_itm auto_msg rating sngl_cht d-flex align-items-start pb-4">
                         <div className="cht_txt postedcmnt_info rating-update">
                           <p className="mb-0 msg auto_press_msg">
-                            Please rate your experience with Presshop
+                            Please rate your experience with PressHop
                           </p>
                           <div className="usr_reviews">
                             <Rating
@@ -1050,7 +1050,7 @@ const RatingReview = () => {
                                 controlId="exampleForm.ControlTextarea1"
                               >
                                 <Form.Control
-                                  placeholder="We hope you're enjoying your experience with Presshop. Please share your feedback with us. Your insights will help us enhance both your experience, and the quality of our service. Thank you"
+                                  placeholder="We hope you're enjoying your experience with PressHop. Please share your feedback with us. Your insights will help us enhance both your experience, and the quality of our service. Thank you"
                                   as="textarea"
                                   rows={3}
                                   onChange={(e) =>
@@ -1090,7 +1090,7 @@ const RatingReview = () => {
                       </div>
                       <p>
                         See what our satisfied customers have to say about
-                        Presshop
+                        PressHop
                       </p>
                       <div className="mt-4 mb-4">
                         <Swiper
@@ -1155,7 +1155,7 @@ const RatingReview = () => {
                                 </div>
                                 <div class="overlay-bottom-slide">
                                   <div className="withText-testi">
-                                    <span>Presshop Customer Review</span>
+                                    <span>PressHop Customer Review</span>
                                     <h3>
                                       “
                                       {el?.features?.length > 1

@@ -2,7 +2,7 @@
   "_id": {
     "$oid": "64bfa693bc47606588a6c807"
   },
-  "name": "Presshop Admin",
+  "name": "PressHop Admin",
   "admin_id": {
     "$oid": "64bfa693bc47606588a6c807"
   },
@@ -11,10 +11,10 @@
   "role": "admin",
   "status": "approved",
   "office_details": {
-    "company_name": "Presshop",
+    "company_name": "PressHop",
     "company_number": "123434",
     "company_vat": 20,
-    "name": "presshop",
+    "name": "PressHop",
     "address": "167-169 Great Portland Street , London W1W 5PF",
     "country_code": 23,
     "phone": {
@@ -23,7 +23,7 @@
     "website": null
   },
   "bank_details": {
-    "account_holder_name": "Presshop Admin",
+    "account_holder_name": "PressHop Admin",
     "account_number": 876598765,
     "bank_name": "ICICI Bank",
     "sort_code": "123456"

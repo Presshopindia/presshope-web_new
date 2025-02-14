@@ -100,7 +100,7 @@ const Login = () => {
                         <Typography>
                           Are you a new user? If yes, please check the box to
                           proceed. You will need to request the adminstrator to
-                          register you onto the Presshop platform, and assign
+                          register you onto the PressHop platform, and assign
                           user rights to you
                         </Typography>
                         <Typography variant="body2">

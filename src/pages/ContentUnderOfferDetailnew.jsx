@@ -860,7 +860,7 @@ const ContentunderofferdetailNew = () => {
                             </div>
                           </Tab>
 
-                          <Tab eventKey="presshopchat" title="Presshop Chat">
+                          <Tab eventKey="presshopchat" title="PressHop Chat">
                             <div className="tab-data active">
                               <Row>
                                 <Col md={9}>

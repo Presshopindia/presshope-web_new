@@ -20,7 +20,7 @@ const HeaderNPost = ({ scrollToDiv, activeHeader }) => {
           <div className="logo-wrap">
             <Navbar.Brand>
               <Link to={"/landing-page"}>
-                <img src={LogoBlack1} alt="Presshop" />
+                <img src={LogoBlack1} alt="PressHop" />
               </Link>
             </Navbar.Brand>
           </div>
@@ -37,7 +37,7 @@ const HeaderNPost = ({ scrollToDiv, activeHeader }) => {
                                 //  className="active nav-link"
                                 className={activeHeader=="div1"?"bg-red":""}
                                  >
-                                    About Presshop
+                                    About PressHop
                                 </NavLink>
                                 <NavLink onClick={() => scrollToDiv('div2')} className="nav-link">
                                     Platform
@@ -67,7 +67,7 @@ const HeaderNPost = ({ scrollToDiv, activeHeader }) => {
                     activeHeader == "div1" ? "nav-linkActiveNav" : "nav-link"
                   }
                 >
-                  About Presshop
+                  About PressHop
                 </NavLink>
                 <NavLink
                   className={

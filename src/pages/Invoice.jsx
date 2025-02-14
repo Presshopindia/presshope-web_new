@@ -86,12 +86,12 @@ const Invoice = () => {
                         <div className="ftr-left">
                           <img
                             src={logo}
-                            alt="Presshop"
+                            alt="PressHop"
                             className="footer-logo"
                           />
                           {/* <img
                             src={logoDark}
-                            alt="Presshop"
+                            alt="PressHop"
                             className="footer-logo darkLogo"
                           /> */}
                         </div>

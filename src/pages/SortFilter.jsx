@@ -13,7 +13,7 @@ const SortFilter = () => {
           <div className="logo-wrap">
             <Navbar.Brand>
               <Link to={'/'}>
-                <img src={LogoBlack1} alt="Presshop" />
+                <img src={LogoBlack1} alt="PressHop" />
               </Link>
             </Navbar.Brand>
           </div>
@@ -22,7 +22,7 @@ const SortFilter = () => {
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto center-links lndg_nav_links">
                 <NavLink to={'/'} className="active nav-link">
-                  About Presshop
+                  About PressHop
                 </NavLink>
                 <NavLink to={'/'} className="nav-link">
                   Platform

@@ -499,7 +499,7 @@ const AdminDetailsPopup = (props) => {
 
                 <Col xs={12} md={6}>
                   <Form.Group className="mb-3 form-group designtn_sel">
-                    <img src={emailic} alt="" />
+                    <img src={emailic} alt="" className="mt-1" />
                     <Form.Control
                       type="text"
                       title="Last Name should not start with space"
@@ -528,7 +528,7 @@ const AdminDetailsPopup = (props) => {
                   <div className="term_conditions">
                     <p className="text_condition mb-0">
                       As the administrator, we are giving you important &
-                      exclusive privileges across the Presshop platform. Please
+                      exclusive privileges across the PressHop platform. Please
                       check the boxes below, and confirm that you are
                       responsible for the following actions across all your
                       offices
@@ -540,7 +540,7 @@ const AdminDetailsPopup = (props) => {
                 <div className="administrator_checkbox">
                   <Col md="12" className="mb-3 position-relative">
                     <FormControlLabel
-                      className="check_label"
+                      className="check_label label-gray"
                       control={<Checkbox />}
                       name="check1"
                       label="I am responsible for allowing user rights for all our official employees and associates"
@@ -562,7 +562,7 @@ const AdminDetailsPopup = (props) => {
                       name="check2"
                       checked={isChecked.check2}
                       onChange={handleCheck}
-                      label="I am responsible and authorised by the Company for granting  purchasing & broadcasting task permissions to all official employees and associates, across all our offices on the Presshop platform"
+                      label="I am responsible and authorised by the Company for granting  purchasing & broadcasting task permissions to all official employees and associates, across all our offices on the PressHop platform"
                     />
                     {submit && !isChecked.check2 && (
                       <span className="req_inp" style={{ color: "red" }}>
@@ -577,7 +577,7 @@ const AdminDetailsPopup = (props) => {
                       name="check3"
                       checked={isChecked.check3}
                       onChange={handleCheck}
-                      label="I am responsible and authorised by the Company for fixing minimum and maximum financial limits for all official employees and associates, across all our offices on the Presshop platform"
+                      label="I am responsible and authorised by the Company for fixing minimum and maximum financial limits for all official employees and associates, across all our offices on the PressHop platform"
                     />
                     {submit && !isChecked.check3 && (
                       <span className="req_inp" style={{ color: "red" }}>
@@ -592,7 +592,7 @@ const AdminDetailsPopup = (props) => {
                       name="check4"
                       checked={isChecked.check4}
                       onChange={handleCheck}
-                      label="I confirm that I will not share, or transfer the administrator password to anybody else without informing, and requesting access from Presshop"
+                      label="I confirm that I will not share, or transfer the administrator password to anybody else without informing, and requesting access from PressHop"
                     />
                     {submit && !isChecked.check4 && (
                       <span className="req_inp" style={{ color: "red" }}>

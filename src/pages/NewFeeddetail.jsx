@@ -1769,7 +1769,7 @@ const NewFeeddetail = (props) => {
                                               </div>
                                               <div className="cht_txt postedcmnt_info">
                                                 <h5>
-                                                  {"Presshop"}
+                                                  {"PressHop"}
                                                   <span className="text-secondary time">
                                                     {moment(
                                                       curr?.createdAt
@@ -1979,7 +1979,7 @@ const NewFeeddetail = (props) => {
                                               <div className="cht_txt postedcmnt_info">
                                                 <div className="d-flex align-items-center">
                                                   <h5 className="usr_name mb-0">
-                                                    {"Presshop"}
+                                                    {"PressHop"}
                                                     <span className="text-secondary time">
                                                       {moment(
                                                         curr?.createdAt
@@ -2198,7 +2198,7 @@ const NewFeeddetail = (props) => {
                                               <div className="cht_txt postedcmnt_info">
                                                 <div className="d-flex align-items-center">
                                                   <h5 className="usr_name mb-0">
-                                                    Presshop
+                                                  PressHop
                                                     <span className="text-secondary time">
                                                       {moment(
                                                         curr?.createdAt
@@ -2264,7 +2264,7 @@ const NewFeeddetail = (props) => {
                                               <div className="cht_txt postedcmnt_info">
                                                 <div className="d-flex align-items-center">
                                                   <h5 className="usr_name mb-0">
-                                                    Presshop
+                                                  PressHop
                                                     <span className="text-secondary time">
                                                       {moment(
                                                         curr?.createdAt
@@ -2342,7 +2342,7 @@ const NewFeeddetail = (props) => {
                                               <div className="cht_txt postedcmnt_info">
                                                 <div className="d-flex align-items-center">
                                                   <h5 className="usr_name mb-0">
-                                                    Presshop
+                                                  PressHop
                                                     <span className="text-secondary time">
                                                       {moment(
                                                         curr?.createdAt
@@ -2406,7 +2406,7 @@ const NewFeeddetail = (props) => {
                             </div>
                           </Tab>
 
-                          <Tab eventKey="presshop" title="Presshop Chat">
+                          <Tab eventKey="presshop" title="PressHop Chat">
                             <div className="tab-data active">
                               <Row>
                                 <Col md={9}>
@@ -2419,7 +2419,7 @@ const NewFeeddetail = (props) => {
                                         </span>
                                       </h6>
                                       <h6 className="txt_light">
-                                        Please select the Presshop team member
+                                        Please select the PressHop team member
                                         you wish to speak to from the
                                         participants box on the right.{" "}
                                       </h6>

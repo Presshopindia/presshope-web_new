@@ -549,7 +549,7 @@ const Chat = () => {
 
                 <Accordion.Item className="cht_accdn_item" eventKey="presshop">
                   <Accordion.Header>
-                    <img src={contactic} alt="presshop chat" /> Presshop Chat
+                    <img src={contactic} alt="presshop chat" /> PressHop Chat
                   </Accordion.Header>
                   <Accordion.Body>
                     <div className="chat_list">
@@ -596,7 +596,7 @@ const Chat = () => {
                                           {curr.role === "admin" && (
                                             <img
                                               src={presshopchatic}
-                                              alt="Presshop logo"
+                                              alt="PressHop logo"
                                               className="ms-1"
                                             />
                                           )}

@@ -38,7 +38,7 @@ const HeaderN = ({ scrollToDiv }) => {
           <div className="logo-wrap">
             <Navbar.Brand>
               <Link to={"/landing-page"}>
-                <img src={LogoBlack1} alt="Presshop" />
+                <img src={LogoBlack1} alt="PressHop" />
               </Link>
             </Navbar.Brand>
           </div>
@@ -64,7 +64,7 @@ const HeaderN = ({ scrollToDiv }) => {
                       // onClick={() =>handleScrollToDiv("div1")}
                       to="/landing-page?q=div1"
                     >
-                      <span>About Presshop</span>
+                      <span>About PressHop</span>
                     </Link>
                   </li>
                   <li className="nav-text">
@@ -132,7 +132,7 @@ const HeaderN = ({ scrollToDiv }) => {
                   to="/landing-page?q=div1"
                   className="active nav-link"
                 >
-                  About Presshop
+                  About PressHop
                 </NavLink>
                 <NavLink
                   //   onClick={() => navigate(`/landing-page?q=div2`)}

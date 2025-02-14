@@ -29,10 +29,10 @@ const DbFooter = () => {
             <Row>
               <Col lg={4} md={6} sm={12} className="">
                 <div className="ftr-left">
-                  <img src={logo} alt="Presshop" className="footer-logo" />
+                  <img src={logo} alt="PressHop" className="footer-logo" />
                   {/* <img
                     src={logoDark}
-                    alt="Presshop"
+                    alt="PressHop"
                     className="footer-logo darkLogo"
                   /> */}
                 </div>
@@ -175,7 +175,7 @@ const DbFooter = () => {
                         <Row>
                           <Col md={6} sm={6}>
                             <div className="aboutPress">
-                              {/* <Link to={"/landing-page"}>About Presshop</Link> */}
+                              {/* <Link to={"/landing-page"}>About PressHop</Link> */}
                               <NavLink
                                 //   onClick={() => navigate("/landing-page?q='div1'")}
                                 to="/landing-page?q=div1"
@@ -184,7 +184,7 @@ const DbFooter = () => {
                                 About PressHop
                               </NavLink>
                               {/* <Link to={"/landing-page?q=div1"}>
-                                About Presshop
+                                About PressHop
                               </Link> */}
                               <Link to={"/broadcasted-taks"}>Tasks</Link>
                               <Link

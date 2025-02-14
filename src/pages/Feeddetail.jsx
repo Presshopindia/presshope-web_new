@@ -5413,7 +5413,7 @@ const Feeddetail = (props) => {
                                         </div>
                                         <div className="cht_txt postedcmnt_info">
                                           <h5>
-                                            {"Presshop"}
+                                            {"PressHop"}
                                             <span className="text-secondary time">
                                               {moment().format(
                                                 // curr?.createdAt
@@ -5426,7 +5426,7 @@ const Feeddetail = (props) => {
                                               <Typography className="comment_text">
                                                 Thank you for your interest in this content! It's already been generously discounted, 
                                                 so further negotiations are not possible at this time. However, if you have any questions 
-                                                or need assistance, feel free to click on the Presshop Chat to connect with one of our 
+                                                or need assistance, feel free to click on the PressHop Chat to connect with one of our 
                                                 friendly team members - Cheers!
                                               </Typography>
                                             ):(
@@ -5459,7 +5459,7 @@ const Feeddetail = (props) => {
                                               </div>
                                               <div className="cht_txt postedcmnt_info">
                                                 <h5>
-                                                  {"Presshop"}
+                                                  {"PressHop"}
                                                   <span className="text-secondary time">
                                                     {moment(curr?.createdAt)
                                                       .local()
@@ -5672,7 +5672,7 @@ const Feeddetail = (props) => {
                                                     </div>
                                                     <div className="cht_txt postedcmnt_info">
                                                       <h5>
-                                                        Presshop
+                                                      PressHop
                                                         <span className="text-secondary time">
                                                           {moment(
                                                             curr?.createdAt
@@ -5839,7 +5839,7 @@ const Feeddetail = (props) => {
                                                 <div className="cht_txt postedcmnt_info">
                                                   <div className="d-flex align-items-center msg-worries">
                                                     <h5 className="usr_name mb-0">
-                                                      Presshop
+                                                    PressHop
                                                       <span className="text-secondary time">
                                                         {moment(
                                                           curr?.createdAt
@@ -5898,7 +5898,7 @@ const Feeddetail = (props) => {
                                                 <div className="cht_txt postedcmnt_info rating-update">
                                                   <div className="d-flex align-items-center">
                                                     <h5 className="usr_name mb-0">
-                                                      Presshop
+                                                    PressHop
                                                       <span className="text-secondary time">
                                                         {moment(
                                                           curr?.createdAt
@@ -5910,7 +5910,7 @@ const Feeddetail = (props) => {
                                                   </div>
                                                   <p className="mb-0 msg auto_press_msg">
                                                     Please rate your experience
-                                                    with Presshop
+                                                    with PressHop
                                                   </p>
                                                   <div className="usr_reviews">
                                                     <Rating
@@ -6140,7 +6140,7 @@ const Feeddetail = (props) => {
                                                         controlId="exampleForm.ControlTextarea1"
                                                       >
                                                         <Form.Control
-                                                          placeholder="We hope you're enjoying your experience with Presshop. Please share your feedback with us. Your insights will help us enhance both your experience, and the quality of our service. Thank you"
+                                                          placeholder="We hope you're enjoying your experience with PressHop. Please share your feedback with us. Your insights will help us enhance both your experience, and the quality of our service. Thank you"
                                                           as="textarea"
                                                           rows={3}
                                                           onChange={(e) =>
@@ -6192,7 +6192,7 @@ const Feeddetail = (props) => {
                                                 <div className="cht_txt postedcmnt_info">
                                                   <div className="d-flex align-items-center">
                                                     <h5 className="usr_name mb-0">
-                                                      Presshop
+                                                    PressHop
                                                       <span className="text-secondary time">
                                                         {moment(
                                                           curr?.createdAt
@@ -6265,7 +6265,7 @@ const Feeddetail = (props) => {
                                               <div className="cht_txt postedcmnt_info">
                                                 <div className="d-flex align-items-center">
                                                   <h5 className="usr_name mb-0">
-                                                    Presshop
+                                                  PressHop
                                                     <span className="text-secondary time">
                                                       {moment(
                                                         curr?.createdAt
@@ -6295,7 +6295,7 @@ const Feeddetail = (props) => {
                             </div>
                           </Tab>
 
-                          <Tab eventKey="presshop" title="Presshop Chat">
+                          <Tab eventKey="presshop" title="PressHop Chat">
                             <div className="tab-data active">
                               <Row>
                                 <Col md={9}>
@@ -6308,7 +6308,7 @@ const Feeddetail = (props) => {
                                         </span>
                                       </h6>
                                       <h6 className="txt_light">
-                                        Please select the Presshop team member
+                                        Please select the PressHop team member
                                         you wish to speak to from the
                                         participants box on the right.{" "}
                                       </h6>
