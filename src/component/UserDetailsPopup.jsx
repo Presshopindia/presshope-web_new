@@ -6,25 +6,20 @@ import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import chair from "../assets/images/chair.svg";
 import user from "../assets/images/user.svg";
-import lock from "../assets/images/sortIcons/lock.svg";
 import addPic from "../assets/images/add-square.svg";
-// import eye from "../assets/images/sortIcons/custom.svg"
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import emailic from "../assets/images/mail.svg";
 import officeicon from "../assets/images/office.svg";
 
 import {
-  Checkbox,
-  FormControlLabel,
+  Autocomplete,
   Button,
   MenuItem,
   Select,
+  TextField,
 } from "@mui/material";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-// import { FaRegEyeSlash } from "react-icons/fa";
-// import { IoEyeOffOutlin } from "react-icons/io";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 import { Get, Post } from "../services/user.services";
 import { toast } from "react-toastify";
@@ -37,7 +32,6 @@ const UserDetailsPopup = (props) => {
   const [office, setOffice] = useState([]);
   const [show, setShow] = useState(true);
   const [error, setError] = useState({});
-  const [value, setValue] = useState();
   const [loading, setLoading] = useState(false);
   const [details, setDetails] = useState({
     user_full_name: "",
@@ -55,29 +49,9 @@ const UserDetailsPopup = (props) => {
     country_code: "",
     profile_image: "",
   });
-  console.log("officeeee", office);
 
   const handleChange = async (e) => {
     setDetails({ ...details, [e.target.name]: e.target.value });
-
-    if (e.target.name === "administator_email") {
-      console.log("administator_email  ----->  ------>");
-
-      try {
-        const list = await Post(
-          "mediaHouse/getOfficeListBasedUponMediahouseEmail",
-          { email: e.target.value }
-        );
-
-        console.log("administator_email  ----->  ------>", list);
-
-        if (list) {
-          setOffice(list?.data?.data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
   };
 
   const getDesignation = async () => {
@@ -88,6 +62,23 @@ const UserDetailsPopup = (props) => {
   const getDepartmentType = async () => {
     const list = await Get("mediaHouse/getDepartmentType");
     setDepartmentTypes(list.data.data);
+  };
+
+  const [mediahouseList, setMediahouseList] = useState([]);
+  const getMediahouseList = async (search = "") => {
+    try{
+      const list = await Get(`auth/mediahouse-list?search=${search}`);
+      const updatedData = list?.data?.data?.map((el) => {
+        return {
+          ...el,
+          label: `${el?.company_name}`
+        }
+      })
+      setMediahouseList(updatedData);
+    }
+    catch(error){
+      console.log(error);
+    }
   };
 
   // Phone input ref-
@@ -144,6 +135,7 @@ const UserDetailsPopup = (props) => {
   useEffect(() => {
     getDesignation();
     getDepartmentType();
+    getMediahouseList();
   }, []);
 
   return (
@@ -168,7 +160,7 @@ const UserDetailsPopup = (props) => {
             </Modal.Header>
             <Modal.Body className="show-grid modal-body border-0">
               <Container>
-                <Row>
+                {/* <Row>
                   <p className="bg_lbl">Administrator details</p>
                   <Col xs={12} md={6}>
                     <Form.Group className="mb-4 form-group">
@@ -200,6 +192,44 @@ const UserDetailsPopup = (props) => {
                         onChange={handleChange}
                       />
                     </Form.Group>
+                  </Col>
+                </Row> */}
+                <Row className="mb-4">
+                  <p className="bg_lbl">Administrator details</p>
+                  <Col>
+                  <Autocomplete
+                    name="administator_email"
+                    size="small"
+                    className="w-100 slct_sign"
+                    options={mediahouseList}
+                    getOptionLabel={(option) => option?.company_name}
+                    onChange={async (event, newValue) => {
+                      setDetails({...details, "administator_email": newValue?.email})
+                      if(newValue?.email) {
+                        const list = await Post("mediaHouse/getOfficeListBasedUponMediahouseEmail", { email: newValue?.email });
+                        setOffice(list?.data?.data);
+                      }
+                    }}
+                    filterOptions={(options, { inputValue }) => {
+                      return options.filter(
+                        (option) =>
+                          option?.company_name?.toLowerCase()?.includes(inputValue?.toLowerCase()) ||
+                          option?.email?.toLowerCase()?.includes(inputValue?.toLowerCase()) ||
+                          option?.admin_detail?.first_name?.toLowerCase()?.includes(inputValue?.toLowerCase()) ||
+                          option?.admin_detail?.last_name?.toLowerCase()?.includes(inputValue?.toLowerCase())
+                      )
+                    }
+                    }
+                    renderOption={(props, option) => (
+                      <li {...props} className="mediahouse-list" key={option?.email}>
+                        <img src={option?.profile_image} alt={option?.company_name} />
+                        <div>
+                          <span>{option?.company_name} <span className="mediahouse-list-name">{option?.admin_detail?.first_name} {option?.admin_detail?.last_name} ({option?.email})</span></span>
+                        </div>
+                      </li>
+                    )}
+                    renderInput={(params) => <TextField {...params} placeholder="Search company name / publication name" />}
+                  />
                   </Col>
                 </Row>
                 <Row>
