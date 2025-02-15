@@ -12775,3 +12775,26 @@ audio {
   background: none;
   border: none;
 }
+
+.mediahouse-list {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+.mediahouse-list img {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 100%;
+  object-fit: cover;
+}
+
+.mediahouse-list:hover {
+  background-color: #d8d8d8;
+  cursor: pointer;
+}
+
+.mediahouse-list-name {
+  color: #878787;
+}
