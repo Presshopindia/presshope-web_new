@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import { Link } from 'react-router-dom'
 import { Link, useNavigate, useParams } from "react-router-dom";
 import contentCamera from "../assets/images/contentCamera.svg";
 import contentVideo from "../assets/images/contentVideo.svg";
@@ -10,22 +9,17 @@ import typeVideo from "../assets/images/typeVideo.svg";
 import Header from "../component/Header";
 import DashBoardSortCard from "../component/card/DashBoardSortCard";
 import DashBoardTabCards from "../component/card/DashBoardTabCards";
-// import audioic from "../assets/images/audio-icon.svg";
-import typeInterviewwt from "../assets/images/typeinterview-wt.svg";
 
 import {
   Card,
   CardActions,
   CardContent,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import moment from "moment/moment";
-import { Button, Col, Container, Row, Tab, Tabs } from "react-bootstrap";
+import { Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 import {
-  BsArrowDown,
   BsArrowRight,
-  BsArrowUp,
   BsChevronDown,
 } from "react-icons/bs";
 import favouritedic from "../assets/images/favouritestar.svg";
@@ -34,16 +28,12 @@ import TopSearchesTipsCard from "../component/card/TopSearchesTipsCard";
 //new//
 
 import typestar from "../assets/images/sortIcons/star.svg";
-// import imgSortTab1 from "../assets/images/ImgSortTab1.svg";
 import DbFooter from "../component/DbFooter";
 
-// import DbFooter from '../component/DbFooter';
-import { AiFillCaretDown } from "react-icons/ai";
 import { MdOutlineWatchLater } from "react-icons/md";
 import audioic from "../assets/images/audimg.svg";
 import audioicsm from "../assets/images/audimgsmall.svg";
 import typeInterview from "../assets/images/interview.svg";
-import sharedic from "../assets/images/shared.svg";
 import Loader from "../component/Loader";
 import NewContentPurchasedOnline from "../component/Sortfilters/Content/NewContentPurchasedOnlne";
 import NewFavourite from "../component/Sortfilters/Content/NewFavourite";
@@ -52,33 +42,20 @@ import { Get, Post } from "../services/user.services";
 import AddBroadcastTask from "./AddBroadcastTask";
 import { formatAmountInMillion } from "../component/commonFunction";
 import PostIconsWrapper from "../component/PostIconComponents/PostIconsWrapper";
-//const socket = io.connect("https://betazone.promaticstechnologies.com:3005");
 
 const ContentPage = () => {
   const [show, setShow] = useState(false);
 
-  const [fav_content, setFav_Content] = useState([]);
-  console.log("🚀 ~ ContentPage ~ fav_content:", fav_content)
-  const [pub_content, setPub_Content] = useState([]);
-  console.log("🚀 ~ ContentPage ~ pub_content:", pub_content)
+  const [favouriteContent, setFavouriteContent] = useState([]);
+  const [pubContent, setPubContent] = useState([]);
   const [pur_content, setPur_content] = useState([]);
-  const [Upload_content, setUpload_content] = useState([]);
-  console.log("🚀 ~ ContentPage ~ Upload_content:", Upload_content)
+  const [uploadedContent, setUploadedContent] = useState([]);
   const [content_count, setContent_count] = useState();
   const [type, setType] = useState("exclusive");
   const [loading, setLoading] = useState(false);
   const [underOfferContent, setUnderOfferContent] = useState([]);
-  const [content_sourced, setContent_Sourced] = useState([]);
   const navigate = useNavigate();
   const params = useParams();
-
-  // state for filteration related to - daily latest relevence
-  const [dlrFilter, setDLRFilter] = useState({ name: "", value: "" });
-
-  const dlrFilterHndleChange = (e) => {
-    const { name, value } = e.target;
-    setDLRFilter({ ...dlrFilter, name, value });
-  };
 
   // Content Purchased-
   const [openContentPuchased, setOpenContentPuchased] = useState(false);
@@ -93,47 +70,40 @@ const ContentPage = () => {
     setOpenSortComponent(values);
   };
 
-  const [favTimeValues, setFavTimeValues] = useState();
-
-  // Content Sourced -
-  const [openContentSourced, setOpenContentSourced] = useState(false);
-  const handleCloseContentSourced = (values) => {
-    setOpenContentSourced(values);
-  };
-
   // Fav compoenent-
   const [favouriteComponentState, setFavouriteComponentState] = useState("");
   const [openFavComponent, setOpenFavComponent] = useState(false);
   const handleCloseFavComponent = (values) => {
     setOpenFavComponent(values);
   };
-  const [fundsInvtestedState, setfundsInvtestedState] = useState("");
+  const [fundInvested, setFundInvested] = useState("");
 
   const Navigate = (type) => {
     navigate(`/content-tables/${type}`);
   };
 
   const [discount, setDiscount] = useState([]);
-  console.log("🚀 ~ ContentPage ~ discount:", discount)
+  const [dashboardData, setDashboardData] = useState([]);
   const getUnderOffer = async () => {
     try {
-      const obj = {
-        limit: 6,
-        offset: 0,
-      };
-      const res = await Post(`mediahouse/dashboard/Count`, obj);
+      setLoading(true);
+      const res = await Post(`mediahouse/dashboard/Count`);
+      setDashboardData(res?.data)
       setUnderOfferContent(res?.data?.content_under_offer.newdata);
 
       const res1 = await Post("mediaHouse/view/published/content", {
         isDiscount: true,
         limit: 6,
       });
+      setLoading(false);
       setDiscount(res1.data.content);
     } catch (error) {
-      console.log(error);
+      console.log(error)
+      setLoading(false);
     }
   };
 
+  console.log("dashboardData", dashboardData)
   const [ userId, setUserId ] = useState(null);
   const getProfileData = async () => {
     try {
@@ -148,16 +118,7 @@ const ContentPage = () => {
   useEffect(() => {
     getProfileData()
   }, [])
-  const ContentSourced = async () => {
-    const resp = await Get(`mediahouse/getlistoduploadedcontent`);
-    setContent_Sourced(resp.data.response);
-  };
 
-  useEffect(() => {
-    getUnderOffer();
-    ContentSourced();
-    window.scrollTo(0, 0);
-  }, []);
 
   const handleShow = () => {
     return setShow(!show);
@@ -169,13 +130,11 @@ const ContentPage = () => {
     try {
       const resp = await Post("mediaHouse/view/published/content");
 
-      console.log("myres", resp);
-      setPub_Content(resp.data.content);
+      setPubContent(resp.data.content);
       if (resp) {
         setLoading(false);
       }
     } catch (error) {
-      // console.log(error)
       setLoading(false);
     }
   };
@@ -196,7 +155,6 @@ const ContentPage = () => {
         setLoading(false);
       }
     } catch (error) {
-      // console.log(error)
       setLoading(false);
     }
   };
@@ -205,16 +163,12 @@ const ContentPage = () => {
     setLoading(true);
 
     try {
-      const resp = await Post("mediaHouse/favourites", {
-        [favTimeValues]: favTimeValues,
-      });
-      // console.log(resp, "<-------resp")
-      setFav_Content(resp.data.response.response);
+      const resp = await Post("mediaHouse/favourites");
+      setFavouriteContent(resp.data.response.response);
       if (resp) {
         setLoading(false);
       }
     } catch (error) {
-      // console.log(error)
       setLoading(false);
     }
   };
@@ -224,12 +178,11 @@ const ContentPage = () => {
 
     try {
       const resp = await Get("mediaHouse/getuploadedContentbyHoppers");
-      setUpload_content(resp.data.data);
+      setUploadedContent(resp.data.data);
       if (resp) {
         setLoading(false);
       }
     } catch (error) {
-      // console.log(error)
       setLoading(false);
     }
   };
@@ -274,7 +227,6 @@ const ContentPage = () => {
         setLoading(false);
       }
     } catch (error) {
-      // console.log(error)
       setLoading(false);
     }
   };
@@ -286,8 +238,7 @@ const ContentPage = () => {
     UploadedContent();
     PurchasedContent();
     ContentCount();
-
-    // getUnderOffer()
+    getUnderOffer()
   }, [sortingValue, sortingType, params?.tab1]);
 
   const [favContent, setFavContent] = useState(null);
@@ -326,7 +277,6 @@ const ContentPage = () => {
   useEffect(() => {
     HopperContribute();
   }, []);
-  console.log("content_countttt", content_count);
 
   return (
     <>
@@ -352,26 +302,26 @@ const ContentPage = () => {
                             <path
                               d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
                               stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             />
                             <path
                               d="M0.747559 6.15625H19.4976"
                               stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             />
                             <path
                               d="M0.747559 10.8438H19.4976"
                               stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             />
                             <path
                               d="M6.21631 6.15625V15.5312"
                               stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             />
                           </svg>
                           <div className="fltrs_prnt">
@@ -400,7 +350,7 @@ const ContentPage = () => {
                           variant="body2"
                           className="card-head-txt mb-2"
                         >
-                          {content_count?.content_online?.count || 0}
+                          {dashboardData?.content_online?.count || 0}
                         </Typography>
                       </div>
                       <Link to="/dashboard-tables/content_purchased_online">
@@ -412,44 +362,53 @@ const ContentPage = () => {
                         >
                           Content purchased online
                         </Typography>
-                        {/* <div className="content_stat">
-                          <span className={content_count?.content_online?.type === "increase" ? 'stat_up' : 'stat_down'}>{content_count?.content_online?.type === "increase" ? <BsArrowUp /> : <BsArrowDown />} {content_count?.content_online?.percent ? Math.round(content_count?.content_online?.percent) : 0}%</span>
-                          <span>vs yesterday</span>
-                        </div> */}
                       </Link>
                     </CardContent>
 
-                    <CardActions className="dash-c-foot">
-                      <div className="card-imgs-wrap">
-                        {content_count?.content_online?.task &&
-                          content_count?.content_online?.task
-                            .slice(0, 3)
-                            .map((curr) => {
-                              const Content =
-                                curr?.content_id && curr.content_id.content[0]
-                                  ? curr.content_id.content[0].media_type ===
-                                    "video"
-                                    ? process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr.content_id.content[0].thumbnail
-                                    : curr.content_id.content[0].media_type ===
-                                      "audio"
-                                    ? audioicsm
-                                    : process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr.content_id.content[0].media
-                                  : null;
-                              return <img src={Content} className="card-img" />;
-                            })}
-                        <span>
-                          <BsArrowRight
-                            onClick={() =>
-                              navigate(
-                                "/dashboard-tables/content_purchased_online"
-                              )
-                            }
-                          />
-                        </span>
-                      </div>
-                    </CardActions>
+                    <Link to="/dashboard-tables/content_purchased_online">
+                      <CardActions className="dash-c-foot cstm justify-content-start">
+                        <Link to="/dashboard-tables/content_purchased_online">
+                          <div className="card-imgs-wrap">
+                            {dashboardData?.content_online?.task
+                                .slice(0, 3)
+                                .map((curr) => {
+                                  const Content =
+                                    curr.content_ids &&
+                                    curr.content_ids[0]?.content[0]
+                                      ? curr.content_ids[0]?.content[0]
+                                          .media_type === "video"
+                                        ? curr.content_ids[0]?.content[0]
+                                            .watermark ||
+                                          process.env.REACT_APP_CONTENT_MEDIA +
+                                            curr.content_ids[0]?.content[0]
+                                              .thumbnail
+                                        : curr.content_ids[0]?.content[0]
+                                            .media_type === "audio"
+                                        ? audioic
+                                        : curr.content_ids[0]?.content[0]
+                                            .watermark ||
+                                          process.env.REACT_APP_CONTENT_MEDIA +
+                                            curr.content_ids[0]?.content[0]
+                                              .media
+                                      : curr.content_ids[0]?.content[0]
+                                          .media_type === "audio"
+                                      ? docsic
+                                      : null;
+                                  return (
+                                    <img src={Content} className="card-img" />
+                                  );
+                                })}
+                            <span>
+                              <BsArrowRight
+                                onClick={() =>
+                                  Navigate("content_purchased_online")
+                                }
+                              />
+                            </span>
+                          </div>
+                        </Link>
+                      </CardActions>
+                    </Link>
                   </Card>
                 </Col>
 
@@ -473,26 +432,26 @@ const ContentPage = () => {
                             <path
                               d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
                               stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             />
                             <path
                               d="M0.747559 6.15625H19.4976"
                               stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             />
                             <path
                               d="M0.747559 10.8438H19.4976"
                               stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             />
                             <path
                               d="M6.21631 6.15625V15.5312"
                               stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             />
                           </svg>
                         </div>
@@ -525,8 +484,7 @@ const ContentPage = () => {
                     </CardContent>
                     <CardActions className="dash-c-foot">
                       <div className="card-imgs-wrap">
-                        {content_count?.sourced_content_from_tasks?.task &&
-                          content_count?.sourced_content_from_tasks?.task
+                        {content_count?.sourced_content_from_tasks?.task
                             .slice(0, 3)
                             .map((curr) => {
                               const Content =
@@ -539,7 +497,7 @@ const ContentPage = () => {
                                     process.env.REACT_APP_UPLOADED_CONTENT +
                                       curr?.imageAndVideo
                                   : audioic;
-                              return <img src={Content} className="card-img" />;
+                              return <img src={Content} className="card-img" key={curr?._id} alt={Content} />;
                             })}
                         <span>
                           <BsArrowRight
@@ -605,8 +563,7 @@ const ContentPage = () => {
                     <CardActions className="dash-c-foot">
                       <Link to="/Favourited-Content">
                         <div className="card-imgs-wrap">
-                          {favContent &&
-                            favContent?.slice(0, 3).map((curr) => {
+                          {favContent?.slice(0, 3).map((curr) => {
                               const Content = curr.content_id.content[0]
                                 ? curr.content_id.content[0].media_type ===
                                   "video"
@@ -623,7 +580,7 @@ const ContentPage = () => {
                                     process.env.REACT_APP_CONTENT_MEDIA +
                                       curr.content_id.content[0].media
                                 : null;
-                              return <img src={Content} className="card-img" />;
+                              return <img src={Content} className="card-img" key={curr?._id} alt={Content} />;
                             })}
                           <span>
                             <Link to="/Favourited-Content">
@@ -651,26 +608,26 @@ const ContentPage = () => {
                               <path
                                 d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
                                 stroke="black"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
                                 d="M0.747559 6.15625H19.4976"
                                 stroke="black"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
                                 d="M0.747559 10.8438H19.4976"
                                 stroke="black"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
                                 d="M6.21631 6.15625V15.5312"
                                 stroke="black"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                             </svg>
                           </div>
@@ -717,7 +674,7 @@ const ContentPage = () => {
                                         curr.content[0].media
                                   : null;
                                 return (
-                                  <img src={Content} className="card-img" />
+                                  <img src={Content} className="card-img" key={curr?._id} alt={Content} />
                                 );
                               })}
                             <span>
@@ -746,26 +703,26 @@ const ContentPage = () => {
                             <path
                               d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
                               stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             />
                             <path
                               d="M0.747559 6.15625H19.4976"
                               stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             />
                             <path
                               d="M0.747559 10.8438H19.4976"
                               stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             />
                             <path
                               d="M6.21631 6.15625V15.5312"
                               stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             />
                           </svg>
                           <div className="fltrs_prnt">
@@ -779,8 +736,8 @@ const ContentPage = () => {
                             </button>
                             {openSortComponent && (
                               <NewFundsInvested
-                                active={fundsInvtestedState}
-                                setActive={setfundsInvtestedState}
+                                active={fundInvested}
+                                setActive={setFundInvested}
                                 fundsValues={fundsInvestedHandler}
                                 closeSortComponent={handleCloseSortComponent}
                               />
@@ -831,7 +788,7 @@ const ContentPage = () => {
                                     process.env.REACT_APP_CONTENT_MEDIA +
                                       curr.content[0].media
                                 : null;
-                              return <img src={Content} className="card-img" />;
+                              return <img src={Content} className="card-img" key={curr?._id} alt={Content} />;
                             })}
                           <span>
                             <Link to="/content-tables/total_fund_invested">
@@ -841,10 +798,6 @@ const ContentPage = () => {
                         </div>
                       </Link>
                     </CardActions>
-                    {console.log(
-                      "content_count?.total_fund_invested",
-                      content_count?.total_fund_invested
-                    )}
                   </Card>
                 </Col>
                 <Col md={4} className="mb-0 p-0">
@@ -863,26 +816,26 @@ const ContentPage = () => {
                               <path
                                 d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
                                 stroke="black"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
                                 d="M0.747559 6.15625H19.4976"
                                 stroke="black"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
                                 d="M0.747559 10.8438H19.4976"
                                 stroke="black"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                               <path
                                 d="M6.21631 6.15625V15.5312"
                                 stroke="black"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                               />
                             </svg>
                           </div>
@@ -909,8 +862,7 @@ const ContentPage = () => {
 
                       <CardActions className="dash-c-foot">
                         <div className="card-imgs-wrap">
-                          {content_count?.content_under_offer?.task &&
-                            content_count?.content_under_offer?.task
+                          {content_count?.content_under_offer?.task
                               .slice(0, 3)
                               .map((curr) => {
                                 const Content =
@@ -919,7 +871,7 @@ const ContentPage = () => {
                                       curr.content[0]?.media
                                     : audioicsm;
                                 return (
-                                  <img src={Content} className="card-img" />
+                                  <img src={Content} className="card-img" key={curr?._id} alt={Content} />
                                 );
                               })}
                           <span>
@@ -1016,9 +968,6 @@ const ContentPage = () => {
                               );
                             })}
                       </Tab>
-                      {
-                        console.log("userId", userId)
-                      }
                       <Tab eventKey="shared" title="Shared">
                         {pur_content
                             ?.slice(0, 2)
@@ -1026,6 +975,7 @@ const ContentPage = () => {
                               return (
                                 <Link
                                   to={`/purchased-content-detail/${item?.transaction_id}`}
+                                  key={item?._id}
                                 >
                                   <DashBoardTabCards
                                     imgcount={item.image_count}
@@ -1091,12 +1041,11 @@ const ContentPage = () => {
                       View all
                       <BsArrowRight className="text-danger" />{" "}
                     </Link>
-                    {content_count?.sourced_content_from_tasks?.task &&
-                      content_count?.sourced_content_from_tasks?.task
+                    {content_count?.sourced_content_from_tasks?.task
                         .slice(0, 2)
                         .map((curr) => {
                           return (
-                            <Link to={`/sourced-content-detail/${curr._id}`}>
+                            <Link to={`/sourced-content-detail/${curr._id}`} key={curr?._id}>
                               <DashBoardTabCards
                                 imgcount={curr?.task_id?.content.length}
                                 imgtab={
@@ -1159,26 +1108,26 @@ const ContentPage = () => {
                                 <path
                                   d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
                                   stroke="black"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
                                 />
                                 <path
                                   d="M0.747559 6.15625H19.4976"
                                   stroke="black"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
                                 />
                                 <path
                                   d="M0.747559 10.8438H19.4976"
                                   stroke="black"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
                                 />
                                 <path
                                   d="M6.21631 6.15625V15.5312"
                                   stroke="black"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
                                 />
                               </svg>
                             </div>
@@ -1214,7 +1163,9 @@ const ContentPage = () => {
                                     process.env.REACT_APP_AVATAR_IMAGE +
                                     el?._id?.avatar_id?.avatar
                                   }
+                                  key={el?._id}
                                   className="card-img"
+                                  alt={el?._id?.avatar_id?.avatar}
                                 />
                               ))}
                             <span>
@@ -1268,15 +1219,10 @@ const ContentPage = () => {
                         activeKey={params?.tab2}
                       >
                         <Tab eventKey="published" title="Published content">
-                          {pub_content &&
-                            pub_content.map((curr, index) => {
-                              console.log(
-                                "all content view --->",
-                                curr.content[0]
-                              );
-                              if (index > pub_content.length - 3) {
+                          {pubContent?.map((curr, index) => {
+                              if (index > pubContent.length - 3) {
                                 return (
-                                  <CardContent key={index} className="dash-c-body rev new_tbs_card">
+                                  <CardContent key={curr?._id} className="dash-c-body rev new_tbs_card">
                                     <Link
                                       to={`/Feeddetail/content/${curr._id}`}
                                     >
@@ -1286,28 +1232,11 @@ const ContentPage = () => {
                                             <div className="list-in d-flex align-items-start">
                                               <div className="rateReview_content">
                                                 <div className="commonContentIconsWrap crd_in_icons d-flex justify-content-between">
-                                                  {/* <span className="rateView-type dflt cmr">
-                                                    <span className="volCount">
-                                                      1
-                                                    </span>
-                                                    <img
-                                                      className=""
-                                                      src={
-                                                        curr.content[0]
-                                                          .media_type ===
-                                                        "audio"
-                                                          ? typeInterviewwt
-                                                          : contentCamera
-                                                      }
-                                                    />
-                                                  </span> */}
-                                                  
                                                   <PostIconsWrapper 
                                                     images={curr?.image_count}
                                                     video={curr?.video_count}
                                                     audio={curr?.audio_count}
                                                   />
-                                                  
                                                   <span className="rateView-type dflt">
                                                     <img
                                                       className=""
@@ -1317,6 +1246,7 @@ const ContentPage = () => {
                                                           ? favouritedic
                                                           : favic
                                                       }
+                                                      alt="Fav"
                                                     />
                                                   </span>
                                                 </div>
@@ -1396,14 +1326,9 @@ const ContentPage = () => {
                         </Tab>
                         
                         <Tab eventKey="uploaded" title="Uploaded content">
-                          {Upload_content &&
-                            Upload_content?.slice(0, 2)?.map((item, index) => {
-                              console.log(
-                                "alll task image not showing ---->",
-                                item?.task_id?.content[0]
-                              );
+                          {uploadedContent?.slice(0, 2)?.map((item, index) => {
                               return (
-                                <CardContent className="dash-c-body rev new_tbs_card">
+                                <CardContent className="dash-c-body rev new_tbs_card" key={item?._id}>
                                   <Link to={`/content-details/${item._id}`}>
                                     <div className="">
                                       <Card className="list-card mb-3">
@@ -1428,6 +1353,7 @@ const ContentPage = () => {
                                                         ? contentVideo
                                                         : null
                                                     }
+                                                    alt={item?._id}
                                                   />
                                                 </span>
                                                 {/* <PostIconsWrapper 
@@ -1538,12 +1464,12 @@ const ContentPage = () => {
                             className="DashBoardsort_wrapper d-flex justify-content-start fvt_undr_ofr"
                             style={{ flexWrap: "wrap" }}
                           >
-                            {fav_content &&
-                              fav_content?.slice(0, 6)?.map((curr, index) => {
+                            {favouriteContent?.slice(0, 6)?.map((curr, index) => {
                                 return (
                                   <Link
                                     to={`/Feeddetail/content/${curr?.content_id?._id}`}
                                     className="favourited_card_design"
+                                    key={curr?._id}
                                   >
                                     <DashBoardSortCard
                                       className="fvrt_itm"
@@ -1596,28 +1522,17 @@ const ContentPage = () => {
                             className="DashBoardsort_wrapper_tab d-flex justify-content-between fvt_undr_ofr"
                             style={{ flexWrap: "wrap" }}
                           >
-                            {underOfferContent &&
-                              underOfferContent.slice(0, 6).map((curr) => {
+                            {underOfferContent?.slice(0, 6).map((curr) => {
                                 const feedIcon =
                                   curr?.type === "shared"
                                     ? typeShare
                                     : exclusive;
-                                const content =
-                                  curr?.content[0].media_type === "image" ? (
-                                    <img
-                                      src={
-                                        process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr?.content[0].media
-                                      }
-                                    />
-                                  ) : (
-                                    ""
-                                  );
 
                                 return (
                                   <Link
                                     to={`/Feeddetail/content/${curr._id}`}
                                     className="favourited_card_design"
+                                    key={curr?._id}
                                   >
                                     <DashBoardSortCard
                                       reviewType={
@@ -1691,6 +1606,7 @@ const ContentPage = () => {
                                 <Link
                                   className="favourited_card_design special_card_design"
                                   to={`/Feeddetail/content/${curr?._id}`}
+                                  key={curr?._id}
                                 >
                                   <DashBoardSortCard
                                     className="fvrt_itm"
