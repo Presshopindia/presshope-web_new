@@ -1094,9 +1094,10 @@ import { PaginationComp } from "../component/Pagination";
 import TopFilterComn from "../component/Sortfilters/Content/TopFilterComn";
 import Fundsinvested from "../component/Sortfilters/Dashboard/Fundsinvested";
 import ContentFeedCard from "../component/card/ContentFeedCard";
-import { formatAmountInMillion } from "../component/commonFunction";
+import { formatAmountInMillion, getDeepModifiedTaskContent, getTaskContent } from "../component/commonFunction";
 import { initStateOfSortFilterPurchasedContent } from "../component/staticData";
-import { Get } from "../services/user.services";
+import { Get, Post } from "../services/user.services";
+import { DashboardCardInfo } from "../component/DashboardCardInfo";
 
 //const socket = io.connect("https://betazone.promaticstechnologies.com:3005");
 const BroadcastedTask = () => {
@@ -1259,14 +1260,12 @@ const BroadcastedTask = () => {
       let resp = {};
       if (id) {
         resp = await Get(
-          `mediaHouse/getuploadedContentbyHoppers?task_id=${id}&limit=${limit}&offet=${
-            +(page - 1) * limit
+          `mediaHouse/getuploadedContentbyHoppers?task_id=${id}&limit=${limit}&offet=${+(page - 1) * limit
           }`
         );
       } else {
         resp = await Get(
-          `mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${
-            +(page - 1) * limit
+          `mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit
           }`
         );
       }
@@ -1280,8 +1279,7 @@ const BroadcastedTask = () => {
       if (resp?.data) {
         if (resp?.data?.data.length < 1) {
           resp = await Get(
-            `mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${
-              +(page - 1) * limit
+            `mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit
             }`
           );
 
@@ -1385,6 +1383,58 @@ const BroadcastedTask = () => {
     ContentSourced();
   }, [query.get("change")]);
 
+
+  // New work -
+  const [contentUnderOfferSort, setContentUnderOfferSort] = useState("");
+  const [dashboardSort, setDashboardSort] = useState({
+    type: "",
+  });
+  const [dashboardData, setDashboardData] = useState(null);
+  const [dashboardPayload, setDashboardPayload] = useState({
+    requestedItems: ["live_task", "total_fund_invested_in_task", "content_purchased_from_task", "broadcasted_task"],
+    requestedFilter: {
+      broadcasted_task: "",
+      content_purchased_from_task: "",
+      total_fund_invested_in_task: ""
+    }
+  })
+
+  const DashboardData = async () => {
+    try {
+      setLoading(true);
+      const resp = await Post("mediaHouse/dashboard-data", dashboardPayload);
+      setDashboardData(resp?.data?.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    DashboardData();
+  }, [dashboardPayload.requestedFilter]);
+
+  const handleSort = (val) => {
+    setContentUnderOfferSort(val);
+  }
+
+  const handleSortClick = (value) => {
+    setDashboardSort({ ...dashboardSort, type: value });
+  };
+
+  const handleSortState = (value) => {
+    setDashboardPayload({
+      ...dashboardPayload,
+      requestedFilter: {
+        ...dashboardPayload.requestedFilter,
+        [dashboardSort?.type]: value
+      }
+    })
+    setDashboardSort({
+      type: ""
+    })
+  }
+
   return (
     <>
       {loading && <Loader />}
@@ -1392,470 +1442,81 @@ const BroadcastedTask = () => {
       <div className="page-wrap task_pg renew-task">
         <Container fluid>
           <Row className="dashboardStat_cards">
-            <Col md={3} className="p-0 mb-0 task-card">
-              <Card className="dash-top-cards tsk">
-                <Link to="/task-tables/liveTasks">
-                  <CardContent className="dash-c-body">
-                    <div className="cardCustomHead">
-                      <div className="sortFilter_actions">
-                        <svg
-                          className="me-0"
-                          width="20"
-                          height="17"
-                          viewBox="0 0 20 17"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M0.747559 6.15625H19.4976"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M0.747559 10.8438H19.4976"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M6.21631 6.15625V15.5312"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
-                      </div>
-                      <Typography
-                        variant="body2"
-                        className="card-head-txt mb-2"
-                      >
-                        {stats?.live_tasks_details?.count}
-                      </Typography>
-                    </div>
-                    <Typography
-                      sx={{ fontSize: 14 }}
-                      color="text.secondary"
-                      gutterBottom
-                      className="cardContent_head"
-                    >
-                      {/* <span className="text-pink">Live</span> */}
-                      Live tasks
-                    </Typography>
-                    <div className="content_stat">
-                      {/* {stats?.live_tasks_details?.type === "increase" ? (
-                            <span className="stat_up">
-                              <BsArrowUp />
-                              {(
-                                stats?.live_tasks_details?.percentage || 0
-                              )?.toFixed(2)}
-                              %
-                            </span>
-                          ) : (
-                            <span className="stat_down">
-                              <BsArrowDown />
-                              {(
-                                stats?.live_tasks_details?.percentage || 0
-                              )?.toFixed(2)}
-                              %
-                            </span>
-                          )}
-                          <span>vs yesterday</span> */}
-                    </div>
-                  </CardContent>
-                  <CardActions className="dash-c-foot">
-                    <div className="card-imgs-wrap">
-                      {stats?.live_tasks_details?.task &&
-                        stats?.live_tasks_details?.task
-                          ?.filter((el) => el.content.length !== 0)
-                          .slice(0, 3)
-                          .map((curr, index) => {
-                            const Content =
-                              curr.content[0] &&
-                              (curr.content[0]?.media_type === "video"
-                                ? curr.content[0]?.thumbnail ||
-                                  process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr.content[0]?.thumbnail
-                                : curr.content[0]?.media_type === "audio"
-                                ? audioic
-                                : curr.content[0]?.media_type === "image"
-                                ? curr.content[0]?.watermark
-                                : curr.content[0]?.media ||
-                                  process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr.content[0]?.media);
-                            //  `${process.env.REACT_APP_UPLOADED_CONTENT}${curr?.thumbnail}`
-                            // Conditionally render the img element only if Content is available
-                            return Content ? (
-                              <img
-                                src={Content}
-                                className="card-img"
-                                key={index}
-                                alt={`Image ${index}`}
-                              />
-                            ) : null;
-                          })}
-                      <span onClick={() => Navigate("liveTasks")}>
-                        <BsArrowRight />
-                      </span>
-                    </div>
-                  </CardActions>
-                </Link>
-              </Card>
+            {/* Live Tasks */}
+            <Col md={3} className="p-0 task-card">
+              <DashboardCardInfo
+                showSort={false}
+                path="/task-tables/liveTasks"
+                title="Live tasks"
+                type="live_task"
+                total={dashboardData?.task?.liveTask?.totalCount}
+                data={getDeepModifiedTaskContent(dashboardData?.task?.liveTask?.data)}
+                sort={contentUnderOfferSort}
+                setSort={setContentUnderOfferSort}
+                dashboardSort={dashboardSort}
+                setDashboardSort={setDashboardSort}
+                setSortState={setContentUnderOfferSort}
+                handleSortClick={handleSortClick}
+                task={true}
+              />
             </Col>
-            <Col md={3} className="p-0 mb-0 task-card">
-              <Link to="/dashboard-tables/broadcasted_task">
-                <Card className="dash-top-cards tsk">
-                  <CardContent className="dash-c-body">
-                    <div className="cardCustomHead">
-                      <div className="sortFilter_actions">
-                        <svg
-                          className="me-0"
-                          width="20"
-                          height="17"
-                          viewBox="0 0 20 17"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M0.747559 6.15625H19.4976"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M0.747559 10.8438H19.4976"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M6.21631 6.15625V15.5312"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
-                      </div>
-                      <Typography
-                        variant="body2"
-                        className="card-head-txt mb-2"
-                      >
-                        {stats?.broad_casted_tasks_details?.count}
-                      </Typography>
-                    </div>
-                    <Typography
-                      sx={{ fontSize: 14 }}
-                      color="text.secondary"
-                      gutterBottom
-                      className="cardContent_head"
-                    >
-                      Broadcasted tasks
-                    </Typography>
-                    {/* <div className="content_stat">
-                          {stats?.broad_casted_tasks_details?.type ===
-                          "increase" ? (
-                            <span className="stat_up">
-                              <BsArrowUp />
-                              {(
-                                stats?.broad_casted_tasks_details?.percentage ||
-                                0
-                              )?.toFixed(2)}
-                              %
-                            </span>
-                          ) : (
-                            <span className="stat_down">
-                              <BsArrowDown />
-                              {(
-                                stats?.broad_casted_tasks_details?.percentage ||
-                                0
-                              )?.toFixed(2)}
-                              %
-                            </span>
-                          )}
-                          <span>vs last month</span>
-                        </div> */}
-                  </CardContent>
-                  <CardActions className="dash-c-foot">
-                    <div className="card-imgs-wrap">
-                      {stats?.broad_casted_tasks_details?.task &&
-                        stats?.broad_casted_tasks_details?.task
-                          ?.filter((el) => el.content.length != 0)
-                          ?.slice(0, 3)
-                          ?.map((curr, index) => {
-                            const Content = curr.content[0]
-                              ? curr.content[0]?.media_type === "video"
-                                ? process.env.REACT_APP_CONTENT_MEDIA +
-                                  curr.content[0]?.thumbnail
-                                : curr.content[0]?.media_type === "audio"
-                                ? audioic
-                                : curr.content[0]?.media_type === "image"
-                                ? curr.content[0]?.watermark
-                                : curr.content[0]?.media
-                              : null;
+            {/* Broadcast Tasks */}
+            <Col md={3} className="p-0 task-card">
+              <DashboardCardInfo
+                showSort={false}
+                path="/dashboard-tables/broadcasted_task"
+                title="Broadcasted tasks"
+                type="broadcasted_task"
+                total={dashboardData?.task?.broadcastedTask?.totalCount}
+                data={getDeepModifiedTaskContent(dashboardData?.task?.broadcastedTask?.data)}
+                sort={contentUnderOfferSort}
+                setSort={setContentUnderOfferSort}
+                dashboardSort={dashboardSort}
+                setDashboardSort={setDashboardSort}
+                setSortState={setContentUnderOfferSort}
+                handleSortClick={handleSortClick}
+                task={true}
+              />
+            </Col>
 
-                            // Conditionally render the img element only if Content is available
-                            return Content ? (
-                              <img
-                                src={Content}
-                                className="card-img"
-                                key={index}
-                                alt={`Image ${index}`}
-                              />
-                            ) : null;
-                          })}
-                      <span
-                        onClick={() =>
-                          navigate("/dashboard-tables/broadcasted_task")
-                        }
-                      >
-                        <BsArrowRight />
-                      </span>
-                    </div>
-                  </CardActions>
-                </Card>
-              </Link>
+            {/* Content Purchased From Task */}
+            <Col md={3} className="p-0 task-card">
+              <DashboardCardInfo
+                showSort={false}
+                path="/content-tables/content_sourced_from_task"
+                title="Content purchased from tasks"
+                type="content_purchased_from_task"
+                total={dashboardData?.task?.contentPurchasedFromTask?.totalCount}
+                data={getTaskContent(dashboardData?.task?.contentPurchasedFromTask?.data)}
+                sort={contentUnderOfferSort}
+                setSort={setContentUnderOfferSort}
+                dashboardSort={dashboardSort}
+                setDashboardSort={setDashboardSort}
+                setSortState={setContentUnderOfferSort}
+                handleSortClick={handleSortClick}
+                task={true}
+              />
             </Col>
-            <Col md={3} className="p-0 mb-0 task-card">
-              <Link to="/task-tables/content-sourced">
-                <Card className="dash-top-cards tsk">
-                  <CardContent className="dash-c-body">
-                    <div className="cardCustomHead">
-                      <div className="sortFilter_actions">
-                        <svg
-                          className="me-0"
-                          width="20"
-                          height="17"
-                          viewBox="0 0 20 17"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M0.747559 6.15625H19.4976"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M0.747559 10.8438H19.4976"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M6.21631 6.15625V15.5312"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
-                      </div>
-                      <Typography
-                        variant="body2"
-                        className="card-head-txt mb-2"
-                      >
-                        {stats?.sourced_content_from_tasks?.count || 0}
-                      </Typography>
-                    </div>
-                    <Typography
-                      sx={{ fontSize: 14 }}
-                      color="text.secondary"
-                      gutterBottom
-                      className="cardContent_head"
-                    >
-                      Content purchased from tasks
-                    </Typography>
-                  </CardContent>
-                  <CardActions className="dash-c-foot">
-                    <div className="card-imgs-wrap">
-                      {stats?.sourced_content_from_tasks?.task
-                        ?.slice(0, 3)
-                        .map((curr, index) => {
-                          return (
-                            <div key={index}>
-                              {curr?.type === "images" ? (
-                                <img
-                                  src={
-                                    curr?.videothubnail ||
-                                    process.env.REACT_APP_UPLOADED_CONTENT +
-                                      curr?.imageAndVideo
-                                  }
-                                  className="card-img"
-                                  alt={`Image ${index}`}
-                                />
-                              ) : curr?.type === "audio" ? (
-                                <img
-                                  src={audioic}
-                                  className="card-img"
-                                  alt={`Audio ${index}`}
-                                />
-                              ) : curr?.type === "video" ? (
-                                <img
-                                  className="card-img"
-                                  src={
-                                    curr?.videothubnail ||
-                                    process.env.REACT_APP_UPLOADED_CONTENT +
-                                      curr?.thumbnail
-                                  }
-                                  alt={`Video ${index}`}
-                                />
-                              ) : curr.content[0]?.media_type === "image" ? (
-                                curr.content[0]?.watermark
-                              ) : null}
-                            </div>
-                          );
-                        })}
 
-                      <span onClick={() => Navigate("content-sourced")}>
-                        <BsArrowRight />
-                      </span>
-                    </div>
-                  </CardActions>
-                </Card>
-              </Link>
+            {/* Total fund invested */}
+            <Col md={3} className="p-0 task-card">
+              <DashboardCardInfo
+                showSort={false}
+                path="/task-tables/total-fund-invested"
+                title="Total funds invested"
+                type="total_fund_invested_in_task_today"
+                total={"£" + formatAmountInMillion(dashboardData?.task?.totalFundInvested?.totalAmount || 0)}
+                data={getTaskContent(dashboardData?.task?.totalFundInvested?.data)}
+                sort={contentUnderOfferSort}
+                setSort={setContentUnderOfferSort}
+                dashboardSort={dashboardSort}
+                setDashboardSort={setDashboardSort}
+                setSortState={setContentUnderOfferSort}
+                handleSortClick={handleSortClick}
+                task={true}
+              />
             </Col>
-            <Col md={3} className="p-0 mb-0 task-card">
-              <Link to="/task-tables/total-fund-invested">
-                <Card className="dash-top-cards tsk">
-                  <CardContent className="dash-c-body">
-                    <div className="cardCustomHead">
-                      <div className="sortFilter_actions">
-                        <svg
-                          className="me-0"
-                          width="20"
-                          height="17"
-                          viewBox="0 0 20 17"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M0.747559 6.15625H19.4976"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M0.747559 10.8438H19.4976"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M6.21631 6.15625V15.5312"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
-                      </div>
-                      <Typography
-                        variant="body2"
-                        className="card-head-txt mb-2"
-                      >
-                        £
-                        {formatAmountInMillion(
-                          stats?.total_fund_invested?.count
-                        )}
-                      </Typography>
-                    </div>
-                    <Typography
-                      sx={{ fontSize: 14 }}
-                      color="text.secondary"
-                      gutterBottom
-                      className="cardContent_head"
-                    >
-                      Total funds invested
-                    </Typography>
-                    {/* <div className="content_stat">
-                          {stats?.total_fund_invested?.type === "increase" ? (
-                            <span className="stat_up">
-                              <BsArrowUp />{" "}
-                              {(
-                                stats?.total_fund_invested?.percentage || 0
-                              )?.toFixed(2)}
-                              %
-                            </span>
-                          ) : (
-                            <span className="stat_down">
-                              <BsArrowDown />{" "}
-                              {(
-                                stats?.total_fund_invested?.percentage || 0
-                              ).toFixed(2)}
-                              %
-                            </span>
-                          )}
-                          <span>vs last month</span>
-                        </div> */}
-                  </CardContent>
-                  <CardActions className="dash-c-foot">
-                    <div className="card-imgs-wrap">
-                      {stats?.total_fund_invested?.data
-                        ?.slice(0, 3)
-                        .map((curr, index) => {
-                          return (
-                            <div key={index}>
-                              {curr?.type === "image" ? (
-                                <img
-                                  src={
-                                    curr?.videothubnail ||
-                                    process.env.REACT_APP_UPLOADED_CONTENT +
-                                      curr?.imageAndVideo
-                                  }
-                                  className="card-img"
-                                  alt={`Image ${index}`}
-                                />
-                              ) : curr?.type === "audio" ? (
-                                <img
-                                  src={audioic}
-                                  className="card-img"
-                                  alt={`Audio ${index}`}
-                                />
-                              ) : curr?.type === "video" ? (
-                                <img
-                                  src={
-                                    curr?.videothubnail ||
-                                    process.env.REACT_APP_UPLOADED_CONTENT +
-                                      curr?.thumbnail
-                                  }
-                                  className="card-img"
-                                  alt={`Video ${index}`}
-                                />
-                              ) : null}
-                            </div>
-                          );
-                        })}
 
-                      <span onClick={() => Navigate("content-sourced")}>
-                        <BsArrowRight />
-                      </span>
-                    </div>
-                  </CardActions>
-                </Card>
-              </Link>
-            </Col>
             <Col md={2} className="mb-4 p-0 add-task-card">
               <Card className="dash-top-cards h-100 add-br d-flex align-items-center me-0 justify-content-center">
                 <CardContent className="dash-c-body rev">
@@ -1998,7 +1659,7 @@ const BroadcastedTask = () => {
                                 }
                                 setAllFilterData={setAllFilterData}
                                 allFilterData={allFilterData}
-                                // feedMultiFilter={handleMultiFilter}
+                              // feedMultiFilter={handleMultiFilter}
                               />
                             )}
                           </div>
@@ -2048,15 +1709,15 @@ const BroadcastedTask = () => {
                           feedImg={
                             item?.type === "image"
                               ? item?.videothubnail ||
-                                process.env.REACT_APP_UPLOADED_CONTENT +
-                                  item?.imageAndVideo
+                              process.env.REACT_APP_UPLOADED_CONTENT +
+                              item?.imageAndVideo
                               : item?.type === "video"
-                              ? item?.videothubnail ||
+                                ? item?.videothubnail ||
                                 process.env.REACT_APP_UPLOADED_CONTENT +
-                                  item?.videothubnail
-                              : item?.type === "audio"
-                              ? audioic
-                              : null
+                                item?.videothubnail
+                                : item?.type === "audio"
+                                  ? audioic
+                                  : null
                           }
                           type={"task"}
                           postcount={1}
@@ -2064,19 +1725,19 @@ const BroadcastedTask = () => {
                             item?.type === "image"
                               ? cameraic
                               : item?.type === "audio"
-                              ? interviewic
-                              : item?.type === "video"
-                              ? videoic
-                              : null
+                                ? interviewic
+                                : item?.type === "video"
+                                  ? videoic
+                                  : null
                           }
                           user_avatar={
                             item?.avatar_details?.[0]?.avatar
                               ? process.env.REACT_APP_AVATAR_IMAGE +
-                                item?.avatar_details?.[0]?.avatar
+                              item?.avatar_details?.[0]?.avatar
                               : item?.avatar_detals?.[0]?.avatar
-                              ? process.env.REACT_APP_AVATAR_IMAGE +
+                                ? process.env.REACT_APP_AVATAR_IMAGE +
                                 item?.avatar_detals?.[0]?.avatar
-                              : ""
+                                : ""
                           }
                           author_Name={item?.hopper_id?.user_name}
                           // lnkto={`/content-details/${item?._id}`}
@@ -2102,10 +1763,10 @@ const BroadcastedTask = () => {
                             item?.type === "image"
                               ? item?.task_id?.hopper_photo_price || 0
                               : item?.type === "audio"
-                              ? item?.task_id?.hopper_interview_price || 0
-                              : item?.type === "video"
-                              ? item?.task_id?.hopper_videos_price || 0
-                              : null
+                                ? item?.task_id?.hopper_interview_price || 0
+                                : item?.type === "video"
+                                  ? item?.task_id?.hopper_videos_price || 0
+                                  : null
                           )}`}
                           favourite={() => handleFavourite(index, "task")}
                           bool_fav={

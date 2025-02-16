@@ -21,7 +21,6 @@ function DashBoardCardList(props) {
       setSelectedCard(null); // Deselect if setPayload is not provided (if needed)
     }
   };
-  console.log("propsss", props);
 
   return (
     <>

@@ -1,4 +1,6 @@
 import { Slide, toast } from "react-toastify";
+import audioicsm from "../assets/images/audimgsmall.svg";
+import docsic from "../assets/images/docsic.svg";
 
 // Sorting function for total fund invested (account table)-
 export const accountTotalFundInvestedContentPurchase = (data) => {
@@ -205,3 +207,80 @@ export const totalAmountAfterPromocodeAndVat = (amount, off) => {
 export const receiveLastTwoDigits = (number) => {
     return (+(number) % 1)?.toFixed(2)?.toString()?.replace(/^0/, '') > 0 ? (+(number) % 1)?.toFixed(2)?.toString()?.replace(/^0/, '') : ""
 }
+
+export const getModifiedContent = (data) => {
+    return data?.map((curr) => {
+        if (!curr.content || !curr.content[0]) {
+            return null;
+        }
+
+        const media = curr.content[0];
+
+        if (media.media_type === "video") {
+            return media.watermark || process.env.REACT_APP_CONTENT_MEDIA + media.thumbnail;
+        } else if (media.media_type === "audio") {
+            return audioicsm;
+        } else if (media.media_type === "pdf") {
+            return docsic;
+        } else {
+            return media.watermark || process.env.REACT_APP_CONTENT_MEDIA + media.media;
+        }
+    });
+};
+
+export const getDeepModifiedContent = (data) => {
+    return data?.map((curr) => {
+        if (!curr?.contentDetails?.content || !curr?.contentDetails?.content?.[0]) {
+            return null;
+        }
+
+        const media = curr.contentDetails.content[0];
+
+        if (media.media_type === "video") {
+            return media.watermark || process.env.REACT_APP_CONTENT_MEDIA + media.thumbnail;
+        } else if (media.media_type === "audio") {
+            return audioicsm;
+        } else if (media.media_type === "pdf") {
+            return docsic;
+        } else {
+            return media.watermark || process.env.REACT_APP_CONTENT_MEDIA + media.media;
+        }
+    });
+};
+
+export const getTaskContent = (data) => {
+    return data?.map((curr) => {
+        const media = curr;
+
+        if (media.type === "video") {
+            return media.watermark || process.env.REACT_APP_CONTENT_MEDIA + media.thumbnail;
+        } else if (media.type === "interview") {
+            return audioicsm;
+        } else if (media.type === "pdf") {
+            return docsic;
+        } else {
+            return process.env.REACT_APP_UPLOADED_CONTENT + media.imageAndVideo;
+        }
+    });
+};
+
+
+export const getDeepModifiedTaskContent = (data) => {
+    return data?.map((curr) => {
+        if (!curr.contentDetails || !curr.contentDetails[0]) {
+            return null;
+        }
+
+        const media = curr.contentDetails[0];
+
+        if (media.type === "video") {
+            return media.watermark || process.env.REACT_APP_CONTENT_MEDIA + media.thumbnail;
+        } else if (media.type === "interview") {
+            return audioicsm;
+        } else if (media.type === "pdf") {
+            return docsic;
+        } else {
+            return process.env.REACT_APP_UPLOADED_CONTENT + media.imageAndVideo;
+        }
+    });
+};
