@@ -23,7 +23,8 @@ import {
   initStateOfSortFilterPurchasedContent,
 } from "./staticData";
 import { useDarkMode } from "../context/DarkModeContext";
-const ContentReports = ({ timeValuesProps }) => {
+import { DashboardCardInfo } from "./DashboardCardInfo";
+const ContentReports = ({ dashboardData }) => {
   const [activeTab, setActiveTab] = useState("task");
   const [ContentData, setContentData] = useState({});
   const [loading, setLoading] = useState(false);
@@ -637,7 +638,7 @@ const ContentReports = ({ timeValuesProps }) => {
       // console.log("avgdata",data.data)
       const data = res?.data?.data;
       setAvgAmount(data);
-    } catch (error) {}
+    } catch (error) { }
   };
   console.log("sortFilterPurchasedContent", sortFilterPurchasedContent);
 
@@ -699,478 +700,66 @@ const ContentReports = ({ timeValuesProps }) => {
       {loading && <Loader />}
       <div className="taskReports_container tsk cnt">
         <Row className="top_crds_wrp">
+          {/* Content purchased online today */}
           <Col>
-            <Link to={"/reports-tables-content/content_purchased_online_today"}>
-              {/* <Link to={"/dashboard-tables/content_purchased_online"}> */}
-              <Card className="dash-top-cards">
-                <CardContent className="dash-c-body">
-                  <div className="cardCustomHead">
-                    <div className="sortFilter_actions">
-                      <svg
-                        width="20"
-                        height="17"
-                        viewBox="0 0 20 17"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 6.15625H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 10.8438H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M6.21631 6.15625V15.5312"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-                    <Typography variant="body2" className="card-head-txt mb-2">
-                      {ContentData?.content_online?.count || 0}
-                    </Typography>
-                  </div>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                    className="cardContent_head"
-                  >
-                    Content purchased online today
-                  </Typography>
-                  <div className="content_stat">
-                    {ContentData?.content_online?.type === "decrease" ? (
-                      <span className="stat_down">
-                        <BsArrowDown />{" "}
-                        {ContentData?.content_online?.percent?.toFixed(2)}%
-                      </span>
-                    ) : ContentData?.content_online?.type === "increase" ? (
-                      <span className="stat_up">
-                        <BsArrowUp />{" "}
-                        {ContentData?.content_online?.percent?.toFixed(2)}%
-                      </span>
-                    ) : (
-                      <span>{"No change "}</span>
-                    )}
-
-                    <span>vs yesterday</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            <DashboardCardInfo
+              path="/reports-tables-content/content_purchased_online_today"
+              title="Content purchased online today"
+              type="content_purchased_online_today"
+              total={dashboardData?.purchasedOnlineToday?.totalCount}
+              showSort={false}
+              task={true}
+            />
           </Col>
 
-          {/* //total  */}
+          {/* Total content purchased */}
+          <Col>
+            <DashboardCardInfo
+              path="/dashboard-tables/content_purchased_online"
+              title="Total content purchased"
+              type="content_purchased_online"
+              total={dashboardData?.purchasedOnline?.totalCount}
+              showSort={false}
+              task={true}
+            />
+          </Col>
 
+          {/* Content average price */}
           <Col>
-            <Link to={"/dashboard-tables/content_purchased_online"}>
-              {/* <Link to={"/dashboard-tables/content_purchased_online"}> */}
-              <Card className="dash-top-cards">
-                <CardContent className="dash-c-body">
-                  <div className="cardCustomHead">
-                    <div className="sortFilter_actions">
-                      <svg
-                        width="20"
-                        height="17"
-                        viewBox="0 0 20 17"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 6.15625H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 10.8438H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M6.21631 6.15625V15.5312"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-                    <Typography variant="body2" className="card-head-txt mb-2">
-                      {ContentData?.total_fund_invested?.task?.data.length || 0}
-                    </Typography>
-                  </div>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                    className="cardContent_head"
-                  >
-                    Total content purchased
-                  </Typography>
-                  {/* <div className="content_stat">
-                    {ContentData?.content_online?.type === "decrease" ? (
-                      <span className="stat_down">
-                        <BsArrowDown />{" "}
-                        {ContentData?.content_online?.percent?.toFixed(2)}%
-                      </span>
-                    ) : ContentData?.content_online?.type === "increase" ? (
-                      <span className="stat_up">
-                        <BsArrowUp />{" "}
-                        {ContentData?.content_online?.percent?.toFixed(2)}%
-                      </span>
-                    ) : <span>{"No change "}</span>}
+            <DashboardCardInfo
+              path="/reports-tables-content/content_avg_price"
+              title="Content average price"
+              type="content_average_price"
+              total={"£" + formatAmountInMillion(dashboardData?.contentAveragePrice || 0)}
+              showSort={false}
+              task={true}
+            />
+          </Col>
 
-                    <span>vs yesterday</span>
-                  </div> */}
+          {/* Content average price */}
+          <Col>
+            <DashboardCardInfo
+              path="/reports-tables-content/fund_invested_today"
+              title="Funds invested today"
+              type="total_fund_invested_today"
+              total={"£" + formatAmountInMillion(dashboardData?.totalFundInvestedToday?.totalAmount || 0)}
+              showSort={false}
+              task={true}
+            />
+          </Col>
 
-                  <div className="content_stat">
-                    {ContentData?.total_fund_invested?.type === "decrease" ? (
-                      <span className="stat_down">
-                        <BsArrowDown />{" "}
-                        {ContentData?.total_fund_invested?.percent?.toFixed(2)}%
-                      </span>
-                    ) : ContentData?.total_fund_invested?.type ===
-                      "increase" ? (
-                      <span className="stat_up">
-                        <BsArrowUp />{" "}
-                        {ContentData?.total_fund_invested?.percent?.toFixed(2)}%
-                      </span>
-                    ) : (
-                      <span>{"No change "}</span>
-                    )}
-                    <span>vs last month</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          </Col>
+          {/* Content average price */}
           <Col>
-            <Link to={"/reports-tables-content/content_avg_price"}>
-              <Card className="dash-top-cards">
-                <CardContent className="dash-c-body">
-                  <div className="cardCustomHead">
-                    <div className="sortFilter_actions">
-                      <svg
-                        width="20"
-                        height="17"
-                        viewBox="0 0 20 17"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 6.15625H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 10.8438H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M6.21631 6.15625V15.5312"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-                    <Typography variant="body2" className="card-head-txt mb-2">
-                      £{formatAmountInMillion(avgAmount)}
-                    </Typography>
-                  </div>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                    className="cardContent_head"
-                  >
-                    Content average price
-                  </Typography>
-                  <div className="content_stat">
-                    {ContentData?.average_content_price?.type === "decrease" ? (
-                      <span className="stat_down">
-                        <BsArrowDown />{" "}
-                        {ContentData?.average_content_price?.percent?.toFixed(
-                          2
-                        )}
-                        %
-                      </span>
-                    ) : ContentData?.average_content_price?.type ===
-                      "increase" ? (
-                      <span className="stat_up">
-                        <BsArrowUp />{" "}
-                        {ContentData?.average_content_price?.percent?.toFixed(
-                          2
-                        )}
-                        %
-                      </span>
-                    ) : (
-                      <span>{"No change "}</span>
-                    )}
-                    <span>vs last month</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            <DashboardCardInfo
+              path="/reports-tables-content/total_fund_invested"
+              title="Total funds invested"
+              type="total_fund_invested_today"
+              total={"£" + formatAmountInMillion(dashboardData?.totalFundInvested?.totalAmount || 0)}
+              showSort={false}
+              task={true}
+            />
           </Col>
-          {/* <Col>
-            <Link to={"/reports-tables-content/content_purchase_volume_moment"}>
-              <Card className="dash-top-cards">
-                <CardContent className="dash-c-body">
-                  <div className="cardCustomHead">
-                    <div className="sortFilter_actions">
-                      <svg
-                        width="20"
-                        height="17"
-                        viewBox="0 0 20 17"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 6.15625H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 10.8438H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M6.21631 6.15625V15.5312"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-                    <Typography variant="body2" className="card-head-txt mb-2">
-                      {(
-                        ContentData?.content_purchase_moment?.count || 0
-                      )?.toFixed(2)}
-                      %
-                    </Typography>
-                  </div>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                    className="cardContent_head"
-                  >
-                    Content purchase volume movement
-                  </Typography>
-                  <div className="content_stat">
-                    {ContentData?.content_purchase_moment?.type ===
-                      "increase" ? (
-                      <span className="stat_up">
-                        <BsArrowUp />
-                        {ContentData?.content_purchase_moment?.percent?.toFixed(
-                          2
-                        )}
-                        %
-                      </span>
-                    ) : ContentData?.content_purchase_moment?.type ===
-                      "decrease" ? (
-                      <span className="stat_down">
-                        <BsArrowUp />
-                        {ContentData?.content_purchase_moment?.percent?.toFixed(
-                          2
-                        )}
-                        %
-                      </span>
-                    ) : <span>{"No change "}</span>}
-                    <span>vs last month</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          </Col> */}
-          <Col>
-            <Link to={"/reports-tables-content/fund_invested_today"}>
-              <Card className="dash-top-cards">
-                <CardContent className="dash-c-body">
-                  <div className="cardCustomHead">
-                    <div className="sortFilter_actions">
-                      <svg
-                        width="20"
-                        height="17"
-                        viewBox="0 0 20 17"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 6.15625H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 10.8438H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M6.21631 6.15625V15.5312"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-                    <Typography variant="body2" className="card-head-txt mb-2">
-                      £
-                      {formatAmountInMillion(
-                        ContentData?.today_fund_invested?.count || 0
-                      )}
-                    </Typography>
-                  </div>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                    className="cardContent_head"
-                  >
-                    Funds invested today
-                  </Typography>
-                  <div className="content_stat">
-                    {ContentData?.today_fund_invested?.type === "decrease" ? (
-                      <span className="stat_down">
-                        <BsArrowDown />{" "}
-                        {ContentData?.today_fund_invested?.percent?.toFixed(2)}%
-                      </span>
-                    ) : ContentData?.today_fund_invested?.type ===
-                      "increase" ? (
-                      <span className="stat_up">
-                        <BsArrowUp />{" "}
-                        {ContentData?.today_fund_invested?.percent?.toFixed(2)}%
-                      </span>
-                    ) : (
-                      <span>{"No change "}</span>
-                    )}
-                    <span>vs yesterday</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          </Col>
-          <Col>
-            <Link to={"/reports-tables-content/total_fund_invested"}>
-              <Card className="dash-top-cards">
-                <CardContent className="dash-c-body">
-                  <div className="cardCustomHead">
-                    <div className="sortFilter_actions">
-                      <svg
-                        width="20"
-                        height="17"
-                        viewBox="0 0 20 17"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 6.15625H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 10.8438H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M6.21631 6.15625V15.5312"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-                    <Typography variant="body2" className="card-head-txt mb-2">
-                      {`£${formatAmountInMillion(
-                        ContentData?.total_fund_invested?.count || 0
-                      )}`}
-                    </Typography>
-                  </div>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                    className="cardContent_head"
-                  >
-                    Total funds invested
-                  </Typography>
-                  <div className="content_stat">
-                    {ContentData?.total_fund_invested?.type === "decrease" ? (
-                      <span className="stat_down">
-                        <BsArrowDown />{" "}
-                        {ContentData?.total_fund_invested?.percent?.toFixed(2)}%
-                      </span>
-                    ) : ContentData?.total_fund_invested?.type ===
-                      "increase" ? (
-                      <span className="stat_up">
-                        <BsArrowUp />{" "}
-                        {ContentData?.total_fund_invested?.percent?.toFixed(2)}%
-                      </span>
-                    ) : (
-                      <span>{"No change "}</span>
-                    )}
-                    <span>vs last month</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          </Col>
+
         </Row>
         <div className="taskstat_chart chrts">
           <Row>
@@ -1451,10 +1040,10 @@ const ContentReports = ({ timeValuesProps }) => {
                                 src={
                                   curr?.content[0]?.media_type === "video"
                                     ? process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.thumbnail
+                                    curr?.content[0]?.thumbnail
                                     : curr?.content[0]?.media_type === "audio"
-                                    ? audioic
-                                    : process.env.REACT_APP_CONTENT_MEDIA +
+                                      ? audioic
+                                      : process.env.REACT_APP_CONTENT_MEDIA +
                                       curr?.content[0]?.media
                                 }
                                 alt=""

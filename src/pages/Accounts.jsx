@@ -57,7 +57,7 @@ import shared from "../assets/images/share.png";
 import idic from "../assets/images/id.svg";
 import invic from "../assets/images/invoice.svg";
 import Loader from "../component/Loader";
-import { Get } from "../services/user.services";
+import { Get, Post } from "../services/user.services";
 import moment from "moment";
 import Fundsinvested from "../component/Sortfilters/Dashboard/Fundsinvested";
 import AccountsFilter from "../component/Sortfilters/Content/AccountsFilter";
@@ -73,6 +73,7 @@ import {
   initStateOfSortFilterAccount,
 } from "../component/staticData";
 import { PaginationComp } from "../component/Pagination";
+import { DashboardCardInfo } from "../component/DashboardCardInfo";
 
 const Accounts = () => {
   const navigate = useNavigate();
@@ -204,8 +205,7 @@ const Accounts = () => {
       let resp;
       if (query.get("type") || tranPage) {
         resp = await Get(
-          `mediahouse/getallinvoiseforMediahouse?${parsedSort}=${parsedSort}&task=${parsedTask}&content=${parsedContent}&task=${parsedTask}&payment_made=${parsedPaymentMade}&payment_pending=${parsedPaymentPending}&limit=5&offset=${
-            (tranPage - 1) * 5
+          `mediahouse/getallinvoiseforMediahouse?${parsedSort}=${parsedSort}&task=${parsedTask}&content=${parsedContent}&task=${parsedTask}&payment_made=${parsedPaymentMade}&payment_pending=${parsedPaymentPending}&limit=5&offset=${(tranPage - 1) * 5
           }`
         );
       } else {
@@ -228,8 +228,7 @@ const Accounts = () => {
       let resp;
       if (query.get("type") || vatPage) {
         resp = await Get(
-          `mediahouse/getallinvoiseforMediahouse?${parsedSort}=${parsedSort}&task=${parsedTask}&content=${parsedContent}&task=${parsedTask}&payment_made=${parsedPaymentMade}&payment_pending=${parsedPaymentPending}&limit=5&offset=${
-            (tranPage - 1) * 5
+          `mediahouse/getallinvoiseforMediahouse?${parsedSort}=${parsedSort}&task=${parsedTask}&content=${parsedContent}&task=${parsedTask}&payment_made=${parsedPaymentMade}&payment_pending=${parsedPaymentPending}&limit=5&offset=${(tranPage - 1) * 5
           }`
         );
       } else {
@@ -756,6 +755,32 @@ const Accounts = () => {
     }, 0);
   };
 
+  const [dashboardData, setDashboardData] = useState(null);
+
+  const DashboardData = async () => {
+    const dashboardPayload = {
+      requestedItems: [
+        "total_fund_invested",
+        "content_purchased_online",
+        "content_purchased_from_task",
+        "total_fund_invested_in_task"
+      ],
+      requestedFilter: {}
+    }
+    try {
+      setLoading(true);
+      const resp = await Post("mediaHouse/dashboard-data", dashboardPayload);
+      setDashboardData(resp?.data?.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    DashboardData();
+  }, []);
+
   return (
     <>
       {loading && <Loader />}
@@ -810,350 +835,51 @@ const Accounts = () => {
                   <div className="acnts_wrp acnts">
                     <div className="accountReports_container">
                       <Row className="accoutStats">
+                        {/* Total content purchased online */}
                         <Col>
-                          <Link
-                            to={{
-                              pathname:
-                                "/accounts-tables/total_content_purchase",
-                              state: { x: 1 },
-                            }}
-                          >
-                            <Card className="dash-top-cards">
-                              <CardContent className="dash-c-body">
-                                <div className="cardCustomHead">
-                                  <div className="sortFilter_actions">
-                                    <svg
-                                      width="20"
-                                      height="17"
-                                      viewBox="0 0 20 17"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M0.747559 6.15625H19.4976"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M0.747559 10.8438H19.4976"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M6.21631 6.15625V15.5312"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                    </svg>
-                                  </div>
-                                  <Typography
-                                    variant="body2"
-                                    className="card-head-txt mb-2"
-                                  >
-                                    {accountCount?.content_online?.count}
-                                  </Typography>
-                                </div>
-                                <Typography
-                                  sx={{ fontSize: 14 }}
-                                  color="text.secondary"
-                                  gutterBottom
-                                  className="cardContent_head"
-                                >
-                                  Total contents purchased online
-                                </Typography>
-                                <div className="content_stat">
-                                  {accountCount?.content_online &&
-                                  accountCount?.content_online?.type ===
-                                    "increase" ? (
-                                    <span className="stat_up">
-                                      <BsArrowUp />
-                                      {accountCount?.content_online?.percent?.toFixed(
-                                        2
-                                      )}
-                                      %
-                                    </span>
-                                  ) : accountCount?.content_online?.type ===
-                                    "decrease" ? (
-                                    <span className="stat_down">
-                                      <BsArrowDown />
-                                      {accountCount?.content_online?.percent?.toFixed(
-                                        2
-                                      )}
-                                      %
-                                    </span>
-                                  ) : null}
-                                  <span>vs last month</span>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          </Link>
+                          <DashboardCardInfo
+                            path="/accounts-tables/total_content_purchase"
+                            title="Total content purchased online"
+                            total={dashboardData?.content?.purchasedOnline?.totalCount}
+                            showSort={false}
+                            task={true}
+                          />
                         </Col>
+
+                        {/* Total funds invested for purchased content */}
                         <Col>
-                          <Link to={"/accounts-tables/total_funds"}>
-                            <Card className="dash-top-cards">
-                              <CardContent className="dash-c-body">
-                                <div className="cardCustomHead">
-                                  <div className="sortFilter_actions">
-                                    <svg
-                                      width="20"
-                                      height="17"
-                                      viewBox="0 0 20 17"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M0.747559 6.15625H19.4976"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M0.747559 10.8438H19.4976"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M6.21631 6.15625V15.5312"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                    </svg>
-                                  </div>
-                                  <Typography
-                                    variant="body2"
-                                    className="card-head-txt mb-2"
-                                  >
-                                    £
-                                    {formatAmountInMillion(
-                                      accountCount?.total_fund_invested?.count
-                                    ) || 0}
-                                  </Typography>
-                                </div>
-                                <Typography
-                                  sx={{ fontSize: 14 }}
-                                  color="text.secondary"
-                                  gutterBottom
-                                  className="cardContent_head"
-                                >
-                                  Total funds invested for purchased content
-                                </Typography>
-                                <div className="content_stat">
-                                  {accountCount?.total_fund_invested &&
-                                  accountCount?.total_fund_invested?.type ===
-                                    "increase" ? (
-                                    <span className="stat_up">
-                                      <BsArrowUp />
-                                      {accountCount?.total_fund_invested?.percentage?.toFixed(
-                                        2
-                                      ) || 0.0}
-                                      %
-                                    </span>
-                                  ) : accountCount?.total_fund_invested
-                                      ?.type === "decrease" ? (
-                                    <span className="stat_down">
-                                      <BsArrowDown />
-                                      {accountCount?.total_fund_invested?.percentage?.toFixed(
-                                        2
-                                      )}
-                                      %
-                                    </span>
-                                  ) : null}
-                                  <span>vs last month</span>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          </Link>
+                          <DashboardCardInfo
+                            path="/accounts-tables/total_funds"
+                            title="Total funds invested for purchased content"
+                            total={"£" + formatAmountInMillion(dashboardData?.content?.totalFundInvested?.totalAmount || 0)}
+                            showSort={false}
+                            task={true}
+                          />
                         </Col>
+
+
+                        {/* Total content purchased from tasks */}
                         <Col>
-                          <Link to={"/accounts-tables/total_content"}>
-                            <Card className="dash-top-cards">
-                              <CardContent className="dash-c-body">
-                                <div className="cardCustomHead">
-                                  <div className="sortFilter_actions">
-                                    <svg
-                                      width="20"
-                                      height="17"
-                                      viewBox="0 0 20 17"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M0.747559 6.15625H19.4976"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M0.747559 10.8438H19.4976"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M6.21631 6.15625V15.5312"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                    </svg>
-                                  </div>
-                                  <Typography
-                                    variant="body2"
-                                    className="card-head-txt mb-2"
-                                  >
-                                    {
-                                      accountCount?.sourced_content_from_tasks
-                                        ?.count
-                                    }
-                                  </Typography>
-                                </div>
-                                <Typography
-                                  sx={{ fontSize: 14 }}
-                                  color="text.secondary"
-                                  gutterBottom
-                                  className="cardContent_head"
-                                >
-                                  Total content purchased from tasks
-                                </Typography>
-                                <div className="content_stat">
-                                  {accountCount?.sourced_content_from_tasks &&
-                                  accountCount?.sourced_content_from_tasks
-                                    ?.type === "increase" ? (
-                                    <span className="stat_up">
-                                      <BsArrowUp />
-                                      {accountCount?.sourced_content_from_tasks?.percentage?.toFixed(
-                                        2
-                                      )}
-                                      %
-                                    </span>
-                                  ) : accountCount?.sourced_content_from_tasks
-                                      ?.type === "decrease" ? (
-                                    <span className="stat_down">
-                                      <BsArrowDown />
-                                      {accountCount?.sourced_content_from_tasks?.percentage?.toFixed(
-                                        2
-                                      )}
-                                      %
-                                    </span>
-                                  ) : null}
-                                  <span>vs last month</span>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          </Link>
+                          <DashboardCardInfo
+                            path="/accounts-tables/total_content"
+                            title="Total content purchased from tasks"
+                            total={dashboardData?.task?.contentPurchasedFromTask?.totalCount}
+                            showSort={false}
+                            task={true}
+                          />
                         </Col>
+
+                        {/* Total funds invested for content purchased from task */}
                         <Col>
-                          <Link to={"/accounts-tables/total_funds_sourced"}>
-                            <Card className="dash-top-cards">
-                              <CardContent className="dash-c-body">
-                                <div className="cardCustomHead">
-                                  <div className="sortFilter_actions">
-                                    <svg
-                                      width="20"
-                                      height="17"
-                                      viewBox="0 0 20 17"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M0.747559 6.15625H19.4976"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M0.747559 10.8438H19.4976"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                      <path
-                                        d="M6.21631 6.15625V15.5312"
-                                        stroke="black"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                      />
-                                    </svg>
-                                  </div>
-                                  <Typography
-                                    variant="body2"
-                                    className="card-head-txt mb-2"
-                                  >
-                                    £
-                                    {formatAmountInMillion(
-                                      accountCount
-                                        ?.total_fund_invested_source_content
-                                        ?.count
-                                    )}
-                                  </Typography>
-                                </div>
-                                <Typography
-                                  sx={{ fontSize: 14 }}
-                                  color="text.secondary"
-                                  gutterBottom
-                                  className="cardContent_head"
-                                >
-                                  Total funds invested for content purchased
-                                  from task
-                                </Typography>
-                                <div className="content_stat">
-                                  {accountCount?.total_fund_invested_source_content &&
-                                  accountCount
-                                    ?.total_fund_invested_source_content
-                                    ?.type === "increase" ? (
-                                    <span className="stat_up">
-                                      <BsArrowUp />
-                                      {accountCount?.total_fund_invested_source_content?.percent?.toFixed(
-                                        2
-                                      )}
-                                      %
-                                    </span>
-                                  ) : accountCount
-                                      ?.total_fund_invested_source_content
-                                      ?.type === "decrease" ? (
-                                    <span className="stat_down">
-                                      <BsArrowDown />
-                                      {accountCount?.total_fund_invested_source_content?.percent?.toFixed(
-                                        2
-                                      )}
-                                      %
-                                    </span>
-                                  ) : null}
-                                  <span>vs last month</span>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          </Link>
+                          <DashboardCardInfo
+                            path="/accounts-tables/total_funds_sourced"
+                            title="Total funds invested for content purchased from task"
+                            total={"£" + formatAmountInMillion(dashboardData?.task?.totalFundInvested?.totalAmount || 0)}
+                            showSort={false}
+                            task={true}
+                          />
                         </Col>
+
                         <Col>
                           <Link to={"/accounts-tables/pending_payments"}>
                             <Card className="dash-top-cards">
@@ -1249,13 +975,13 @@ const Accounts = () => {
                                       </Button>
                                       {accountSortFilter?.type ===
                                         "account" && (
-                                        <AccountsFilter
-                                          setAccountSortFilter={
-                                            setAccountSortFilter
-                                          }
-                                          accountSortFilter={accountSortFilter}
-                                        />
-                                      )}
+                                          <AccountsFilter
+                                            setAccountSortFilter={
+                                              setAccountSortFilter
+                                            }
+                                            accountSortFilter={accountSortFilter}
+                                          />
+                                        )}
                                     </div>
                                   </div>
                                 </div>
@@ -1317,7 +1043,7 @@ const Accounts = () => {
                                               <td className="">
                                                 <div className="cont_wrp d-flex flex-column">
                                                   {curr?.type ==
-                                                  "task_content" ? (
+                                                    "task_content" ? (
                                                     <div className="d-flex cnt_inn">
                                                       {
                                                         <img
@@ -1326,14 +1052,14 @@ const Accounts = () => {
                                                               ?.task_content_id
                                                               ?.type === "video"
                                                               ? curr
-                                                                  ?.task_content_id
-                                                                  ?.videothubnail
+                                                                ?.task_content_id
+                                                                ?.videothubnail
                                                               : curr
-                                                                  ?.task_content_id
-                                                                  ?.type ===
+                                                                ?.task_content_id
+                                                                ?.type ===
                                                                 "audio"
-                                                              ? audiosm
-                                                              : curr
+                                                                ? audiosm
+                                                                : curr
                                                                   ?.task_content_id
                                                                   ?.videothubnail
                                                           }
@@ -1349,17 +1075,17 @@ const Accounts = () => {
                                                             <img
                                                               src={
                                                                 item?.media_type ===
-                                                                "video"
+                                                                  "video"
                                                                   ? process.env
-                                                                      .REACT_APP_CONTENT_MEDIA +
-                                                                    item?.thumbnail
+                                                                    .REACT_APP_CONTENT_MEDIA +
+                                                                  item?.thumbnail
                                                                   : item?.media_type ===
                                                                     "audio"
-                                                                  ? audiosm
-                                                                  : item?.thumbnail ||
+                                                                    ? audiosm
+                                                                    : item?.thumbnail ||
                                                                     process.env
                                                                       .REACT_APP_CONTENT_MEDIA +
-                                                                      item?.media
+                                                                    item?.media
                                                               }
                                                               className="content_img"
                                                             />
@@ -1370,7 +1096,7 @@ const Accounts = () => {
                                                   <Link
                                                     to={
                                                       curr?.type !==
-                                                      "task_content"
+                                                        "task_content"
                                                         ? `/purchased-content-detail/${curr?._id}`
                                                         : `/sourced-content-detail/${curr?.task_content_id?._id}`
                                                     }
@@ -1394,7 +1120,7 @@ const Accounts = () => {
                                                           )
                                                         )?._id
                                                     )?.purchased_content_type ==
-                                                    "exclusive"
+                                                      "exclusive"
                                                       ? "Exclusive"
                                                       : "Shared"
                                                   }
@@ -1411,7 +1137,7 @@ const Accounts = () => {
                                                           )?._id
                                                       )
                                                         ?.purchased_content_type ==
-                                                      "exclusive"
+                                                        "exclusive"
                                                         ? exclusiveic
                                                         : shared
                                                     }
@@ -1527,7 +1253,7 @@ const Accounts = () => {
                                                 {curr?.type !== "task_content"
                                                   ? curr?.content_id?.location
                                                   : curr?.task_content_id
-                                                      ?.task_id?.location}
+                                                    ?.task_id?.location}
                                               </td>
                                               <td className="timedate_wrap">
                                                 <p className="timedate">
@@ -1755,7 +1481,7 @@ const Accounts = () => {
                                               <td className="">
                                                 <div className="cont_wrp d-flex flex-column">
                                                   {curr?.type ==
-                                                  "task_content" ? (
+                                                    "task_content" ? (
                                                     <div className="d-flex cnt_inn">
                                                       {
                                                         <img
@@ -1764,14 +1490,14 @@ const Accounts = () => {
                                                               ?.task_content_id
                                                               ?.type === "video"
                                                               ? curr
-                                                                  ?.task_content_id
-                                                                  ?.videothubnail
+                                                                ?.task_content_id
+                                                                ?.videothubnail
                                                               : curr
-                                                                  ?.task_content_id
-                                                                  ?.type ===
+                                                                ?.task_content_id
+                                                                ?.type ===
                                                                 "audio"
-                                                              ? audiosm
-                                                              : curr
+                                                                ? audiosm
+                                                                : curr
                                                                   ?.task_content_id
                                                                   ?.videothubnail
                                                           }
@@ -1787,17 +1513,17 @@ const Accounts = () => {
                                                             <img
                                                               src={
                                                                 item?.media_type ===
-                                                                "video"
+                                                                  "video"
                                                                   ? process.env
-                                                                      .REACT_APP_CONTENT_MEDIA +
-                                                                    item?.thumbnail
+                                                                    .REACT_APP_CONTENT_MEDIA +
+                                                                  item?.thumbnail
                                                                   : item?.media_type ===
                                                                     "audio"
-                                                                  ? audiosm
-                                                                  : item?.thumbnail ||
+                                                                    ? audiosm
+                                                                    : item?.thumbnail ||
                                                                     process.env
                                                                       .REACT_APP_CONTENT_MEDIA +
-                                                                      item?.media
+                                                                    item?.media
                                                               }
                                                               className="content_img"
                                                             />
@@ -1808,7 +1534,7 @@ const Accounts = () => {
                                                   <Link
                                                     to={
                                                       curr?.type !==
-                                                      "task_content"
+                                                        "task_content"
                                                         ? `/purchased-content-detail/${curr?._id}`
                                                         : `/sourced-content-detail/${curr?.task_content_id?._id}`
                                                     }
@@ -1843,7 +1569,7 @@ const Accounts = () => {
                                                 {curr?.type !== "task_content"
                                                   ? curr?.content_id?.location
                                                   : curr?.task_content_id
-                                                      ?.task_id?.location}
+                                                    ?.task_id?.location}
                                               </td>
                                               <td className="timedate_wrap">
                                                 <p className="timedate">
@@ -1912,7 +1638,7 @@ const Accounts = () => {
                                                   £
                                                   {formatAmountInMillion(
                                                     curr?.Vat ||
-                                                      curr?.original_Vatamount
+                                                    curr?.original_Vatamount
                                                   ) ?? "0"}
                                                 </p>
                                               </td>
@@ -2030,9 +1756,9 @@ const Accounts = () => {
                                     "/reports-tables-content/content_purchased_summary"
                                   );
                                 }}
-                                // to={
-                                //   "/reports-tables-content/content_purchased_summary"
-                                // }
+                              // to={
+                              //   "/reports-tables-content/content_purchased_summary"
+                              // }
                               >
                                 <ReactApexChart
                                   options={contentSummary.options}
@@ -2045,9 +1771,9 @@ const Accounts = () => {
                             <Tab eventKey="funds" title="VAT summary">
                               <div
                                 onClick={handleTabClick}
-                                // to={
-                                //   "/reports-tables-content/content_purchased_summary"
-                                // }
+                              // to={
+                              //   "/reports-tables-content/content_purchased_summary"
+                              // }
                               >
                                 <ReactApexChart
                                   options={vatSummary.options}
