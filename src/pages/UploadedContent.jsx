@@ -842,7 +842,7 @@ const UploadedContent = () => {
                 <div className="feedsMain_wrap mb-0">
                   <div className="feedsContainer feedUploadedContent mb-0">
                     <div className="feedContent_header">
-                      <h1>Uploaded content task</h1>
+                      <h1>Uploaded content</h1>
                     </div>
                     <Row className="">
                       {upld_content &&

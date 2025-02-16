@@ -491,7 +491,7 @@ const RatingReview = () => {
                         gutterBottom
                         className="cardContent_head"
                       >
-                        Reviews given
+                        Total reviews received
                       </Typography>
                       <div className="content_stat">
                         {ratingWithPercentageReceived?.type === "increase" ? (
@@ -558,7 +558,15 @@ const RatingReview = () => {
                                     src={audioic}
                                     alt="content"
                                   />
-                                ) : (
+                                ) :curr?.from?.admin_detail?.admin_profile ? (
+                                  <img
+                                    className="card-img"
+                                    src={
+                                      curr?.from?.admin_detail?.admin_profile
+                                    }
+                                    alt="profile"
+                                  />
+                                ): (
                                   <img
                                     className="card-img"
                                     src={
@@ -570,9 +578,9 @@ const RatingReview = () => {
                               </div>
                             );
                           })}
-                        {/* <span>
+                        <span>
                           <BsArrowRight />
-                        </span> */}
+                        </span>
                       </div>
                     </CardActions>
                   </Card>
@@ -1199,7 +1207,7 @@ const RatingReview = () => {
                             variant="body2"
                             className="review-txt card-head-txt mb-0"
                           >
-                            Ratings & reviews given
+                            Ratings & reviews received
                           </Typography>
                           <div class="fltrs_prnt">
                             <button
