@@ -13,8 +13,11 @@ import Fundsinvested from "../component/Sortfilters/Dashboard/Fundsinvested";
 import TopFilterComn from "../component/Sortfilters/Content/TopFilterComn";
 import ChartsSort from "../component/Sortfilters/Dashboard/ChartsSort";
 import { useNavigate, useParams } from "react-router-dom";
+import { Post } from "../services/user.services";
+import Loader from "../component/Loader";
 
 const Reports = () => {
+  
   const [selectedOption, setSelectedOption] = useState("");
   const [timeValues, setTimeValues] = useState("");
   const [open, setOpen] = useState(false);
@@ -28,33 +31,48 @@ const Reports = () => {
     setTimeValues(values);
   };
 
-  const handleChange = (event) => {
-    setSelectedOption(event.target.value);
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  // open and close sort filter component-
-  const handleCloseSortComponent = (values) => {
-    setOpenSortComponent(values);
-  };
-
-  const handleCloseFilterComponent = (values) => {
-    setOpenFilterComponent(values);
-  };
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const DashboardData = async () => {
+    const dashboardPayload = {
+      requestedItems: [
+        "total_fund_invested",
+        "content_average_price",
+        "broadcasted_task_today",
+        "content_purchased_online",
+        "total_fund_invested_today",
+        "content_purchased_from_task",
+        "total_fund_invested_in_task",
+        "content_purchased_online_today",
+        "total_fund_invested_in_task_today",
+        "content_purchased_from_task_today",
+      ],
+      requestedFilter: {}
+    }
+    try {
+      setLoading(true);
+      const resp = await Post("mediaHouse/dashboard-data", dashboardPayload );
+      setDashboardData(resp?.data?.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    DashboardData();
+  }, []);
+
+
   return (
     <>
+    {loading && <Loader />}
       <Header />
       <div className="page-wrap all-reports-wrap">
         <Container fluid className="p-0">
@@ -74,7 +92,7 @@ const Reports = () => {
                     className="reports_tabs_opts"
                     onSelect={(e) => {
                       navigate(`/reports/${e}`);
-                      window.location.reload();
+                      // window.location.reload();
                     }}
                     activeKey={params?.type}
                   >
@@ -82,12 +100,14 @@ const Reports = () => {
                       <ContentReports
                         timeValuesProps={timeValues}
                         type={params?.type}
+                        dashboardData={dashboardData?.content}
                       />
                     </Tab>
                     <Tab eventKey="tasks" title="Tasks">
                       <TaskReports
                         timeValuesProps={timeValues}
                         type={params?.type}
+                        dashboardData={dashboardData?.task}
                       />
                     </Tab>
                   </Tabs>

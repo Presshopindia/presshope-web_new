@@ -12,24 +12,17 @@ import typeCam from "../assets/images/typeCam.svg";
 import typeVideo from "../assets/images/typeVideo.svg";
 import typeInterview from "../assets/images/interview.svg";
 import typeInterviewwt from "../assets/images/typeinterview-wt.svg";
-import usric from "../assets/images/menu-icons/user.svg";
 import star from "../assets/images/star.png";
 import FillStar from "../assets/images/half_filled_star.png";
 import {
   Card,
-  TextField,
   CardActions,
   CardContent,
   Typography,
-  FormControlLabel,
-  Checkbox,
-  Tooltip,
 } from "@mui/material";
 import { BsArrowRight, BsChevronDown } from "react-icons/bs";
 import {
-  Modal,
   Button,
-  Form,
   Tab,
   Tabs,
   Container,
@@ -42,27 +35,23 @@ import Loader from "../component/Loader";
 import moment from "moment";
 import audioic from "../assets/images/audimg.svg";
 import audioicsm from "../assets/images/audimgsmall.svg";
-import audioicbg from "../assets/images/audimgbg.svg";
-import io from "socket.io-client";
-import { Rating } from "react-simple-star-rating";
 
 // sorts
 import RecentActivityDF from "../component/Sortfilters/Dashboard/RecentActivity";
-import CommonSort from "../component/Sortfilters/commonSort";
 import { useDarkMode } from "../context/DarkModeContext";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import {
   capitalizeWord,
   formatAmountInMillion,
+  getDeepModifiedContent,
+  getDeepModifiedTaskContent,
+  getModifiedContent,
   hasDecimal,
 } from "../component/commonFunction";
-// import Navbar from '../component/Navbar';
+import { DashboardCardInfo } from "../component/DashboardCardInfo";
 
-//const socket = io.connect("https://betazone.promaticstechnologies.com:3005");
 const Dashboard = () => {
   const navigate = useNavigate();
   const [receivedCount, setReceivedCount] = useState();
-  const [dash_count, setDashCount] = useState();
   const [rat_count, setRatCount] = useState();
   const [recentUploaded, setRecentUploaded] = useState();
   const [pub_content, setPub_Content] = useState([]);
@@ -72,42 +61,20 @@ const Dashboard = () => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const params = useParams();
-  console.log("recent-upload", recentUploaded);
 
   // Dark Mode-
   const { profileData } = useDarkMode();
 
-  const [filter, setFilter] = useState({
-    status: false,
-    type: "",
-  });
-
   const [trading, setTrading] = useState([]);
 
-  // Sorting-
-  const [dashboardSort, setDashboardSort] = useState({
-    type: "",
-  });
   const [contentUnderOfferSort, setContentUnderOfferSort] = useState("");
-  const [favouritedContentSort, setFavouritedContentSort] = useState("");
-  const [contentPurchaseOnline, setContentPurchaseOnline] = useState("");
-  const [broadCasterTaskSort, setBroadCasterTaskSort] = useState("");
-  const [fundsInvestedSort, setFundsInvesteSort] = useState("");
   const [recentActivityState, setRecentActivityState] = useState("");
-  const handleSortClick = (value) => {
-    setDashboardSort({ ...dashboardSort, type: value });
-  };
-
-  const Navigate = (type) => {
-    navigate(`/dashboard-tables/${type}`);
-  };
 
   const Trendingseraches = async () => {
     // setLoading(true)
     try {
       const resp = await Get(`mediahouse/trending_search`);
       setTrading(resp?.data?.response);
-      // console.log("resp?.data?.response--------->", resp?.data?.response)
     } catch (error) {
       // setLoading(false)
     }
@@ -131,36 +98,6 @@ const Dashboard = () => {
     // console.log("handleFavouriteComponentValues", value)
     setRecentActivityValues({ field: value.field, value: value.values });
   };
-
-  // APIs-
-  const DashboardCount = async () => {
-    setLoading(true);
-    try {
-      let resp;
-      if (dashboardSort.type && dashboardSort.time) {
-        resp = await Post(`mediaHouse/dashboard/Count`, {
-          type: dashboardSort?.type,
-          [dashboardSort.time]: dashboardSort.time,
-        });
-        setDashboardSort({ ...dashboardSort, type: "" });
-      } else {
-        resp = await Post(`mediaHouse/dashboard/Count`);
-      }
-      setDashCount(resp.data);
-      if (resp) {
-        setDashboardSort({
-          type: "",
-        });
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    DashboardCount();
-  }, [dashboardSort.time]);
 
   const ChatCount = async () => {
     setLoading(true);
@@ -193,8 +130,7 @@ const Dashboard = () => {
     setLoading(true);
     try {
       const resp = await Get(
-        `mediahouse/recentactivity?${
-          recentActivityValues.field && recentActivityValues.field
+        `mediahouse/recentactivity?${recentActivityValues.field && recentActivityValues.field
         }=${recentActivityValues.value && recentActivityValues.value}`
       );
       console.log("responseee", resp);
@@ -212,18 +148,15 @@ const Dashboard = () => {
     setLoading(true);
 
     try {
-      let resp;
+      let payload = {};
       if (params?.type === "discount") {
-        resp = await Post("mediaHouse/view/published/content", {
-          isDiscount: true,
-          limit: 2,
-        });
-      } else {
-        resp = await Post(`mediaHouse/DashboardcontentTypeMain`, {
-          soldtype: params?.type,
-          limit: 2,
-        });
+        payload = { isDiscount: true, limit: 2 }
       }
+      else {
+        payload = { type: [params?.type], limit: 2 }
+      }
+
+      const resp = await Post("mediaHouse/view/published/content", payload)
       setPub_Content(resp.data.content);
       if (resp) {
         setLoading(false);
@@ -272,40 +205,58 @@ const Dashboard = () => {
     RatingNReview_Count();
   }, []);
 
-  const [favContent, setFavContent] = useState(null);
-  const FavContent = async () => {
+
+  // New work -
+  const [dashboardSort, setDashboardSort] = useState({
+    type: "",
+  });
+  const [dashboardData, setDashboardData] = useState(null);
+  const [dashboardPayload, setDashboardPayload] = useState({
+    requestedItems: ["content_purchased_online", "total_fund_invested", "content_under_offer", "favourite", "broadcasted_task"],
+    requestedFilter: {
+      favourite: "",
+      broadcasted_task: "",
+      content_under_offer: "",
+      total_fund_invested: "",
+      content_purchased_online: ""
+    }
+  })
+
+  const DashboardData = async () => {
     try {
-      let resp;
-      if (dashboardSort.type && dashboardSort.time) {
-        resp = await Post("mediaHouse/favourites", {
-          [dashboardSort.time]: dashboardSort.time,
-        });
-      } else {
-        resp = await Post("mediaHouse/favourites");
-      }
-      setFavContent(resp?.data?.response?.response);
+      setLoading(true);
+      const resp = await Post("mediaHouse/dashboard-data", dashboardPayload);
+      setDashboardData(resp?.data?.data);
+      setLoading(false);
     } catch (error) {
-      // console.log(error);
+      setLoading(false);
     }
   };
-  useEffect(() => {
-    FavContent();
-  }, [dashboardSort.time]);
 
   useEffect(() => {
-    if (contentUnderOfferSort) {
-      console.log(
-        "all sort data ---> --->contentunderoffer",
-        contentUnderOfferSort
-      );
-      // setContentUnderOfferSort("");
-    }
-    if (favouritedContentSort) {
-      console.log("all sort data ---> --->favrated", favouritedContentSort);
-      setFavouritedContentSort("");
-    }
-  }, [contentUnderOfferSort, favouritedContentSort]);
-  console.log("pub_contenttt", pub_content);
+    DashboardData();
+  }, [dashboardPayload.requestedFilter]);
+
+  const handleSort = (val) => {
+    setContentUnderOfferSort(val);
+  }
+
+  const handleSortClick = (value) => {
+    setDashboardSort({ ...dashboardSort, type: value });
+  };
+
+  const handleSortState = (value) => {
+    setDashboardPayload({
+      ...dashboardPayload,
+      requestedFilter: {
+        ...dashboardPayload.requestedFilter,
+        [dashboardSort?.type]: value
+      }
+    })
+    setDashboardSort({
+      type: ""
+    })
+  }
 
   return (
     <>
@@ -381,10 +332,6 @@ const Dashboard = () => {
                       <CardActions className="dash-c-foot">
                         <div className="card-imgs-wrap">
                           {current_chat_detais.slice(0, 3)?.map((curr) => {
-                            console.log(
-                              "all curr chats ------>",
-                              curr?.sender_id?.avatar_id?.avatar
-                            );
                             let avtartimage =
                               "https://uat-presshope.s3.eu-west-2.amazonaws.com/public/avatarImages/" +
                               curr?.sender_id?.avatar_id?.avatar;
@@ -415,668 +362,87 @@ const Dashboard = () => {
                 </Col>
 
                 {/* Content Under Offer */}
-                <Col md={4} className="p-0 mb-0">
-                  <Card className="dash-top-cards crd_edit">
-                    <CardContent className="dash-c-body">
-                      <div className="cardCustomHead">
-                        <div
-                          className="edit_card_sel"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <svg
-                            width="20"
-                            height="17"
-                            viewBox="0 0 20 17"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M0.747559 6.15625H19.4976"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M0.747559 10.8438H19.4976"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M6.21631 6.15625V15.5312"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                          <div className="fltrs_prnt">
-                            <Button
-                              className="sort_btn"
-                              onClick={() =>
-                                handleSortClick("content_under_offer")
-                              }
-                            >
-                              Sort
-                              <BsChevronDown />
-                            </Button>
-                            {dashboardSort?.type == "content_under_offer" ? (
-                              <CommonSort
-                                sort={contentUnderOfferSort}
-                                setSort={setContentUnderOfferSort}
-                                dashboardSort={dashboardSort}
-                                setDashboardSort={setDashboardSort}
-                                setSortState={setContentUnderOfferSort} // Pass the appropriate setter function
-                              />
-                            ) : null}
-                          </div>
-                        </div>
-                        <Link to="/Content-Under-Offer">
-                          <Typography
-                            variant="body2"
-                            className="card-head-txt mb-2"
-                          >
-                            {dash_count?.content_under_offer?.count || 0}
-                          </Typography>
-                        </Link>
-                      </div>
-                      <Link to="/Content-Under-Offer">
-                        <Typography
-                          sx={{ fontSize: 14 }}
-                          color="text.secondary"
-                          gutterBottom
-                          className="cardContent_head"
-                        >
-                          Content under offer
-                        </Typography>
-                      </Link>
-                    </CardContent>
-                    <Link to="/Content-Under-Offer">
-                      {/* Move CardActions inside Link */}
-                      <CardActions className="dash-c-foot">
-                        <div className="card-imgs-wrap">
-                          {dash_count?.content_under_offer?.newdata
-                            .slice(0, 3)
-                            .map((curr) => {
-                              const Content = curr.content[0]
-                                ? curr.content[0].media_type === "video"
-                                  ? curr.content[0].watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr.content[0].thumbnail
-                                  : curr.content[0].media_type === "audio"
-                                  ? audioicsm
-                                  : curr.content[0].media_type === "pdf"
-                                  ? docsic
-                                  : curr.content[0].watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr.content[0].media
-                                : null;
-                              return <img src={Content} className="card-img" />;
-                            })}
-                          <span>
-                            {" "}
-                            <BsArrowRight />
-                          </span>
-                        </div>
-                      </CardActions>
-                    </Link>
-                  </Card>
+                <Col md={4} className="p-0">
+                  <DashboardCardInfo
+                    path="/Content-Under-Offer"
+                    title="Content under offer"
+                    type="content_under_offer"
+                    total={dashboardData?.content?.contentUnderOffer?.totalCount}
+                    data={getModifiedContent(dashboardData?.content?.contentUnderOffer?.data)}
+                    sort={contentUnderOfferSort}
+                    setSort={handleSort}
+                    dashboardSort={dashboardSort}
+                    setDashboardSort={setDashboardSort}
+                    setSortState={handleSortState}
+                    handleSortClick={handleSortClick}
+                  />
                 </Col>
-
                 {/* Favourited Content */}
-                <Col md={4} className="p-0 mb-0">
-                  <Card className="dash-top-cards crd_edit">
-                    <CardContent className="dash-c-body">
-                      <div className="cardCustomHead">
-                        <div
-                          className="edit_card_sel"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <svg
-                            width="20"
-                            height="17"
-                            viewBox="0 0 20 17"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M0.747559 6.15625H19.4976"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M0.747559 10.8438H19.4976"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M6.21631 6.15625V15.5312"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                          <div className="fltrs_prnt">
-                            <Button
-                              className="sort_btn"
-                              onClick={() =>
-                                handleSortClick("favourited_content")
-                              }
-                            >
-                              Sort
-                              <BsChevronDown />
-                            </Button>
-                            {dashboardSort?.type == "favourited_content" ? (
-                              <CommonSort
-                                sort={favouritedContentSort}
-                                setSort={setFavouritedContentSort}
-                                dashboardSort={dashboardSort}
-                                setDashboardSort={setDashboardSort}
-                                setSortState={setFavouritedContentSort} // Pass the appropriate setter function
-                              />
-                            ) : null}
-                          </div>
-                        </div>
-                        <Link to="/Favourited-Content">
-                          <Typography
-                            variant="body2"
-                            className="card-head-txt mb-2"
-                          >
-                            {favContent?.length || 0}
-                          </Typography>
-                        </Link>
-                      </div>
-                      <Link to="/Favourited-Content">
-                        <Typography
-                          sx={{ fontSize: 14 }}
-                          color="text.secondary"
-                          gutterBottom
-                          className="cardContent_head"
-                        >
-                          Favourited content
-                        </Typography>
-                      </Link>
-                    </CardContent>
-                    <Link to="/Favourited-Content">
-                      <CardActions className="dash-c-foot">
-                        <Link to="/Favourited-Content">
-                          <div className="card-imgs-wrap">
-                            {favContent &&
-                              favContent?.slice(0, 3).map((curr) => {
-                                const Content = curr.content_id.content[0]
-                                  ? curr.content_id.content[0].media_type ===
-                                    "video"
-                                    ? curr.content_id.content[0].watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr.content_id.content[0].thumbnail
-                                    : curr.content_id.content[0].media_type ===
-                                      "audio"
-                                    ? audioic
-                                    : curr.content_id.content[0].media_type ===
-                                      "pdf"
-                                    ? docsic
-                                    : curr.content_id.content[0].watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr.content_id.content[0].media
-                                  : null;
-                                return (
-                                  <img src={Content} className="card-img" />
-                                );
-                              })}
-                            <span>
-                              <Link to="/Favourited-Content">
-                                <BsArrowRight />
-                              </Link>
-                            </span>
-                          </div>
-                        </Link>
-                      </CardActions>
-                    </Link>
-                  </Card>
+                <Col md={4} className="p-0">
+                  <DashboardCardInfo
+                    path="/Favourited-Content"
+                    title="Favourite content"
+                    type="favourite"
+                    total={dashboardData?.content?.favourite?.totalCount}
+                    data={getDeepModifiedContent(dashboardData?.content?.favourite?.data)}
+                    sort={contentUnderOfferSort}
+                    setSort={setContentUnderOfferSort}
+                    dashboardSort={dashboardSort}
+                    setDashboardSort={setDashboardSort}
+                    setSortState={setContentUnderOfferSort}
+                    handleSortClick={handleSortClick}
+                  />
                 </Col>
 
                 {/* Content Purchase Online */}
-                <Col md={4} className="p-0 mb-0">
-                  <Card className="dash-top-cards crd_edit">
-                    <CardContent className="dash-c-body">
-                      <div className="cardCustomHead">
-                        <div
-                          className="edit_card_sel"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <svg
-                            width="20"
-                            height="17"
-                            viewBox="0 0 20 17"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M0.747559 6.15625H19.4976"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M0.747559 10.8438H19.4976"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M6.21631 6.15625V15.5312"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                          <div className="fltrs_prnt">
-                            <Button
-                              className="sort_btn"
-                              onClick={() =>
-                                handleSortClick("content_purchased_online")
-                              }
-                            >
-                              Sort
-                              <BsChevronDown />
-                            </Button>
-                            {dashboardSort?.type ==
-                            "content_purchased_online" ? (
-                              <CommonSort
-                                sort={contentPurchaseOnline}
-                                setSort={setContentPurchaseOnline}
-                                dashboardSort={dashboardSort}
-                                setDashboardSort={setDashboardSort}
-                                setSortState={setContentPurchaseOnline}
-                              />
-                            ) : null}
-                          </div>
-                        </div>
-                        <Link to="/dashboard-tables/content_purchased_online">
-                          <Typography
-                            variant="body2"
-                            className="card-head-txt mb-2"
-                          >
-                            {dash_count?.content_online?.count || 0}
-                          </Typography>
-                        </Link>
-                      </div>
-                      <Link to="/dashboard-tables/content_purchased_online">
-                        <Typography
-                          sx={{ fontSize: 14 }}
-                          color="text.secondary"
-                          gutterBottom
-                          className="cardContent_head"
-                        >
-                          Content purchased online
-                        </Typography>
-                      </Link>
-                    </CardContent>
-                    <Link to="/dashboard-tables/content_purchased_online">
-                      <CardActions className="dash-c-foot cstm justify-content-start">
-                        <Link to="/dashboard-tables/content_purchased_online">
-                          <div className="card-imgs-wrap">
-                            {dash_count?.content_online?.task &&
-                              dash_count?.content_online?.task
-                                .slice(0, 3)
-                                .map((curr) => {
-                                  const Content =
-                                    curr.content_ids &&
-                                    curr.content_ids[0]?.content[0]
-                                      ? curr.content_ids[0]?.content[0]
-                                          .media_type === "video"
-                                        ? curr.content_ids[0]?.content[0]
-                                            .watermark ||
-                                          process.env.REACT_APP_CONTENT_MEDIA +
-                                            curr.content_ids[0]?.content[0]
-                                              .thumbnail
-                                        : curr.content_ids[0]?.content[0]
-                                            .media_type === "audio"
-                                        ? audioic
-                                        : curr.content_ids[0]?.content[0]
-                                            .watermark ||
-                                          process.env.REACT_APP_CONTENT_MEDIA +
-                                            curr.content_ids[0]?.content[0]
-                                              .media
-                                      : curr.content_ids[0]?.content[0]
-                                          .media_type === "audio"
-                                      ? docsic
-                                      : null;
-                                  return (
-                                    <img src={Content} className="card-img" />
-                                  );
-                                })}
-                            <span>
-                              <BsArrowRight
-                                onClick={() =>
-                                  Navigate("content_purchased_online")
-                                }
-                              />
-                            </span>
-                          </div>
-                        </Link>
-                      </CardActions>
-                    </Link>
-                  </Card>
+                <Col md={4} className="p-0">
+                  <DashboardCardInfo
+                    path="/dashboard-tables/content_purchased_online"
+                    title="Content purchased online"
+                    type="content_purchased_online"
+                    total={dashboardData?.content?.purchasedOnline?.totalCount}
+                    data={getDeepModifiedContent(dashboardData?.content?.purchasedOnline?.data)}
+                    sort={contentUnderOfferSort}
+                    setSort={setContentUnderOfferSort}
+                    dashboardSort={dashboardSort}
+                    setDashboardSort={setDashboardSort}
+                    setSortState={setContentUnderOfferSort}
+                    handleSortClick={handleSortClick}
+                  />
                 </Col>
 
                 {/* Broadcast Tasks */}
-                <Col md={4} className="p-0 mb-0">
-                  {/* <Tooltip title="Launching soon"> */}
-                  <Card className="dash-top-cards crd_edit">
-                    <CardContent className="dash-c-body">
-                      <div className="cardCustomHead">
-                        <div
-                          className="edit_card_sel"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <svg
-                            width="20"
-                            height="17"
-                            viewBox="0 0 20 17"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M0.747559 6.15625H19.4976"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M0.747559 10.8438H19.4976"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M6.21631 6.15625V15.5312"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                          <div className="fltrs_prnt">
-                            <Button
-                              className="sort_btn"
-                              onClick={() => handleSortClick("broadcast_task")}
-                            >
-                              Sort
-                              <BsChevronDown />
-                            </Button>
-                            {dashboardSort?.type == "broadcast_task" ? (
-                              <CommonSort
-                                sort={broadCasterTaskSort}
-                                setSort={setBroadCasterTaskSort}
-                                dashboardSort={dashboardSort}
-                                setDashboardSort={setDashboardSort}
-                                setSortState={setBroadCasterTaskSort} // Pass the appropriate setter function
-                              />
-                            ) : null}
-                          </div>
-                        </div>
-                        <Link to="/dashboard-tables/broadcasted_task">
-                          <Typography
-                            variant="body2"
-                            className="card-head-txt mb-2"
-                          >
-                            {dash_count?.broad_casted_tasks_details?.count || 0}
-                          </Typography>
-                        </Link>
-                      </div>
-                      <Link to="/dashboard-tables/broadcasted_task">
-                        <Typography
-                          sx={{ fontSize: 14 }}
-                          color="text.secondary"
-                          gutterBottom
-                          className="cardContent_head"
-                        >
-                          Broadcasted tasks
-                        </Typography>
-                      </Link>
-                    </CardContent>
-                    <Link to="/dashboard-tables/broadcasted_task">
-                      <CardActions className="dash-c-foot cstm justify-content-start">
-                        <Link to="/dashboard-tables/broadcasted_task">
-                          <div className="card-imgs-wrap">
-                            {dash_count?.broad_casted_tasks_details?.task
-                              ?.filter((el) => el.hasOwnProperty("content"))
-                              ?.slice(0, 3)
-                              .map((curr) => {
-                                const Content = curr
-                                  ? curr?.content[0]?.media_type === "video"
-                                    ? process.env.REACT_APP_UPLOADED_CONTENT +
-                                      curr?.content[0]?.thumbnail
-                                    : curr?.content[0]?.media_type === "image"
-                                    ? curr?.content[0]?.watermark
-                                    : curr?.content[0]?.media_type === "audio"
-                                    ? audioicsm
-                                    : curr?.content[0]?.media
-                                  : null;
-                                return Content ? (
-                                  <img src={Content} className="card-img" />
-                                ) : (
-                                  <div className="mapInput2">
-                                    <style>
-                                      {`
-                                        .gm-style > div:first-child {
-                                        cursor: pointer !important;
-                                      }
-                                    `}
-                                    </style>
-                                    <GoogleMap
-                                      googleMapsApiKey={
-                                        process.env
-                                          .REACT_APP_GOOGLE_MAPS_API_KEY
-                                      }
-                                      center={{
-                                        lat: curr?.address_location
-                                          ?.coordinates[0],
-                                        lng: curr?.address_location
-                                          ?.coordinates[1],
-                                      }}
-                                      zoom={7}
-                                      mapContainerStyle={{
-                                        height: "42px",
-                                        width: "42px",
-                                        borderRadius: "8px",
-                                      }}
-                                      options={{
-                                        disableDefaultUI: true,
-                                        mapTypeControl: false,
-                                        streetViewControl: false,
-                                      }}
-                                    >
-                                      <Marker
-                                        key={curr._id}
-                                        position={{
-                                          lat: curr?.address_location
-                                            ?.coordinates[0],
-                                          lng: curr?.address_location
-                                            ?.coordinates[1],
-                                        }}
-                                      />
-                                    </GoogleMap>
-                                  </div>
-                                );
-                              })}
-                            <span>
-                              <BsArrowRight
-                                onClick={() => Navigate("broadcasted_task")}
-                              />
-                            </span>
-                          </div>
-                        </Link>
-                      </CardActions>
-                    </Link>
-                  </Card>
-                  {/* </Tooltip> */}
+                <Col md={4} className="p-0">
+                  <DashboardCardInfo
+                    path="/dashboard-tables/broadcasted_task"
+                    title="Broadcasted tasks"
+                    type="broadcasted_task"
+                    total={dashboardData?.task?.broadcastedTask?.totalCount}
+                    data={getDeepModifiedTaskContent(dashboardData?.task?.broadcastedTask?.data)}
+                    sort={contentUnderOfferSort}
+                    setSort={setContentUnderOfferSort}
+                    dashboardSort={dashboardSort}
+                    setDashboardSort={setDashboardSort}
+                    setSortState={setContentUnderOfferSort}
+                    handleSortClick={handleSortClick}
+                  />
                 </Col>
 
-                {/* Funds Invested */}
-                <Col md={4} className="p-0 mb-0">
-                  <Card className="dash-top-cards crd_edit">
-                    <CardContent className="dash-c-body">
-                      <div className="cardCustomHead">
-                        <div
-                          className="edit_card_sel"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <svg
-                            width="20"
-                            height="17"
-                            viewBox="0 0 20 17"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M0.747559 6.15625H19.4976"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M0.747559 10.8438H19.4976"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M6.21631 6.15625V15.5312"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                          <div className="fltrs_prnt">
-                            <Button
-                              className="sort_btn"
-                              onClick={() => handleSortClick("funds_invested")}
-                            >
-                              Sort
-                              <BsChevronDown />
-                            </Button>
-                            {dashboardSort?.type == "funds_invested" ? (
-                              <CommonSort
-                                sort={fundsInvestedSort}
-                                setSort={setFundsInvesteSort}
-                                dashboardSort={dashboardSort}
-                                setDashboardSort={setDashboardSort}
-                                setSortState={setFundsInvesteSort} // Pass the appropriate setter function
-                              />
-                            ) : null}
-                          </div>
-                        </div>
-                        <Link to="/dashboard-tables/fund_invested">
-                          <Typography
-                            variant="body2"
-                            className="card-head-txt mb-2"
-                          >
-                            £
-                            {formatAmountInMillion(
-                              dash_count?.total_fund_invested?.task[0]
-                                ?.totalamountpaid || 0
-                            )}
-                          </Typography>
-                        </Link>
-                      </div>
-                      <Link to="/dashboard-tables/fund_invested">
-                        <Typography
-                          sx={{ fontSize: 14 }}
-                          color="text.secondary"
-                          gutterBottom
-                          className="cardContent_head"
-                        >
-                          Total funds invested
-                        </Typography>
-                      </Link>
-                    </CardContent>
-                    {/* <Link to="/dashboard-tables/fund_invested">
-                      <CardActions className="dash-c-foot">
-                        <Link to="/dashboard-tables/fund_invested">
-                          <div className="card-imgs-wrap">
-                            <span onClick={() => Navigate("fund_invested")}>
-                              <BsArrowRight
-                                onClick={() => Navigate("fund_invested")}
-                              />
-                            </span>
-                          </div>
-                        </Link>
-                      </CardActions>
-                    </Link> */}
-                    <Link to="/dashboard-tables/fund_invested">
-                      <CardActions className="dash-c-foot cstm justify-content-start">
-                        <Link to="/dashboard-tables/fund_invested">
-                          <div className="card-imgs-wrap">
-                            {dash_count?.content_online?.task
-                              .slice(0, 3)
-                              .map((curr) => {
-                                const Content =
-                                  curr.content_ids &&
-                                  curr.content_ids[0]?.content[0]
-                                    ? curr.content_ids[0]?.content[0]
-                                        .media_type === "video"
-                                      ? curr.content_ids[0]?.content[0]
-                                          .watermark ||
-                                        process.env.REACT_APP_CONTENT_MEDIA +
-                                          curr.content_ids[0]?.content[0]
-                                            .thumbnail
-                                      : curr.content_ids[0]?.content[0]
-                                          .media_type === "audio"
-                                      ? audioic
-                                      : curr.content_ids[0]?.content[0]
-                                          .watermark ||
-                                        process.env.REACT_APP_CONTENT_MEDIA +
-                                          curr.content_ids[0]?.content[0].media
-                                    : curr.content_ids[0]?.content[0]
-                                        .media_type === "audio"
-                                    ? docsic
-                                    : null;
-                                return (
-                                  <img src={Content} className="card-img" />
-                                );
-                              })}
-                            <span>
-                              <BsArrowRight
-                                onClick={() => Navigate("fund_invested")}
-                              />
-                            </span>
-                          </div>
-                        </Link>
-                      </CardActions>
-                    </Link>
-                  </Card>
+                {/* Total Fund Invested */}
+                <Col md={4} className="p-0">
+                  <DashboardCardInfo
+                    path="/dashboard-tables/fund_invested"
+                    title="Total funds invested"
+                    type="total_fund_invested"
+                    total={"£" + formatAmountInMillion(dashboardData?.content?.totalFundInvested?.totalAmount || 0)}
+                    data={getDeepModifiedContent(dashboardData?.content?.totalFundInvested?.data)}
+                    sort={contentUnderOfferSort}
+                    setSort={setContentUnderOfferSort}
+                    dashboardSort={dashboardSort}
+                    setDashboardSort={setDashboardSort}
+                    setSortState={setContentUnderOfferSort}
+                    handleSortClick={handleSortClick}
+                  />
                 </Col>
               </Row>
               <Row>
@@ -1106,19 +472,19 @@ const Dashboard = () => {
                       <Tab eventKey="exclusive" title="Exclusive">
                         {pub_content?.map((curr, index) => {
                           return (
-                            <Link to={`/Feeddetail/content/${curr._id}`}>
+                            <Link to={`/Feeddetail/content/${curr._id}`} key={curr?._id}>
                               <DashBoardTabCards
                                 imgcount={curr.image_count}
                                 imgtab={
                                   curr?.content[0]?.media_type === "video"
                                     ? curr?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr?.content[0]?.thumbnail
+                                    process.env.REACT_APP_CONTENT_MEDIA +
+                                    curr?.content[0]?.thumbnail
                                     : curr?.content[0]?.media_type === "audio"
-                                    ? audioicsm
-                                    : curr?.content[0]?.watermark ||
+                                      ? audioicsm
+                                      : curr?.content[0]?.watermark ||
                                       process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr?.content[0]?.media
+                                      curr?.content[0]?.media
                                 }
                                 lnkto={`/Feeddetail/content/${curr._id}`}
                                 tabcarddata={curr.heading}
@@ -1131,15 +497,15 @@ const Dashboard = () => {
                                   curr?.content[0]?.media_type === "image"
                                     ? typeCam
                                     : curr?.content[0]?.media_type === "video"
-                                    ? typeVideo
-                                    : typeInterview
+                                      ? typeVideo
+                                      : typeInterview
                                 }
                                 feedType={
                                   curr?.content[0]?.media_type === "image"
                                     ? "Photo"
                                     : curr?.content[0]?.media_type === "video"
-                                    ? "Video"
-                                    : "Audio"
+                                      ? "Video"
+                                      : "Audio"
                                 }
                                 tabcard3={
                                   " Buy £" +
@@ -1157,73 +523,21 @@ const Dashboard = () => {
                       </Tab>
 
                       <Tab eventKey="shared" title="Shared">
-                        {pub_content &&
-                          pub_content?.slice(0, 2).map((curr, index) => {
-                            return (
-                              <Link to={`/Feeddetail/content/${curr._id}`}>
-                                <DashBoardTabCards
-                                  imgcount={curr.image_count}
-                                  imgtab={
-                                    curr?.content[0]?.media_type === "video"
-                                      ? curr?.content[0]?.watermark ||
-                                        process.env.REACT_APP_CONTENT_MEDIA +
-                                          curr?.content[0]?.thumbnail
-                                      : curr?.content[0]?.media_type === "audio"
-                                      ? audioicsm
-                                      : curr?.content[0]?.watermark ||
-                                        process.env.REACT_APP_CONTENT_MEDIA +
-                                          curr?.content[0]?.media
-                                  }
-                                  feedIcon={
-                                    curr?.content[0]?.media_type === "image"
-                                      ? typeCam
-                                      : typeVideo
-                                  }
-                                  tabcarddata={curr.heading}
-                                  tabcard4={moment(curr?.createdAt)?.format(
-                                    `hh:mm A, DD MMM YYYY`
-                                  )}
-                                  image_type={curr?.content[0]?.media_type}
-                                  // tabcard2={"2h:32m"}
-                                  lnkto={`/Feeddetail/content/${curr._id}`}
-                                  feedType={
-                                    curr?.content[0]?.media_type === "image"
-                                      ? "Photo"
-                                      : curr?.content[0]?.media_type === "video"
-                                      ? "Video"
-                                      : "Audio"
-                                  }
-                                  tabcard3={
-                                    " Buy £" +
-                                    formatAmountInMillion(curr?.ask_price || 0)
-                                  }
-                                  tabcard5={curr?.hopper_id?.user_name}
-                                  imgtab1={
-                                    process.env.REACT_APP_AVATAR_IMAGE +
-                                    curr?.hopper_id?.avatar_id?.avatar
-                                  }
-                                />
-                              </Link>
-                            );
-                          })}
-                      </Tab>
-
-                      <Tab eventKey="discount" title="Special offers">
-                        {pub_content?.map((curr, index) => {
+                        {pub_content?.slice(0, 2).map((curr, index) => {
                           return (
-                            <Link to={`/Feeddetail/content/${curr._id}`}>
+                            <Link to={`/Feeddetail/content/${curr._id}`} key={curr?._id}>
                               <DashBoardTabCards
                                 imgcount={curr.image_count}
                                 imgtab={
                                   curr?.content[0]?.media_type === "video"
                                     ? curr?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr?.content[0]?.thumbnail
+                                    process.env.REACT_APP_CONTENT_MEDIA +
+                                    curr?.content[0]?.thumbnail
                                     : curr?.content[0]?.media_type === "audio"
-                                    ? audioicsm
-                                    : curr?.content[0]?.watermark ||
+                                      ? audioicsm
+                                      : curr?.content[0]?.watermark ||
                                       process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr?.content[0]?.media
+                                      curr?.content[0]?.media
                                 }
                                 feedIcon={
                                   curr?.content[0]?.media_type === "image"
@@ -1241,8 +555,59 @@ const Dashboard = () => {
                                   curr?.content[0]?.media_type === "image"
                                     ? "Photo"
                                     : curr?.content[0]?.media_type === "video"
-                                    ? "Video"
-                                    : "Audio"
+                                      ? "Video"
+                                      : "Audio"
+                                }
+                                tabcard3={
+                                  " Buy £" +
+                                  formatAmountInMillion(curr?.ask_price || 0)
+                                }
+                                tabcard5={curr?.hopper_id?.user_name}
+                                imgtab1={
+                                  process.env.REACT_APP_AVATAR_IMAGE +
+                                  curr?.hopper_id?.avatar_id?.avatar
+                                }
+                              />
+                            </Link>
+                          );
+                        })}
+                      </Tab>
+
+                      <Tab eventKey="discount" title="Special offers">
+                        {pub_content?.map((curr, index) => {
+                          return (
+                            <Link to={`/Feeddetail/content/${curr._id}`} key={curr?._id}>
+                              <DashBoardTabCards
+                                imgcount={curr.image_count}
+                                imgtab={
+                                  curr?.content[0]?.media_type === "video"
+                                    ? curr?.content[0]?.watermark ||
+                                    process.env.REACT_APP_CONTENT_MEDIA +
+                                    curr?.content[0]?.thumbnail
+                                    : curr?.content[0]?.media_type === "audio"
+                                      ? audioicsm
+                                      : curr?.content[0]?.watermark ||
+                                      process.env.REACT_APP_CONTENT_MEDIA +
+                                      curr?.content[0]?.media
+                                }
+                                feedIcon={
+                                  curr?.content[0]?.media_type === "image"
+                                    ? typeCam
+                                    : typeVideo
+                                }
+                                tabcarddata={curr.heading}
+                                tabcard4={moment(curr?.createdAt)?.format(
+                                  `hh:mm A, DD MMM YYYY`
+                                )}
+                                image_type={curr?.content[0]?.media_type}
+                                // tabcard2={"2h:32m"}
+                                lnkto={`/Feeddetail/content/${curr._id}`}
+                                feedType={
+                                  curr?.content[0]?.media_type === "image"
+                                    ? "Photo"
+                                    : curr?.content[0]?.media_type === "video"
+                                      ? "Video"
+                                      : "Audio"
                                 }
                                 tabcard3={
                                   " Buy £" +
@@ -1288,14 +653,14 @@ const Dashboard = () => {
                               imgtab={
                                 curr?.content[0]?.media_type === "video"
                                   ? curr?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.thumbnail
+                                  process.env.REACT_APP_CONTENT_MEDIA +
+                                  curr?.content[0]?.thumbnail
                                   : curr?.content[0]?.media_type === "audio"
-                                  ? audioicsm
-                                  : curr?.content[0]?.media_type === "pdf"
-                                  ? docsic
-                                  : curr?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
+                                    ? audioicsm
+                                    : curr?.content[0]?.media_type === "pdf"
+                                      ? docsic
+                                      : curr?.content[0]?.watermark ||
+                                      process.env.REACT_APP_CONTENT_MEDIA +
                                       curr?.content[0]?.media
                               }
                               // imgtab={curr?.content[0]?.watermark || process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media}
@@ -1460,76 +825,76 @@ const Dashboard = () => {
                         </div>
                         <div className="scrolling">
                           {recentUploaded?.map((curr) => {
-                              return (
-                                <Link
-                                  to={`/Feeddetail/content/${curr?.content_id?._id}`}
-                                  key={curr._id}
-                                >
-                                  <DashBoardCardList
-                                    contentId={
-                                      curr.hasOwnProperty("content_id")
-                                        ? curr?.content_id?._id
-                                        : curr?.task_id?._id
-                                    }
-                                    listcard1={
-                                      curr.hasOwnProperty("content_id")
-                                        ? curr?.content_id?.heading
-                                        : curr?.task_id?.heading
-                                    }
-                                    listcard2={moment(
-                                      curr?.content_id?.createdAt
-                                    ).format("hh:mm A, DD MMM YYYY")}
-                                    reviewType={
-                                      curr.content_id?.content[0]
-                                        ?.media_type === "audio"
-                                        ? typeInterviewwt
-                                        : curr.content_id?.content[0]
-                                            ?.media_type === "image"
+                            return (
+                              <Link
+                                to={`/Feeddetail/content/${curr?.content_id?._id}`}
+                                key={curr._id}
+                              >
+                                <DashBoardCardList
+                                  contentId={
+                                    curr.hasOwnProperty("content_id")
+                                      ? curr?.content_id?._id
+                                      : curr?.task_id?._id
+                                  }
+                                  listcard1={
+                                    curr.hasOwnProperty("content_id")
+                                      ? curr?.content_id?.heading
+                                      : curr?.task_id?.heading
+                                  }
+                                  listcard2={moment(
+                                    curr?.content_id?.createdAt
+                                  ).format("hh:mm A, DD MMM YYYY")}
+                                  reviewType={
+                                    curr.content_id?.content[0]
+                                      ?.media_type === "audio"
+                                      ? typeInterviewwt
+                                      : curr.content_id?.content[0]
+                                        ?.media_type === "image"
                                         ? contentCamera
                                         : contentVideo
-                                    }
-                                    imgtype={
-                                      curr?.content_details?.content[0]
-                                        ?.media_type
-                                    }
-                                    imgl={
-                                      curr.hasOwnProperty("content_id")
-                                        ? curr?.content_id?.content[0]
-                                            ?.media_type === "video"
-                                          ? process.env
-                                              .REACT_APP_CONTENT_MEDIA +
-                                            curr?.content_id?.content[0]
-                                              ?.thumbnail
-                                          : curr?.content_id?.content[0]
-                                              ?.media_type === "audio"
+                                  }
+                                  imgtype={
+                                    curr?.content_details?.content[0]
+                                      ?.media_type
+                                  }
+                                  imgl={
+                                    curr.hasOwnProperty("content_id")
+                                      ? curr?.content_id?.content[0]
+                                        ?.media_type === "video"
+                                        ? process.env
+                                          .REACT_APP_CONTENT_MEDIA +
+                                        curr?.content_id?.content[0]
+                                          ?.thumbnail
+                                        : curr?.content_id?.content[0]
+                                          ?.media_type === "audio"
                                           ? audioic
                                           : curr?.content_id?.content[0]
-                                              ?.media_type === "pdf"
-                                          ? docsic
-                                          : curr?.content_id?.content[0]
+                                            ?.media_type === "pdf"
+                                            ? docsic
+                                            : curr?.content_id?.content[0]
                                               ?.watermark ||
                                             process.env
                                               .REACT_APP_CONTENT_MEDIA +
-                                              curr?.content_id?.content[0]
-                                                ?.media
-                                        : curr?.task_id?.content[0]?.media
-                                    }
-                                    imageCount={
-                                      curr?.content_id?.image_count || 0
-                                    }
-                                    videoCount={
-                                      curr?.content_id?.video_count || 0
-                                    }
-                                    audioCount={
-                                      curr?.content_id?.audio_count || 0
-                                    }
-                                    otherCount={
-                                      curr?.content_id?.other_count || 0
-                                    }
-                                  />
-                                </Link>
-                              );
-                            })}
+                                            curr?.content_id?.content[0]
+                                              ?.media
+                                      : curr?.task_id?.content[0]?.media
+                                  }
+                                  imageCount={
+                                    curr?.content_id?.image_count || 0
+                                  }
+                                  videoCount={
+                                    curr?.content_id?.video_count || 0
+                                  }
+                                  audioCount={
+                                    curr?.content_id?.audio_count || 0
+                                  }
+                                  otherCount={
+                                    curr?.content_id?.other_count || 0
+                                  }
+                                />
+                              </Link>
+                            );
+                          })}
                         </div>
                       </CardContent>
                     </Card>

@@ -13,8 +13,9 @@ import ChartsSort from "./Sortfilters/Dashboard/ChartsSort";
 import { Link, useNavigate } from "react-router-dom";
 import { formatAmountInMillion } from "./commonFunction";
 import { initStateOfTaskGraph } from "./staticData";
+import { DashboardCardInfo } from "./DashboardCardInfo";
 // import { Get } from '../services/user.services';
-const TaskReports = ({ timeValuesProps }) => {
+const TaskReports = ({ dashboardData }) => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("task");
   const [contentType, setContentType] = useState({
@@ -426,17 +427,6 @@ const TaskReports = ({ timeValuesProps }) => {
     }
   };
 
-  const [report, setReport] = useState();
-  const getReports = async () => {
-    try {
-      const res = await Get(`mediahouse/reportTaskCount`);
-      if (res) {
-        // console.log(res, `<---there are `);
-        setReport(res?.data);
-      }
-    } catch (er) {}
-  };
-
   useEffect(() => {
     TaskLocation();
     TaskType();
@@ -444,7 +434,6 @@ const TaskReports = ({ timeValuesProps }) => {
     ContentSourced();
     FundInvested();
     TaskCategories();
-    getReports();
   }, []);
 
   useEffect(() => {
@@ -480,459 +469,72 @@ const TaskReports = ({ timeValuesProps }) => {
       {loading && <Loader />}
       <div className="taskReports_container tsk rep_tsk">
         <Row>
+          {/* Broadcasted task today */}
           <Col md={2}>
-            <Link to={`/reports-tables-task/task_broadcasted_today`}>
-              <Card className="dash-top-cards">
-                <CardContent className="dash-c-body">
-                  <div className="cardCustomHead">
-                    <div className="sortFilter_actions">
-                      <svg
-                        width="20"
-                        height="17"
-                        viewBox="0 0 20 17"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 6.15625H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 10.8438H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M6.21631 6.15625V15.5312"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-                    <Typography variant="body2" className="card-head-txt mb-2">
-                      {report?.task_broadcasted_today?.count ?? 0}
-                    </Typography>
-                  </div>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                    className="cardContent_head"
-                  >
-                    Broadcasted tasks today
-                  </Typography>
-                  <div className="content_stat">
-                    {report?.task_broadcasted_today?.type === "increase" ? (
-                      <span className="stat_up">
-                        <BsArrowUp />
-                        {report?.task_broadcasted_today?.percent?.toFixed(2)}%
-                      </span>
-                    ) : report?.task_broadcasted_today?.type === "decrease" ? (
-                      <span className="stat_down">
-                        <BsArrowDown />
-                        {report?.task_broadcasted_today?.percent?.toFixed(2)}%
-                      </span>
-                    ) : (
-                      <span>{"No change "}</span>
-                    )}
-                    <span>vs yesterday</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            <DashboardCardInfo
+              path="/reports-tables-task/task_broadcasted_today"
+              title="Broadcasted tasks today"
+              total={dashboardData?.broadcastedTaskToday?.totalCount}
+              showSort={false}
+              task={true}
+            />
           </Col>
+
+          {/* Content purchased from tasks today */}
           <Col md={2}>
-            <Link to={"/reports-tables-task/content_sourced_task"}>
-              <Card className="dash-top-cards">
-                <CardContent className="dash-c-body">
-                  <div className="cardCustomHead">
-                    <div className="sortFilter_actions">
-                      <svg
-                        width="20"
-                        height="17"
-                        viewBox="0 0 20 17"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 6.15625H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 10.8438H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M6.21631 6.15625V15.5312"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-
-                    <Typography variant="body2" className="card-head-txt mb-2">
-                      {report?.today_content_sourced_from_task?.count ?? 0}
-                    </Typography>
-                  </div>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                    className="cardContent_head"
-                  >
-                    Content purchased from tasks today
-                  </Typography>
-                  <div className="content_stat">
-                    {report?.today_content_sourced_from_task?.type ===
-                    "increase" ? (
-                      <span className="stat_up">
-                        <BsArrowUp />
-                        {report?.today_content_sourced_from_task?.percent?.toFixed(
-                          2
-                        )}
-                        %
-                      </span>
-                    ) : report?.today_content_sourced_from_task?.type ===
-                      "decrease" ? (
-                      <span className="stat_down">
-                        <BsArrowDown />
-                        {report?.today_content_sourced_from_task?.percent?.toFixed(
-                          2
-                        )}
-                        %
-                      </span>
-                    ) : (
-                      <span>{"No change "}</span>
-                    )}
-                    <span>vs yesterday</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            <DashboardCardInfo
+              path="/reports-tables-task/content_sourced_task"
+              title="Content purchased from tasks today"
+              total={dashboardData?.contentPurchasedFromTaskToday?.totalCount}
+              showSort={false}
+              task={true}
+            />
           </Col>
+
+          {/* Total content purchased from tasks */}
           <Col md={2}>
-            <Link to={"/reports-tables-task/total_content_sourced_today"}>
-              <Card className="dash-top-cards">
-                <CardContent className="dash-c-body">
-                  <div className="cardCustomHead">
-                    <div className="sortFilter_actions">
-                      <svg
-                        width="20"
-                        height="17"
-                        viewBox="0 0 20 17"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 6.15625H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 10.8438H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M6.21631 6.15625V15.5312"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-
-                    <Typography variant="body2" className="card-head-txt mb-2">
-                      {report?.total_content_sourced_from_task?.count ?? 0}
-                    </Typography>
-                  </div>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                    className="cardContent_head"
-                  >
-                    Total content purchased from tasks
-                  </Typography>
-                  <div className="content_stat">
-                    {report?.total_content_sourced_from_task?.type ===
-                    "increase" ? (
-                      <span className="stat_up">
-                        <BsArrowUp />
-                        {report?.total_content_sourced_from_task?.percent?.toFixed(
-                          2
-                        )}
-                        %
-                      </span>
-                    ) : report?.total_content_sourced_from_task?.type ===
-                      "decrease" ? (
-                      <span className="stat_down">
-                        <BsArrowDown />
-                        {report?.total_content_sourced_from_task?.percent?.toFixed(
-                          2
-                        )}
-                        %
-                      </span>
-                    ) : (
-                      <span>{"No change "}</span>
-                    )}
-                    <span>vs last month</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            <DashboardCardInfo
+              path="/reports-tables-task/total_content_sourced_today"
+              title="Total content purchased from tasks"
+              total={dashboardData?.contentPurchasedFromTask?.totalCount}
+              showSort={false}
+              task={true}
+            />
           </Col>
+
+          {/* Funds invested today */}
           <Col md={2}>
-            <Link to={"/reports-tables-task/funds_invested_today"}>
-              <Card className="dash-top-cards">
-                <CardContent className="dash-c-body">
-                  <div className="cardCustomHead">
-                    <div className="sortFilter_actions">
-                      <svg
-                        width="20"
-                        height="17"
-                        viewBox="0 0 20 17"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 6.15625H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 10.8438H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M6.21631 6.15625V15.5312"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-
-                    <Typography variant="body2" className="card-head-txt mb-2">
-                      £
-                      {formatAmountInMillion(
-                        report?.today_fund_invested?.count
-                      ) ?? 0}
-                    </Typography>
-                  </div>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                    className="cardContent_head"
-                  >
-                    Funds invested today
-                  </Typography>
-                  <div className="content_stat">
-                    {report?.today_fund_invested?.type === "increase" ? (
-                      <span className="stat_up">
-                        <BsArrowUp />
-                        {report?.today_fund_invested?.percentage?.toFixed(2)}%
-                      </span>
-                    ) : report?.today_fund_invested?.type === "decrease" ? (
-                      <span className="stat_down">
-                        <BsArrowDown />
-                        {report?.today_fund_invested?.percentage?.toFixed(2)}%
-                      </span>
-                    ) : (
-                      <span>{"No change "}</span>
-                    )}
-                    <span>vs yesterday</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            <DashboardCardInfo
+              path="/reports-tables-task/funds_invested_today"
+              title="Funds invested today"
+              total={"£" + formatAmountInMillion(dashboardData?.totalFundInvestedToday?.totalAmount || 0)}
+              showSort={false}
+              task={true}
+            />
           </Col>
-          <Col md={2} className="pe-0">
-            <Link to={"/reports-tables-task/total_fund_invested_today"}>
-              <Card className="dash-top-cards">
-                <CardContent className="dash-c-body">
-                  <div className="cardCustomHead">
-                    <div className="sortFilter_actions">
-                      <svg
-                        width="20"
-                        height="17"
-                        viewBox="0 0 20 17"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 6.15625H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 10.8438H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M6.21631 6.15625V15.5312"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
 
-                    <Typography variant="body2" className="card-head-txt mb-2">
-                      £
-                      {formatAmountInMillion(
-                        report?.total_fund_invested?.count || 0
-                      )}
-                    </Typography>
-                  </div>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                    className="cardContent_head"
-                  >
-                    Total funds invested
-                  </Typography>
-                  <div className="content_stat">
-                    {report?.total_fund_invested?.type === "increase" ? (
-                      <span className="stat_up">
-                        <BsArrowUp />
-                        {report?.total_fund_invested?.percentage?.toFixed(2)}%
-                      </span>
-                    ) : report?.total_fund_invested?.type === "decrease" ? (
-                      <span className="stat_down">
-                        <BsArrowDown />
-                        {report?.total_fund_invested?.percentage?.toFixed(2)}%
-                      </span>
-                    ) : (
-                      <span>{"No change "}</span>
-                    )}
+          {/* Funds invested today */}
+          <Col md={2}>
+            <DashboardCardInfo
+              path="/reports-tables-task/total_fund_invested_today"
+              title="Total funds invested"
+              total={"£" + formatAmountInMillion(dashboardData?.totalFundInvested?.totalAmount || 0)}
+              showSort={false}
+              task={true}
+            />
+          </Col>
 
-                    <span>vs yesterday</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+          {/* Deadline met */}
+          <Col md={2}>
+            <DashboardCardInfo
+              path="/reports-tables-task/deadline_met"
+              title="Deadline met"
+              total={"90%"}
+              showSort={false}
+              task={true}
+            />
           </Col>
-          <Col md={2} className="ps-4">
-            <Link to={"/reports-tables-task/deadline_met"}>
-              <Card className="dash-top-cards">
-                <CardContent className="dash-c-body">
-                  <div className="cardCustomHead">
-                    <div className="sortFilter_actions">
-                      <svg
-                        width="20"
-                        height="17"
-                        viewBox="0 0 20 17"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 6.15625H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M0.747559 10.8438H19.4976"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M6.21631 6.15625V15.5312"
-                          stroke="black"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-                    <Typography variant="body2" className="card-head-txt mb-2">
-                      {formatAmountInMillion(report?.deadline_met?.task || 0)}%
-                    </Typography>
-                  </div>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                    className="cardContent_head"
-                  >
-                    Deadline met
-                  </Typography>
-                  <div className="content_stat">
-                    {report?.deadline_met?.type === "increase" ? (
-                      <span className="stat_up">
-                        <BsArrowUp />
-                        {(report?.deadline_met?.percentage || 0)?.toFixed(2)}%
-                      </span>
-                    ) : report?.deadline_met?.type === "decrease" ? (
-                      <span className="stat_down">
-                        <BsArrowDown />
-                        {(report?.deadline_met?.percentage || 0)?.toFixed(2)}%
-                      </span>
-                    ) : (
-                      <span>{"No change "}</span>
-                    )}
-                    <span>vs yesterday</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          </Col>
+
         </Row>
 
         {/* 3 Task Chart */}
