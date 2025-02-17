@@ -1429,7 +1429,7 @@ const BroadcastedTask = () => {
       <Header />
       <div className="page-wrap task_pg renew-task">
         <Container fluid>
-          <Row className="dashboardStat_cards">
+          <Row className="dashboardStat_cards crd_edit_wrap">
             {/* Live Tasks */}
             <Col md={3} className="p-0 task-card">
               <DashboardCardInfo

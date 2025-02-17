@@ -471,15 +471,21 @@ const TaskReports = ({
     }
   }, [activeTab]);
 
+  let broadcastedCount = dashboardData?.broadcastedTask?.totalCount ?? 0;
+  let liveCount = dashboardData?.liveTask?.totalCount ?? 0;
+  
+  let deadlineMet = broadcastedCount > 0 
+    ? (((broadcastedCount - liveCount) * 100) / broadcastedCount).toFixed(2) + "%" 
+    : "0%"; 
+  
   return (
     <>
       {loading && <Loader />}
       <div className="taskReports_container tsk rep_tsk">
-        <Row>
+        <Row className="dashboardStat_cards crd_edit_wrap">
           {/* Broadcasted task today */}
           <Col md={2}>
             <DashboardCardInfo
-              task={true}
               showSort={false}
               title="Broadcasted tasks today"
               path="/reports-tables-task/task_broadcasted_today"
@@ -491,7 +497,6 @@ const TaskReports = ({
           {/* Content purchased from tasks today */}
           <Col md={2}>
             <DashboardCardInfo
-              task={true}
               showSort={false}
               title="Content purchased from tasks today"
               path="/reports-tables-task/content_sourced_task"
@@ -503,7 +508,6 @@ const TaskReports = ({
           {/* Total content purchased from tasks */}
           <Col md={2}>
             <DashboardCardInfo
-              task={true}
               title="Total content purchased from tasks"
               path="/reports-tables-task/total_content_sourced_today"
               trend={dashboardData?.contentPurchasedFromTask?.trend}
@@ -522,7 +526,6 @@ const TaskReports = ({
           {/* Funds invested today */}
           <Col md={2}>
             <DashboardCardInfo
-              task={true}
               showSort={false}
               title="Funds invested today"
               path="/reports-tables-task/funds_invested_today"
@@ -534,7 +537,6 @@ const TaskReports = ({
           {/* Total funds today */}
           <Col md={2}>
             <DashboardCardInfo
-              task={true}
               title="Total funds invested"
               path="/reports-tables-task/total_fund_invested_today"
               trend={dashboardData?.totalFundInvested?.trend}
@@ -555,9 +557,8 @@ const TaskReports = ({
             <DashboardCardInfo
               path="/reports-tables-task/deadline_met"
               title="Deadline met"
-              total={"90%"}
+              total={deadlineMet}
               showSort={false}
-              task={true}
             />
           </Col>
 
