@@ -1385,17 +1385,15 @@ const BroadcastedTask = () => {
 
 
   // New work -
-  const [contentUnderOfferSort, setContentUnderOfferSort] = useState("");
-  const [dashboardSort, setDashboardSort] = useState({
-    type: "",
-  });
   const [dashboardData, setDashboardData] = useState(null);
+  const [dashboardSort, setDashboardSort] = useState({ type: "" });
   const [dashboardPayload, setDashboardPayload] = useState({
     requestedItems: ["live_task", "total_fund_invested_in_task", "content_purchased_from_task", "broadcasted_task"],
     requestedFilter: {
-      broadcasted_task: "",
+      live_task: "",
+      total_fund_invested_in_task: "",
       content_purchased_from_task: "",
-      total_fund_invested_in_task: ""
+      broadcasted_task: ""
     }
   })
 
@@ -1411,28 +1409,18 @@ const BroadcastedTask = () => {
   };
 
   useEffect(() => {
-    DashboardData();
-  }, [dashboardPayload.requestedFilter]);
+    DashboardData(dashboardPayload);
+  }, []);
 
-  const handleSort = (val) => {
-    setContentUnderOfferSort(val);
+  const handleApplySorting = async () => {
+    DashboardData(dashboardPayload);
+    setDashboardSort({ ...dashboardSort, type: "" });
   }
 
-  const handleSortClick = (value) => {
-    setDashboardSort({ ...dashboardSort, type: value });
-  };
-
-  const handleSortState = (value) => {
-    setDashboardPayload({
-      ...dashboardPayload,
-      requestedFilter: {
-        ...dashboardPayload.requestedFilter,
-        [dashboardSort?.type]: value
-      }
-    })
-    setDashboardSort({
-      type: ""
-    })
+  const handleClearSort = async (payload) => {
+    DashboardData(payload)
+    setDashboardPayload(payload);
+    setDashboardSort({ ...dashboardSort, type: "" });
   }
 
   return (
@@ -1445,36 +1433,36 @@ const BroadcastedTask = () => {
             {/* Live Tasks */}
             <Col md={3} className="p-0 task-card">
               <DashboardCardInfo
-                showSort={false}
                 path="/task-tables/liveTasks"
                 title="Live tasks"
                 type="live_task"
                 total={dashboardData?.task?.liveTask?.totalCount}
                 data={getDeepModifiedTaskContent(dashboardData?.task?.liveTask?.data)}
-                sort={contentUnderOfferSort}
-                setSort={setContentUnderOfferSort}
                 dashboardSort={dashboardSort}
                 setDashboardSort={setDashboardSort}
-                setSortState={setContentUnderOfferSort}
-                handleSortClick={handleSortClick}
+                sort={dashboardPayload?.requestedFilter?.live_task}
+                setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, live_task: value } })}
+                setSortState={handleApplySorting}
+                handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, live_task: "" } })}
                 task={true}
               />
             </Col>
             {/* Broadcast Tasks */}
             <Col md={3} className="p-0 task-card">
               <DashboardCardInfo
-                showSort={false}
                 path="/dashboard-tables/broadcasted_task"
                 title="Broadcasted tasks"
                 type="broadcasted_task"
                 total={dashboardData?.task?.broadcastedTask?.totalCount}
                 data={getDeepModifiedTaskContent(dashboardData?.task?.broadcastedTask?.data)}
-                sort={contentUnderOfferSort}
-                setSort={setContentUnderOfferSort}
                 dashboardSort={dashboardSort}
                 setDashboardSort={setDashboardSort}
-                setSortState={setContentUnderOfferSort}
-                handleSortClick={handleSortClick}
+                sort={dashboardPayload?.requestedFilter?.broadcasted_task}
+                setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, broadcasted_task: value } })}
+                setSortState={handleApplySorting}
+                handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, broadcasted_task: "" } })}
                 task={true}
               />
             </Col>
@@ -1482,18 +1470,18 @@ const BroadcastedTask = () => {
             {/* Content Purchased From Task */}
             <Col md={3} className="p-0 task-card">
               <DashboardCardInfo
-                showSort={false}
                 path="/content-tables/content_sourced_from_task"
                 title="Content purchased from tasks"
                 type="content_purchased_from_task"
                 total={dashboardData?.task?.contentPurchasedFromTask?.totalCount}
                 data={getTaskContent(dashboardData?.task?.contentPurchasedFromTask?.data)}
-                sort={contentUnderOfferSort}
-                setSort={setContentUnderOfferSort}
                 dashboardSort={dashboardSort}
                 setDashboardSort={setDashboardSort}
-                setSortState={setContentUnderOfferSort}
-                handleSortClick={handleSortClick}
+                sort={dashboardPayload?.requestedFilter?.content_purchased_from_task}
+                setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_from_task: value } })}
+                setSortState={handleApplySorting}
+                handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_from_task: "" } })}
                 task={true}
               />
             </Col>
@@ -1501,18 +1489,18 @@ const BroadcastedTask = () => {
             {/* Total fund invested */}
             <Col md={3} className="p-0 task-card">
               <DashboardCardInfo
-                showSort={false}
                 path="/task-tables/total-fund-invested"
                 title="Total funds invested"
                 type="total_fund_invested_in_task_today"
                 total={"£" + formatAmountInMillion(dashboardData?.task?.totalFundInvested?.totalAmount || 0)}
                 data={getTaskContent(dashboardData?.task?.totalFundInvested?.data)}
-                sort={contentUnderOfferSort}
-                setSort={setContentUnderOfferSort}
                 dashboardSort={dashboardSort}
                 setDashboardSort={setDashboardSort}
-                setSortState={setContentUnderOfferSort}
-                handleSortClick={handleSortClick}
+                sort={dashboardPayload?.requestedFilter?.total_fund_invested_in_task_today}
+                setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task_today: value } })}
+                setSortState={handleApplySorting}
+                handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task_today: ""} })}
                 task={true}
               />
             </Col>

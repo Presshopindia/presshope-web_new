@@ -2,62 +2,52 @@ import React, { useEffect, useState } from "react";
 import Header from "../component/Header";
 import DbFooter from "../component/DbFooter";
 import { Container, Row, Col, Tabs, Tab } from "react-bootstrap";
-import AccountsReports from "../component/AccountsReports";
 import ContentReports from "../component/ContentReports";
 import TaskReports from "../component/TaskReports";
 import TopSearchesTipsCard from "../component/card/TopSearchesTipsCard";
-import { Select, MenuItem, FormControl } from "@mui/material";
-import SortingDialog from "../popups/SortingDialog";
-import { AiFillCaretDown, AiOutlineClose } from "react-icons/ai";
-import Fundsinvested from "../component/Sortfilters/Dashboard/Fundsinvested";
-import TopFilterComn from "../component/Sortfilters/Content/TopFilterComn";
-import ChartsSort from "../component/Sortfilters/Dashboard/ChartsSort";
+import { FormControl } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { Post } from "../services/user.services";
 import Loader from "../component/Loader";
 
 const Reports = () => {
-  
-  const [selectedOption, setSelectedOption] = useState("");
-  const [timeValues, setTimeValues] = useState("");
-  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
-
-  const [openSortComponent, setOpenSortComponent] = useState(false);
-  const [openFilterComponent, setOpenFilterComponent] = useState(false);
-  const [reportState, setReportState] = useState("");
-  const timeValuesHandler = (values) => {
-    setTimeValues(values);
-  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
 
-  const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const DashboardData = async () => {
-    const dashboardPayload = {
-      requestedItems: [
-        "total_fund_invested",
-        "content_average_price",
-        "broadcasted_task_today",
-        "content_purchased_online",
-        "total_fund_invested_today",
-        "content_purchased_from_task",
-        "total_fund_invested_in_task",
-        "content_purchased_online_today",
-        "total_fund_invested_in_task_today",
-        "content_purchased_from_task_today",
-      ],
-      requestedFilter: {}
+  const [dashboardData, setDashboardData] = useState(null);
+  const [dashboardSort, setDashboardSort] = useState({ type: "" });
+  const [dashboardPayload, setDashboardPayload] = useState({
+    requestedItems: [
+      "total_fund_invested",
+      "content_average_price",
+      "broadcasted_task_today",
+      "content_purchased_online",
+      "total_fund_invested_today",
+      "content_purchased_from_task",
+      "total_fund_invested_in_task",
+      "content_purchased_online_today",
+      "total_fund_invested_in_task_today",
+      "content_purchased_from_task_today",
+    ],
+    requestedFilter: {
+      total_fund_invested: "monthly",
+      content_average_price: "monthly",
+      content_purchased_online: "monthly",
+      content_purchased_from_task: "monthly",
+      total_fund_invested_in_task: "monthly"
     }
+  });
+
+  const DashboardData = async (payload) => {
     try {
       setLoading(true);
-      const resp = await Post("mediaHouse/dashboard-data", dashboardPayload );
+      const resp = await Post("mediaHouse/dashboard-data", payload);
       setDashboardData(resp?.data?.data);
       setLoading(false);
     } catch (error) {
@@ -66,13 +56,23 @@ const Reports = () => {
   };
 
   useEffect(() => {
-    DashboardData();
+    DashboardData(dashboardPayload);
   }, []);
 
+  const handleApplySorting = async () => {
+    DashboardData(dashboardPayload);
+    setDashboardSort({ ...dashboardSort, type: "" });
+  }
+
+  const handleClearSort = async (payload) => {
+    DashboardData(payload)
+    setDashboardPayload(payload);
+    setDashboardSort({ ...dashboardSort, type: "" });
+  }
 
   return (
     <>
-    {loading && <Loader />}
+      {loading && <Loader />}
       <Header />
       <div className="page-wrap all-reports-wrap">
         <Container fluid className="p-0">
@@ -98,16 +98,26 @@ const Reports = () => {
                   >
                     <Tab eventKey="content" title="Content">
                       <ContentReports
-                        timeValuesProps={timeValues}
                         type={params?.type}
+                        dashboardSort={dashboardSort}
+                        handleClearSort={handleClearSort}
+                        dashboardPayload={dashboardPayload}
+                        setDashboardSort={setDashboardSort}
                         dashboardData={dashboardData?.content}
+                        handleApplySorting={handleApplySorting}
+                        setDashboardPayload={setDashboardPayload}
                       />
                     </Tab>
                     <Tab eventKey="tasks" title="Tasks">
                       <TaskReports
-                        timeValuesProps={timeValues}
                         type={params?.type}
+                        dashboardSort={dashboardSort}
+                        handleClearSort={handleClearSort}
+                        dashboardPayload={dashboardPayload}
+                        setDashboardSort={setDashboardSort}
                         dashboardData={dashboardData?.task}
+                        handleApplySorting={handleApplySorting}
+                        setDashboardPayload={setDashboardPayload}
                       />
                     </Tab>
                   </Tabs>

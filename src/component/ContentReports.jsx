@@ -24,7 +24,15 @@ import {
 } from "./staticData";
 import { useDarkMode } from "../context/DarkModeContext";
 import { DashboardCardInfo } from "./DashboardCardInfo";
-const ContentReports = ({ dashboardData }) => {
+const ContentReports = ({
+  dashboardData,
+  dashboardSort,
+  setDashboardSort,
+  handleClearSort,
+  dashboardPayload,
+  setDashboardPayload,
+  handleApplySorting
+}) => {
   const [activeTab, setActiveTab] = useState("task");
   const [ContentData, setContentData] = useState({});
   const [loading, setLoading] = useState(false);
@@ -43,8 +51,6 @@ const ContentReports = ({ dashboardData }) => {
     task: "",
   });
   const { cartCount, setCartCount, profileData } = useDarkMode();
-
-  console.log("MYpROFILEdATA", profileData);
 
   const timeValuesHandler = (values) => {
     setTimeValues(values);
@@ -258,7 +264,6 @@ const ContentReports = ({ dashboardData }) => {
         setChartName({ ...chartName, purchased: "" });
       }
     } catch (error) {
-      console.log(error);
       setLoading(false);
       setChartName({ ...chartName, purchased: "" });
     }
@@ -291,7 +296,6 @@ const ContentReports = ({ dashboardData }) => {
         setChartName({ ...chartName, location: "" });
       }
     } catch (error) {
-      // console.log(error);
       setLoading(false);
       setChartName({ ...chartName, location: "" });
     }
@@ -325,7 +329,6 @@ const ContentReports = ({ dashboardData }) => {
         setChartName({ ...chartName, category: "" });
       }
     } catch (error) {
-      // console.log(error);
       setLoading(false);
       setChartName({ ...chartName, category: "" });
     }
@@ -353,7 +356,6 @@ const ContentReports = ({ dashboardData }) => {
         setChartName({ ...chartName, split: "" });
       }
     } catch (error) {
-      // console.log(error);
       setLoading(false);
       setChartName({ ...chartName, split: "" });
     }
@@ -371,7 +373,6 @@ const ContentReports = ({ dashboardData }) => {
       } else {
         resp = await Get(`mediaHouse/report/content/type`);
       }
-      // console.log(resp.data, "<--------resp.data.data")
       if (resp) {
         setContentType((prev) => ({
           ...prev,
@@ -386,7 +387,6 @@ const ContentReports = ({ dashboardData }) => {
         setChartName({ ...chartName, type: "" });
       }
     } catch (error) {
-      // console.log(error);
       setLoading(false);
       setChartName({ ...chartName, type: "" });
     }
@@ -404,7 +404,6 @@ const ContentReports = ({ dashboardData }) => {
       } else {
         resp = await Get(`mediahouse/reportgraphofContentforPaid`);
       }
-      // console.log(resp.data.data, "<--------resp.data.data")
       if (resp) {
         setContentSummary((prevTaskSummary) => ({
           ...prevTaskSummary,
@@ -454,7 +453,6 @@ const ContentReports = ({ dashboardData }) => {
         setChartName({ ...chartName, task: "" });
       }
     } catch (error) {
-      // console.log(error);
       setLoading(false);
       setChartName({ ...chartName, task: "" });
     }
@@ -472,7 +470,6 @@ const ContentReports = ({ dashboardData }) => {
       } else {
         resp = await Get(`mediahouse/reportgraphofContent`);
       }
-      // console.log(resp.data.data, "<--------resp.data.data")
       if (resp) {
         setContentsourced((prevTaskSummary) => ({
           ...prevTaskSummary,
@@ -521,7 +518,6 @@ const ContentReports = ({ dashboardData }) => {
         setLoading(false);
       }
     } catch (error) {
-      // console.log(error);
       setLoading(false);
     }
   };
@@ -612,7 +608,6 @@ const ContentReports = ({ dashboardData }) => {
         setChartName({ ...chartName, task: "" });
       }
     } catch (error) {
-      // console.log(error);
       setLoading(false);
       setChartName({ ...chartName, task: "" });
     }
@@ -635,12 +630,10 @@ const ContentReports = ({ dashboardData }) => {
   const handleAverageAmount = async () => {
     try {
       const res = await Post(`mediaHouse/contentaverageprice`, {});
-      // console.log("avgdata",data.data)
       const data = res?.data?.data;
       setAvgAmount(data);
     } catch (error) { }
   };
-  console.log("sortFilterPurchasedContent", sortFilterPurchasedContent);
 
   useEffect(() => {
     CountReport();
@@ -703,60 +696,83 @@ const ContentReports = ({ dashboardData }) => {
           {/* Content purchased online today */}
           <Col>
             <DashboardCardInfo
-              path="/reports-tables-content/content_purchased_online_today"
-              title="Content purchased online today"
-              type="content_purchased_online_today"
-              total={dashboardData?.purchasedOnlineToday?.totalCount}
-              showSort={false}
               task={true}
+              showSort={false}
+              type="content_purchased_online_today"
+              title="Content purchased online today"
+              path="/reports-tables-content/content_purchased_online_today"
+              trend={dashboardData?.purchasedOnlineToday?.trend}
+              total={dashboardData?.purchasedOnlineToday?.totalCount}
             />
           </Col>
 
           {/* Total content purchased */}
           <Col>
             <DashboardCardInfo
-              path="/dashboard-tables/content_purchased_online"
-              title="Total content purchased"
+              task={true}
               type="content_purchased_online"
+              title="Total content purchased"
+              path="/dashboard-tables/content_purchased_online"
+              trend={dashboardData?.purchasedOnline?.trend}
               total={dashboardData?.purchasedOnline?.totalCount}
-              showSort={false}
-              task={true}
+              dashboardSort={dashboardSort}
+              setDashboardSort={setDashboardSort}
+              sort={dashboardPayload?.requestedFilter?.content_purchased_online}
+              setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_online: value } })}
+              setSortState={handleApplySorting}
+              handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+              handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_online: "" } })}
             />
           </Col>
 
           {/* Content average price */}
           <Col>
             <DashboardCardInfo
-              path="/reports-tables-content/content_avg_price"
-              title="Content average price"
+              task={true}
               type="content_average_price"
-              total={"£" + formatAmountInMillion(dashboardData?.contentAveragePrice || 0)}
-              showSort={false}
-              task={true}
+              title="Content average price"
+              path="/reports-tables-content/content_avg_price"
+              trend={dashboardData?.contentAveragePrice?.trend}
+              total={"£" + formatAmountInMillion(dashboardData?.contentAveragePrice?.contentAveragePrice || 0)}
+              dashboardSort={dashboardSort}
+              setDashboardSort={setDashboardSort}
+              sort={dashboardPayload?.requestedFilter?.content_average_price}
+              setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_average_price: value } })}
+              setSortState={handleApplySorting}
+              handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+              handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_average_price: "" } })}
             />
           </Col>
 
-          {/* Content average price */}
+          {/* Funds invested today */}
           <Col>
             <DashboardCardInfo
-              path="/reports-tables-content/fund_invested_today"
+              task={true}
+              showSort={false}
               title="Funds invested today"
               type="total_fund_invested_today"
+              path="/reports-tables-content/fund_invested_today"
+              trend={dashboardData?.totalFundInvestedToday?.trend}
               total={"£" + formatAmountInMillion(dashboardData?.totalFundInvestedToday?.totalAmount || 0)}
-              showSort={false}
-              task={true}
             />
           </Col>
 
           {/* Content average price */}
           <Col>
             <DashboardCardInfo
-              path="/reports-tables-content/total_fund_invested"
-              title="Total funds invested"
-              type="total_fund_invested_today"
-              total={"£" + formatAmountInMillion(dashboardData?.totalFundInvested?.totalAmount || 0)}
-              showSort={false}
               task={true}
+              title="Total funds invested"
+              type="total_fund_invested"
+              path="/reports-tables-content/total_fund_invested"
+              trend={dashboardData?.totalFundInvested?.trend}
+              total={"£" + formatAmountInMillion(dashboardData?.totalFundInvested?.totalAmount || 0)}
+              dashboardSort={dashboardSort}
+              setDashboardSort={setDashboardSort}
+              sort={dashboardPayload?.requestedFilter?.total_fund_invested}
+              setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.Total, total_fund_invested: value } })}
+              setSortState={handleApplySorting}
+              handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+              handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.Total, total_fund_invested: "" } })}
             />
           </Col>
 
@@ -1010,13 +1026,11 @@ const ContentReports = ({ dashboardData }) => {
                       {purchasedContent?.slice(0, 6)?.map((curr) => {
                         const userProfile = profileData;
                         let mediaHouseId = null;
-                        console.log("userProfile?.role", profileData);
                         if (
                           userProfile?.role &&
                           userProfile?.role == "MediaHouse"
                         ) {
                           mediaHouseId = userProfile?._id;
-                          console.log("mediaHouseId", mediaHouseId);
                         } else if (
                           userProfile?.role &&
                           userProfile?.role != "MediaHouse"
@@ -1024,7 +1038,6 @@ const ContentReports = ({ dashboardData }) => {
                           mediaHouseId = userProfile?.media_house_id;
                         }
 
-                        // JSON.parse(localStorage.getItem("user"))?._id
                         return (
                           <Col md={4} className="CntPurFeed">
                             <div

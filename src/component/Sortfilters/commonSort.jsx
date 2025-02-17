@@ -15,6 +15,7 @@ const CommonSort = ({
   dashboardSort,
   setDashboardSort,
   setSortState,
+  handleClearSort
 }) => {
   const handleSortClick = (sortOption) => {
     setSort(sortOption);
@@ -24,15 +25,12 @@ const CommonSort = ({
     setSortState(sort);
     setDashboardSort((prev) => ({ ...prev, time: sort }));
   };
-  const handleClearSort = () => {
-    setSortState("");
-    setDashboardSort((prev) => ({ ...prev, time: "" }));
-  };
+
   return (
     <>
       <div
         className={`filter_wrap ${
-          dashboardSort.type === "content_purchased_online"
+          (dashboardSort.type === "content_purchased_online" || dashboardSort.type === "live_task")
             ? "fltrMaxWidth"
             : ""
         }`}
@@ -45,7 +43,6 @@ const CommonSort = ({
             alt="Close"
             onClick={() => {
               setDashboardSort({ type: "" });
-              setSortState("");
             }}
           />
           <p className="hdng">Sort</p>

@@ -15,8 +15,15 @@ import { formatAmountInMillion } from "./commonFunction";
 import { initStateOfTaskGraph } from "./staticData";
 import { DashboardCardInfo } from "./DashboardCardInfo";
 // import { Get } from '../services/user.services';
-const TaskReports = ({ dashboardData }) => {
-  const navigate = useNavigate();
+const TaskReports = ({
+  dashboardData,
+  dashboardSort,
+  setDashboardSort,
+  handleClearSort,
+  dashboardPayload,
+  setDashboardPayload,
+  handleApplySorting
+}) => {
   const [activeTab, setActiveTab] = useState("task");
   const [contentType, setContentType] = useState({
     series: [],
@@ -472,55 +479,74 @@ const TaskReports = ({ dashboardData }) => {
           {/* Broadcasted task today */}
           <Col md={2}>
             <DashboardCardInfo
-              path="/reports-tables-task/task_broadcasted_today"
-              title="Broadcasted tasks today"
-              total={dashboardData?.broadcastedTaskToday?.totalCount}
-              showSort={false}
               task={true}
+              showSort={false}
+              title="Broadcasted tasks today"
+              path="/reports-tables-task/task_broadcasted_today"
+              trend={dashboardData?.broadcastedTaskToday?.trend}
+              total={dashboardData?.broadcastedTaskToday?.totalCount}
             />
           </Col>
 
           {/* Content purchased from tasks today */}
           <Col md={2}>
             <DashboardCardInfo
-              path="/reports-tables-task/content_sourced_task"
-              title="Content purchased from tasks today"
-              total={dashboardData?.contentPurchasedFromTaskToday?.totalCount}
-              showSort={false}
               task={true}
+              showSort={false}
+              title="Content purchased from tasks today"
+              path="/reports-tables-task/content_sourced_task"
+              trend={dashboardData?.contentPurchasedFromTaskToday?.trend}
+              total={dashboardData?.contentPurchasedFromTaskToday?.totalCount}
             />
           </Col>
 
           {/* Total content purchased from tasks */}
           <Col md={2}>
             <DashboardCardInfo
-              path="/reports-tables-task/total_content_sourced_today"
+              task={true}
               title="Total content purchased from tasks"
+              path="/reports-tables-task/total_content_sourced_today"
+              trend={dashboardData?.contentPurchasedFromTask?.trend}
               total={dashboardData?.contentPurchasedFromTask?.totalCount}
-              showSort={false}
-              task={true}
+              dashboardSort={dashboardSort}
+              setDashboardSort={setDashboardSort}
+              type="content_purchased_from_task"
+              sort={dashboardPayload?.requestedFilter?.content_purchased_from_task}
+              setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_from_task: value } })}
+              setSortState={handleApplySorting}
+              handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+              handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_from_task: "" } })}
             />
           </Col>
 
           {/* Funds invested today */}
           <Col md={2}>
             <DashboardCardInfo
-              path="/reports-tables-task/funds_invested_today"
+              task={true}
+              showSort={false}
               title="Funds invested today"
+              path="/reports-tables-task/funds_invested_today"
+              trend={dashboardData?.contentPurchasedFromTask?.trend}
               total={"£" + formatAmountInMillion(dashboardData?.totalFundInvestedToday?.totalAmount || 0)}
-              showSort={false}
-              task={true}
             />
           </Col>
 
-          {/* Funds invested today */}
+          {/* Total funds today */}
           <Col md={2}>
             <DashboardCardInfo
-              path="/reports-tables-task/total_fund_invested_today"
-              title="Total funds invested"
-              total={"£" + formatAmountInMillion(dashboardData?.totalFundInvested?.totalAmount || 0)}
-              showSort={false}
               task={true}
+              title="Total funds invested"
+              path="/reports-tables-task/total_fund_invested_today"
+              trend={dashboardData?.totalFundInvested?.trend}
+              total={"£" + formatAmountInMillion(dashboardData?.totalFundInvested?.totalAmount || 0)}
+              dashboardSort={dashboardSort}
+              setDashboardSort={setDashboardSort}
+              type="total_fund_invested_in_task"
+              sort={dashboardPayload?.requestedFilter?.total_fund_invested_in_task}
+              setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task: value } })}
+              setSortState={handleApplySorting}
+              handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+              handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task: "" } })}
             />
           </Col>
 

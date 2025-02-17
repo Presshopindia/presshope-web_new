@@ -756,20 +756,26 @@ const Accounts = () => {
   };
 
   const [dashboardData, setDashboardData] = useState(null);
-
-  const DashboardData = async () => {
-    const dashboardPayload = {
-      requestedItems: [
-        "total_fund_invested",
-        "content_purchased_online",
-        "content_purchased_from_task",
-        "total_fund_invested_in_task"
-      ],
-      requestedFilter: {}
+  const [dashboardSort, setDashboardSort] = useState({ type: "" });
+  const [dashboardPayload, setDashboardPayload] = useState({
+    requestedItems: [
+      "total_fund_invested",
+      "content_purchased_online",
+      "content_purchased_from_task",
+      "total_fund_invested_in_task"
+    ],
+    requestedFilter: {
+      total_fund_invested: "monthly",
+      content_purchased_online: "monthly",
+      content_purchased_from_task: "monthly",
+      total_fund_invested_in_task: "monthly"
     }
+  })
+
+  const DashboardData = async (payload) => {
     try {
       setLoading(true);
-      const resp = await Post("mediaHouse/dashboard-data", dashboardPayload);
+      const resp = await Post("mediaHouse/dashboard-data", payload);
       setDashboardData(resp?.data?.data);
       setLoading(false);
     } catch (error) {
@@ -778,8 +784,19 @@ const Accounts = () => {
   };
 
   useEffect(() => {
-    DashboardData();
+    DashboardData(dashboardPayload);
   }, []);
+
+  const handleApplySorting = async () => {
+    DashboardData(dashboardPayload);
+    setDashboardSort({ ...dashboardSort, type: "" });
+  }
+
+  const handleClearSort = async (payload) => {
+    DashboardData(payload)
+    setDashboardPayload(payload);
+    setDashboardSort({ ...dashboardSort, type: "" });
+  }
 
   return (
     <>
@@ -804,29 +821,6 @@ const Accounts = () => {
                       )}
                     </FormControl>
                   </div>
-                  {/* <div className="relevanceSelecter">
-                    <FormControl>
-                      <div className="fltrs_prnt top_fltr">
-                        <p className="lbl_fltr">Sort</p>
-                        <button
-                          className="sortTrigger"
-                          onClick={() => {
-                            setOpenSortComponent(true);
-                          }}
-                        >
-                          Sort <AiFillCaretDown />
-                        </button>
-                        {openSortComponent && (
-                          <ChartsSort
-                            rangeTimeValues={timeValuesHandler}
-                            closeSortComponent={() =>
-                              setOpenSortComponent(false)
-                            }
-                          />
-                        )}
-                      </div>
-                    </FormControl>
-                  </div> */}
                 </div>
                 <div className="rprts_wrap allContent_report theme_card">
                   <div className="accnts_hdng">
@@ -835,25 +829,41 @@ const Accounts = () => {
                   <div className="acnts_wrp acnts">
                     <div className="accountReports_container">
                       <Row className="accoutStats">
-                        {/* Total content purchased online */}
+                        {/* Content purchased online */}
                         <Col>
                           <DashboardCardInfo
-                            path="/accounts-tables/total_content_purchase"
-                            title="Total content purchased online"
-                            total={dashboardData?.content?.purchasedOnline?.totalCount}
-                            showSort={false}
                             task={true}
+                            type="content_purchased_online"
+                            title="Total content purchased online"
+                            path="/accounts-tables/total_content_purchase"
+                            trend={dashboardData?.content?.purchasedOnline?.trend}
+                            total={dashboardData?.content?.purchasedOnline?.totalCount}
+                            dashboardSort={dashboardSort}
+                            setDashboardSort={setDashboardSort}
+                            sort={dashboardPayload?.requestedFilter?.content_purchased_online}
+                            setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_online: value } })}
+                            setSortState={handleApplySorting}
+                            handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                            handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.total_fund_invested, content_purchased_online: "" } })}
                           />
                         </Col>
 
-                        {/* Total funds invested for purchased content */}
+                        {/* Total funds invested */}
                         <Col>
                           <DashboardCardInfo
+                            task={true}
+                            type="total_fund_invested"
                             path="/accounts-tables/total_funds"
                             title="Total funds invested for purchased content"
+                            trend={dashboardData?.content?.totalFundInvested?.trend}
                             total={"£" + formatAmountInMillion(dashboardData?.content?.totalFundInvested?.totalAmount || 0)}
-                            showSort={false}
-                            task={true}
+                            dashboardSort={dashboardSort}
+                            setDashboardSort={setDashboardSort}
+                            sort={dashboardPayload?.requestedFilter?.total_fund_invested}
+                            setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested: value } })}
+                            setSortState={handleApplySorting}
+                            handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                            handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.total_fund_invested, content_purchased_online: "" } })}
                           />
                         </Col>
 
@@ -861,22 +871,38 @@ const Accounts = () => {
                         {/* Total content purchased from tasks */}
                         <Col>
                           <DashboardCardInfo
+                            task={true}
+                            type="content_purchased_from_task"
                             path="/accounts-tables/total_content"
                             title="Total content purchased from tasks"
+                            trend={dashboardData?.task?.contentPurchasedFromTask?.trend}
                             total={dashboardData?.task?.contentPurchasedFromTask?.totalCount}
-                            showSort={false}
-                            task={true}
+                            dashboardSort={dashboardSort}
+                            setDashboardSort={setDashboardSort}
+                            sort={dashboardPayload?.requestedFilter?.content_purchased_from_task}
+                            setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_from_task: value } })}
+                            setSortState={handleApplySorting}
+                            handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                            handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_from_task: "" } })}
                           />
                         </Col>
 
                         {/* Total funds invested for content purchased from task */}
                         <Col>
                           <DashboardCardInfo
+                            task={true}
+                            type="total_fund_invested_in_task"
                             path="/accounts-tables/total_funds_sourced"
                             title="Total funds invested for content purchased from task"
+                            trend={dashboardData?.task?.totalFundInvested?.trend}
                             total={"£" + formatAmountInMillion(dashboardData?.task?.totalFundInvested?.totalAmount || 0)}
-                            showSort={false}
-                            task={true}
+                            dashboardSort={dashboardSort}
+                            setDashboardSort={setDashboardSort}
+                            sort={dashboardPayload?.requestedFilter?.total_fund_invested_in_task}
+                            setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task: value } })}
+                            setSortState={handleApplySorting}
+                            handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                            handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task: "" } })}
                           />
                         </Col>
 

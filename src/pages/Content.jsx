@@ -76,7 +76,7 @@ const ContentPage = () => {
     }
   };
 
-  const [ userId, setUserId ] = useState(null);
+  const [userId, setUserId] = useState(null);
   const getProfileData = async () => {
     try {
       const data = await Get("mediahouse/getProfile");
@@ -185,26 +185,24 @@ const ContentPage = () => {
   }, []);
 
   // New work -
-  const [contentUnderOfferSort, setContentUnderOfferSort] = useState("");
-  const [dashboardSort, setDashboardSort] = useState({
-    type: "",
-  });
   const [dashboardData, setDashboardData] = useState(null);
+  const [dashboardSort, setDashboardSort] = useState({ type: "" });
   const [dashboardPayload, setDashboardPayload] = useState({
     requestedItems: ["content_purchased_online", "total_fund_invested", "total_fund_invested_today", "content_under_offer", "favourite", "content_purchased_from_task"],
     requestedFilter: {
       favourite: "",
-      broadcasted_task: "",
+      content_purchased_from_task: "",
       content_under_offer: "",
       total_fund_invested: "",
-      content_purchased_online: ""
+      content_purchased_online: "",
+      total_fund_invested_today: ""
     }
   })
 
-  const DashboardData = async () => {
+  const DashboardData = async (payload) => {
     try {
       setLoading(true);
-      const resp = await Post("mediaHouse/dashboard-data", dashboardPayload);
+      const resp = await Post("mediaHouse/dashboard-data", payload);
       setDashboardData(resp?.data?.data);
       setLoading(false);
     } catch (error) {
@@ -213,28 +211,18 @@ const ContentPage = () => {
   };
 
   useEffect(() => {
-    DashboardData();
-  }, [dashboardPayload.requestedFilter]);
+    DashboardData(dashboardPayload);
+  }, []);
 
-  const handleSort = (val) => {
-    setContentUnderOfferSort(val);
+  const handleApplySorting = async () => {
+    DashboardData(dashboardPayload);
+    setDashboardSort({ ...dashboardSort, type: "" });
   }
 
-  const handleSortClick = (value) => {
-    setDashboardSort({ ...dashboardSort, type: value });
-  };
-
-  const handleSortState = (value) => {
-    setDashboardPayload({
-      ...dashboardPayload,
-      requestedFilter: {
-        ...dashboardPayload.requestedFilter,
-        [dashboardSort?.type]: value
-      }
-    })
-    setDashboardSort({
-      type: ""
-    })
+  const handleClearSort = async (payload) => {
+    DashboardData(payload)
+    setDashboardPayload(payload);
+    setDashboardSort({ ...dashboardSort, type: "" });
   }
 
   return (
@@ -254,12 +242,13 @@ const ContentPage = () => {
                     type="content_purchased_online"
                     total={dashboardData?.content?.purchasedOnline?.totalCount}
                     data={getDeepModifiedContent(dashboardData?.content?.purchasedOnline?.data)}
-                    sort={contentUnderOfferSort}
-                    setSort={setContentUnderOfferSort}
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}
-                    setSortState={setContentUnderOfferSort}
-                    handleSortClick={handleSortClick}
+                    sort={dashboardPayload?.requestedFilter?.content_purchased_online}
+                    setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_online: value } })}
+                    setSortState={handleApplySorting}
+                    handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                    handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_online: "" } })}
                   />
                 </Col>
 
@@ -271,12 +260,13 @@ const ContentPage = () => {
                     type="content_purchased_from_task"
                     total={dashboardData?.task?.contentPurchasedFromTask?.totalCount}
                     data={getTaskContent(dashboardData?.task?.contentPurchasedFromTask?.data)}
-                    sort={contentUnderOfferSort}
-                    setSort={setContentUnderOfferSort}
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}
-                    setSortState={setContentUnderOfferSort}
-                    handleSortClick={handleSortClick}
+                    sort={dashboardPayload?.requestedFilter?.content_purchased_from_task}
+                    setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_from_task: value } })}
+                    setSortState={handleApplySorting}
+                    handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                    handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_from_task: "" } })}
                   />
                 </Col>
 
@@ -288,12 +278,13 @@ const ContentPage = () => {
                     type="favourite"
                     total={dashboardData?.content?.favourite?.totalCount}
                     data={getDeepModifiedContent(dashboardData?.content?.favourite?.data)}
-                    sort={contentUnderOfferSort}
-                    setSort={setContentUnderOfferSort}
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}
-                    setSortState={setContentUnderOfferSort}
-                    handleSortClick={handleSortClick}
+                    sort={dashboardPayload?.requestedFilter?.favourite}
+                    setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, favourite: value } })}
+                    setSortState={handleApplySorting}
+                    handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                    handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, favourite: "" } })}
                   />
                 </Col>
 
@@ -306,12 +297,6 @@ const ContentPage = () => {
                     type="total_fund_invested_today"
                     total={"£" + formatAmountInMillion(dashboardData?.content?.totalFundInvestedToday?.totalAmount || 0)}
                     data={getDeepModifiedContent(dashboardData?.content?.totalFundInvestedToday?.data)}
-                    sort={contentUnderOfferSort}
-                    setSort={setContentUnderOfferSort}
-                    dashboardSort={dashboardSort}
-                    setDashboardSort={setDashboardSort}
-                    setSortState={setContentUnderOfferSort}
-                    handleSortClick={handleSortClick}
                   />
                 </Col>
 
@@ -323,12 +308,13 @@ const ContentPage = () => {
                     type="total_fund_invested"
                     total={"£" + formatAmountInMillion(dashboardData?.content?.totalFundInvested?.totalAmount || 0)}
                     data={getDeepModifiedContent(dashboardData?.content?.totalFundInvested?.data)}
-                    sort={contentUnderOfferSort}
-                    setSort={setContentUnderOfferSort}
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}
-                    setSortState={setContentUnderOfferSort}
-                    handleSortClick={handleSortClick}
+                    sort={dashboardPayload?.requestedFilter?.total_fund_invested}
+                    setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested: value } })}
+                    setSortState={handleApplySorting}
+                    handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                    handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested: "" } })}
                   />
                 </Col>
 
@@ -340,12 +326,13 @@ const ContentPage = () => {
                     type="content_under_offer"
                     total={dashboardData?.content?.contentUnderOffer?.totalCount}
                     data={getModifiedContent(dashboardData?.content?.contentUnderOffer?.data)}
-                    sort={contentUnderOfferSort}
-                    setSort={handleSort}
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}
-                    setSortState={handleSortState}
-                    handleSortClick={handleSortClick}
+                    sort={dashboardPayload?.requestedFilter?.content_under_offer}
+                    setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_under_offer: value } })}
+                    setSortState={handleApplySorting}
+                    handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                    handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_under_offer: "" } })}
                   />
                 </Col>
 
