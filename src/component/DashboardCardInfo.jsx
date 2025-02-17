@@ -1,5 +1,5 @@
 import { Card, CardActions, CardContent, Typography } from "@mui/material"
-import { BsArrowDown, BsArrowRight, BsChevronDown } from "react-icons/bs"
+import { BsArrowDown, BsArrowRight, BsArrowUp, BsChevronDown } from "react-icons/bs"
 import CommonSort from "./Sortfilters/commonSort"
 import { Link } from "react-router-dom"
 import { Button } from "react-bootstrap"
@@ -18,8 +18,10 @@ export const DashboardCardInfo = ({
     handleSortClick,
     showSort = true,
     task = false,
-    trend = false
+    trend = {},
+    handleClearSort
 }) => {
+
     return (
         <Card className={task ? "dash-top-cards tsk" : "dash-top-cards crd_edit"}>
             <CardContent className="dash-c-body">
@@ -71,6 +73,7 @@ export const DashboardCardInfo = ({
                                                 dashboardSort={dashboardSort}
                                                 setDashboardSort={setDashboardSort}
                                                 setSortState={setSortState}
+                                                handleClearSort={handleClearSort}
                                             />
                                         )
                                     }
@@ -98,14 +101,19 @@ export const DashboardCardInfo = ({
                     </Typography>
                 </Link>
                 {
-                    trend && (
+                    Object.keys(trend)?.length ? (
                         <div className="content_stat">
-                            <span className="stat_down">
-                                <BsArrowDown />{" "}10%
-                            </span>
-                            <span>vs yesterday</span>
+                            {
+                                sort && (trend?.status === "Increasing" || trend?.status === "Decreasing") ? (
+                                    <span className={trend?.status === "Increasing" ? "stat_up" : "stat_down"}>
+                                        {trend?.status === "Increasing" ? <BsArrowUp /> : <BsArrowDown />} {trend?.percentage}
+                                    </span>
+                                ) : <span>{"No change "}</span>
+                            }
+
+                            <span>{trend?.period}</span>
                         </div>
-                    )
+                    ) : null
                 }
             </CardContent>
             {
