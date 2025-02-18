@@ -4794,7 +4794,24 @@ const Feeddetail = (props) => {
                             </div>
                             <div className="foot cont-info-actions d-flex gap-5 justify-content-between align-items-center">
                               {messages && messages.length === 0 ? (
-                                <Button
+                              data?.sales_prefix ? (
+                                  <Button
+                                    variant={
+                                      data?.sales_prefix ? "" : "secondary"
+                                    }
+                                    className={
+                                      data?.sales_prefix ? "greyBtn" : ""
+                                    }
+                                    onClick={() => {
+                                        setTabSelect("external");
+                                      
+                                    }}
+                                    // disabled={data?.sales_prefix ? true : loading}
+                                  >
+                                    Offer
+                                  </Button>
+                                ) : (
+                                  <Button
                                     variant={
                                       data?.sales_prefix ? "" : "secondary"
                                     }
@@ -4804,20 +4821,47 @@ const Feeddetail = (props) => {
                                         "offer_started"
                                       ) {
                                         setTabSelect("external");
-                                        // Start_Offer();
-                                        // setMessages((old) => [...old]);
+                                        Start_Offer();
+                                        setMessages((old) => [...old]);
                                       }
                                     }}
-                                    className={
-                                      data?.sales_prefix ? "greyBtn" : ""
-                                    }
-                                    // disabled={
-                                    //   data?.sales_prefix ? true : loading
+                                    // className={
+                                    //   data?.sales_prefix ? "greyBtn" : ""
                                     // }
+                                    disabled={
+                                      data?.sales_prefix ? true : loading
+                                    }
                                   >
                                     Offer
                                   </Button>
-                              ) : messages?.length === 1 ? (
+                                )
+                              )
+
+                              //   <Button
+                              //       variant={
+                              //         data?.sales_prefix ? "" : "secondary"
+                              //       }
+                              //       onClick={() => {
+                              //         if (
+                              //           messages[0]?.message_type !==
+                              //           "offer_started"
+                              //         ) {
+                              //           setTabSelect("external");
+                              //           // Start_Offer();
+                              //           // setMessages((old) => [...old]);
+                              //         }
+                              //       }}
+                              //       className={
+                              //         data?.sales_prefix ? "greyBtn" : ""
+                              //       }
+                              //       // disabled={
+                              //       //   data?.sales_prefix ? true : loading
+                              //       // }
+                              //     >
+                              //       Offer
+                              //     </Button>
+                              // ) 
+                              : messages?.length === 1 ? (
                                 <Button
                                   onClick={() => {
                                     setTabSelect("external");

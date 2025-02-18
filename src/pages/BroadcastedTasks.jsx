@@ -433,7 +433,7 @@ const BroadcastedTask = () => {
               </Card>
             </Col>
             {/* Broadcast Tasks */}
-            <Col md={3} className="p-0">
+            <Col md={3} className="p-0 mb-0 task-card">
               <DashboardCardInfo
                 path="/dashboard-tables/broadcasted_task"
                 title="Broadcasted tasks"

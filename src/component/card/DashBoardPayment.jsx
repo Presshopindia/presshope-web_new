@@ -35,7 +35,7 @@ function DashBoardPayment(props) {
                 <div className="paymentToBeMadeImgContent">
                   <img className="list-card-img" src={props.imgtab} alt="1" />
                   {/* <span>2</span> */}
-                  <div class="post_icns_cstm_wrp">
+                  {/* <div class="post_icns_cstm_wrp">
                     <div class="post_itm_icns dtl_icns">
                       <span class="count">{props?.imageCount}</span>
                       <img
@@ -44,7 +44,7 @@ function DashBoardPayment(props) {
                         alt=""
                       />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <div className=" d-flex align-items-center">
                   <Typography variant="body2" className="tab-card-txt mb-2">
