@@ -324,7 +324,7 @@ const BroadcastedTrackings = (props) => {
               </div>
             </div>
           </Col>
-          <Col md={6}>
+          <Col md={6} className="ps-0 pe-1">
             <div className="taskDetail_wrap">
               <h2 className="dashCard-heading">Task details</h2>
               <div className="singleTask_detail sngl_wrp">
@@ -365,7 +365,7 @@ const BroadcastedTrackings = (props) => {
                 </div>
                 <div className="taskInfo_card">
                   <Row className="justify-content-between price-wrapper">
-                    <Col md={6} className="pe-0">
+                    <Col md={6}>
                       <div className="timeSlots_tiles">
                         <label>Date</label>
                         <span className="sm-tiles">
@@ -385,7 +385,7 @@ const BroadcastedTrackings = (props) => {
                         </span>
                       </div>
                     </Col>
-                    <Col md={6} className="pe-0">
+                    <Col md={6}>
                       <div className="timeSlots_tiles">
                         <label>Deadline</label>
                         <span className="sm-tiles">
@@ -475,7 +475,7 @@ const BroadcastedTrackings = (props) => {
                         </div>
                       </div>
                     </Col>
-                    <Col md={6} className="d-flex justify-content-end">
+                    <Col md={6} className="d-flex justify-content-end mt-4">
                       <div
                         className="taskUploads_media"
                         onClick={() =>
