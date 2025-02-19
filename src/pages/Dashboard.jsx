@@ -370,7 +370,7 @@ const Dashboard = () => {
                 <Col md={4} className="p-0">
                   <DashboardCardInfo
                     path="/Favourited-Content"
-                    title="Favourite content"
+                    title="Favourited content"
                     type="favourite"
                     total={dashboardData?.content?.favourite?.totalCount}
                     data={getDeepModifiedContent(dashboardData?.content?.favourite?.data)}
