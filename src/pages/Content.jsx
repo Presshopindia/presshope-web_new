@@ -788,9 +788,9 @@ const ContentPage = () => {
                                             <div className="commonContentIconsWrap crd_in_icons d-flex justify-content-between">
                                               <span className="rateView-type dflt cmr">
                                                 <span className="volCount">
-                                                  1
+                                                {item?.task_id?.content.length}
                                                 </span>
-                                                <img
+                                                {/* <img
                                                   className=""
                                                   src={
                                                     item?.task_id?.content[0]
@@ -804,7 +804,7 @@ const ContentPage = () => {
                                                         : null
                                                   }
                                                   alt={item?._id}
-                                                />
+                                                /> */}
                                               </span>
                                               {/* <PostIconsWrapper 
                                                     images={item?.image_count}

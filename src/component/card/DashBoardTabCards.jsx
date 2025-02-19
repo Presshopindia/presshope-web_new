@@ -33,12 +33,12 @@ function DashBoardTabCards(props) {
                   ) : (
                     <img className="list-card-img" src={props.imgtab} alt="1" />
                   )}
-                  <div class="post_icns_cstm_wrp">
+                  {/* <div class="post_icns_cstm_wrp">
                     <div class="post_itm_icns dtl_icns">
                       <span class="count">{props.imgcount}</span>
                       <img class="feedMediaType iconBg" src={Camera} alt="" />
                     </div>
-                  </div>
+                  </div> */}
                   <div className=" d-flex align-items-center">
                     <Typography variant="body2" className="tab-card-txt mb-2">
                       {props.tabcarddata}
