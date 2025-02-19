@@ -8,11 +8,17 @@ const PostIconsWrapper = ({ audio, video, images, Pdf, Doc }) => {
   return (
     // <div className="post_icns_cstm_wrp">
     <div className="tableContentTypeIcons">
-      <MediaCountIcon count={audio} iconSrc={interviewic} altText="Audio Icon" />
+      <MediaCountIcon count={audio} />
+      <MediaCountIcon count={video} />
+      <MediaCountIcon count={images} />
+      <MediaCountIcon count={Pdf} />
+      <MediaCountIcon count={Doc} />
+      {/* <MediaCountIcon count={audio} iconSrc={interviewic} altText="Audio Icon" />
       <MediaCountIcon count={video} iconSrc={videoic} altText="Video Icon" />
       <MediaCountIcon count={images} iconSrc={cameraic} altText="Image Icon" />
+      <MediaCountIcon count={images} iconSrc={cameraic} altText="Image Icon" />
       <MediaCountIcon count={Pdf} iconSrc={docsic} altText="PDF Icon" />
-      <MediaCountIcon count={Doc} iconSrc={docsic} altText="Document Icon" />
+      <MediaCountIcon count={Doc} iconSrc={docsic} altText="Document Icon" /> */}
     </div>
   );
 };
