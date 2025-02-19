@@ -56,11 +56,11 @@ function DashBoardCardList(props) {
                 {props.reviewType && (
                   <span className="rateView-type">
                     <span className="volCount">{props.imageCount}</span>
-                    <img
+                    {/* <img
                       className=""
                       src={props.reviewType}
                       alt="review type"
-                    />
+                    /> */}
                   </span>
                 )}
                 {props.imgtype === "audio" ? (
