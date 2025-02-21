@@ -254,7 +254,7 @@ const ContentReports = ({
     setLoading(true);
     try {
       const resp = await Get(
-        `mediaHouse/publish/content?is_sold=true&limit=6&${sortFilterPurchasedContent?.sortField}=${sortFilterPurchasedContent?.sortValue}&favContent=${sortFilterPurchasedContent?.favContent}&category=${sortFilterPurchasedContent?.category}&type=${sortFilterPurchasedContent?.type}`
+        `mediaHouse/publish/content?is_sold=true&limit=9&${sortFilterPurchasedContent?.sortField}=${sortFilterPurchasedContent?.sortValue}&favContent=${sortFilterPurchasedContent?.favContent}&category=${sortFilterPurchasedContent?.category}&type=${sortFilterPurchasedContent?.type}`
       );
 
       setPurcahsedContent(resp.data.content);
@@ -1018,7 +1018,7 @@ const ContentReports = ({
                       )}
                     </div>
                     <Row>
-                      {purchasedContent?.slice(0, 6)?.map((curr) => {
+                      {purchasedContent?.map((curr) => {
                         const userProfile = profileData;
                         let mediaHouseId = null;
                         if (

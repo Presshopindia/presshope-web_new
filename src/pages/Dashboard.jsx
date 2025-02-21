@@ -48,6 +48,7 @@ import {
   hasDecimal,
 } from "../component/commonFunction";
 import { DashboardCardInfo } from "../component/DashboardCardInfo";
+import RecentActivityCard from "../component/card/RecentActivityCard";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -823,7 +824,7 @@ const Dashboard = () => {
                                 to={`/Feeddetail/content/${curr?.content_id?._id}`}
                                 key={curr._id}
                               >
-                                <DashBoardCardList
+                                <RecentActivityCard
                                   contentId={
                                     curr.hasOwnProperty("content_id")
                                       ? curr?.content_id?._id
@@ -884,6 +885,7 @@ const Dashboard = () => {
                                   otherCount={
                                     curr?.content_id?.other_count || 0
                                   }
+                                  colorWhite={false}
                                 />
                               </Link>
                             );
