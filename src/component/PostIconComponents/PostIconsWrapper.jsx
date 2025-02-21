@@ -8,9 +8,9 @@ const PostIconsWrapper = ({ audio, video, images, Pdf, Doc }) => {
   return (
     // <div className="post_icns_cstm_wrp">
     <div className="tableContentTypeIcons">
+      <MediaCountIcon count={images} />
       <MediaCountIcon count={audio} />
       <MediaCountIcon count={video} />
-      <MediaCountIcon count={images} />
       <MediaCountIcon count={Pdf} />
       <MediaCountIcon count={Doc} />
       {/* <MediaCountIcon count={audio} iconSrc={interviewic} altText="Audio Icon" />

@@ -471,15 +471,21 @@ const TaskReports = ({
     }
   }, [activeTab]);
 
+  let broadcastedCount = dashboardData?.broadcastedTask?.totalCount ?? 0;
+  let liveCount = dashboardData?.liveTask?.totalCount ?? 0;
+
+  let deadlineMet = broadcastedCount > 0
+    ? (((broadcastedCount - liveCount) * 100) / broadcastedCount).toFixed(2) + "%"
+    : "0%";
+
   return (
     <>
       {loading && <Loader />}
-      <div className="taskReports_container tsk rep_tsk">
-        <Row>
+      <div className="taskReports_container tsk cnt">
+        <Row className="dashboardStat_cards crd_edit_wrap">
           {/* Broadcasted task today */}
           <Col md={2}>
             <DashboardCardInfo
-              task={true}
               showSort={false}
               title="Broadcasted tasks today"
               path="/reports-tables-task/task_broadcasted_today"
@@ -491,7 +497,6 @@ const TaskReports = ({
           {/* Content purchased from tasks today */}
           <Col md={2}>
             <DashboardCardInfo
-              task={true}
               showSort={false}
               title="Content purchased from tasks today"
               path="/reports-tables-task/content_sourced_task"
@@ -503,7 +508,6 @@ const TaskReports = ({
           {/* Total content purchased from tasks */}
           <Col md={2}>
             <DashboardCardInfo
-              task={true}
               title="Total content purchased from tasks"
               path="/reports-tables-task/total_content_sourced_today"
               trend={dashboardData?.contentPurchasedFromTask?.trend}
@@ -522,7 +526,6 @@ const TaskReports = ({
           {/* Funds invested today */}
           <Col md={2}>
             <DashboardCardInfo
-              task={true}
               showSort={false}
               title="Funds invested today"
               path="/reports-tables-task/funds_invested_today"
@@ -534,7 +537,6 @@ const TaskReports = ({
           {/* Total funds today */}
           <Col md={2}>
             <DashboardCardInfo
-              task={true}
               title="Total funds invested"
               path="/reports-tables-task/total_fund_invested_today"
               trend={dashboardData?.totalFundInvested?.trend}
@@ -555,9 +557,8 @@ const TaskReports = ({
             <DashboardCardInfo
               path="/reports-tables-task/deadline_met"
               title="Deadline met"
-              total={"90%"}
+              total={deadlineMet}
               showSort={false}
-              task={true}
             />
           </Col>
 
@@ -566,176 +567,240 @@ const TaskReports = ({
         {/* 3 Task Chart */}
         <div className="taskstat_chart chrts">
           <Row>
-            <Col md={4}>
-              <div className="reportCard">
-                <div className="statChartHead align-items-center">
-                  <Link
-                    to={"/reports-tables-task/task_categories"}
-                    className="text-dark"
-                  >
-                    <p className="cht_hdngs">Task categories</p>
-                  </Link>
-                  <div className="statSort">
-                    <Link
-                      to={"/reports-tables-task/task_categories"}
-                      className="text-dark"
-                    >
-                      <img src={taskIcon} className="tbl_icn" alt="" />
-                      {/* <button className='sortTrigger' onClick={() => {handleOpen(); setChartName({...chartName, category: "taskCategories"})}}>Sort <AiFillCaretDown /></button> */}
-                    </Link>
-                    <div className="fltrs_prnt">
-                      <button
-                        className="sortTrigger"
-                        onClick={() => {
-                          setOpenSortCategory(true);
-                          setChartName({
-                            ...chartName,
-                            category: "taskCategories",
-                          });
-                        }}
-                      >
-                        Sort <AiFillCaretDown />
-                      </button>
-                      {openSortCategory && (
-                        <ChartsSort
-                          setActive={setCategoryState}
-                          active={sortCategoryState}
-                          rangeTimeValues={timeValuesHandler}
-                          closeSortComponent={() => setOpenSortCategory(false)}
-                          setChartName={setChartName}
-                        />
-                      )}
+            <Col md={7}>
+              <div className="contentChartsWrap">
+                <Row>
+                  <Col md={6}>
+                    <div className="reportCard">
+                      <div className="statChartHead align-items-center">
+                        <Link
+                          to={"/reports-tables-task/task_categories"}
+                          className="text-dark"
+                        >
+                          <p className="cht_hdngs">Task categories</p>
+                        </Link>
+                        <div className="statSort">
+                          <Link
+                            to={"/reports-tables-task/task_categories"}
+                            className="text-dark"
+                          >
+                            <img src={taskIcon} className="tbl_icn" alt="" />
+                            {/* <button className='sortTrigger' onClick={() => {handleOpen(); setChartName({...chartName, category: "taskCategories"})}}>Sort <AiFillCaretDown /></button> */}
+                          </Link>
+                          <div className="fltrs_prnt">
+                            <button
+                              className="sortTrigger"
+                              onClick={() => {
+                                setOpenSortCategory(true);
+                                setChartName({
+                                  ...chartName,
+                                  category: "taskCategories",
+                                });
+                              }}
+                            >
+                              Sort <AiFillCaretDown />
+                            </button>
+                            {openSortCategory && (
+                              <ChartsSort
+                                setActive={setCategoryState}
+                                active={sortCategoryState}
+                                rangeTimeValues={timeValuesHandler}
+                                closeSortComponent={() => setOpenSortCategory(false)}
+                                setChartName={setChartName}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="statChartBody">
+                        <Link
+                          to={"/reports-tables-task/task_categories"}
+                          className="text-dark"
+                        >
+                          <ReactApexChart
+                            options={taskCategories}
+                            series={taskCategories.series}
+                            type="pie"
+                            width="350"
+                          />
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <div className="statChartBody">
-                  <Link
-                    to={"/reports-tables-task/task_categories"}
-                    className="text-dark"
-                  >
-                    <ReactApexChart
-                      options={taskCategories}
-                      series={taskCategories.series}
-                      type="pie"
-                      width="350"
-                    />
-                  </Link>
-                </div>
+                  </Col>
+                  <Col md={6}>
+                    <div className="reportCard mb-0">
+                      <div className="statChartHead align-items-center">
+                        <Link
+                          to={"/reports-tables-task/content_type"}
+                          className="text-dark"
+                        >
+                          <p className="cht_hdngs">Content type</p>
+                        </Link>
+                        <div className="statSort">
+                          <Link
+                            to={"/reports-tables-task/content_type"}
+                            className="text-dark"
+                          >
+                            <img src={taskIcon} className="tbl_icn" />
+                          </Link>
+                          {/* <button className='sortTrigger' onClick={() => {handleOpen(); setChartName({...chartName, type: "contentType"})}}>Sort <AiFillCaretDown /></button> */}
+                          <div className="fltrs_prnt">
+                            <button
+                              className="sortTrigger"
+                              onClick={() => {
+                                setOpenSortContentType(true);
+                                setChartName({ ...chartName, type: "contentType" });
+                              }}
+                            >
+                              Sort <AiFillCaretDown />
+                            </button>
+                            {openSortContentType && (
+                              <ChartsSort
+                                active={contentTypeState}
+                                setActive={setContentTypeState}
+                                rangeTimeValues={timeValuesHandler}
+                                closeSortComponent={() =>
+                                  setOpenSortContentType(false)
+                                }
+                                setChartName={setChartName}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="statChartBody">
+                        <Link
+                          to={"/reports-tables-task/content_type"}
+                          className="text-dark"
+                        >
+                          <ReactApexChart
+                            options={contentType && contentType}
+                            series={contentType?.series}
+                            type="pie"
+                            width="350"
+                          />
+                        </Link>
+                      </div>
+                    </div>
+                  </Col>
+                  <Col md={6}>
+                    <div className="reportCard mb-0">
+                      <div className="statChartHead align-items-center">
+                        <Link
+                          to={"/reports-tables-task/task_location"}
+                          className="text-dark"
+                        >
+                          <p className="cht_hdngs">Task locations</p>
+                        </Link>
+                        <div className="statSort">
+                          <Link
+                            to={"/reports-tables-task/task_location"}
+                            className="text-dark"
+                          >
+                            <img src={taskIcon} className="tbl_icn" />
+                          </Link>
+                          {/* <button className='sortTrigger' onClick={() => {handleOpen(); setChartName({...chartName, location: "taskLocation"})}}>Sort <AiFillCaretDown /></button> */}
+                          <div className="fltrs_prnt">
+                            <button
+                              className="sortTrigger"
+                              onClick={() => {
+                                setOpenSortLocation(true);
+                                setChartName({
+                                  ...chartName,
+                                  location: "taskLocation",
+                                });
+                              }}
+                            >
+                              Sort <AiFillCaretDown />
+                            </button>
+                            {openSortLocation && (
+                              <ChartsSort
+                                active={locationState}
+                                setActive={setLocationState}
+                                rangeTimeValues={timeValuesHandler}
+                                closeSortComponent={() => setOpenSortLocation(false)}
+                                setChartName={setChartName}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="statChartBody">
+                        <Link
+                          to={"/reports-tables-task/task_location"}
+                          className="text-dark"
+                        >
+                          <ReactApexChart
+                            options={taskLocation}
+                            series={taskLocation.series}
+                            type="pie"
+                            width="350"
+                          />
+                        </Link>
+                      </div>
+                    </div>
+                  </Col>
+                  <Col md={6}>
+                    <div className="reportCard mb-0">
+                      <div className="statChartHead align-items-center">
+                        <Link
+                          to={"/reports-tables-task/task_location"}
+                          className="text-dark"
+                        >
+                          <p className="cht_hdngs">Task locations</p>
+                        </Link>
+                        <div className="statSort">
+                          <Link
+                            to={"/reports-tables-task/task_location"}
+                            className="text-dark"
+                          >
+                            <img src={taskIcon} className="tbl_icn" />
+                          </Link>
+                          {/* <button className='sortTrigger' onClick={() => {handleOpen(); setChartName({...chartName, location: "taskLocation"})}}>Sort <AiFillCaretDown /></button> */}
+                          <div className="fltrs_prnt">
+                            <button
+                              className="sortTrigger"
+                              onClick={() => {
+                                setOpenSortLocation(true);
+                                setChartName({
+                                  ...chartName,
+                                  location: "taskLocation",
+                                });
+                              }}
+                            >
+                              Sort <AiFillCaretDown />
+                            </button>
+                            {openSortLocation && (
+                              <ChartsSort
+                                active={locationState}
+                                setActive={setLocationState}
+                                rangeTimeValues={timeValuesHandler}
+                                closeSortComponent={() => setOpenSortLocation(false)}
+                                setChartName={setChartName}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="statChartBody">
+                        <Link
+                          to={"/reports-tables-task/task_location"}
+                          className="text-dark"
+                        >
+                          <ReactApexChart
+                            options={taskLocation}
+                            series={taskLocation.series}
+                            type="pie"
+                            width="350"
+                          />
+                        </Link>
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
               </div>
             </Col>
-            <Col md={4}>
-              <div className="reportCard">
-                <div className="statChartHead align-items-center">
-                  <Link
-                    to={"/reports-tables-task/content_type"}
-                    className="text-dark"
-                  >
-                    <p className="cht_hdngs">Content type</p>
-                  </Link>
-                  <div className="statSort">
-                    <Link
-                      to={"/reports-tables-task/content_type"}
-                      className="text-dark"
-                    >
-                      <img src={taskIcon} className="tbl_icn" />
-                    </Link>
-                    {/* <button className='sortTrigger' onClick={() => {handleOpen(); setChartName({...chartName, type: "contentType"})}}>Sort <AiFillCaretDown /></button> */}
-                    <div className="fltrs_prnt">
-                      <button
-                        className="sortTrigger"
-                        onClick={() => {
-                          setOpenSortContentType(true);
-                          setChartName({ ...chartName, type: "contentType" });
-                        }}
-                      >
-                        Sort <AiFillCaretDown />
-                      </button>
-                      {openSortContentType && (
-                        <ChartsSort
-                          active={contentTypeState}
-                          setActive={setContentTypeState}
-                          rangeTimeValues={timeValuesHandler}
-                          closeSortComponent={() =>
-                            setOpenSortContentType(false)
-                          }
-                          setChartName={setChartName}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className="statChartBody">
-                  <Link
-                    to={"/reports-tables-task/content_type"}
-                    className="text-dark"
-                  >
-                    <ReactApexChart
-                      options={contentType && contentType}
-                      series={contentType?.series}
-                      type="pie"
-                      width="350"
-                    />
-                  </Link>
-                </div>
-              </div>
-            </Col>
-            <Col md={4}>
-              <div className="reportCard">
-                <div className="statChartHead align-items-center">
-                  <Link
-                    to={"/reports-tables-task/task_location"}
-                    className="text-dark"
-                  >
-                    <p className="cht_hdngs">Task locations</p>
-                  </Link>
-                  <div className="statSort">
-                    <Link
-                      to={"/reports-tables-task/task_location"}
-                      className="text-dark"
-                    >
-                      <img src={taskIcon} className="tbl_icn" />
-                    </Link>
-                    {/* <button className='sortTrigger' onClick={() => {handleOpen(); setChartName({...chartName, location: "taskLocation"})}}>Sort <AiFillCaretDown /></button> */}
-                    <div className="fltrs_prnt">
-                      <button
-                        className="sortTrigger"
-                        onClick={() => {
-                          setOpenSortLocation(true);
-                          setChartName({
-                            ...chartName,
-                            location: "taskLocation",
-                          });
-                        }}
-                      >
-                        Sort <AiFillCaretDown />
-                      </button>
-                      {openSortLocation && (
-                        <ChartsSort
-                          active={locationState}
-                          setActive={setLocationState}
-                          rangeTimeValues={timeValuesHandler}
-                          closeSortComponent={() => setOpenSortLocation(false)}
-                          setChartName={setChartName}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className="statChartBody">
-                  <Link
-                    to={"/reports-tables-task/task_location"}
-                    className="text-dark"
-                  >
-                    <ReactApexChart
-                      options={taskLocation}
-                      series={taskLocation.series}
-                      type="pie"
-                      width="350"
-                    />
-                  </Link>
-                </div>
-              </div>
-            </Col>
+            <Col md={5}></Col>
           </Row>
         </div>
 

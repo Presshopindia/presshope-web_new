@@ -24,7 +24,7 @@ import Loader from "../component/Loader";
 import { Rating } from "react-simple-star-rating";
 import reviewicn from "../assets/images/review-txt-icn.png";
 import ContainerSorting from "../component/Sortfilters/containerSorting";
-import { hasDecimal, successToasterFun } from "../component/commonFunction";
+import { getDeepModifiedContent, hasDecimal, successToasterFun } from "../component/commonFunction";
 import star from "../assets/images/star.png";
 import emptystar from "../assets/images/emptystar.svg";
 // import StarBorderIcon from '@mui/icons-material/StarBorder';
@@ -40,6 +40,7 @@ import BBC from "../assets/images/bbc.png";
 import TestiImg2 from "../assets/images/testi-3.png";
 import Recuirters from "../assets/images/Avatar11.png";
 import SwiperCore, { Autoplay, Pagination } from "swiper";
+import { DashboardCardInfo } from "../component/DashboardCardInfo";
 
 const RatingReview = () => {
   const [loading, setLoading] = useState(false);
@@ -144,7 +145,6 @@ const RatingReview = () => {
         successToasterFun("Thank you for submitting your review.");
         sendRatingFromHopper();
         setTask([]);
-        setSelectedHopper(null);
         setLoading(false);
       }
     } catch (error) {
@@ -195,7 +195,6 @@ const RatingReview = () => {
     receivedRatingFromHopper();
     HopperList();
     averageOfRating();
-    ContentOnline();
   }, []);
 
   useEffect(() => {
@@ -235,41 +234,6 @@ const RatingReview = () => {
 
   useEffect(() => {
     receivedRatingFromHopper1();
-  }, [sortContainer.change]);
-
-  // Content purchased online-
-  const [contentPurchaseOnline, setContentPurchasedOnline] = useState(null);
-  const ContentOnline = async () => {
-    setLoading(true);
-    try {
-      let res;
-      if (
-        sortContainer.type &&
-        sortContainer.value &&
-        sortContainer.type != "current"
-      ) {
-        res = await Get(
-          `mediahouse/contentonlineCard?type=${sortContainer.value}`
-        );
-        setSortContainer({ ...sortContainer, type: "" });
-      } else if (
-        !sortContainer.type &&
-        !sortContainer.value &&
-        sortContainer.type != "current"
-      ) {
-        res = await Get(`mediahouse/contentonlineCard`);
-      }
-      if (res) {
-        setContentPurchasedOnline(res?.data);
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    ContentOnline();
   }, [sortContainer.change]);
 
   const averageOfRating = async () => {
@@ -313,30 +277,6 @@ const RatingReview = () => {
       setLoading(false);
     }
   };
-
-  const ContentDetails = async (hopper_id) => {
-    // console.log("hopper_id", hopper_id)
-    setLoading(true);
-    try {
-      const obj = {};
-      const res = await Get(
-        `mediahouse/contentwithouthrating?hopper_id=${hopper_id}`
-      );
-      if (res.data) {
-        setTask(res.data.data);
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading(false);
-    }
-  };
-
-  const [selectedHopper, setSelectedHopper] = useState(null);
-  const handleHopperSelect = (hopper) => {
-    setSelectedHopper(hopper);
-  };
-
-  const [selectedCard, setSelectedCard] = useState(null);
 
   // Testimonial-
   const [testimonial, setTestimonial] = useState({
@@ -395,7 +335,41 @@ const RatingReview = () => {
     getTestimonial();
   }, []);
 
-  console.log(testimonial);
+  // New work -
+  const [dashboardData, setDashboardData] = useState(null);
+  const [dashboardSort, setDashboardSort] = useState({ type: "" });
+  const [dashboardPayload, setDashboardPayload] = useState({
+    requestedItems: ["content_purchased_online"],
+    requestedFilter: {
+      content_purchased_online: "monthly"
+    }
+  })
+
+  const DashboardData = async (payload) => {
+    try {
+      setLoading(true);
+      const resp = await Post("mediaHouse/dashboard-data", payload);
+      setDashboardData(resp?.data?.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    DashboardData(dashboardPayload);
+  }, []);
+
+  const handleApplySorting = async () => {
+    DashboardData(dashboardPayload);
+    setDashboardSort({ ...dashboardSort, type: "" });
+  }
+
+  const handleClearSort = async (payload) => {
+    DashboardData(payload)
+    setDashboardPayload(payload);
+    setDashboardSort({ ...dashboardSort, type: "" });
+  }
 
   SwiperCore.use([Autoplay, Pagination]);
 
@@ -532,7 +506,7 @@ const RatingReview = () => {
                             return (
                               <div>
                                 {curr?.content_id?.content[0]?.media_type ===
-                                "image" ? (
+                                  "image" ? (
                                   <img
                                     className="card-img"
                                     src={
@@ -547,7 +521,7 @@ const RatingReview = () => {
                                     src={
                                       curr?.content_id?.content[0]?.watermark ||
                                       process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr?.content_id?.content[0]?.thumbnail
+                                      curr?.content_id?.content[0]?.thumbnail
                                     }
                                     alt="content"
                                   />
@@ -558,7 +532,7 @@ const RatingReview = () => {
                                     src={audioic}
                                     alt="content"
                                   />
-                                ) :curr?.from?.admin_detail?.admin_profile ? (
+                                ) : curr?.from?.admin_detail?.admin_profile ? (
                                   <img
                                     className="card-img"
                                     src={
@@ -566,7 +540,7 @@ const RatingReview = () => {
                                     }
                                     alt="profile"
                                   />
-                                ): (
+                                ) : (
                                   <img
                                     className="card-img"
                                     src={
@@ -585,124 +559,23 @@ const RatingReview = () => {
                     </CardActions>
                   </Card>
                 </Col>
-                <Col
-                  md={4}
-                  className="p-0 mb-0 clickable"
-                  onClick={() =>
-                    navigate("/dashboard-tables/content_purchased_online")
-                  }
-                >
-                  <Card className="dash-top-cards crd_edit ">
-                    <CardContent className="dash-c-body">
-                      <div className="cardCustomHead">
-                        <div className="edit_card_sel">
-                          <div className="edit_card_sel">
-                            <svg
-                              width="20"
-                              height="17"
-                              viewBox="0 0 20 17"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M0.747559 1.46875H19.4976V14.75C19.4976 14.9572 19.4152 15.1559 19.2687 15.3024C19.1222 15.4489 18.9235 15.5312 18.7163 15.5312H1.52881C1.32161 15.5312 1.12289 15.4489 0.976382 15.3024C0.829869 15.1559 0.747559 14.9572 0.747559 14.75V1.46875Z"
-                                stroke="black"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                              <path
-                                d="M0.747559 6.15625H19.4976"
-                                stroke="black"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                              <path
-                                d="M0.747559 10.8438H19.4976"
-                                stroke="black"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                              <path
-                                d="M6.21631 6.15625V15.5312"
-                                stroke="black"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                            <div
-                              className="fltrs_prnt"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <Button
-                                className="sort_btn"
-                                onClick={() =>
-                                  setSortContainer({
-                                    ...sortContainer,
-                                    type: "online",
-                                  })
-                                }
-                              >
-                                Sort
-                                <BsChevronDown />
-                              </Button>
-                              {sortContainer.type == "online" ? (
-                                <ContainerSorting
-                                  width={true}
-                                  setSortContainer={setSortContainer}
-                                  sortContainer={sortContainer}
-                                />
-                              ) : null}
-                            </div>
-                          </div>
-                        </div>
-                        <Typography
-                          variant="body2"
-                          className="card-head-txt mb-2"
-                        >
-                          {contentPurchaseOnline?.count || 0}
-                        </Typography>
-                      </div>
-                      <Typography
-                        sx={{ fontSize: 14 }}
-                        color="text.secondary"
-                        gutterBottom
-                        className="cardContent_head"
-                      >
-                        Content purchased online
-                      </Typography>
-                      <div className="content_stat">
-                        {/* {ratingWithPercentageReceived?.type === "increase" ? (
-                          <span className="stat_up">
-                            <BsArrowUp /> {(ratingWithPercentageSend?.percentage)?.toFixed(2)}{" "}
-                            %
-                          </span>
-                        ) : ratingWithPercentageReceived?.type === "decrease" ? (
-                          <span className="stat_down">
-                            <BsArrowDown />{" "}
-                            {(ratingWithPercentageSend?.percentage)?.toFixed(2)} %
-                          </span>
-                        ) : <span>{"No change "}</span>} */}
-                        <span></span>
-                      </div>
-                    </CardContent>
-                    <CardActions className="dash-c-foot">
-                      <div className="card-imgs-wrap">
-                        {contentPurchaseOnline?.data?.map((curr) => {
-                          return (
-                            <img
-                              className="card-img"
-                              src={curr?.content_id?.content?.[0]?.watermark}
-                              alt="1"
-                            />
-                          );
-                        })}
-
-                        <span>
-                          <BsArrowRight />
-                        </span>
-                      </div>
-                    </CardActions>
-                  </Card>
+                {/* Content Purchase Online */}
+                <Col md={4} className="p-0">
+                  <DashboardCardInfo
+                    path="/dashboard-tables/content_purchased_online"
+                    title="Content purchased online"
+                    type="content_purchased_online"
+                    trend={dashboardData?.content?.purchasedOnline?.trend}
+                    total={dashboardData?.content?.purchasedOnline?.totalCount}
+                    data={getDeepModifiedContent(dashboardData?.content?.purchasedOnline?.data)}
+                    dashboardSort={dashboardSort}
+                    setDashboardSort={setDashboardSort}
+                    sort={dashboardPayload?.requestedFilter?.content_purchased_online}
+                    setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_online: value } })}
+                    setSortState={handleApplySorting}
+                    handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                    handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_online: "" } })}
+                  />
                 </Col>
                 {/* <Col md={4} className="p-0 mb-0">
                   <Card className="dash-top-cards crd_edit">
@@ -944,8 +817,8 @@ const RatingReview = () => {
                                 onClick={() => handleFeatures("Experience")}
                                 className={
                                   testimonial?.features.includes("Experience")
-                                    ? "selected clickable"
-                                    : "clickable"
+                                    ? "clickable"
+                                    : "selected clickable"
                                 }
                               >
                                 Experience
@@ -954,8 +827,8 @@ const RatingReview = () => {
                                 onClick={() => handleFeatures("Easy to use")}
                                 className={
                                   testimonial?.features.includes("Easy to use")
-                                    ? "selected clickable"
-                                    : "clickable"
+                                    ? "clickable"
+                                    : "selected clickable"
                                 }
                               >
                                 Easy to use
@@ -968,8 +841,8 @@ const RatingReview = () => {
                                   testimonial?.features.includes(
                                     "Connectivity with Hoppers"
                                   )
-                                    ? "selected clickable"
-                                    : "clickable"
+                                    ? "clickable"
+                                    : "selected clickable"
                                 }
                               >
                                 Connectivity with Hoppers
@@ -978,8 +851,8 @@ const RatingReview = () => {
                                 onClick={() => handleFeatures("Pricing")}
                                 className={
                                   testimonial?.features.includes("Pricing")
-                                    ? "selected clickable"
-                                    : "clickable"
+                                    ? "clickable"
+                                    : "selected clickable"
                                 }
                               >
                                 Pricing
@@ -990,8 +863,8 @@ const RatingReview = () => {
                                   testimonial?.features.includes(
                                     "Secure payment"
                                   )
-                                    ? "selected clickable"
-                                    : "clickable"
+                                    ? "clickable"
+                                    : "selected clickable"
                                 }
                               >
                                 Secure payment
@@ -1000,8 +873,8 @@ const RatingReview = () => {
                                 onClick={() => handleFeatures("Support")}
                                 className={
                                   testimonial?.features.includes("Support")
-                                    ? "selected clickable"
-                                    : "clickable"
+                                    ? "clickable"
+                                    : "selected clickable"
                                 }
                               >
                                 Support
@@ -1058,6 +931,7 @@ const RatingReview = () => {
                                 controlId="exampleForm.ControlTextarea1"
                               >
                                 <Form.Control
+                                  className="rating_placholder"
                                   placeholder="We hope you're enjoying your experience with PressHop. Please share your feedback with us. Your insights will help us enhance both your experience, and the quality of our service. Thank you"
                                   as="textarea"
                                   rows={3}
@@ -1102,7 +976,7 @@ const RatingReview = () => {
                       </p>
                       <div className="mt-4 mb-4">
                         <Swiper
-                          spaceBetween={50}
+                          spaceBetween={-120}
                           slidesPerView={3}
                           pagination={{ clickable: true }}
                           autoplay={{
@@ -1168,16 +1042,16 @@ const RatingReview = () => {
                                       “
                                       {el?.features?.length > 1
                                         ? `Impressed by the level of ${el?.features
-                                            ?.slice(0, -1)
-                                            ?.join(", ")
-                                            ?.toLowerCase()} and ${el.features
+                                          ?.slice(0, -1)
+                                          ?.join(", ")
+                                          ?.toLowerCase()} and ${el.features
                                             .slice(-1)
                                             .join("")
                                             ?.toLowerCase()} of content`
                                         : `Impressed by the level of ${el.features
-                                            .slice(-1)
-                                            .join("")
-                                            ?.toLowerCase()} of content`}
+                                          .slice(-1)
+                                          .join("")
+                                          ?.toLowerCase()} of content`}
                                     </h3>
                                     <p>{el?.description}“</p>
                                   </div>
@@ -1434,7 +1308,7 @@ const RatingReview = () => {
                                           curr.sender_type == "hopper"
                                             ? hopperImage
                                             : curr?.from?.admin_detail
-                                                ?.admin_profile
+                                              ?.admin_profile
                                         }
                                         alt="content"
                                       />
@@ -1443,7 +1317,7 @@ const RatingReview = () => {
                                           <b>
                                             {`${curr?.from?.first_name} ${curr?.from?.last_name}`}{" "}
                                           </b>
-                                          {}
+                                          { }
                                         </p>
                                         <p className="nme">London</p>
                                       </div>
