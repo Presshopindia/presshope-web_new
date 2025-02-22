@@ -24,6 +24,8 @@ const Reports = () => {
   const [dashboardSort, setDashboardSort] = useState({ type: "" });
   const [dashboardPayload, setDashboardPayload] = useState({
     requestedItems: [
+      "live_task",
+      "broadcasted_task",
       "total_fund_invested",
       "content_average_price",
       "broadcasted_task_today",

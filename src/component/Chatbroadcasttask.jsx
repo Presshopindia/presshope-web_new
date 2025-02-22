@@ -78,8 +78,7 @@ const Chatbroadcasttask = (props) => {
     setLoading(true);
     try {
       const resp = await Get(
-        `mediaHouse/live/expired/tasks?status=live&id=${
-          (props.id && props.id) || ""
+        `mediaHouse/live/expired/tasks?status=live&id=${(props.id && props.id) || ""
         }`
       );
       setDeadline(resp.data.tasks.deadline_date);
@@ -215,7 +214,7 @@ const Chatbroadcasttask = (props) => {
                 </div>
                 <div className="taskInfo_card">
                   <Row className="justify-content-between rw_gp_5">
-                    <Col md={6} className="pe-0">
+                    <Col md={6} className="">
                       <div className="timeSlots_tiles">
                         <label>Date</label>
                         <span className="sm-tiles">
@@ -228,14 +227,14 @@ const Chatbroadcasttask = (props) => {
                             "DD/MM/YYYY"
                           ) !== "Invalid date"
                             ? " " +
-                              moment(taskDetails?.deadline_date).format(
-                                "DD/MM/YYYY"
-                              )
+                            moment(taskDetails?.deadline_date).format(
+                              "DD/MM/YYYY"
+                            )
                             : "dd/mm/yyyy"}
                         </span>
                       </div>
                     </Col>
-                    <Col md={6} className="pe-0">
+                    <Col md={6} className="">
                       <div className="timeSlots_tiles">
                         <label>Deadline</label>
                         <span className="sm-tiles">
@@ -248,9 +247,9 @@ const Chatbroadcasttask = (props) => {
                             "hh:mm A"
                           ) !== "Invalid date"
                             ? " " +
-                              moment(taskDetails?.deadline_date).format(
-                                "hh:mm A"
-                              )
+                            moment(taskDetails?.deadline_date).format(
+                              "hh:mm A"
+                            )
                             : " 00:00 AM"}
                         </span>
                       </div>

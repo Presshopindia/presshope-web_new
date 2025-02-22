@@ -16109,7 +16109,7 @@ button.MuiButton-secondary {
 .priceOffer_wrap .sm-tiles {
   padding: 6px 6px;
   width: 100%;
-  font-weight:700;
+  font-weight: 700;
 }
 
 .broadcasted_uploads .scrolling {
@@ -19807,7 +19807,7 @@ input[type=number] {
 
 .task_pg .priceOffer_wrap .sm-tiles {
   width: 80px;
-  font-weight:700;
+  font-weight: 700;
 }
 
 .task_pg .priceOffer_wrap .type_price {
@@ -22732,6 +22732,7 @@ button.sort_btn.small_sort_btn {
 .singleTask_detail .taskUploads_media .small {
   font-size: 14px;
   line-height: 16px;
+  margin-left: 0px;
 }
 
 .adm_reg_mdl.mdl_dsn .modal-header {
@@ -23350,7 +23351,7 @@ button.sort_btn.small_sort_btn {
 }
 
 .PhoneInputCountryIcon {
-  border:none !important;
+  border: none !important;
 }
 
 .profile_mdl_body .PhoneInputCountry .PhoneInputCountrySelectArrow {
@@ -24098,7 +24099,7 @@ a.txtBlack svg {
 }
 
 .typing {
- 
+
   .bubble {
     background: #055a90;
     padding: 8px 13px 9px 13px;

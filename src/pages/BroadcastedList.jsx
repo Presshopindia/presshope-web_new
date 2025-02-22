@@ -71,8 +71,7 @@ const BroadcastedTrackings = (props) => {
     try {
       console.log("chakalalalalal");
       const resp = await Get(
-        `mediaHouse/live/expired/tasks?status=live&id=${
-          id || liveId || param?.id
+        `mediaHouse/live/expired/tasks?status=live&id=${id || liveId || param?.id
         }`
       );
       setDeadline(resp.data?.tasks?.deadline_date);
@@ -249,7 +248,7 @@ const BroadcastedTrackings = (props) => {
                                 <Button
                                   variant="primary"
                                   className="sm-btn"
-                                  // onClick={() => TaskDetails(curr?._id)}
+                                // onClick={() => TaskDetails(curr?._id)}
                                 >
                                   View
                                 </Button>
@@ -428,9 +427,9 @@ const BroadcastedTrackings = (props) => {
                             "DD/MM/YYYY"
                           ) !== "Invalid date"
                             ? " " +
-                              moment(taskDetails?.deadline_date).format(
-                                "DD/MM/YYYY"
-                              )
+                            moment(taskDetails?.deadline_date).format(
+                              "DD/MM/YYYY"
+                            )
                             : "dd/mm/yyyy"}
                         </span>
                       </div>
@@ -448,9 +447,9 @@ const BroadcastedTrackings = (props) => {
                             "hh:mm A"
                           ) !== "Invalid date"
                             ? " " +
-                              moment(taskDetails?.deadline_date).format(
-                                "hh:mm A"
-                              )
+                            moment(taskDetails?.deadline_date).format(
+                              "hh:mm A"
+                            )
                             : " 00:00 AM"}
                         </span>
                       </div>
@@ -483,9 +482,9 @@ const BroadcastedTrackings = (props) => {
                           >
                             {taskDetails?.need_photos === true
                               ? "£" +
-                                formatAmountInMillion(
-                                  taskDetails?.hopper_photo_price
-                                )
+                              formatAmountInMillion(
+                                taskDetails?.hopper_photo_price
+                              )
                               : "-"}
                           </span>
                         </div>
@@ -500,9 +499,9 @@ const BroadcastedTrackings = (props) => {
                           >
                             {taskDetails?.need_interview === true
                               ? "£" +
-                                formatAmountInMillion(
-                                  taskDetails?.hopper_interview_price
-                                )
+                              formatAmountInMillion(
+                                taskDetails?.hopper_interview_price
+                              )
                               : "-"}
                           </span>
                         </div>
@@ -517,9 +516,9 @@ const BroadcastedTrackings = (props) => {
                           >
                             {taskDetails?.need_videos === true
                               ? "£ " +
-                                formatAmountInMillion(
-                                  taskDetails?.hopper_videos_price
-                                )
+                              formatAmountInMillion(
+                                taskDetails?.hopper_videos_price
+                              )
                               : "-"}
                           </span>
                         </div>
@@ -533,7 +532,7 @@ const BroadcastedTrackings = (props) => {
                           navigate(`/Uploaded-Content/${taskDetails?._id}`)
                         }
                       >
-                        <div className="mediaWrap uploaded_mda">
+                        {/* <div className="mediaWrap uploaded_mda">
                           {taskDetails?.content &&
                             taskDetails?.content.map((curr) => {
                               const content =
@@ -558,7 +557,7 @@ const BroadcastedTrackings = (props) => {
                                   />
                                 );
                             })}
-                        </div>
+                        </div> */}
                         <Link
                           className="text-dark"
                           to={"/Uploaded-Content/uploaded"}

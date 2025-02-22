@@ -23,10 +23,10 @@ export const DashboardCardInfo = ({
 }) => {
 
     return (
-        <Card className={task ? "dash-top-cards tsk" : "dash-top-cards crd_edit"}>
+        <Card className="dash-top-cards crd_edit">
             <CardContent className="dash-c-body">
                 <div className="cardCustomHead">
-                    <div className={task ? "sortFilter_actions" : "edit_card_sel"}>
+                    <div className="edit_card_sel">
                         <svg
                             width="20"
                             height="17"

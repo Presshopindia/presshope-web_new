@@ -2172,10 +2172,13 @@ button.MuiButton-secondary {
     backdrop-filter: blur(1.35914px);
     left: 3px;
     top: 3px;
-    border-radius: 10px;
+    border-radius: 6px;
     display: inline-flex;
-    padding: 7px 5px;
+    height: 20px;
+    width: 20px;
     position: absolute;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -2566,7 +2569,7 @@ button.MuiButton-secondary {
 }
 
 .taskDetail_wrap {
-  padding-right: 10px;
+  padding-right: 2px;
 }
 
 .feeddetail-card {
@@ -4602,8 +4605,8 @@ button.btn_bld {
 }
 
 .rateView-type.dflt {
-  height: 25px;
-  width: 27px;
+  height: 18px;
+  width: 18px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -5640,8 +5643,10 @@ input[type="number"] {
     color: $black;
     font-size: 13px;
   }
+
   .call_icon_img {
-    width: 19px;  /* Adjust icon size */
+    width: 19px;
+    /* Adjust icon size */
     height: 19px;
   }
 }
@@ -5813,7 +5818,7 @@ input[type="number"] {
 }
 
 .fvt_undrofr_wrp {
-  padding: 15px !important;
+  padding: 12px 15px !important;
 }
 
 .fvt_undr_ofr {
@@ -5865,7 +5870,7 @@ input[type="number"] {
 }
 
 .rt_crd.rcnt_actvt .scrolling {
-  height: 650px;
+  height: 669px;
 }
 
 .rating_tp_crd .tp_txt {
@@ -6395,7 +6400,7 @@ input[type="number"] {
 .task_pg .priceOffer_wrap .sm-tiles {
   width: 80px;
   justify-content: center;
-  font-weight:700;
+  font-weight: 700;
 }
 
 .task_pg .priceOffer_wrap .type_price {
@@ -6495,7 +6500,7 @@ input[type="number"] {
 
 .taskReports_container.tsk {
   .dash-top-cards .dash-c-body {
-    padding: 3px 3px 10px 5px;
+    // padding: 3px 3px 10px 5px;
   }
 
   .dash-top-cards .dash-c-body .sortFilter_actions svg {
@@ -7701,7 +7706,7 @@ button {
 }
 
 .chatmain.cht_ht {
-  height: 500px;
+  height: 537px;
   padding-bottom: 20px;
   position: relative;
   width: 66.666667%;
@@ -10333,7 +10338,8 @@ select.PhoneInputCountrySelect {
   background-color: $bg-color-dark !important;
 
   .trending-search a {
-    color: #000 !important;
+    color: #fff !important;
+    background-color: #000;
   }
 
   .tbl_crd.bg_grey {
@@ -10365,7 +10371,7 @@ select.PhoneInputCountrySelect {
   }
 
   .list-card.rcnt_act_card {
-    background-color: $dark-mode-bg !important;
+    background-color: #000 !important;
     position: relative;
 
     // color: $white;
@@ -10377,6 +10383,16 @@ select.PhoneInputCountrySelect {
       width: 100%;
       content: "";
       background: white;
+    }
+
+    .list-in {
+      .list-in-txt {
+        color: #fff;
+
+        svg {
+          color: #fff !important;
+        }
+      }
     }
   }
 
@@ -11456,8 +11472,8 @@ p.text_light {
 }
 
 .rating-update li.selected {
-  background-color: #000;
-  color: #fff;
+  background-color: $bg-grey !important;
+  color: $inactive-btn-clr !important;
 }
 
 // Brodcasted task
@@ -11500,7 +11516,7 @@ p.text_light {
 
 .broadcast-heading h2 {
   font-size: 20px !important;
-  font-family: "AirbnbMedium" !important;
+  font-family: "AirbnbBold" !important;
 }
 
 .bg-color {
@@ -12679,7 +12695,7 @@ audio {
 
 .tableContentTypeIcons {
   position: absolute;
-  top: 15px;
+  top: 10px;
   left: 3px;
   display: flex;
   flex-direction: column;
@@ -12750,21 +12766,25 @@ audio {
 
 
 .commonContentIconsWrap .post_itm_icns.dtl_icns {
-  height: 25px !important;
-  width: 27px !important;
+  height: 18px !important;
+  width: 18px !important;
   border-radius: 5px !important;
 }
+
 .commonContentIconsWrap .tableContentTypeIcons {
   position: unset;
 }
+
 .commonContentIconsWrap .post_itm_icns.dtl_icns .count {
   font-size: 12px;
   font-family: "AirbnbMedium" !important;
 }
+
 .commonContentIconsWrap .post_itm_icns.dtl_icns img {
   width: 15px !important;
   height: auto !important;
 }
+
 .circular_red_dot {
   height: 12px;
   width: 12px;
@@ -12798,4 +12818,16 @@ audio {
 
 .mediahouse-list-name {
   color: #878787;
+}
+
+.bg_grey {
+  background-color: $bg-grey !important;
+}
+
+.rating_placholder {
+  color: #000 !important;
+}
+
+.rating_placholder::placeholder {
+  color: #838383 !important;
 }

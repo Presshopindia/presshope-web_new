@@ -1429,7 +1429,7 @@ const BroadcastedTask = () => {
       <Header />
       <div className="page-wrap task_pg renew-task">
         <Container fluid>
-          <Row className="dashboardStat_cards">
+          <Row className="dashboardStat_cards crd_edit_wrap">
             {/* Live Tasks */}
             <Col md={3} className="p-0 task-card">
               <DashboardCardInfo
@@ -1500,7 +1500,7 @@ const BroadcastedTask = () => {
                 setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task_today: value } })}
                 setSortState={handleApplySorting}
                 handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
-                handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task_today: ""} })}
+                handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task_today: "" } })}
                 task={true}
               />
             </Col>
@@ -1626,8 +1626,8 @@ const BroadcastedTask = () => {
               <div className="top-bar">
                 <Row>
                   <Col sm={12}>
-                    <div className="feedPreviews d-flex justify-content-between broadcast-heading">
-                      <h2>Uploaded content</h2>
+                    <div className="feedPreviews d-flex justify-content-between broadcast-heading align-items-center">
+                      <h2 className="mb-0">Uploaded content</h2>
                       <div className="sorting_wrap d-flex">
                         <div className="feedSorting me-4">
                           <div className="fltrs_prnt top_fltr">
