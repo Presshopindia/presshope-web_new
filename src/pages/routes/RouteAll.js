@@ -269,7 +269,7 @@ function RouteAll() {
           <Route path="/accounts-tables/:type" element={<AccountsTables />} />
           <Route path="/broadcasted-taks/:id" element={<PrivateRoute Component={BroadcastedTasks} />} />
 
-          <Route path="/related-content/:tag_id/:hopper_id/:category_id" element={<RelatedContent />} />
+          <Route path="/related-content/:content_id" element={<RelatedContent />} />
           <Route path="/related-content-task/:tag_id/:hopper_id/:category_id" element={<RelatedContentTask />} />
           <Route path="/more-content/:hopper_id" element={<MoreContentFromUser />} />
           <Route path="/more-content-task/:hopper_id/:task_id" element={<MoreContentFromUserForTask />} />

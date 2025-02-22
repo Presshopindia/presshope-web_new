@@ -90,9 +90,8 @@ const PurchasedContentDetail = () => {
         // console.log(resp1, `,<------this one is response of more content`)
         setmoreContentset(resp1?.data.content);
         const resp2 = await Post(`mediaHouse/relatedContent`, {
-          tag_id: [res?.data?.resp.content_id?.tag_ids[0]?._id],
-          hopper_id: res?.data?.resp?.hopper_id?._id,
-          category_id: res?.data?.resp?.category_id?._id,
+          content_id: res?.data?.resp.content_id?._id,
+          limit: 4
         });
         setRelatedContent(resp2.data.content);
 
@@ -987,7 +986,7 @@ const PurchasedContentDetail = () => {
                         )}
                       </div> */}
                       <Link
-                        to={`/related-content/tags/${transactionDetails?.hopper_id?._id}/${transactionDetails?.content_id?.category_id?._id}`}
+                        to={`/related-content/${transactionDetails?.content_id?._id}`}
                         className="next_link"
                       >
                         View all
@@ -1055,7 +1054,7 @@ const PurchasedContentDetail = () => {
                               // feedTime={moment(curr?.updatedAt).format(
                               //   "DD MMMM YYYY"
                               // )}
-                              feedTime={moment(item.createdAt).format(
+                              feedTime={moment(curr.createdAt).format(
                                 " hh:mm A, DD MMM YYYY"
                               )}
                               content_id={curr._id}

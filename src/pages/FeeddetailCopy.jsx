@@ -2780,7 +2780,7 @@ const FeeddetailCopy = (props) => {
                         )}
                       </div> */}
                       <Link
-                        to={`/related-content/tags/${data?.hopper_id?._id}/${data?.category_id?._id}`}
+                        to={`/related-content/${data?._id}`}
                         className="next_link"
                       >
                         View all
