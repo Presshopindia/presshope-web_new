@@ -20,7 +20,6 @@ import {
   TextField,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { BsEyeSlash, BsEye } from "react-icons/bs";
 import { Get, Post } from "../services/user.services";
 import { toast } from "react-toastify";
 import Loader from "./Loader";
@@ -33,6 +32,7 @@ const UserDetailsPopup = (props) => {
   const [show, setShow] = useState(true);
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
+  const [mediahouseListLoading, setMediahouseListLoading] = useState(false);
   const [details, setDetails] = useState({
     user_full_name: "",
     user_first_name: "",
@@ -67,6 +67,7 @@ const UserDetailsPopup = (props) => {
   const [mediahouseList, setMediahouseList] = useState([]);
   const getMediahouseList = async (search = "") => {
     try{
+      setMediahouseListLoading(true);
       const list = await Get(`auth/mediahouse-list?search=${search}`);
       const updatedData = list?.data?.data?.map((el) => {
         return {
@@ -75,9 +76,10 @@ const UserDetailsPopup = (props) => {
         }
       })
       setMediahouseList(updatedData);
+      setMediahouseListLoading(false);
     }
     catch(error){
-      console.log(error);
+      setMediahouseListLoading(false);
     }
   };
 
@@ -135,8 +137,19 @@ const UserDetailsPopup = (props) => {
   useEffect(() => {
     getDesignation();
     getDepartmentType();
-    getMediahouseList();
   }, []);
+
+  const debounce = (func, delay) => {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => func(...args), delay);
+    };
+  };
+
+  const handleSearch = debounce((value) => {
+    getMediahouseList( value );
+  }, 500);
 
   return (
     <>
@@ -160,40 +173,6 @@ const UserDetailsPopup = (props) => {
             </Modal.Header>
             <Modal.Body className="show-grid modal-body border-0">
               <Container>
-                {/* <Row>
-                  <p className="bg_lbl">Administrator details</p>
-                  <Col xs={12} md={6}>
-                    <Form.Group className="mb-4 form-group">
-                      <img src={user} alt="" />
-                      <Form.Control
-                        type="text"
-                        pattern="\S.*"
-                        title="First Name should not start with space"
-                        size="sm"
-                        name="administator_full_name"
-                        className="user"
-                        placeholder="Enter full name"
-                        required
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col xs={12} md={6}>
-                    <Form.Group className="mb-4 form-group">
-                      <img src={user} alt="" />
-                      <Form.Control
-                        type="email"
-                        pattern="\S.*"
-                        size="sm"
-                        name="administator_email"
-                        className="user"
-                        placeholder="Enter official email id"
-                        required
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row> */}
                 <Row className="mb-4">
                   <p className="bg_lbl">Administrator details</p>
                   <Col>
@@ -202,7 +181,10 @@ const UserDetailsPopup = (props) => {
                     size="small"
                     className="w-100 slct_sign"
                     options={mediahouseList}
+                    loading={mediahouseListLoading}
+                    noOptionsText="No data found"
                     getOptionLabel={(option) => option?.company_name}
+                    onInputChange={(event, value) => handleSearch(value)}
                     onChange={async (event, newValue) => {
                       setDetails({...details, "administator_email": newValue?.email})
                       if(newValue?.email) {
@@ -210,84 +192,18 @@ const UserDetailsPopup = (props) => {
                         setOffice(list?.data?.data);
                       }
                     }}
-                    filterOptions={(options, { inputValue }) => {
-                      return options.filter(
-                        (option) =>
-                          option?.company_name?.toLowerCase()?.includes(inputValue?.toLowerCase()) ||
-                          option?.email?.toLowerCase()?.includes(inputValue?.toLowerCase()) ||
-                          option?.admin_detail?.first_name?.toLowerCase()?.includes(inputValue?.toLowerCase()) ||
-                          option?.admin_detail?.last_name?.toLowerCase()?.includes(inputValue?.toLowerCase())
-                      )
-                    }
-                    }
                     renderOption={(props, option) => (
                       <li {...props} className="mediahouse-list" key={option?.email}>
                         <img src={option?.profile_image} alt={option?.company_name} />
-                        <div>
-                          <span>{option?.company_name} <span className="mediahouse-list-name">{option?.admin_detail?.first_name} {option?.admin_detail?.last_name} ({option?.email})</span></span>
-                        </div>
+                        <span>{option?.company_name}</span>
                       </li>
                     )}
-                    renderInput={(params) => <TextField {...params} placeholder="Search company name / publication name" />}
+                    renderInput={(params) => <TextField {...params} placeholder="Search company name / company number" />}
                   />
                   </Col>
                 </Row>
                 <Row>
                   <p className="bg_lbl">Your details</p>
-                  {/* <Col xs={12} md={6}>
-                    <Form.Group className="mb-4 form-group">
-                      <img src={user} alt="" />
-                      <Form.Control
-                        type="text"
-                        pattern="\S.*"
-                        title="First Name should not start with space"
-                        size="sm"
-                        name="user_first_name"
-                        className="user"
-                        placeholder="Enter first name"
-                        required
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col xs={12} md={6}>
-                    <Form.Group className="mb-4 form-group">
-                      <img src={user} alt="" />
-                      <Form.Control
-                        type="text"
-                        pattern="\S.*"
-                        size="sm"
-                        name="user_last_name"
-                        className="user"
-                        placeholder="Enter last name"
-                        required
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col xs={12} md={6}>
-                    <Form.Group className="mb-4 form-group">
-                      <Form.Control
-                        type="email"
-                        pattern="\S.*"
-                        size="sm"
-                        name="user_email"
-                        className="user"
-                        placeholder="Enter official email id"
-                        required
-                        onChange={(e) => {
-                          handleChange(e);
-                          setError({...error, email: ""})
-                        }}
-                      />
-                      {
-                        error.email ? <span style={{ color: "red" }} className="eml_txt_dngr error_message">
-                        {error.email}
-                      </span> : null
-                      }
-                    </Form.Group>
-                  </Col> */}
-
                   <Row className="rw_gp_sml">
                     <Col lg={9} md={9} sm={12}>
                       <Row className="comp_frm_gap">
@@ -470,12 +386,6 @@ const UserDetailsPopup = (props) => {
                         the administrator onboards, and assigns user rights to
                         you, you can then log onto the <b>PressHop</b> platform
                       </p>
-                      {/* <p className="text_condition mb-0">
-                      Please enter your details above, and send your onboarding
-                      request to your company administrator. Once the
-                      administrator onboards, and assigns user rights to you,
-                      you can then log onto the <b>PressHop</b> platform
-                    </p> */}
                       <p className="text_condition mb-0">
                         If you have any questions regarding the onboarding
                         process, please <a className="link">chat</a> with our

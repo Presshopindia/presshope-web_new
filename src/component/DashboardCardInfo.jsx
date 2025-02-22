@@ -3,6 +3,7 @@ import { BsArrowDown, BsArrowRight, BsArrowUp, BsChevronDown } from "react-icons
 import CommonSort from "./Sortfilters/commonSort"
 import { Link } from "react-router-dom"
 import { Button } from "react-bootstrap"
+import { GoogleMap, Marker } from "@react-google-maps/api"
 
 export const DashboardCardInfo = ({
     path = "",
@@ -122,7 +123,49 @@ export const DashboardCardInfo = ({
                         <CardActions className="dash-c-foot">
                             <div className="card-imgs-wrap">
                                 {
-                                    data?.map((el) => <img src={el} key={el} alt={el} className="card-img" />)
+                                    data?.map((el) => {
+                                        return el?.mediaValue ? (
+                                            <img src={el?.media} key={el?.media} alt={el?.media} className="card-img" />
+                                        ) : (!el?.mediaValue && (type === "broadcasted_task")) ? (
+                                            <div className="mapInput2">
+                                                <style>
+                                                    {`
+                                                            .gm-style > div:first-child {
+                                                            cursor: pointer !important;
+                                                        }
+                                                    `}
+                                                </style>
+                                                <GoogleMap
+                                                    googleMapsApiKey={
+                                                        process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+                                                    }
+                                                    center={{
+                                                        lat: el?.coordinates[0],
+                                                        lng: el?.coordinates[1],
+                                                    }}
+                                                    zoom={7}
+                                                    mapContainerStyle={{
+                                                        height: "42px",
+                                                        width: "42px",
+                                                        borderRadius: "8px",
+                                                    }}
+                                                    options={{
+                                                        disableDefaultUI: true,
+                                                        mapTypeControl: false,
+                                                        streetViewControl: false,
+                                                    }}
+                                                >
+                                                    <Marker
+                                                        key={el?._id}
+                                                        position={{
+                                                            lat: el?.coordinates[0],
+                                                            lng: el?.coordinates[1],
+                                                        }}
+                                                    />
+                                                </GoogleMap>
+                                            </div>
+                                        ) : ""
+                                    })
                                 }
                                 <span>
                                     {" "}

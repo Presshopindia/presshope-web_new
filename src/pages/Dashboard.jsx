@@ -403,6 +403,9 @@ const Dashboard = () => {
                   />
                 </Col>
 
+{
+  console.log("Broadcasted task", getDeepModifiedTaskContent(dashboardData?.task?.broadcastedTask?.data))
+}
                 {/* Broadcast Tasks */}
                 <Col md={4} className="p-0">
                   <DashboardCardInfo

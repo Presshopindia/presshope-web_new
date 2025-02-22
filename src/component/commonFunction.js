@@ -210,40 +210,32 @@ export const receiveLastTwoDigits = (number) => {
 
 export const getModifiedContent = (data) => {
     return data?.map((curr) => {
-        if (!curr.content || !curr.content[0]) {
-            return null;
-        }
+        const media = curr?.content?.[0];
 
-        const media = curr.content[0];
-
-        if (media.media_type === "video") {
-            return media.watermark || process.env.REACT_APP_CONTENT_MEDIA + media.thumbnail;
-        } else if (media.media_type === "audio") {
-            return audioicsm;
-        } else if (media.media_type === "pdf") {
-            return docsic;
+        if (media?.media_type === "video") {
+            return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.thumbnail, mediaValue: media?.watermark || media?.thumbnail };
+        } else if (media?.media_type === "audio") {
+            return { media: audioicsm, mediaValue: audioicsm };
+        } else if (media?.media_type === "pdf") {
+            return { media: docsic, mediaValue: docsic };
         } else {
-            return media.watermark || process.env.REACT_APP_CONTENT_MEDIA + media.media;
+            return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.media, mediaValue: media?.watermark || media?.media };
         }
     });
 };
 
 export const getDeepModifiedContent = (data) => {
     return data?.map((curr) => {
-        if (!curr?.contentDetails?.content || !curr?.contentDetails?.content?.[0]) {
-            return null;
-        }
+        const media = curr?.contentDetails?.content?.[0];
 
-        const media = curr.contentDetails.content[0];
-
-        if (media.media_type === "video") {
-            return media.watermark || process.env.REACT_APP_CONTENT_MEDIA + media.thumbnail;
-        } else if (media.media_type === "audio") {
-            return audioicsm;
-        } else if (media.media_type === "pdf") {
-            return docsic;
+        if (media?.media_type === "video") {
+            return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.thumbnail, mediaValue: media?.watermark || media?.thumbnail };
+        } else if (media?.media_type === "audio") {
+            return { media: audioicsm, mediaValue: audioicsm };
+        } else if (media?.media_type === "pdf") {
+            return { media: docsic, mediaValue: docsic };
         } else {
-            return media.watermark || process.env.REACT_APP_CONTENT_MEDIA + media.media;
+            return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.media, mediaValue: media?.watermark || media?.media };
         }
     });
 };
@@ -251,15 +243,18 @@ export const getDeepModifiedContent = (data) => {
 export const getTaskContent = (data) => {
     return data?.map((curr) => {
         const media = curr;
+        const coordinates = curr?.address_location?.coordinates;
 
-        if (media.type === "video") {
-            return media.watermark || process.env.REACT_APP_CONTENT_MEDIA + media.thumbnail;
-        } else if (media.type === "interview") {
-            return audioicsm;
-        } else if (media.type === "pdf") {
-            return docsic;
+        const contentData = {
+            coordinates,
+        }
+
+        if (media?.type === "video") {
+            return { ...contentData, media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.thumbnail };
+        } else if (media?.type === "interview") {
+            return { ...contentData, media: audioicsm };
         } else {
-            return process.env.REACT_APP_UPLOADED_CONTENT + media.imageAndVideo;
+            return { ...contentData, media: process.env.REACT_APP_UPLOADED_CONTENT + media?.imageAndVideo, mediaValue: media?.imageAndVideo };
         }
     });
 };
@@ -267,20 +262,19 @@ export const getTaskContent = (data) => {
 
 export const getDeepModifiedTaskContent = (data) => {
     return data?.map((curr) => {
-        if (!curr.contentDetails || !curr.contentDetails[0]) {
-            return null;
+        const coordinates = curr?.address_location?.coordinates;
+        const media = curr?.contentDetails[0];
+
+        const contentData = {
+            coordinates,
         }
 
-        const media = curr.contentDetails[0];
-
-        if (media.type === "video") {
-            return media.watermark || process.env.REACT_APP_CONTENT_MEDIA + media.thumbnail;
-        } else if (media.type === "interview") {
-            return audioicsm;
-        } else if (media.type === "pdf") {
-            return docsic;
+        if (media?.type === "video") {
+            return { ...contentData, media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.thumbnail };
+        } else if (media?.type === "interview") {
+            return { ...contentData, media:audioicsm, };
         } else {
-            return process.env.REACT_APP_UPLOADED_CONTENT + media.imageAndVideo;
+            return { ...contentData, media: process.env.REACT_APP_UPLOADED_CONTENT + media?.imageAndVideo, mediaValue: media?.imageAndVideo };
         }
     });
 };
