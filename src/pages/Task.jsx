@@ -28,6 +28,10 @@ import { DashboardCardInfo } from "../component/DashboardCardInfo";
 
 const BroadcastedTask = () => {
   const navigate = useNavigate();
+  const [viewTask, setViewTask] = useState({
+    open: false,
+    taskDetails: {}
+  })
   const [show, setShow] = useState(false);
   const [stats, setStats] = useState();
   const [uploadedContent, setUploadedContent] = useState([]);
@@ -254,6 +258,7 @@ const BroadcastedTask = () => {
     setDashboardPayload(payload);
     setDashboardSort({ ...dashboardSort, type: "" });
   }
+  
 
   return (
     <>
@@ -379,7 +384,7 @@ const BroadcastedTask = () => {
 
           <Row className="tracker-task">
             <Col md={4} className="mb-0">
-              <BroadcastedTrackings show={show} />
+              <BroadcastedTrackings show={show} setViewTask={setViewTask} viewTask={viewTask} />
             </Col>
             <Col md={8} className="pe-0">
               <div className="top-bar">
