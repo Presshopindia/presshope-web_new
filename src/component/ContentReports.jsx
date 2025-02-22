@@ -1119,7 +1119,7 @@ const ContentReports = ({
                         className="view_link"
                         to={"/dashboard-tables/content_purchased_online"}
                       >
-                        View All <BsArrowRight className="text-pink ms-1" />
+                        View all <BsArrowRight className="text-pink ms-1" />
                       </Link>
                     </div>
                   </Tab>

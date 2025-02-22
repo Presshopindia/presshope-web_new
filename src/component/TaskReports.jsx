@@ -948,7 +948,7 @@ const TaskReports = ({
                         className="view_link"
                         to={"/content-tables/content_sourced_from_task"}
                       >
-                        View All <BsArrowRight className="text-pink ms-1" />
+                        View all <BsArrowRight className="text-pink ms-1" />
                       </Link>
                     </div>
                   </Tab>

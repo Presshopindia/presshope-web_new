@@ -537,6 +537,9 @@ const Invoice = () => {
               </Row>
             </Col>
           </Row>
+          <div className="download-invoice-container">
+            <Button className="theme-btn custom-ab mb-4 mt-2 sm_btn download-invoice-btn">Download Invoice</Button>
+          </div>
           <div className="mt-0">
             <TopSearchesTipsCard />
           </div>

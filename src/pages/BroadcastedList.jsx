@@ -151,7 +151,10 @@ const BroadcastedTrackings = (props) => {
         <Row>
           <Col md={6} className="ps-0 pe-1">
             <div className="bTask_list_card">
-              <div className="taskcard_headr d-flex justify-content-between align-items-center">
+              <div className="taskcard_headr d-flex justify-content-between align-items-center mb-13">
+                {
+                  props?.viewTask?.open ? <div className="clickable" onClick={() => props?.setViewTask({...props?.viewTask, open: false })}><BsArrowLeft className="text-pink " /> <span>Back</span></div> : null
+                }
                 <h2 className="dashCard-heading">
                   <span className="text-pink">Live</span> tracking
                 </h2>
@@ -174,20 +177,9 @@ const BroadcastedTrackings = (props) => {
                       )}
                     </div>
                   </div>
-
-                  {/* <Form.Group className="globalSort sm-filter tsk_loc_sort">
-                    <Form.Select>
-                      <option>Sort</option>
-                      <option>Latest</option>
-                      <option>Relevance</option>
-                    </Form.Select>
-                  </Form.Group> */}
                 </div>
               </div>
               <div className="taskcard_body ps-0 pe-1 pb-0">
-                {
-                  props?.viewTask?.open ? <div className="clickable" onClick={() => props?.setViewTask({...props?.viewTask, open: false })}><BsArrowLeft className="text-pink " /> Back</div> : null
-                }
                 {
                   props?.viewTask?.open ? (
                     <div className="mapInput mapView position-relative">

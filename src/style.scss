@@ -3350,6 +3350,7 @@ button.MuiButton-secondary {
     overflow: hidden;
     text-overflow: ellipsis;
     margin-bottom: 0;
+    height: 1.75rem;
   }
 
   img.contentTag {
@@ -6371,7 +6372,6 @@ input[type="number"] {
   font-size: 20px;
   padding: 0;
   line-height: 38px;
-  margin-bottom: 0px;
 }
 
 .red_pin_txt {
@@ -6574,6 +6574,7 @@ input[type="number"] {
   .cardContent_head {
     margin-bottom: 10px;
     padding-right: 12px;
+    height: 2rem;
   }
 }
 
@@ -11501,7 +11502,7 @@ p.text_light {
 }
 
 .tracker-task .singleTask_detail {
-  height: 476px !important;
+  height: 480px !important;
 }
 
 .tracker-task .dashCard-heading {
@@ -12485,7 +12486,7 @@ span.cht_time {
 }
 
 .taskcard_body .mapView div:first-child {
-  height: 375px !important;
+  height: 498px !important;
 }
 
 .tasktables_wrap .cnt_online_img {
@@ -12830,4 +12831,19 @@ audio {
 }
 .rating_placholder::placeholder {
   color: #838383 !important;
+}
+
+.mb-13 {
+  margin-bottom: 13px;
+}
+
+.download-invoice-container {
+  margin: 20px 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.download-invoice-btn {
+  border-radius: 17px !important;
+  padding: 0 2rem !important;
 }

@@ -1951,7 +1951,7 @@ const Contenttables = () => {
                             <tr>
                               <th className="">Hopper</th>
                               <th className="text-left">Published content</th>
-                              <th className="text-left">Number of content</th>
+                              <th className="text-center">Number of content</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -1997,7 +1997,6 @@ const Contenttables = () => {
                                     ) || []),
                                   ];
                                 });
-                                console.log({ audio, video, image, doc })
 
                                 return (
                                   <tr
@@ -2054,15 +2053,15 @@ const Contenttables = () => {
                                         </div>
                                       </div>
                                     </td>
-                                    <td>
+                                    <td className="text-center">
                                       <div className=" d-flex gap-2 flex-column">
                                         {image.length > 0 && (
                                           <Tooltip title="Photo">
                                             <img
                                               src={cameraic}
                                               alt="Photo"
-                                              className="icn m-auto"
-                                            /> <span>{image?.length}</span>
+                                              className="icn m-auto margin-right-8"
+                                            /> <span className="txt_bld ms-2">{ image?.length < 10 ? `0${image?.length}` : image?.length }</span>
                                           </Tooltip>
                                         )}
                                         {video.length > 0 && (
@@ -2070,8 +2069,8 @@ const Contenttables = () => {
                                             <img
                                               src={videoic}
                                               alt="Video"
-                                              className="icn m-auto"
-                                            /> <span>{video?.length}</span>
+                                              className="icn m-auto margin-right-8"
+                                            /> <span className="txt_bld ms-2">{video?.length < 10 ? `0${video?.length}` : video?.length}</span>
                                           </Tooltip>
                                         )}
                                         {audio.length > 0 && (
@@ -2079,8 +2078,8 @@ const Contenttables = () => {
                                              <img
                                               src={interviewic}
                                               alt="Audio"
-                                              className="icn m-auto"
-                                            /> <span>{audio?.length}</span>
+                                              className="icn m-auto margin-right-8"
+                                            /> <span className="txt_bld ms-2">{audio?.length < 10 ? `0${audio?.length}` : audio?.length}</span>
                                           </Tooltip>
                                         )}
                                       </div>
