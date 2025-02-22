@@ -1,11 +1,11 @@
 import React, { memo, useEffect, useState } from "react";
 import { Row, Col, Tabs, Tab } from "react-bootstrap";
 import { Card, CardContent, Typography } from "@mui/material";
-import { BsArrowDown, BsArrowUp } from "react-icons/bs";
+import { BsArrowDown, BsArrowRight, BsArrowUp } from "react-icons/bs";
 import ReactApexChart from "react-apexcharts";
 import taskIcon from "../assets/images/taskIcon.svg";
 import { AiFillCaretDown, AiOutlineClose } from "react-icons/ai";
-import { Get } from "../services/user.services";
+import { Get, Post } from "../services/user.services";
 import SortingDialog from "../popups/SortingDialog";
 import Loader from "./Loader";
 import Fundsinvested from "./Sortfilters/Dashboard/Fundsinvested";
@@ -24,6 +24,7 @@ const TaskReports = ({
   setDashboardPayload,
   handleApplySorting
 }) => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("task");
   const [contentType, setContentType] = useState({
     series: [],
@@ -91,6 +92,7 @@ const TaskReports = ({
     type: "",
     location: "",
     task: "",
+    taskSplit: ""
   });
 
   const timeValuesHandler = (values) => {
@@ -478,6 +480,68 @@ const TaskReports = ({
     ? (((broadcastedCount - liveCount) * 100) / broadcastedCount).toFixed(2) + "%"
     : "0%";
 
+  const [contentPurchasedFromTask, setContentPurchasedFromTask] = useState(null);
+
+  const DashboardData = async (payload) => {
+    try {
+      setLoading(true);
+      const resp = await Post("mediaHouse/content-purchased-from-task");
+      setContentPurchasedFromTask(resp?.data?.response?.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    DashboardData();
+  }, []);
+
+  const [openSplit, setOpenSplit] = useState(false);
+  const [reportSplitState, setReportSplitState] = useState("");
+  const [contentSplit, setContentSplit] = useState({
+    series: [],
+    labels: [],
+    chart: {
+      type: "pie",
+    },
+    legend: {
+      position: "bottom",
+    },
+    colors: ["#53C5AE", "#20639B"],
+  });
+
+  const TaskSplit = async () => {
+    setLoading(true);
+
+    try {
+      let resp;
+      if (reportSplitState) {
+        resp = await Get(
+          `mediaHouse/task/reportSplit?period=${reportSplitState}`
+        );
+      } else {
+        resp = await Get(`mediaHouse/task/reportSplit`);
+      }
+      if (resp) {
+        setContentSplit((prev) => ({
+          ...prev,
+          series: [resp?.data?.data?.liveTaskCount, resp?.data?.data?.broadcastedTaskCount],
+          labels: ["Live task", "Broadcasted task"],
+        }));
+        setLoading(false);
+        setChartName({ ...chartName, taskSplit: "" });
+      }
+    } catch (error) {
+      setLoading(false);
+      setChartName({ ...chartName, taskSplit: "" });
+    }
+  };
+
+  useEffect(() => {
+    TaskSplit();
+  }, [reportSplitState]);
+
   return (
     <>
       {loading && <Loader />}
@@ -690,7 +754,7 @@ const TaskReports = ({
                           to={"/reports-tables-task/task_location"}
                           className="text-dark"
                         >
-                          <p className="cht_hdngs">Task locations</p>
+                          <p className="cht_hdngs">Task Split</p>
                         </Link>
                         <div className="statSort">
                           <Link
@@ -704,21 +768,21 @@ const TaskReports = ({
                             <button
                               className="sortTrigger"
                               onClick={() => {
-                                setOpenSortLocation(true);
+                                setOpenSplit(true);
                                 setChartName({
                                   ...chartName,
-                                  location: "taskLocation",
+                                  taskSplit: "taskSplit",
                                 });
                               }}
                             >
                               Sort <AiFillCaretDown />
                             </button>
-                            {openSortLocation && (
+                            {openSplit && (
                               <ChartsSort
-                                active={locationState}
-                                setActive={setLocationState}
+                                active={reportSplitState}
+                                setActive={setReportSplitState}
                                 rangeTimeValues={timeValuesHandler}
-                                closeSortComponent={() => setOpenSortLocation(false)}
+                                closeSortComponent={() => setOpenSplit(false)}
                                 setChartName={setChartName}
                               />
                             )}
@@ -731,8 +795,8 @@ const TaskReports = ({
                           className="text-dark"
                         >
                           <ReactApexChart
-                            options={taskLocation}
-                            series={taskLocation.series}
+                            options={contentSplit}
+                            series={contentSplit.series}
                             type="pie"
                             width="350"
                           />
@@ -798,6 +862,97 @@ const TaskReports = ({
                     </div>
                   </Col>
                 </Row>
+              </div>
+            </Col>
+            <Col md={5}>
+              <div className="typeContentsWrap bg-grey h-100">
+                <Tabs
+                  defaultActiveKey="purchased"
+                  id="uncontrolled-tab-example"
+                  className="mb-3"
+                >
+                  <Tab eventKey="purchased" title="Content purchased from tasks">
+                    <div className="fltrs_prnt rport_cont_fltrprnt">
+                      <button
+                        className="sortTrigger"
+                        onClick={() => {
+                          // setOpenReportPurchased(true);
+                        }}
+                      >
+                        Sort <AiFillCaretDown />
+                      </button>
+                      {/* {openreportPurchased && (
+                        <ReportPurchasedSourced
+                          shaEx={false}
+                          closeSortComponent={() =>
+                            setOpenReportPurchased(false)
+                          }
+                          setSortFilterPurchasedContent={
+                            setSortFilterPurchasedContent
+                          }
+                          sortFilterPurchasedContent={
+                            sortFilterPurchasedContent
+                          }
+                          url="/reports/content"
+                        />
+                      )} */}
+                    </div>
+                    <Row>
+                      {contentPurchasedFromTask?.map((curr) => {
+                        return (
+                          <Col md={4} className="CntPurFeed">
+                            <div
+                              className="contentCard"
+                              onClick={() =>
+                                navigate(
+                                  `/sourced-content-detail/${curr?._id}`
+                                )
+                              }
+                            >
+                              <img
+                                className="reportcontentImg img-fluid"
+                                src={
+                                  curr.type === "video"
+                                    ? process.env.REACT_APP_UPLOADED_CONTENT +
+                                    curr.videothubnail
+                                    : process.env.REACT_APP_UPLOADED_CONTENT +
+                                    curr.imageAndVideo
+                                }
+                                alt=""
+                              />
+                              <div className="contInfo d-flex">
+                                <h6 className="contentHeadng">
+                                  {curr?.taskDetails?.heading}
+                                </h6>
+                              </div>
+                              <div className="contInfo d-flex justify-content-between align-items-center">
+                                <span
+                                  style={{
+                                    color: "#4c4c4c",
+                                    background: "#f3f5f4",
+                                  }}
+                                  className="priceTag"
+                                >
+                                  {" "}
+                                  £
+                                  {formatAmountInMillion(curr?.amount_paid)}
+                                </span>
+                              </div>
+                            </div>
+                          </Col>
+                        );
+                      })}
+                    </Row>
+                    <div className="viewAllContn text-end">
+                      <Link
+                        className="view_link"
+                        to={"/content-tables/content_sourced_from_task"}
+                      >
+                        View All <BsArrowRight className="text-pink ms-1" />
+                      </Link>
+                    </div>
+                  </Tab>
+                </Tabs>
               </div>
             </Col>
             <Col md={5}></Col>

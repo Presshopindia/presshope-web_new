@@ -90,8 +90,7 @@ const Contenttables = () => {
     setLoading(true);
     try {
       const resp = await Get(
-        `mediaHouse/Content/Count?limit=${contentOnlineLimit}&offset=${
-          (contentOnlinePage - 1) * contentOnlineLimit
+        `mediaHouse/Content/Count?limit=${contentOnlineLimit}&offset=${(contentOnlinePage - 1) * contentOnlineLimit
         }${sortingField && sortingField}=${sortingValue && sortingValue}`
       );
       if (resp) {
@@ -502,9 +501,9 @@ const Contenttables = () => {
                                             curr?.hopper_details
                                               ?.avatar_details[0]?.avatar
                                               ? process.env
-                                                  .REACT_APP_AVATAR_IMAGE +
-                                                curr?.hopper_details
-                                                  ?.avatar_details[0]?.avatar
+                                                .REACT_APP_AVATAR_IMAGE +
+                                              curr?.hopper_details
+                                                ?.avatar_details[0]?.avatar
                                               : null
                                           }
                                           className="content_img"
@@ -706,15 +705,15 @@ const Contenttables = () => {
                                             <img
                                               src={
                                                 curr?.content[0]?.media_type ===
-                                                "image"
+                                                  "image"
                                                   ? curr?.content[0]?.watermark
                                                   : curr?.content[0]
-                                                      ?.media_type === "video"
-                                                  ? curr?.content[0]?.watermark
-                                                  : curr?.content[0]
+                                                    ?.media_type === "video"
+                                                    ? curr?.content[0]?.watermark
+                                                    : curr?.content[0]
                                                       ?.media_type === "audio"
-                                                  ? audioic
-                                                  : null
+                                                      ? audioic
+                                                      : null
                                               }
                                               className="content_img"
                                             />
@@ -881,7 +880,7 @@ const Contenttables = () => {
                           </tbody>
                         </table>
                         {totalFundDetails?.task?.length > 0 &&
-                        contentOnlineTotalPage ? (
+                          contentOnlineTotalPage ? (
                           <PaginationComp
                             totalPage={contentOnlineTotalPage}
                             path="content-tables/fund_invested_today"
@@ -973,8 +972,8 @@ const Contenttables = () => {
                                                     curr?.watermark
                                                       ? curr?.watermark
                                                       : process.env
-                                                          .REACT_APP_CONTENT_MEDIA +
-                                                        curr?.media
+                                                        .REACT_APP_CONTENT_MEDIA +
+                                                      curr?.media
                                                   }
                                                   className="content_img"
                                                 />
@@ -985,8 +984,8 @@ const Contenttables = () => {
                                                     curr?.watermark
                                                       ? curr?.watermark
                                                       : process.env
-                                                          .REACT_APP_CONTENT_MEDIA2 +
-                                                        curr?.media
+                                                        .REACT_APP_CONTENT_MEDIA2 +
+                                                      curr?.media
                                                   }
                                                   className="content_img"
                                                 />
@@ -1111,9 +1110,9 @@ const Contenttables = () => {
                                           src={
                                             curr?.hopper_id?.avatar_id?.avatar
                                               ? process.env
-                                                  .REACT_APP_AVATAR_IMAGE +
-                                                curr?.hopper_id?.avatar_id
-                                                  ?.avatar
+                                                .REACT_APP_AVATAR_IMAGE +
+                                              curr?.hopper_id?.avatar_id
+                                                ?.avatar
                                               : null
                                           }
                                           alt="Hopper"
@@ -1230,18 +1229,18 @@ const Contenttables = () => {
                                             curr?.content_id?.content[0]
                                               ?.media_type === "image"
                                               ? curr?.content_id?.content[0]
-                                                  ?.watermark
+                                                ?.watermark
                                               : curr?.content_id?.content[0]
-                                                  ?.media_type === "video"
-                                              ? curr?.content_id?.content[0]
+                                                ?.media_type === "video"
+                                                ? curr?.content_id?.content[0]
                                                   ?.watermark
-                                              : curr?.content_id?.content[0]
+                                                : curr?.content_id?.content[0]
                                                   ?.media_type === "audio"
-                                              ? audioic
-                                              : curr?.content_id?.content[0]
-                                                  ?.media_type === "pdf"
-                                              ? docsic
-                                              : null
+                                                  ? audioic
+                                                  : curr?.content_id?.content[0]
+                                                    ?.media_type === "pdf"
+                                                    ? docsic
+                                                    : null
                                           }
                                           className="content_img"
                                         />
@@ -1531,21 +1530,21 @@ const Contenttables = () => {
                                           src={
                                             curr?.type === "image"
                                               ? curr?.videothubnail ||
-                                                process.env
-                                                  .REACT_APP_UPLOADED_CONTENT +
-                                                  curr?.imageAndVideo
+                                              process.env
+                                                .REACT_APP_UPLOADED_CONTENT +
+                                              curr?.imageAndVideo
                                               : curr?.type === "video"
-                                              ? curr?.videothubnail ||
+                                                ? curr?.videothubnail ||
                                                 process.env
                                                   .REACT_APP_UPLOADED_CONTENT +
-                                                  curr?.imageAndVideo
-                                              : curr?.type === "audio"
-                                              ? audioic
-                                              : curr?.type === "pdf"
-                                              ? pdfic
-                                              : curr?.type === "doc"
-                                              ? docsic
-                                              : null
+                                                curr?.imageAndVideo
+                                                : curr?.type === "audio"
+                                                  ? audioic
+                                                  : curr?.type === "pdf"
+                                                    ? pdfic
+                                                    : curr?.type === "doc"
+                                                      ? docsic
+                                                      : null
                                           }
                                           className="content_img"
                                         />
@@ -1616,8 +1615,8 @@ const Contenttables = () => {
                                           curr?.type === "image"
                                             ? "Photo"
                                             : curr?.type === "video"
-                                            ? "Video"
-                                            : "Interview"
+                                              ? "Video"
+                                              : "Interview"
                                         }
                                       >
                                         <img
@@ -1625,10 +1624,10 @@ const Contenttables = () => {
                                             curr?.type === "image"
                                               ? cameraic
                                               : curr?.type === "video"
-                                              ? videoic
-                                              : curr?.type === "auido"
-                                              ? interviewic
-                                              : null
+                                                ? videoic
+                                                : curr?.type === "auido"
+                                                  ? interviewic
+                                                  : null
                                           }
                                           className="icn"
                                         />
@@ -1652,9 +1651,9 @@ const Contenttables = () => {
                                             curr?.hopper_details?.avatar_details
                                               ?.avatar
                                               ? process.env
-                                                  .REACT_APP_AVATAR_IMAGE +
-                                                curr?.hopper_details
-                                                  ?.avatar_details?.avatar
+                                                .REACT_APP_AVATAR_IMAGE +
+                                              curr?.hopper_details
+                                                ?.avatar_details?.avatar
                                               : null
                                           }
                                           className="big_img"
@@ -1761,20 +1760,20 @@ const Contenttables = () => {
                                     ? curr.content_id.content[0].media_type ===
                                       "video"
                                       ? curr.content_id.content[0].watermark ||
-                                        process.env.REACT_APP_CONTENT_MEDIA +
-                                          curr.content_id.content[0].thumbnail
+                                      process.env.REACT_APP_CONTENT_MEDIA +
+                                      curr.content_id.content[0].thumbnail
                                       : curr.content_id.content[0]
-                                          .media_type === "audio"
-                                      ? audimgsm
-                                      : curr.content_id.content[0]
+                                        .media_type === "audio"
+                                        ? audimgsm
+                                        : curr.content_id.content[0]
                                           .media_type === "image"
-                                      ? curr.content_id.content[0].watermark ||
-                                        process.env.REACT_APP_CONTENT_MEDIA +
+                                          ? curr.content_id.content[0].watermark ||
+                                          process.env.REACT_APP_CONTENT_MEDIA +
                                           curr.content_id.content[0].media
-                                      : curr.content_id.content[0]
-                                          .media_type === "doc"
-                                      ? docsic
-                                      : null
+                                          : curr.content_id.content[0]
+                                            .media_type === "doc"
+                                            ? docsic
+                                            : null
                                     : null;
 
                                 return (
@@ -1883,9 +1882,9 @@ const Contenttables = () => {
                                             curr?.content_id?.hopper_id
                                               ?.avatar_id?.avatar
                                               ? process.env
-                                                  .REACT_APP_AVATAR_IMAGE +
-                                                curr?.content_id?.hopper_id
-                                                  ?.avatar_id?.avatar
+                                                .REACT_APP_AVATAR_IMAGE +
+                                              curr?.content_id?.hopper_id
+                                                ?.avatar_id?.avatar
                                               : null
                                           }
                                           alt="Hopper"
@@ -1952,14 +1951,13 @@ const Contenttables = () => {
                             <tr>
                               <th className="">Hopper</th>
                               <th className="text-left">Published content</th>
-                              <th>Number of content</th>
+                              <th className="text-left">Number of content</th>
                             </tr>
                           </thead>
                           <tbody>
                             {hopperContri
                               ?.filter((el) => el._id != null)
                               ?.map((el) => {
-                                console.log("all element data ---> -->", el);
 
                                 let audio = [];
                                 let video = [];
@@ -1999,11 +1997,7 @@ const Contenttables = () => {
                                     ) || []),
                                   ];
                                 });
-
-                                console.log("Audio:", audio);
-                                console.log("Video:", video);
-                                console.log("Image:", image);
-                                console.log("Documents:", doc);
+                                console.log({ audio, video, image, doc })
 
                                 return (
                                   <tr
@@ -2043,7 +2037,7 @@ const Contenttables = () => {
                                                     ?.watermark ||
                                                   process.env
                                                     .REACT_APP_CONTENT_MEDIA +
-                                                    curr?.content?.[0]?.media
+                                                  curr?.content?.[0]?.media
                                                 }
                                                 className="content_img"
                                               />
@@ -2060,46 +2054,36 @@ const Contenttables = () => {
                                         </div>
                                       </div>
                                     </td>
-                                    <td class="text-left number-content">
-                                      {/* <img
-                                      src={cameraic}
-                                      alt="shared"
-                                      class="icn"
-                                      aria-label="Shared"
-                                      data-mui-internal-clone-element="true"
-                                    /> */}
-                                      {image.length > 0 && (
-                                        <div className="numcnt">
-                                          <span
-                                            aria-label="Photo"
-                                            class=""
-                                            data-mui-internal-clone-element="true"
-                                          >
-                                            {image.length}
+                                    <td>
+                                      <div className=" d-flex gap-2 flex-column">
+                                        {image.length > 0 && (
+                                          <Tooltip title="Photo">
                                             <img
-                                              src="/static/media/camera.cf7d2b5f4e7f53ae710938e9e9cb00e2.svg"
+                                              src={cameraic}
                                               alt="Photo"
-                                              class="icn"
-                                            />{" "}
-                                          </span>
-                                        </div>
-                                      )}
-                                      {audio.length > 0 && (
-                                        <div className="numcnt">
-                                          <span
-                                            aria-label="Photo"
-                                            class=""
-                                            data-mui-internal-clone-element="true"
-                                          >
-                                            {audio.length}
+                                              className="icn m-auto"
+                                            /> <span>{image?.length}</span>
+                                          </Tooltip>
+                                        )}
+                                        {video.length > 0 && (
+                                          <Tooltip title="Video">
                                             <img
-                                              src="/static/media/interview.66042bc612bde3cff584f337894ff004.svg"
-                                              alt="Photo"
-                                              class="icn"
-                                            />{" "}
-                                          </span>
-                                        </div>
-                                      )}
+                                              src={videoic}
+                                              alt="Video"
+                                              className="icn m-auto"
+                                            /> <span>{video?.length}</span>
+                                          </Tooltip>
+                                        )}
+                                        {audio.length > 0 && (
+                                         <Tooltip title="Audio">
+                                             <img
+                                              src={interviewic}
+                                              alt="Audio"
+                                              className="icn m-auto"
+                                            /> <span>{audio?.length}</span>
+                                          </Tooltip>
+                                        )}
+                                      </div>
                                     </td>
                                   </tr>
                                 );

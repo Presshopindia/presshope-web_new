@@ -39,6 +39,10 @@ const BroadcastedTrackings = (props) => {
   const [markers, setMarkers] = useState({
     positions: [],
   });
+
+  useEffect(() => {
+    setTaskDetails(props?.viewTask?.taskDetails);
+  }, [props?.viewTask?.open])
   const [location, setLocation] = useState([]);
   const LiveTasks = async () => {
     setLoading(true);
@@ -128,8 +132,6 @@ const BroadcastedTrackings = (props) => {
     setOpenSortComponent(values);
   };
 
-  console.log("Task details check--->taskDetails", taskDetails);
-
   return (
     <>
       {loading && <Loader />}
@@ -159,9 +161,9 @@ const BroadcastedTrackings = (props) => {
                     <div className="fltrs_prnt top_fltr">
                       <button
                         className="sortTrigger"
-                        onClick={() => {
-                          setOpenSortComponent(true);
-                        }}
+                        // onClick={() => {
+                        //   setOpenSortComponent(true);
+                        // }}
                       >
                         Sort <AiFillCaretDown />
                       </button>
@@ -183,155 +185,132 @@ const BroadcastedTrackings = (props) => {
                 </div>
               </div>
               <div className="taskcard_body ps-0 pe-1 pb-0">
-                <p className="red_pin_txt">
-                  {/* Click on a Red pin to view task details in the adjoining
-                  screen */}
-                </p>
-                {/* <h1>hello mam</h1> */}
-                <div className="list_view_wrap">
-                  {liveTasks &&
-                    liveTasks.map((curr) => {
-                      return (
-                        <div className="listView_task">
-                          <div className="mapInput">
-                            <GoogleMap
-                              googleMapsApiKey={
-                                process.env.REACT_APP_GOOGLE_MAPS_API_KEY
-                              }
-                              center={{
-                                lat: curr?.address_location?.coordinates[0],
-                                lng: curr?.address_location?.coordinates[1],
-                              }}
-                              zoom={7}
-                              mapContainerStyle={{
-                                height: "120%",
-                                width: "100%",
-                              }}
-                              options={{
-                                disableDefaultUI: true,
-                                mapTypeControl: false,
-                                streetViewControl: false,
-                              }}
-                            >
-                              <Marker
-                                key={curr._id}
-                                position={{
-                                  lat: curr?.address_location?.coordinates[0],
-                                  lng: curr?.address_location?.coordinates[1],
-                                }}
-                              />
-                            </GoogleMap>
-                          </div>
-                          <div className="listTask-detail w-100">
-                            <h6 className="tsk_lft_desc">{curr?.heading}</h6>
-                            <div className="listTask_action d-flex justify-content-between">
-                              <div className="d-flex flex-column">
-                                <span className="time_info d-flex align-items-center lft_tme">
-                                  <BiTimeFive />
-                                  <Typography className="font-12">
-                                    {moment(curr?.deadline_date).format(
-                                      "hh:mm A, DD.MM.YYYY"
-                                    )}
-                                  </Typography>
-                                </span>
-                                <span className="time_info d-flex align-items-center lft_tme">
-                                  <img src={bullseye} alt="Hoppers" />
-                                  <Typography className="font-12">
-                                    {curr?.accepted_by?.length || 0} Hoppers
-                                    tasked
-                                  </Typography>
-                                </span>
-                              </div>
-                              <Link
-                                to={`/broadcasted-taks?taskId=${curr?._id}`}
-                              >
-                                <Button
-                                  variant="primary"
-                                  className="sm-btn"
-                                // onClick={() => TaskDetails(curr?._id)}
+                {
+                  props?.viewTask?.open ? <div className="clickable" onClick={() => props?.setViewTask({...props?.viewTask, open: false })}><BsArrowLeft className="text-pink " /> Back</div> : null
+                }
+                {
+                  props?.viewTask?.open ? (
+                    <div className="mapInput mapView position-relative">
+                      <GoogleMap
+                        googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+                        center={{
+                          lat: props?.viewTask?.taskDetails?.address_location?.coordinates[0]
+                            ? props?.viewTask?.taskDetails?.address_location?.coordinates[0]
+                            : markers?.positions[markers?.positions?.length - 1]
+                              ?.lat,
+                          lng: props?.viewTask?.taskDetails?.address_location?.coordinates[0]
+                            ? props?.viewTask?.taskDetails?.address_location?.coordinates[1]
+                            : markers?.positions[markers?.positions?.length - 1]
+                              ?.lng,
+                        }}
+                        zoom={8}
+                        mapContainerStyle={{ height: "400px", width: "100%" }}
+                      >
+                        {markers.positions.map((marker) => (
+                          <Marker
+                            key={marker.id}
+                            position={{ lat: marker.lat, lng: marker.lng }}
+                            onClick={() => TaskDetails(marker.id)}
+                          />
+                        ))}
+                      </GoogleMap>
+                      <div className="hopper_content">
+                        <span className="me-4">
+
+                          <MdMyLocation />{" "}
+                          {props?.viewTask?.taskDetails.hasOwnProperty("accepted_by")
+                            ? props?.viewTask?.taskDetails?.accepted_by?.length === 0 ||
+                              props?.viewTask?.taskDetails?.accepted_by?.length === 1
+                              ? `${props?.viewTask?.taskDetails?.accepted_by?.length} Hopper tasked`
+                              : `${props?.viewTask?.taskDetails?.accepted_by?.length} Hoppers tasked`
+                            : `${0} Hopper tasked`}{" "}
+                        </span>
+                        <span>
+                          <BiPlay /> {props?.viewTask?.taskDetails?.content?.length || 0} Content
+                          uploaded
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="list_view_wrap">
+                      {liveTasks &&
+                        liveTasks.map((curr) => {
+                          return (
+                            <div className="listView_task">
+                              <div className="mapInput">
+                                <GoogleMap
+                                  googleMapsApiKey={
+                                    process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+                                  }
+                                  center={{
+                                    lat: curr?.address_location?.coordinates[0],
+                                    lng: curr?.address_location?.coordinates[1],
+                                  }}
+                                  zoom={7}
+                                  mapContainerStyle={{
+                                    height: "120%",
+                                    width: "100%",
+                                  }}
+                                  options={{
+                                    disableDefaultUI: true,
+                                    mapTypeControl: false,
+                                    streetViewControl: false,
+                                  }}
                                 >
-                                  View
-                                </Button>
-                              </Link>
+                                  <Marker
+                                    key={curr._id}
+                                    position={{
+                                      lat: curr?.address_location?.coordinates[0],
+                                      lng: curr?.address_location?.coordinates[1],
+                                    }}
+                                  />
+                                </GoogleMap>
+                              </div>
+                              <div className="listTask-detail w-100">
+                                <h6 className="tsk_lft_desc">{curr?.heading}</h6>
+                                <div className="listTask_action d-flex justify-content-between">
+                                  <div className="d-flex flex-column">
+                                    <span className="time_info d-flex align-items-center lft_tme">
+                                      <BiTimeFive />
+                                      <Typography className="font-12">
+                                        {moment(curr?.deadline_date).format(
+                                          "hh:mm A, DD.MM.YYYY"
+                                        )}
+                                      </Typography>
+                                    </span>
+                                    <span className="time_info d-flex align-items-center lft_tme">
+                                      <img src={bullseye} alt="Hoppers" />
+                                      <Typography className="font-12">
+                                        {curr?.accepted_by?.length || 0} Hoppers
+                                        tasked
+                                      </Typography>
+                                    </span>
+                                  </div>
+                                  <Link
+                                    to={`/task?taskId=${curr?._id}`}
+                                  >
+                                    <Button
+                                      variant="primary"
+                                      className="sm-btn"
+                                      onClick={() => props?.setViewTask({ open: true, taskDetails: curr })}
+                                    >
+                                      View
+                                    </Button>
+                                  </Link>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-                {/* <div className="mapInput mapView position-relative">
-                  <GoogleMap
-                    googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
-                    center={{
-                      lat: location[0]
-                        ? location[0]
-                        : markers?.positions[markers?.positions?.length - 1]
-                            ?.lat,
-                      lng: location[0]
-                        ? location[1]
-                        : markers?.positions[markers?.positions?.length - 1]
-                            ?.lng,
-                    }}
-                    zoom={8}
-                    mapContainerStyle={{ height: "400px", width: "100%" }}
-                  >
-                    {markers.positions.map((marker) => (
-                      <Marker
-                        key={marker.id}
-                        position={{ lat: marker.lat, lng: marker.lng }}
-                        onClick={() => TaskDetails(marker.id)}
-                      />
-                    ))}
-                  </GoogleMap>
-                  <div className="hopper_content">
-                    <span className="me-4">
-                      <MdMyLocation />{" "}
-                      {taskDetails.hasOwnProperty("accepted_by")
-                        ? taskDetails?.accepted_by?.length === 0 ||
-                          taskDetails?.accepted_by?.length === 1
-                          ? `${taskDetails?.accepted_by?.length} Hopper tasked`
-                          : `${taskDetails?.accepted_by?.length} Hoppers tasked`
-                        : `${0} Hopper tasked`}{" "}
-                    </span>
-                    <span>
-                      <BiPlay /> {taskDetails?.content?.length || 0} Content
-                      uploaded
-                    </span>
-                  </div>
-                </div> */}
+                          );
+                        })}
+                    </div>
+                  )
+                }
                 <div className="listView_task_wrap">
                   {liveTasks &&
                     liveTasks.map((curr) => {
                       return (
                         <div className="listView_task">
                           <div className="mapInput">
-                            {/* <GoogleMap
-                              googleMapsApiKey={
-                                process.env.REACT_APP_GOOGLE_MAPS_API_KEY
-                              }
-                              center={{
-                                lat: curr?.address_location?.coordinates[0],
-                                lng: curr?.address_location?.coordinates[1],
-                              }}
-                              zoom={7}
-                              mapContainerStyle={{
-                                height: "120%",
-                                width: "100%",
-                              }}
-                              options={{
-                                disableDefaultUI: true,
-                                mapTypeControl: false,
-                                streetViewControl: false,
-                              }}
-                            >
-                              <Marker
-                                key={curr._id}
-                                position={{
-                                  lat: curr?.address_location?.coordinates[0],
-                                  lng: curr?.address_location?.coordinates[1],
-                                }}
-                              />
-                            </GoogleMap> */}
                           </div>
                           <div className="listTask-detail w-100">
                             <h6 className="tsk_lft_desc">
@@ -526,24 +505,15 @@ const BroadcastedTrackings = (props) => {
                     </Col>
                     <Col md={6} className="d-flex justify-content-end mt-4">
                       <div
-                        className="taskUploads_media"
+                        className="taskUploads_media clickable"
                         onClick={() =>
                           taskDetails?.content?.length > 0 &&
-                          navigate(`/Uploaded-Content/${taskDetails?._id}`)
+                          navigate(`/Uploaded-Content/uploaded`)
                         }
                       >
                         {/* <div className="mediaWrap uploaded_mda">
                           {taskDetails?.content &&
                             taskDetails?.content.map((curr) => {
-                              const content =
-                                curr?.media_type === "image"
-                                  ? curr?.watermark
-                                  : curr?.media_type === "video"
-                                  ? curr?.thumbnail
-                                  : curr?.media_type === "audio"
-                                  ? audioic
-                                  : "";
-
                               if (curr?.media_type === "image")
                                 return <img src={curr?.watermark} alt="" />;
                               if (curr?.media_type === "video")
@@ -571,11 +541,6 @@ const BroadcastedTrackings = (props) => {
                     </Col>
                   </Row>
                 </div>
-                {/* <div className="taskChatting">
-                  <Link to="/chat"><Button disabled={taskDetails.deadline_date === ""} variant='secondary'><BsPeople /> <span>Internal Chat</span></Button></Link>
-                  <Link to="/chat"><Button disabled={taskDetails.deadline_date === ""} variant='secondary'><IoChatbubblesOutline /> <span>External Chat</span></Button></Link>
-                  <Link to="/chat"><Button disabled={taskDetails.deadline_date === ""} variant='secondary'><BiSupport /> <span>Presshop Chat</span></Button></Link>
-                </div> */}
               </div>
             </div>
           </Col>

@@ -775,10 +775,10 @@ const ContentPage = () => {
                         </Tab>
 
                         <Tab eventKey="uploaded" title="Uploaded content">
-                          {uploadedContent?.slice(0, 2)?.map((item, index) => {
+                          {uploadedContent?.slice(0, 2)?.map((item) => {
                             return (
                               <CardContent className="dash-c-body rev new_tbs_card" key={item?._id}>
-                                <Link to={`/content-details/${item._id}`}>
+                                <Link to={`/content-details/${item._id}?task_content_id=${item?.content_id}`}>
                                   <div className="">
                                     <Card className="list-card mb-3 bg_grey">
                                       <CardContent className="dash-c-body">

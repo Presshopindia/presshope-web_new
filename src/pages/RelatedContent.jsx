@@ -51,7 +51,6 @@ const RelatedContent = () => {
   const [loading, setLoading] = useState(false);
   const params = useParams();
 
-  console.log("all parama related content --->  --->  --->",params)
 
   // Pagination-
   const [page, setPage] = useState(1);
@@ -70,9 +69,7 @@ const RelatedContent = () => {
     setLoading(true)
     try {
       const resp = await Post(`mediaHouse/relatedContent`, {
-        tag_id: [localStorage.getItem('tag_id')],
-        hopper_id: params?.hopper_id,
-        category_id: params?.category_id,
+        content_id: params?.content_id,
         limit: limit,
         offset: (+(page - 1)) * limit
       })

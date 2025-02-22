@@ -219,18 +219,18 @@ const HopperContent = () => {
                       );
                     })}
                   </Row>
-                  {totalPage ? (
+                  {/* {totalPage ? (
                     <PaginationComp
                       totalPage={totalPage}
-                      path="Favourited-Content"
+                      path="hopper-content"
                       type="fav"
                       setPage={setPage}
                       page={page}
                     />
                   ) : (
                     ""
-                  )}
-                  {/* <PaginationComp totalPage={totalPage} path={`hopper-content/${param?.hopper_id}`} type="fav" setPage={setPage} page={page} /> */}
+                  )} */}
+                  <PaginationComp totalPage={totalPage} path={`hopper-content/${param?.hopper_id}`} type="fav" setPage={setPage} page={page} />
                 </div>
               </div>
             </Col>
