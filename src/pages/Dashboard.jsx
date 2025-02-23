@@ -402,7 +402,6 @@ const Dashboard = () => {
                     handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_online: "" } })}
                   />
                 </Col>
-
                 {
                   console.log("Broadcasted task", getDeepModifiedTaskContent(dashboardData?.task?.broadcastedTask?.data))
                 }
