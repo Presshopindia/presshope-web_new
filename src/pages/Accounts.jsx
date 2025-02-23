@@ -804,7 +804,7 @@ const Accounts = () => {
       <Header />
       <div className="page-wrap all-reports-wrap">
         <Container fluid className="p-0">
-          <Row>
+          <Row className="dashboardStat_cards crd_edit_wrap">
             <Col sm={12}>
               <div className="reportsConainter">
                 <div className="reportsFilter mb-4 d-flex justify-content align-items-center">

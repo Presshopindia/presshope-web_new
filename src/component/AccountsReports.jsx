@@ -372,7 +372,7 @@ const AccountsReports = () => {
                   </tbody>
                 </Table>
                 <div className="viewAllContn text-end">
-                  <Link className='text-dark'>View All <BsArrowRight className='text-pink ms-1' /></Link>
+                  <Link className='text-dark'>View all <BsArrowRight className='text-pink ms-1' /></Link>
                 </div>
                 <TransactionSort
                   open={open}

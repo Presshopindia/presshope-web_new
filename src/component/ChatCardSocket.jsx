@@ -131,7 +131,7 @@ function ChatCardSocket(props) {
 
   const SendMedia = () => {
     socket.emit("media message", mediaMessage);
-    socket.on("media message", (obj) => {});
+    socket.on("media message", (obj) => { });
 
     setMediaMessage({
       room_type: "",
@@ -238,15 +238,14 @@ function ChatCardSocket(props) {
     setHoppers([]);
     try {
       const resp = await Get(
-        `mediaHouse/findacceptedtasks?task_id=${
-          props.id && props.id
+        `mediaHouse/findacceptedtasks?task_id=${props.id && props.id
         }&receiver_id=${User && User._id}&type=task_content`
       );
       if (resp) {
         setHoppers(resp.data.response);
       } else {
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const TaskDetails = async () => {
@@ -282,7 +281,7 @@ function ChatCardSocket(props) {
     return;
 
     socket.emit("rating", obj);
-    socket.on("rating", (obj) => {});
+    socket.on("rating", (obj) => { });
     getMessages(roomDetails?.roomsdetails?._id);
   };
 
@@ -314,7 +313,7 @@ function ChatCardSocket(props) {
                   <img src={presshopchatic} alt="User" className="usr_img" />
                   <div className="cht_txt">
                     <div className="d-flex align-items-center">
-                      <p className="usr_name mb-0">PressHop</p>
+                      <h5 className="usr_name mb-0">PressHop</h5>
                       <p className="cht_time mb-0">
                         {moment(roomDetails?.createdAt).format(
                           "h:mm A, D MMM YYYY"
@@ -386,9 +385,9 @@ function ChatCardSocket(props) {
                           />
                           <div className="cht_txt">
                             <div className="d-flex align-items-center">
-                              <p className="usr_name mb-0">
+                              <h5 className="usr_name mb-0">
                                 {curr?.sender_id?.user_name}
-                              </p>
+                              </h5>
                               <p className="cht_time mb-0">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -469,7 +468,7 @@ function ChatCardSocket(props) {
                           />
                           <div className="cht_txt">
                             <div className="d-flex align-items-center">
-                              <p className="usr_name mb-0">PressHop</p>
+                              <h5 className="usr_name mb-0">PressHop</h5>
                               <p className="cht_time mb-0">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -515,12 +514,12 @@ function ChatCardSocket(props) {
                           />
                           <div className="cht_txt">
                             <div className="d-flex align-items-center">
-                              <p className="usr_name mb-0">
+                              <h5 className="usr_name mb-0">
                                 {curr?.receiver_id?.first_name +
                                   " " +
                                   curr?.receiver_id?.last_name}
                                 {/* <img src={presshopchatic} alt="PressHop logo" className='ms-1' /> */}
-                              </p>
+                              </h5>
                               <p className="cht_time mb-0">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -544,7 +543,7 @@ function ChatCardSocket(props) {
                           />
                           <div className="cht_txt">
                             <div className="d-flex align-items-center">
-                              <p className="usr_name mb-0">PressHop</p>
+                              <h5 className="usr_name mb-0">PressHop</h5>
                               <p className="cht_time mb-0">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -599,7 +598,7 @@ function ChatCardSocket(props) {
                             />
                             <div className="cht_txt">
                               <div className="d-flex align-items-center">
-                                <p className="usr_name mb-0">PressHop</p>
+                                <h5 className="usr_name mb-0">PressHop</h5>
                                 <p className="cht_time mb-0">
                                   {moment(curr?.createdAt).format(
                                     "h:mm A, D MMM YYYY"
@@ -670,9 +669,9 @@ function ChatCardSocket(props) {
                       />
                       <div className="cht_txt w-100">
                         <div className="d-flex align-items-center justify-content-between">
-                          <p className="usr_name mb-0">
+                          <h5 className="usr_name mb-0">
                             {curr.hopper_id.user_name}
-                          </p>
+                          </h5>
                         </div>
                       </div>
                     </div>

@@ -48,6 +48,7 @@ import {
   hasDecimal,
 } from "../component/commonFunction";
 import { DashboardCardInfo } from "../component/DashboardCardInfo";
+import RecentActivityCard from "../component/card/RecentActivityCard";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -208,7 +209,7 @@ const Dashboard = () => {
 
   // New work -
   const [dashboardData, setDashboardData] = useState(null);
-  const [dashboardSort, setDashboardSort] = useState({type: ""});
+  const [dashboardSort, setDashboardSort] = useState({ type: "" });
   const [dashboardPayload, setDashboardPayload] = useState({
     requestedItems: ["content_purchased_online", "total_fund_invested", "content_under_offer", "favourite", "broadcasted_task"],
     requestedFilter: {
@@ -240,7 +241,7 @@ const Dashboard = () => {
     setDashboardSort({ ...dashboardSort, type: "" });
   }
 
-  const handleClearSort = async(payload) => {
+  const handleClearSort = async (payload) => {
     DashboardData(payload)
     setDashboardPayload(payload);
     setDashboardSort({ ...dashboardSort, type: "" });
@@ -360,27 +361,27 @@ const Dashboard = () => {
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}
                     sort={dashboardPayload?.requestedFilter?.content_under_offer}
-                    setSort={(value) => setDashboardPayload({...dashboardPayload, requestedFilter: {...dashboardPayload.requestedFilter, content_under_offer: value}})}
+                    setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_under_offer: value } })}
                     setSortState={handleApplySorting}
-                    handleSortClick={(value) => setDashboardSort({...dashboardSort, type: value})}
-                    handleClearSort={()=> handleClearSort({...dashboardPayload, requestedFilter: {...dashboardPayload.requestedFilter, content_under_offer: ""}})}
+                    handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                    handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_under_offer: "" } })}
                   />
                 </Col>
                 {/* Favourited Content */}
                 <Col md={4} className="p-0">
                   <DashboardCardInfo
                     path="/Favourited-Content"
-                    title="Favourite content"
+                    title="Favourited content"
                     type="favourite"
                     total={dashboardData?.content?.favourite?.totalCount}
                     data={getDeepModifiedContent(dashboardData?.content?.favourite?.data)}
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}
                     sort={dashboardPayload?.requestedFilter?.favourite}
-                    setSort={(value) => setDashboardPayload({...dashboardPayload, requestedFilter: {...dashboardPayload.requestedFilter, favourite: value}})}
+                    setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, favourite: value } })}
                     setSortState={handleApplySorting}
-                    handleSortClick={(value) => setDashboardSort({...dashboardSort, type: value})}
-                    handleClearSort={()=> handleClearSort({...dashboardPayload, requestedFilter: {...dashboardPayload.requestedFilter, favourite: ""}})}
+                    handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                    handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, favourite: "" } })}
                   />
                 </Col>
 
@@ -395,13 +396,16 @@ const Dashboard = () => {
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}
                     sort={dashboardPayload?.requestedFilter?.content_purchased_online}
-                    setSort={(value) => setDashboardPayload({...dashboardPayload, requestedFilter: {...dashboardPayload.requestedFilter, content_purchased_online: value}})}
+                    setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_online: value } })}
                     setSortState={handleApplySorting}
-                    handleSortClick={(value) => setDashboardSort({...dashboardSort, type: value})}
-                    handleClearSort={()=> handleClearSort({...dashboardPayload, requestedFilter: {...dashboardPayload.requestedFilter, content_purchased_online: ""}})}
+                    handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                    handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_online: "" } })}
                   />
                 </Col>
 
+                {
+                  console.log("Broadcasted task", getDeepModifiedTaskContent(dashboardData?.task?.broadcastedTask?.data))
+                }
                 {/* Broadcast Tasks */}
                 <Col md={4} className="p-0">
                   <DashboardCardInfo
@@ -413,10 +417,10 @@ const Dashboard = () => {
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}
                     sort={dashboardPayload?.requestedFilter?.broadcasted_task}
-                    setSort={(value) => setDashboardPayload({...dashboardPayload, requestedFilter: {...dashboardPayload.requestedFilter, broadcasted_task: value}})}
+                    setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, broadcasted_task: value } })}
                     setSortState={handleApplySorting}
-                    handleSortClick={(value) => setDashboardSort({...dashboardSort, type: value})}
-                    handleClearSort={()=> handleClearSort({...dashboardPayload, requestedFilter: {...dashboardPayload.requestedFilter, broadcasted_task: ""}})}
+                    handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                    handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, broadcasted_task: "" } })}
                   />
                 </Col>
 
@@ -431,10 +435,10 @@ const Dashboard = () => {
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}
                     sort={dashboardPayload?.requestedFilter?.total_fund_invested}
-                    setSort={(value) => setDashboardPayload({...dashboardPayload, requestedFilter: {...dashboardPayload.requestedFilter, total_fund_invested: value}})}
+                    setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested: value } })}
                     setSortState={handleApplySorting}
-                    handleSortClick={(value) => setDashboardSort({...dashboardSort, type: value})}
-                    handleClearSort={()=> handleClearSort({...dashboardPayload, requestedFilter: {...dashboardPayload.requestedFilter, total_fund_invested: ""}})}
+                    handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
+                    handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested: "" } })}
                   />
                 </Col>
               </Row>
@@ -773,7 +777,7 @@ const Dashboard = () => {
                               <span className="clickable">+</span>
                             </Tooltip> */}
                           </Typography>
-                          <Typography className="mb-0 text-center txt_bold">
+                          <Typography className="mb-0 text-center txt_bold text-white">
                             Broadcast task
                           </Typography>
                         </div>
@@ -823,7 +827,7 @@ const Dashboard = () => {
                                 to={`/Feeddetail/content/${curr?.content_id?._id}`}
                                 key={curr._id}
                               >
-                                <DashBoardCardList
+                                <RecentActivityCard
                                   contentId={
                                     curr.hasOwnProperty("content_id")
                                       ? curr?.content_id?._id
@@ -884,6 +888,7 @@ const Dashboard = () => {
                                   otherCount={
                                     curr?.content_id?.other_count || 0
                                   }
+                                  colorWhite={false}
                                 />
                               </Link>
                             );

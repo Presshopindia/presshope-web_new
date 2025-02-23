@@ -118,8 +118,7 @@ const Tasktables = () => {
   const TaskDetails = async () => {
     setLoading(true);
     const resp = await Get(
-      `mediaHouse/tasks/count?${sortingField && sortingField}=${
-        sortingValue && sortingValue
+      `mediaHouse/tasks/count?${sortingField && sortingField}=${sortingValue && sortingValue
       }`
     );
     const totalFundInvested = await Get(
@@ -200,7 +199,7 @@ const Tasktables = () => {
                         px="20px"
                         mb="10px"
                       >
-                        <Typography className="tbl_hdng">Live Tasks</Typography>
+                        <Typography className="tbl_hdng">Live tasks</Typography>
                         <div className="tbl_rt sorting_wrap d-flex align-items-center">
                           <div className="feedSorting me-4">
                             <div className="fltrs_prnt top_fltr">
@@ -426,7 +425,7 @@ const Tasktables = () => {
                         mb="10px"
                       >
                         <Typography className="tbl_hdng">
-                          Broadcasted Tasks
+                          Broadcasted tasks
                         </Typography>
                       </div>
                       <div className="fix_ht_table">
@@ -456,10 +455,10 @@ const Tasktables = () => {
                                   curr?.content[0]?.media_type === "image"
                                     ? curr?.content[0]?.media
                                     : curr?.content[0]?.media_type === "video"
-                                    ? curr?.content[0]?.videothubnail
-                                    : curr?.content[0]?.media_type === "audio"
-                                    ? audioic
-                                    : "";
+                                      ? curr?.content[0]?.videothubnail
+                                      : curr?.content[0]?.media_type === "audio"
+                                        ? audioic
+                                        : "";
 
                                 return (
                                   <tr
@@ -589,10 +588,10 @@ const Tasktables = () => {
                                 curr?.type === "image"
                                   ? curr?.imageAndVideo
                                   : curr?.type === "video"
-                                  ? curr?.videothubnail
-                                  : curr?.type === "audio"
-                                  ? audioic
-                                  : "";
+                                    ? curr?.videothubnail
+                                    : curr?.type === "audio"
+                                      ? audioic
+                                      : "";
                               return (
                                 <tr
                                   key={curr?._id}
@@ -783,10 +782,10 @@ const Tasktables = () => {
                                   curr?.type === "image"
                                     ? curr?.imageAndVideo
                                     : curr?.type === "video"
-                                    ? curr?.videothubnail
-                                    : curr?.type === "audio"
-                                    ? audioic
-                                    : "";
+                                      ? curr?.videothubnail
+                                      : curr?.type === "audio"
+                                        ? audioic
+                                        : "";
                                 return (
                                   <tr
                                     key={curr?._id}
@@ -902,7 +901,7 @@ const Tasktables = () => {
                                       {formatAmountInMillion(
                                         +(
                                           curr?.amount_paid -
-                                            curr?.task_id?.Vat?.[0] ?? "0"
+                                          curr?.task_id?.Vat?.[0] ?? "0"
                                         )
                                       )}
                                     </td>
@@ -1100,7 +1099,7 @@ const Tasktables = () => {
                                             }
                                             {curr?.task_details
                                               ?.hopper_details[0]?.category ==
-                                            "pro" ? (
+                                              "pro" ? (
                                               <img
                                                 src={proIcn}
                                                 className="proIcn"
@@ -1305,9 +1304,9 @@ const Tasktables = () => {
                                         />
                                         {curr?.content_details[0]?.createdAt
                                           ? moment(
-                                              curr?.content_details[0]
-                                                ?.createdAt
-                                            ).format("hh:mm a")
+                                            curr?.content_details[0]
+                                              ?.createdAt
+                                          ).format("hh:mm a")
                                           : ""}
                                       </p>
                                       <p className="timedate">
@@ -1317,9 +1316,9 @@ const Tasktables = () => {
                                         />
                                         {curr?.content_details[0]?.createdAt
                                           ? moment(
-                                              curr?.content_details[0]
-                                                ?.createdAt
-                                            ).format("DD MMM, YYYY")
+                                            curr?.content_details[0]
+                                              ?.createdAt
+                                          ).format("DD MMM, YYYY")
                                           : ""}
                                       </p>
                                     </td>
@@ -1333,15 +1332,14 @@ const Tasktables = () => {
                                           curr?.content_details[0]
                                             ?.createdAt && (
                                             <span
-                                              className={`${
-                                                myFunction(
-                                                  curr?.deadline_date,
-                                                  curr?.content_details[0]
-                                                    ?.createdAt
-                                                )?.sign == "+"
-                                                  ? "text-green"
-                                                  : "text-red"
-                                              } txt_mdm`}
+                                              className={`${myFunction(
+                                                curr?.deadline_date,
+                                                curr?.content_details[0]
+                                                  ?.createdAt
+                                              )?.sign == "+"
+                                                ? "text-green"
+                                                : "text-red"
+                                                } txt_mdm`}
                                             >
                                               {
                                                 myFunction(

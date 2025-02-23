@@ -311,7 +311,7 @@ function Chatinternal(props) {
                   <Tooltip id="overlay-example">
                     <div className="recordingPopup">
                       <div className="d-flex justify-content-between align-items-center">
-                        <h5>Record Audio</h5>
+                        <h5>Record audio</h5>
                         <div
                           className="close-btn clickable"
                           onClick={() => setShow(false)}

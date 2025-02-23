@@ -2172,10 +2172,13 @@ button.MuiButton-secondary {
     backdrop-filter: blur(1.35914px);
     left: 3px;
     top: 3px;
-    border-radius: 10px;
+    border-radius: 6px;
     display: inline-flex;
-    padding: 7px 5px;
+    height: 20px;
+    width: 20px;
     position: absolute;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -2566,7 +2569,7 @@ button.MuiButton-secondary {
 }
 
 .taskDetail_wrap {
-  padding-right: 10px;
+  padding-right: 2px;
 }
 
 .feeddetail-card {
@@ -3335,6 +3338,7 @@ button.MuiButton-secondary {
   box-shadow: 0px 2px 6px rgba(81, 97, 95, 0.217126);
   border-radius: 14px;
   padding: 12px 14px;
+  height: 10.5rem;
   cursor: pointer;
 
   .contentHeadng {
@@ -3346,6 +3350,7 @@ button.MuiButton-secondary {
     overflow: hidden;
     text-overflow: ellipsis;
     margin-bottom: 0;
+    height: 1.75rem;
   }
 
   img.contentTag {
@@ -4602,8 +4607,8 @@ button.btn_bld {
 }
 
 .rateView-type.dflt {
-  height: 25px;
-  width: 27px;
+  height: 18px;
+  width: 18px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -5396,6 +5401,7 @@ button {
 .chatmain .chatting .chatting_itm .usr_img {
   height: 40px;
   width: 40px;
+  min-width: 40px;
   object-fit: cover;
   // margin-top: 7px;
   border-radius: 50px;
@@ -5640,8 +5646,10 @@ input[type="number"] {
     color: $black;
     font-size: 13px;
   }
+
   .call_icon_img {
-    width: 19px;  /* Adjust icon size */
+    width: 19px;
+    /* Adjust icon size */
     height: 19px;
   }
 }
@@ -5813,7 +5821,7 @@ input[type="number"] {
 }
 
 .fvt_undrofr_wrp {
-  padding: 15px !important;
+  padding: 12px 15px !important;
 }
 
 .fvt_undr_ofr {
@@ -5865,7 +5873,7 @@ input[type="number"] {
 }
 
 .rt_crd.rcnt_actvt .scrolling {
-  height: 650px;
+  height: 669px;
 }
 
 .rating_tp_crd .tp_txt {
@@ -6365,7 +6373,6 @@ input[type="number"] {
   font-size: 20px;
   padding: 0;
   line-height: 38px;
-  margin-bottom: 0px;
 }
 
 .red_pin_txt {
@@ -6395,7 +6402,7 @@ input[type="number"] {
 .task_pg .priceOffer_wrap .sm-tiles {
   width: 80px;
   justify-content: center;
-  font-weight:700;
+  font-weight: 700;
 }
 
 .task_pg .priceOffer_wrap .type_price {
@@ -6495,7 +6502,7 @@ input[type="number"] {
 
 .taskReports_container.tsk {
   .dash-top-cards .dash-c-body {
-    padding: 3px 3px 10px 5px;
+    // padding: 3px 3px 10px 5px;
   }
 
   .dash-top-cards .dash-c-body .sortFilter_actions svg {
@@ -6568,6 +6575,7 @@ input[type="number"] {
   .cardContent_head {
     margin-bottom: 10px;
     padding-right: 12px;
+    height: 2rem;
   }
 }
 
@@ -7022,7 +7030,7 @@ input[type="number"] {
 }
 
 .sub_hdng_inn {
-  font-size: 20px;
+  font-size: 15px;
   font-family: $txt-bold;
 }
 
@@ -7564,7 +7572,7 @@ button {
   .btm_btns .offrd_txt {
     font-size: 12px;
     text-align: center;
-    color: #9da3a3;
+    color: $black;
     font-family: $txt-mdm !important;
     margin-bottom: 7px;
   }
@@ -7572,7 +7580,8 @@ button {
   .btm_btns .cont_tp {
     width: 79px;
     height: 33px;
-    background: $bg-grey;
+    background: $danger;
+    color: $white;
     border-radius: 8px;
     text-transform: uppercase;
     display: flex;
@@ -7701,7 +7710,7 @@ button {
 }
 
 .chatmain.cht_ht {
-  height: 500px;
+  height: 537px;
   padding-bottom: 20px;
   position: relative;
   width: 66.666667%;
@@ -8132,6 +8141,10 @@ button {
     border-radius: 50%;
     object-fit: contain !important;
   }
+}
+
+.chat_msgs_scrl .crd .img .usr_img {
+  object-fit: cover !important;
 }
 
 .chatting_itm.rating {
@@ -9518,6 +9531,7 @@ button.sort_btn.small_sort_btn {
   .taskUploads_media small {
     font-size: 13px;
     line-height: 16px;
+    margin: 0px;
   }
 }
 
@@ -10333,7 +10347,8 @@ select.PhoneInputCountrySelect {
   background-color: $bg-color-dark !important;
 
   .trending-search a {
-    color: #000 !important;
+    color: #fff !important;
+    background-color: #000;
   }
 
   .tbl_crd.bg_grey {
@@ -10365,7 +10380,7 @@ select.PhoneInputCountrySelect {
   }
 
   .list-card.rcnt_act_card {
-    background-color: $dark-mode-bg !important;
+    background-color: #000 !important;
     position: relative;
 
     // color: $white;
@@ -10377,6 +10392,16 @@ select.PhoneInputCountrySelect {
       width: 100%;
       content: "";
       background: white;
+    }
+
+    .list-in {
+      .list-in-txt {
+        color: #fff;
+
+        svg {
+          color: #fff !important;
+        }
+      }
     }
   }
 
@@ -11456,8 +11481,8 @@ p.text_light {
 }
 
 .rating-update li.selected {
-  background-color: #000;
-  color: #fff;
+  background-color: $bg-grey !important;
+  color: $inactive-btn-clr !important;
 }
 
 // Brodcasted task
@@ -11484,7 +11509,7 @@ p.text_light {
 }
 
 .tracker-task .singleTask_detail {
-  height: 476px !important;
+  height: 480px !important;
 }
 
 .tracker-task .dashCard-heading {
@@ -11500,7 +11525,7 @@ p.text_light {
 
 .broadcast-heading h2 {
   font-size: 20px !important;
-  font-family: "AirbnbMedium" !important;
+  font-family: "AirbnbBold" !important;
 }
 
 .bg-color {
@@ -12468,7 +12493,7 @@ span.cht_time {
 }
 
 .taskcard_body .mapView div:first-child {
-  height: 375px !important;
+  height: 498px !important;
 }
 
 .tasktables_wrap .cnt_online_img {
@@ -12679,7 +12704,7 @@ audio {
 
 .tableContentTypeIcons {
   position: absolute;
-  top: 15px;
+  top: 10px;
   left: 3px;
   display: flex;
   flex-direction: column;
@@ -12750,21 +12775,25 @@ audio {
 
 
 .commonContentIconsWrap .post_itm_icns.dtl_icns {
-  height: 25px !important;
-  width: 27px !important;
+  height: 18px !important;
+  width: 18px !important;
   border-radius: 5px !important;
 }
+
 .commonContentIconsWrap .tableContentTypeIcons {
   position: unset;
 }
+
 .commonContentIconsWrap .post_itm_icns.dtl_icns .count {
   font-size: 12px;
   font-family: "AirbnbMedium" !important;
 }
+
 .commonContentIconsWrap .post_itm_icns.dtl_icns img {
   width: 15px !important;
   height: auto !important;
 }
+
 .circular_red_dot {
   height: 12px;
   width: 12px;
@@ -12798,4 +12827,31 @@ audio {
 
 .mediahouse-list-name {
   color: #878787;
+}
+
+.bg_grey {
+  background-color: $bg-grey !important;
+}
+
+.rating_placholder {
+  color: #000 !important;
+}
+
+.rating_placholder::placeholder {
+  color: #838383 !important;
+}
+
+.mb-13 {
+  margin-bottom: 13px;
+}
+
+.download-invoice-container {
+  margin: 20px 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.download-invoice-btn {
+  border-radius: 17px !important;
+  padding: 0 2rem !important;
 }

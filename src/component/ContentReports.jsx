@@ -254,7 +254,7 @@ const ContentReports = ({
     setLoading(true);
     try {
       const resp = await Get(
-        `mediaHouse/publish/content?is_sold=true&limit=6&${sortFilterPurchasedContent?.sortField}=${sortFilterPurchasedContent?.sortValue}&favContent=${sortFilterPurchasedContent?.favContent}&category=${sortFilterPurchasedContent?.category}&type=${sortFilterPurchasedContent?.type}`
+        `mediaHouse/publish/content?is_sold=true&limit=9&${sortFilterPurchasedContent?.sortField}=${sortFilterPurchasedContent?.sortValue}&favContent=${sortFilterPurchasedContent?.favContent}&category=${sortFilterPurchasedContent?.category}&type=${sortFilterPurchasedContent?.type}`
       );
 
       setPurcahsedContent(resp.data.content);
@@ -692,11 +692,10 @@ const ContentReports = ({
     <>
       {loading && <Loader />}
       <div className="taskReports_container tsk cnt">
-        <Row className="top_crds_wrp">
+        <Row className="dashboardStat_cards crd_edit_wrap">
           {/* Content purchased online today */}
           <Col>
             <DashboardCardInfo
-              task={true}
               showSort={false}
               type="content_purchased_online_today"
               title="Content purchased online today"
@@ -709,7 +708,6 @@ const ContentReports = ({
           {/* Total content purchased */}
           <Col>
             <DashboardCardInfo
-              task={true}
               type="content_purchased_online"
               title="Total content purchased"
               path="/dashboard-tables/content_purchased_online"
@@ -728,7 +726,6 @@ const ContentReports = ({
           {/* Content average price */}
           <Col>
             <DashboardCardInfo
-              task={true}
               type="content_average_price"
               title="Content average price"
               path="/reports-tables-content/content_avg_price"
@@ -747,7 +744,6 @@ const ContentReports = ({
           {/* Funds invested today */}
           <Col>
             <DashboardCardInfo
-              task={true}
               showSort={false}
               title="Funds invested today"
               type="total_fund_invested_today"
@@ -760,7 +756,6 @@ const ContentReports = ({
           {/* Content average price */}
           <Col>
             <DashboardCardInfo
-              task={true}
               title="Total funds invested"
               type="total_fund_invested"
               path="/reports-tables-content/total_fund_invested"
@@ -1023,7 +1018,7 @@ const ContentReports = ({
                       )}
                     </div>
                     <Row>
-                      {purchasedContent?.slice(0, 6)?.map((curr) => {
+                      {purchasedContent?.map((curr) => {
                         const userProfile = profileData;
                         let mediaHouseId = null;
                         if (
@@ -1124,7 +1119,7 @@ const ContentReports = ({
                         className="view_link"
                         to={"/dashboard-tables/content_purchased_online"}
                       >
-                        View All <BsArrowRight className="text-pink ms-1" />
+                        View all <BsArrowRight className="text-pink ms-1" />
                       </Link>
                     </div>
                   </Tab>

@@ -616,7 +616,7 @@ function ChatCard(props) {
                   <Tooltip id="overlay-example" className="react-mic-tooltip">
                     <div className="recordingPopup">
                       <div className="d-flex justify-content-between align-items-center">
-                        <h5>Record Audio</h5>
+                        <h5>Record audio</h5>
                         <div
                           className="close-btn"
                           onClick={() => setShow(false)}
@@ -679,8 +679,8 @@ function ChatCard(props) {
                         />
                       </div>
                       <div className="text-end">
-                        <Button
-                          className="rec_aud_btn"
+                        <button
+                          className="sendrecBtn"
                           onClick={(e) => {
                             onStopRecording(e);
                             setShow((old) => !old);
@@ -689,8 +689,8 @@ function ChatCard(props) {
                         >
                           {" "}
                           <BsPause fontSize={"20px"} />
-                          send
-                        </Button>
+                          Send
+                        </button>
                         {/* <button
                           className="sendrecBtn"
                           onClick={(e) => {

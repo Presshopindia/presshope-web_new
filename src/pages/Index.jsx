@@ -144,7 +144,7 @@ const DashBoardN = () => {
                           >
                             <span>+</span>
                           </Typography>
-                          <Typography className="mb-0 text-center"
+                          <Typography className="mb-0 text-center text-white"
                           >
                             Broadcast task
                           </Typography>

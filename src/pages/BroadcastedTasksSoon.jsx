@@ -383,13 +383,13 @@ const BroadcastedTasksSoon = () => {
                                 curr.content[0] &&
                                 (curr.content[0]?.media_type === "video"
                                   ? curr.content[0]?.thumbnail ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr.content[0]?.thumbnail
+                                  process.env.REACT_APP_CONTENT_MEDIA +
+                                  curr.content[0]?.thumbnail
                                   : curr.content[0]?.media_type === "audio"
-                                  ? audioic
-                                  : curr.content[0]?.media ||
+                                    ? audioic
+                                    : curr.content[0]?.media ||
                                     process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr.content[0]?.media);
+                                    curr.content[0]?.media);
 
                               // Conditionally render the img element only if Content is available
                               return Content ? (
@@ -498,10 +498,10 @@ const BroadcastedTasksSoon = () => {
                               const Content = curr.content[0]
                                 ? curr.content[0]?.media_type === "video"
                                   ? process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr.content[0]?.thumbnail
+                                  curr.content[0]?.thumbnail
                                   : curr.content[0]?.media_type === "audio"
-                                  ? audioic
-                                  : curr.content[0]?.media
+                                    ? audioic
+                                    : curr.content[0]?.media
                                 : null;
 
                               // Conditionally render the img element only if Content is available
@@ -592,7 +592,7 @@ const BroadcastedTasksSoon = () => {
                                     src={
                                       curr?.videothubnail ||
                                       process.env.REACT_APP_UPLOADED_CONTENT +
-                                        curr?.imageAndVideo
+                                      curr?.imageAndVideo
                                     }
                                     className="card-img"
                                     alt={`Image ${index}`}
@@ -608,7 +608,7 @@ const BroadcastedTasksSoon = () => {
                                     src={
                                       curr?.videothubnail ||
                                       process.env.REACT_APP_UPLOADED_CONTENT +
-                                        curr?.thumbnail
+                                      curr?.thumbnail
                                     }
                                     alt={`Video ${index}`}
                                   />
@@ -716,7 +716,7 @@ const BroadcastedTasksSoon = () => {
                                     src={
                                       curr?.videothubnail ||
                                       process.env.REACT_APP_UPLOADED_CONTENT +
-                                        curr?.imageAndVideo
+                                      curr?.imageAndVideo
                                     }
                                     className="card-img"
                                     alt={`Image ${index}`}
@@ -732,7 +732,7 @@ const BroadcastedTasksSoon = () => {
                                     src={
                                       curr?.videothubnail ||
                                       process.env.REACT_APP_UPLOADED_CONTENT +
-                                        curr?.thumbnail
+                                      curr?.thumbnail
                                     }
                                     alt={`Video ${index}`}
                                   />
@@ -758,7 +758,7 @@ const BroadcastedTasksSoon = () => {
                           +
                         </span>
                       </Typography>
-                      <Typography className="mb-0 text-center txt_bold">
+                      <Typography className="mb-0 text-center txt_bold text-white">
                         Broadcast task
                       </Typography>
                     </div>
@@ -849,7 +849,7 @@ const BroadcastedTasksSoon = () => {
                 <div className="top-bar">
                   <Row>
                     <Col sm={12}>
-                      <div className="feedPreviews d-flex justify-content-between broadcast-heading">
+                      <div className="feedPreviews d-flex justify-content-between broadcast-heading ">
                         <h2>Uploaded content</h2>
                         <div className="sorting_wrap d-flex">
                           <div className="feedSorting me-4">
@@ -868,7 +868,7 @@ const BroadcastedTasksSoon = () => {
                                   closeFilterComponent={
                                     handleCloseFilterComponent
                                   }
-                                  // feedMultiFilter={handleMultiFilter}
+                                // feedMultiFilter={handleMultiFilter}
                                 />
                               )}
                             </div>

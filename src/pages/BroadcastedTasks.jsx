@@ -795,8 +795,8 @@ const BroadcastedTask = () => {
               <div className="top-bar">
                 <Row>
                   <Col sm={12}>
-                    <div className="feedPreviews d-flex justify-content-between broadcast-heading">
-                      <h2>Uploaded content check</h2>
+                    <div className="feedPreviews d-flex justify-content-between broadcast-heading align-items-center">
+                      <h2 className="mb-0">Uploaded content</h2>
                       <div className="sorting_wrap d-flex">
                         <div className="feedSorting me-4">
                           <div className="fltrs_prnt top_fltr">

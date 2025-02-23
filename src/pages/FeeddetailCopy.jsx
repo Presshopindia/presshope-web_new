@@ -923,7 +923,7 @@ const FeeddetailCopy = (props) => {
 
                             <div
                               className="post_itm_icns right dtl_icns cart_icn"
-                              // onClick={() => Favourite(data?.favourite_status === "true" ? "false" : "true")}
+                            // onClick={() => Favourite(data?.favourite_status === "true" ? "false" : "true")}
                             >
                               {/* Favourite icon */}
                               <svg
@@ -983,113 +983,112 @@ const FeeddetailCopy = (props) => {
                                   };
                                 }
                               }}
-                              // onSwiper={(swiper) => console.log(swiper)}
+                            // onSwiper={(swiper) => console.log(swiper)}
                             >
                               {data
                                 ? data.content.map((curr) => (
-                                    <SwiperSlide key={curr._id}>
-                                      <div className="swiper-slide-content">
-                                        {/* Media content based on type */}
-                                        {curr?.media_type === "image" && (
+                                  <SwiperSlide key={curr._id}>
+                                    <div className="swiper-slide-content">
+                                      {/* Media content based on type */}
+                                      {curr?.media_type === "image" && (
+                                        <img
+                                          src={curr?.watermark}
+                                          alt={`Image ${curr._id}`}
+                                        />
+                                      )}
+                                      {curr?.media_type === "audio" && (
+                                        <div>
                                           <img
-                                            src={curr?.watermark}
-                                            alt={`Image ${curr._id}`}
+                                            src={audioic}
+                                            alt={`Audio ${curr._id}`}
+                                            className="slider-img"
+                                            onClick={toggleAudio}
                                           />
-                                        )}
-                                        {curr?.media_type === "audio" && (
-                                          <div>
-                                            <img
-                                              src={audioic}
-                                              alt={`Audio ${curr._id}`}
-                                              className="slider-img"
-                                              onClick={toggleAudio}
-                                            />
-                                            <audio
-                                              controls
-                                              src={
-                                                curr?.watermark ||
-                                                process.env
-                                                  .REACT_APP_CONTENT_MEDIA +
-                                                  curr?.media
-                                              }
-                                              type="audio/mpeg"
-                                              className="slider-audio"
-                                              ref={audioRef}
-                                            />
-                                          </div>
-                                        )}
-                                        {curr?.media_type === "video" && (
-                                          <video
+                                          <audio
                                             controls
-                                            className="slider-video"
-                                            src={curr?.watermark}
-                                            style={{
-                                              height: "380px",
-                                              width: "100%",
-                                            }}
-                                          />
-                                        )}
-                                        {curr?.media_type === "pdf" && (
-                                          <embed
-                                            src={`${
-                                              process.env
-                                                .REACT_APP_CONTENT_MEDIA +
-                                              curr?.media
-                                            }`}
-                                            type="application/pdf"
-                                            width="100%"
-                                            height="500"
-                                          />
-                                        )}
-                                      </div>
-                                    </SwiperSlide>
-                                  ))
-                                : fav?.content_id?.content?.map((curr) => (
-                                    <SwiperSlide key={curr._id}>
-                                      <div className="swiper-slide-content">
-                                        {/* Media content based on type */}
-                                        {curr?.media_type === "image" && (
-                                          <img
                                             src={
                                               curr?.watermark ||
                                               process.env
                                                 .REACT_APP_CONTENT_MEDIA +
-                                                curr?.media
+                                              curr?.media
                                             }
-                                            alt={`Image ${curr._id}`}
+                                            type="audio/mpeg"
+                                            className="slider-audio"
+                                            ref={audioRef}
                                           />
-                                        )}
-                                        {curr?.media_type === "audio" && (
-                                          <div>
-                                            <img
-                                              src={audioic}
-                                              alt={`Audio ${curr._id}`}
-                                              className="slider-img"
-                                              onClick={toggleAudio}
-                                            />
-                                            <audio
-                                              controls
-                                              src={
-                                                process.env
-                                                  .REACT_APP_CONTENT_MEDIA +
-                                                curr?.media
-                                              }
-                                              type="audio/mpeg"
-                                              className="slider-audio"
-                                              ref={audioRef}
-                                            />
-                                          </div>
-                                        )}
-                                        {curr?.media_type === "video" && (
-                                          <video
+                                        </div>
+                                      )}
+                                      {curr?.media_type === "video" && (
+                                        <video
+                                          controls
+                                          className="slider-video"
+                                          src={curr?.watermark}
+                                          style={{
+                                            height: "380px",
+                                            width: "100%",
+                                          }}
+                                        />
+                                      )}
+                                      {curr?.media_type === "pdf" && (
+                                        <embed
+                                          src={`${process.env
+                                            .REACT_APP_CONTENT_MEDIA +
+                                            curr?.media
+                                            }`}
+                                          type="application/pdf"
+                                          width="100%"
+                                          height="500"
+                                        />
+                                      )}
+                                    </div>
+                                  </SwiperSlide>
+                                ))
+                                : fav?.content_id?.content?.map((curr) => (
+                                  <SwiperSlide key={curr._id}>
+                                    <div className="swiper-slide-content">
+                                      {/* Media content based on type */}
+                                      {curr?.media_type === "image" && (
+                                        <img
+                                          src={
+                                            curr?.watermark ||
+                                            process.env
+                                              .REACT_APP_CONTENT_MEDIA +
+                                            curr?.media
+                                          }
+                                          alt={`Image ${curr._id}`}
+                                        />
+                                      )}
+                                      {curr?.media_type === "audio" && (
+                                        <div>
+                                          <img
+                                            src={audioic}
+                                            alt={`Audio ${curr._id}`}
+                                            className="slider-img"
+                                            onClick={toggleAudio}
+                                          />
+                                          <audio
                                             controls
-                                            className="slider-video"
-                                            src={curr?.media}
+                                            src={
+                                              process.env
+                                                .REACT_APP_CONTENT_MEDIA +
+                                              curr?.media
+                                            }
+                                            type="audio/mpeg"
+                                            className="slider-audio"
+                                            ref={audioRef}
                                           />
-                                        )}
-                                      </div>
-                                    </SwiperSlide>
-                                  ))}
+                                        </div>
+                                      )}
+                                      {curr?.media_type === "video" && (
+                                        <video
+                                          controls
+                                          className="slider-video"
+                                          src={curr?.media}
+                                        />
+                                      )}
+                                    </div>
+                                  </SwiperSlide>
+                                ))}
                             </Swiper>
                           </div>
 
@@ -1151,14 +1150,14 @@ const FeeddetailCopy = (props) => {
                                       data
                                         ? data?.hopper_id?.avatar_id?.avatar
                                           ? process.env.REACT_APP_AVATAR_IMAGE +
-                                            data?.hopper_id?.avatar_id?.avatar
+                                          data?.hopper_id?.avatar_id?.avatar
                                           : null
                                         : fav?.content_id?.hopper_id?.avatar_id
-                                            ?.avatar
-                                        ? process.env.REACT_APP_AVATAR_IMAGE +
+                                          ?.avatar
+                                          ? process.env.REACT_APP_AVATAR_IMAGE +
                                           fav?.content_id?.hopper_id?.avatar_id
                                             ?.avatar
-                                        : null
+                                          : null
                                     }
                                     alt=""
                                   />
@@ -1194,11 +1193,11 @@ const FeeddetailCopy = (props) => {
                                     <MdOutlineWatchLater />
                                     {data
                                       ? moment(data?.createdAt).format(
-                                          "h:mm A, DD MMMM YYYY"
-                                        )
+                                        "h:mm A, DD MMMM YYYY"
+                                      )
                                       : moment(
-                                          fav?.content_id?.createdAt
-                                        ).format("h:mm A, DD MMMM YYYY")}
+                                        fav?.content_id?.createdAt
+                                      ).format("h:mm A, DD MMMM YYYY")}
                                   </span>
                                 </div>
                               </div>
@@ -1210,21 +1209,21 @@ const FeeddetailCopy = (props) => {
                                   <div className="item-in-right hashtag-wrap">
                                     {data
                                       ? data &&
-                                        data?.tag_ids.map((tag) => {
-                                          return (
-                                            <span className="mr">
-                                              #{tag.name}
-                                            </span>
-                                          );
-                                        })
+                                      data?.tag_ids.map((tag) => {
+                                        return (
+                                          <span className="mr">
+                                            #{tag.name}
+                                          </span>
+                                        );
+                                      })
                                       : fav &&
-                                        fav?.content_id?.tag_ids.map((tag) => {
-                                          return (
-                                            <span className="mr">
-                                              #{tag.name}
-                                            </span>
-                                          );
-                                        })}
+                                      fav?.content_id?.tag_ids.map((tag) => {
+                                        return (
+                                          <span className="mr">
+                                            #{tag.name}
+                                          </span>
+                                        );
+                                      })}
                                   </div>
                                 </div>
                               </div>
@@ -1263,8 +1262,8 @@ const FeeddetailCopy = (props) => {
                                           ? exclusive
                                           : shared
                                         : fav?.content_id?.type === "exclusive"
-                                        ? exclusive
-                                        : shared
+                                          ? exclusive
+                                          : shared
                                     }
                                     className="exclusive-img"
                                     alt=""
@@ -1273,8 +1272,8 @@ const FeeddetailCopy = (props) => {
                                     {data
                                       ? capitalizeFirstLetter(data?.type)
                                       : capitalizeFirstLetter(
-                                          fav?.content_id?.type
-                                        )}
+                                        fav?.content_id?.type
+                                      )}
                                   </span>
                                 </div>
                               </div>
@@ -1333,9 +1332,9 @@ const FeeddetailCopy = (props) => {
                                     messages?.find(
                                       (el) =>
                                         el.message_type ===
-                                          "accept_mediaHouse_offer" ||
+                                        "accept_mediaHouse_offer" ||
                                         el.message_type ===
-                                          "decline_mediaHouse_offer"
+                                        "decline_mediaHouse_offer"
                                     )?.amount
                                   )?.toLocaleString("en-US", {
                                     maximumFractionDigits: 2,
@@ -1345,52 +1344,52 @@ const FeeddetailCopy = (props) => {
 
                               {(data
                                 ? !data?.purchased_mediahouse.find(
-                                    (el) =>
-                                      el ==
-                                      JSON.parse(localStorage.getItem("user"))
-                                        ?._id
-                                  )
+                                  (el) =>
+                                    el ==
+                                    JSON.parse(localStorage.getItem("user"))
+                                      ?._id
+                                )
                                 : !fav?.content_id?.purchased_mediahouse.find(
-                                    (el) =>
-                                      el ==
-                                      JSON.parse(localStorage.getItem("user"))
-                                        ?._id
-                                  )) && (
-                                <Link to={`/auto-invoice/${param.id}`}>
-                                  {" "}
-                                  {/* <Button variant="primary" onClick={() => paymentintentnew(data)}> */}
-                                  <Button variant="primary">
-                                    £
-                                    {data
-                                      ? data?.ask_price?.toLocaleString(
+                                  (el) =>
+                                    el ==
+                                    JSON.parse(localStorage.getItem("user"))
+                                      ?._id
+                                )) && (
+                                  <Link to={`/auto-invoice/${param.id}`}>
+                                    {" "}
+                                    {/* <Button variant="primary" onClick={() => paymentintentnew(data)}> */}
+                                    <Button variant="primary">
+                                      £
+                                      {data
+                                        ? data?.ask_price?.toLocaleString(
                                           "en-US",
                                           { maximumFractionDigits: 2 }
                                         ) || 0
-                                      : fav?.content_id?.ask_price?.toLocaleString(
+                                        : fav?.content_id?.ask_price?.toLocaleString(
                                           "en-US",
                                           { maximumFractionDigits: 2 }
                                         ) || 0}
-                                  </Button>
-                                </Link>
-                              )}
+                                    </Button>
+                                  </Link>
+                                )}
                               {(data
                                 ? data?.purchased_mediahouse.find(
-                                    (el) =>
-                                      el ===
-                                      JSON.parse(localStorage.getItem("user"))
-                                        ?._id
-                                  )
+                                  (el) =>
+                                    el ===
+                                    JSON.parse(localStorage.getItem("user"))
+                                      ?._id
+                                )
                                 : fav?.content_id?.purchased_mediahouse.find(
-                                    (el) =>
-                                      el ===
-                                      JSON.parse(localStorage.getItem(user))
-                                        ?._id
-                                  )) && (
-                                <Link className="w-100">
-                                  {" "}
-                                  <Button className="greyBtn">Paid</Button>
-                                </Link>
-                              )}
+                                  (el) =>
+                                    el ===
+                                    JSON.parse(localStorage.getItem(user))
+                                      ?._id
+                                )) && (
+                                  <Link className="w-100">
+                                    {" "}
+                                    <Button className="greyBtn">Paid</Button>
+                                  </Link>
+                                )}
                             </div>
                           </div>
                         </CardContent>
@@ -1537,7 +1536,7 @@ const FeeddetailCopy = (props) => {
                                             "admin_detail"
                                           )
                                             ? profileData?.admin_detail
-                                                ?.admin_profile
+                                              ?.admin_profile
                                             : profileData?.profile_image
                                         }
                                         alt=""
@@ -1589,7 +1588,7 @@ const FeeddetailCopy = (props) => {
                                         >
                                           <Tooltip id="overlay-example">
                                             <div className="recordingPopup">
-                                              <h5>Record Audiosss</h5>
+                                              <h5>Record audio</h5>
                                               <div className="d-flex mt-3 justify-content-evenly">
                                                 <Button
                                                   className="rec_aud_btn"
@@ -1629,7 +1628,7 @@ const FeeddetailCopy = (props) => {
                                                     setShow(!show);
                                                   }}
                                                 >
-                                                  Send
+                                                  Send eee
                                                 </button>
                                               </div>
                                             </div>
@@ -1657,11 +1656,10 @@ const FeeddetailCopy = (props) => {
                                           <div className="tab_in_card_items">
                                             <div className="checkWrap">
                                               <FormControlLabel
-                                                className={`me-0 ${
-                                                  !selectedIds.includes(
-                                                    curr._id
-                                                  ) && "afterCheck"
-                                                }`}
+                                                className={`me-0 ${!selectedIds.includes(
+                                                  curr._id
+                                                ) && "afterCheck"
+                                                  }`}
                                                 checked={
                                                   selectedIds.includes(
                                                     curr._id
@@ -1752,7 +1750,7 @@ const FeeddetailCopy = (props) => {
                                             {"PressHop"}
                                             <span className="text-secondary time">
                                               {moment().format(
-                                              // curr?.createdAt
+                                                // curr?.createdAt
                                                 "h:mm A, D MMM YYYY"
                                               )}
                                             </span>
@@ -1856,22 +1854,22 @@ const FeeddetailCopy = (props) => {
                                                     src={
                                                       data
                                                         ? data?.hopper_id
-                                                            ?.avatar_id?.avatar
+                                                          ?.avatar_id?.avatar
                                                           ? process.env
-                                                              .REACT_APP_AVATAR_IMAGE +
-                                                            data?.hopper_id
-                                                              ?.avatar_id
-                                                              ?.avatar
+                                                            .REACT_APP_AVATAR_IMAGE +
+                                                          data?.hopper_id
+                                                            ?.avatar_id
+                                                            ?.avatar
                                                           : null
                                                         : fav?.content_id
-                                                            ?.hopper_id
-                                                            ?.avatar_id?.avatar
-                                                        ? process.env
+                                                          ?.hopper_id
+                                                          ?.avatar_id?.avatar
+                                                          ? process.env
                                                             .REACT_APP_AVATAR_IMAGE +
                                                           fav?.content_id
                                                             ?.hopper_id
                                                             ?.avatar_id?.avatar
-                                                        : null
+                                                          : null
                                                     }
                                                     alt="User"
                                                     className="usr_img"
@@ -1904,7 +1902,7 @@ const FeeddetailCopy = (props) => {
                                                     <button
                                                       className={
                                                         curr.paid_status ===
-                                                        true
+                                                          true
                                                           ? "sub_hdng_inn"
                                                           : "theme_btn"
                                                       }
@@ -1979,7 +1977,7 @@ const FeeddetailCopy = (props) => {
                                                       {"PressHop"}
                                                       <span className="text-secondary time">
                                                         {moment().format(
-                                                        // curr?.createdAt
+                                                          // curr?.createdAt
                                                           "h:mm A, D MMM YYYY"
                                                         )}
                                                       </span>
@@ -2034,22 +2032,22 @@ const FeeddetailCopy = (props) => {
                                                     src={
                                                       data
                                                         ? data?.hopper_id
-                                                            ?.avatar_id?.avatar
+                                                          ?.avatar_id?.avatar
                                                           ? process.env
-                                                              .REACT_APP_AVATAR_IMAGE +
-                                                            data?.hopper_id
-                                                              ?.avatar_id
-                                                              ?.avatar
+                                                            .REACT_APP_AVATAR_IMAGE +
+                                                          data?.hopper_id
+                                                            ?.avatar_id
+                                                            ?.avatar
                                                           : null
                                                         : fav?.content_id
-                                                            ?.hopper_id
-                                                            ?.avatar_id?.avatar
-                                                        ? process.env
+                                                          ?.hopper_id
+                                                          ?.avatar_id?.avatar
+                                                          ? process.env
                                                             .REACT_APP_AVATAR_IMAGE +
                                                           fav?.content_id
                                                             ?.hopper_id
                                                             ?.avatar_id?.avatar
-                                                        : null
+                                                          : null
                                                     }
                                                     alt="User"
                                                     className="usr_img"
@@ -2125,7 +2123,7 @@ const FeeddetailCopy = (props) => {
                                                 <div className="cht_txt postedcmnt_info">
                                                   <div className="d-flex align-items-center">
                                                     <h5 className="usr_name mb-0">
-                                                    PressHop
+                                                      PressHop
                                                       <span className="text-secondary time">
                                                         {moment(
                                                           curr?.createdAt
@@ -2177,7 +2175,7 @@ const FeeddetailCopy = (props) => {
                                                 <div className="cht_txt postedcmnt_info rating-update">
                                                   <div className="d-flex align-items-center">
                                                     <h5 className="usr_name mb-0">
-                                                    PressHop
+                                                      PressHop
                                                       <span className="text-secondary time">
                                                         {moment(
                                                           curr?.createdAt
@@ -2232,9 +2230,9 @@ const FeeddetailCopy = (props) => {
                                                             ?.features?.includes(
                                                               "Experience"
                                                             ) ||
-                                                          features.includes(
-                                                            "Experience"
-                                                          )
+                                                            features.includes(
+                                                              "Experience"
+                                                            )
                                                             ? "selected clickable"
                                                             : "clickable"
                                                         }
@@ -2257,9 +2255,9 @@ const FeeddetailCopy = (props) => {
                                                             ?.features?.includes(
                                                               "Easy to use"
                                                             ) ||
-                                                          features.includes(
-                                                            "Easy to use"
-                                                          )
+                                                            features.includes(
+                                                              "Easy to use"
+                                                            )
                                                             ? "selected clickable"
                                                             : "clickable"
                                                         }
@@ -2282,9 +2280,9 @@ const FeeddetailCopy = (props) => {
                                                             ?.features?.includes(
                                                               "Connectivity with Hoppers"
                                                             ) ||
-                                                          features.includes(
-                                                            "Connectivity with Hoppers"
-                                                          )
+                                                            features.includes(
+                                                              "Connectivity with Hoppers"
+                                                            )
                                                             ? "selected clickable"
                                                             : "clickable"
                                                         }
@@ -2308,9 +2306,9 @@ const FeeddetailCopy = (props) => {
                                                             ?.features?.includes(
                                                               "Pricing"
                                                             ) ||
-                                                          features.includes(
-                                                            "Pricing"
-                                                          )
+                                                            features.includes(
+                                                              "Pricing"
+                                                            )
                                                             ? "selected clickable"
                                                             : "clickable"
                                                         }
@@ -2333,9 +2331,9 @@ const FeeddetailCopy = (props) => {
                                                             ?.features?.includes(
                                                               "Secure payment"
                                                             ) ||
-                                                          features.includes(
-                                                            "Secure payment"
-                                                          )
+                                                            features.includes(
+                                                              "Secure payment"
+                                                            )
                                                             ? "selected clickable"
                                                             : "clickable"
                                                         }
@@ -2358,9 +2356,9 @@ const FeeddetailCopy = (props) => {
                                                             ?.features?.includes(
                                                               "Support"
                                                             ) ||
-                                                          features.includes(
-                                                            "Support"
-                                                          )
+                                                            features.includes(
+                                                              "Support"
+                                                            )
                                                             ? "selected clickable"
                                                             : "clickable"
                                                         }
@@ -2542,7 +2540,7 @@ const FeeddetailCopy = (props) => {
                                               <div className="cht_txt postedcmnt_info">
                                                 <div className="d-flex align-items-center">
                                                   <h5 className="usr_name mb-0">
-                                                  PressHop
+                                                    PressHop
                                                     <span className="text-secondary time">
                                                       {moment(
                                                         curr?.createdAt
@@ -2780,7 +2778,7 @@ const FeeddetailCopy = (props) => {
                         )}
                       </div> */}
                       <Link
-                        to={`/related-content/tags/${data?.hopper_id?._id}/${data?.category_id?._id}`}
+                        to={`/related-content/${data?._id}`}
                         className="next_link"
                       >
                         View all
@@ -2821,23 +2819,23 @@ const FeeddetailCopy = (props) => {
                             feedImg={
                               curr?.content[0]?.media_type === "video"
                                 ? curr?.content[0]?.watermark ||
-                                  process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.thumbnail
+                                process.env.REACT_APP_CONTENT_MEDIA +
+                                curr?.content[0]?.thumbnail
                                 : curr?.content[0]?.media_type === "audio"
-                                ? audioic
-                                : curr?.content[0]?.watermark ||
+                                  ? audioic
+                                  : curr?.content[0]?.watermark ||
                                   process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.media
+                                  curr?.content[0]?.media
                             }
                             // feedType={contentVideo}
                             feedTag={
                               curr?.sales_prefix
                                 ? `${curr?.sales_prefix} ${curr?.discount_percent}% Off`
                                 : curr?.content_view_type == "mostpopular"
-                                ? "Most Popular"
-                                : curr?.content_view_type == "mostviewed"
-                                ? "Most viewed"
-                                : null
+                                  ? "Most Popular"
+                                  : curr?.content_view_type == "mostviewed"
+                                    ? "Most viewed"
+                                    : null
                             }
                             user_avatar={
                               process.env.REACT_APP_AVATAR_IMAGE +
@@ -2954,26 +2952,26 @@ const FeeddetailCopy = (props) => {
                             feedImg={
                               curr?.content[0]?.media_type === "video"
                                 ? process.env.REACT_APP_CONTENT_MEDIA +
-                                  curr?.content[0]?.thumbnail
+                                curr?.content[0]?.thumbnail
                                 : curr?.content[0]?.media_type === "audio"
-                                ? audioic
-                                : curr?.content[0]?.watermark ||
+                                  ? audioic
+                                  : curr?.content[0]?.watermark ||
                                   process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.media
+                                  curr?.content[0]?.media
                             }
                             feedType={contentVideo}
                             feedTag={
                               curr?.sales_prefix
                                 ? `${curr?.sales_prefix} ${curr?.discount_percent}% Off`
                                 : curr?.content_view_type == "mostpopular"
-                                ? "Most Popular"
-                                : curr?.content_view_type == "mostviewed"
-                                ? "Most viewed"
-                                : null
+                                  ? "Most Popular"
+                                  : curr?.content_view_type == "mostviewed"
+                                    ? "Most viewed"
+                                    : null
                             }
                             user_avatar={
                               process.env.REACT_APP_AVATAR_IMAGE +
-                                curr?.hopper_id?.avatar_id?.avatar || authorimg
+                              curr?.hopper_id?.avatar_id?.avatar || authorimg
                             }
                             author_Name={curr.hopper_id?.user_name}
                             type_img={

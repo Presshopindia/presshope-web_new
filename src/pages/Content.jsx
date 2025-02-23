@@ -21,7 +21,6 @@ import { Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 import {
   BsArrowRight,
 } from "react-icons/bs";
-import favouritedic from "../assets/images/favouritestar.svg";
 import favic from "../assets/images/star.svg";
 import TopSearchesTipsCard from "../component/card/TopSearchesTipsCard";
 //new//
@@ -645,7 +644,7 @@ const ContentPage = () => {
                               <span className="clickable">+</span>
                             </Tooltip> */}
                           </Typography>
-                          <Typography className="mb-0 text-center txt_bold">
+                          <Typography className="mb-0 text-center txt_bold text-white">
                             Broadcast task
                           </Typography>
                         </div>
@@ -677,7 +676,7 @@ const ContentPage = () => {
                                     to={`/Feeddetail/content/${curr._id}`}
                                   >
                                     <div className="">
-                                      <Card className="list-card mb-3">
+                                      <Card className="list-card mb-3 bg_grey">
                                         <CardContent className="dash-c-body">
                                           <div className="list-in d-flex align-items-start">
                                             <div className="rateReview_content">
@@ -693,7 +692,7 @@ const ContentPage = () => {
                                                     src={
                                                       curr.favourite_status ===
                                                         "true"
-                                                        ? favouritedic
+                                                        ? typestar
                                                         : favic
                                                     }
                                                     alt="Fav"
@@ -776,19 +775,19 @@ const ContentPage = () => {
                         </Tab>
 
                         <Tab eventKey="uploaded" title="Uploaded content">
-                          {uploadedContent?.slice(0, 2)?.map((item, index) => {
+                          {uploadedContent?.slice(0, 2)?.map((item) => {
                             return (
                               <CardContent className="dash-c-body rev new_tbs_card" key={item?._id}>
-                                <Link to={`/content-details/${item._id}`}>
+                                <Link to={`/content-details/${item._id}?task_content_id=${item?.content_id}`}>
                                   <div className="">
-                                    <Card className="list-card mb-3">
+                                    <Card className="list-card mb-3 bg_grey">
                                       <CardContent className="dash-c-body">
                                         <div className="list-in d-flex align-items-center">
                                           <div className="rateReview_content">
                                             <div className="commonContentIconsWrap crd_in_icons d-flex justify-content-between">
                                               <span className="rateView-type dflt cmr">
                                                 <span className="volCount">
-                                                {item?.task_id?.content.length}
+                                                  {item?.task_id?.content.length}
                                                 </span>
                                                 {/* <img
                                                   className=""
@@ -817,7 +816,7 @@ const ContentPage = () => {
                                                   src={
                                                     item.favourite_status ===
                                                       "true"
-                                                      ? favouritedic
+                                                      ? typestar
                                                       : favic
                                                   }
                                                 />
@@ -992,7 +991,7 @@ const ContentPage = () => {
                                     }
                                     reviewTypetwo={
                                       curr.favourite_status === "true"
-                                        ? favouritedic
+                                        ? typestar
                                         : favic
                                     }
                                     imgtab={
@@ -1067,7 +1066,7 @@ const ContentPage = () => {
                                     }
                                     reviewTypetwo={
                                       curr.favourite_status === "true"
-                                        ? favouritedic
+                                        ? typestar
                                         : favic
                                     }
                                     imgtab={

@@ -458,7 +458,7 @@ const NewFeeddetail = (props) => {
       let obj = {
         favourite_status:
           (data && data.favourite_status === "false") ||
-          (fav && fav.content_id && fav.content_id.favourite_status === "false")
+            (fav && fav.content_id && fav.content_id.favourite_status === "false")
             ? "true"
             : "false",
         content_id: data ? data._id : fav?.content_id?._id,
@@ -953,10 +953,10 @@ const NewFeeddetail = (props) => {
                                     ? favouritedic
                                     : favic
                                   : fav
-                                  ? fav?.content_id?.favourite_status === "true"
-                                    ? favouritedic
-                                    : favic
-                                  : null
+                                    ? fav?.content_id?.favourite_status === "true"
+                                      ? favouritedic
+                                      : favic
+                                    : null
                               }
                               alt=""
                             />
@@ -972,104 +972,103 @@ const NewFeeddetail = (props) => {
                           >
                             {data
                               ? data.content.map((curr) => {
-                                  return (
-                                    <SwiperSlide key={curr._id}>
-                                      {curr?.media_type === "image" ? (
+                                return (
+                                  <SwiperSlide key={curr._id}>
+                                    {curr?.media_type === "image" ? (
+                                      <img
+                                        src={
+                                          curr?.watermark ||
+                                          process.env
+                                            .REACT_APP_CONTENT_MEDIA +
+                                          curr?.media
+                                        }
+                                        alt={`Image ${curr._id}`}
+                                      />
+                                    ) : curr?.media_type === "audio" ? (
+                                      <div>
                                         <img
+                                          src={audioic}
+                                          alt={`Audio ${curr._id}`}
+                                          className="slider-img"
+                                          onClick={toggleAudio}
+                                        />
+                                        <audio
+                                          controls
                                           src={
-                                            curr?.watermark ||
-                                            process.env
-                                              .REACT_APP_CONTENT_MEDIA +
+                                            curr.hasOwnProperty("watermark")
+                                              ? curr.watermark
+                                              : process.env
+                                                .REACT_APP_CONTENT_MEDIA +
                                               curr?.media
                                           }
-                                          alt={`Image ${curr._id}`}
+                                          type="audio/mpeg"
+                                          className="slider-audio"
+                                          ref={audioRef}
                                         />
-                                      ) : curr?.media_type === "audio" ? (
-                                        <div>
-                                          <img
-                                            src={audioic}
-                                            alt={`Audio ${curr._id}`}
-                                            className="slider-img"
-                                            onClick={toggleAudio}
-                                          />
-                                          <audio
-                                            controls
-                                            src={
-                                              curr.hasOwnProperty("watermark")
-                                                ? curr.watermark
-                                                : process.env
-                                                    .REACT_APP_CONTENT_MEDIA +
-                                                  curr?.media
-                                            }
-                                            type="audio/mpeg"
-                                            className="slider-audio"
-                                            ref={audioRef}
-                                          />
-                                        </div>
-                                      ) : curr?.media_type === "video" ? (
-                                        <video
+                                      </div>
+                                    ) : curr?.media_type === "video" ? (
+                                      <video
+                                        controls
+                                        className="slider-vddo"
+                                        src={curr?.media}
+                                      />
+                                    ) : curr?.media_type === "pdf" ? (
+                                      <embed
+                                        src={`${process.env
+                                          .REACT_APP_CONTENT_MEDIA +
+                                          curr?.media
+                                          }`}
+                                        type="application/pdf"
+                                        width="100%"
+                                        height="500"
+                                      />
+                                    ) : null}
+                                  </SwiperSlide>
+                                );
+                              })
+                              : fav?.content_id?.content?.map((curr) => {
+                                return (
+                                  <SwiperSlide key={curr._id}>
+                                    {curr?.media_type === "image" ? (
+                                      <img
+                                        src={
+                                          curr?.watermark ||
+                                          process.env
+                                            .REACT_APP_CONTENT_MEDIA +
+                                          curr?.media
+                                        }
+                                        alt={`Image ${curr._id}`}
+                                      />
+                                    ) : curr?.media_type === "audio" ? (
+                                      <div>
+                                        <img
+                                          src={audioic}
+                                          alt={`Audio ${curr._id}`}
+                                          className="slider-img"
+                                          onClick={toggleAudio}
+                                        />
+                                        <audio
                                           controls
-                                          className="slider-vddo"
-                                          src={curr?.media}
-                                        />
-                                      ) : curr?.media_type === "pdf" ? (
-                                        <embed
-                                          src={`${
+                                          src={
                                             process.env
                                               .REACT_APP_CONTENT_MEDIA +
                                             curr?.media
-                                          }`}
-                                          type="application/pdf"
-                                          width="100%"
-                                          height="500"
-                                        />
-                                      ) : null}
-                                    </SwiperSlide>
-                                  );
-                                })
-                              : fav?.content_id?.content?.map((curr) => {
-                                  return (
-                                    <SwiperSlide key={curr._id}>
-                                      {curr?.media_type === "image" ? (
-                                        <img
-                                          src={
-                                            curr?.watermark ||
-                                            process.env
-                                              .REACT_APP_CONTENT_MEDIA +
-                                              curr?.media
                                           }
-                                          alt={`Image ${curr._id}`}
+                                          type="audio/mpeg"
+                                          className="slider-audio"
+                                          ref={audioRef}
                                         />
-                                      ) : curr?.media_type === "audio" ? (
-                                        <div>
-                                          <img
-                                            src={audioic}
-                                            alt={`Audio ${curr._id}`}
-                                            className="slider-img"
-                                            onClick={toggleAudio}
-                                          />
-                                          <audio
-                                            controls
-                                            src={
-                                              process.env
-                                                .REACT_APP_CONTENT_MEDIA +
-                                              curr?.media
-                                            }
-                                            type="audio/mpeg"
-                                            className="slider-audio"
-                                            ref={audioRef}
-                                          />
-                                        </div>
-                                      ) : curr?.media_type === "video" ? (
-                                        <video
-                                          controls
-                                          className="slider-vddo"
-                                          src={curr?.media}
-                                        />
-                                      ) : null}
-                                    </SwiperSlide>
-                                  );
-                                })}
+                                      </div>
+                                    ) : curr?.media_type === "video" ? (
+                                      <video
+                                        controls
+                                        className="slider-vddo"
+                                        src={curr?.media}
+                                      />
+                                    ) : null}
+                                  </SwiperSlide>
+                                );
+                              })}
 
                             {/* )
                             })} */}
@@ -1133,14 +1132,14 @@ const NewFeeddetail = (props) => {
                                       data
                                         ? data?.hopper_id?.avatar_id?.avatar
                                           ? process.env.REACT_APP_AVATAR_IMAGE +
-                                            data?.hopper_id?.avatar_id?.avatar
+                                          data?.hopper_id?.avatar_id?.avatar
                                           : null
                                         : fav?.content_id?.hopper_id?.avatar_id
-                                            ?.avatar
-                                        ? process.env.REACT_APP_AVATAR_IMAGE +
+                                          ?.avatar
+                                          ? process.env.REACT_APP_AVATAR_IMAGE +
                                           fav?.content_id?.hopper_id?.avatar_id
                                             ?.avatar
-                                        : null
+                                          : null
                                     }
                                     alt=""
                                   />
@@ -1176,11 +1175,11 @@ const NewFeeddetail = (props) => {
                                     <MdOutlineWatchLater />
                                     {data
                                       ? moment(
-                                          data?.published_time_date
-                                        ).format("h:mm A, DD MMMM YYYY")
+                                        data?.published_time_date
+                                      ).format("h:mm A, DD MMMM YYYY")
                                       : moment(
-                                          fav?.content_id?.published_time_date
-                                        ).format("h:mm A, DD MMMM YYYY")}
+                                        fav?.content_id?.published_time_date
+                                      ).format("h:mm A, DD MMMM YYYY")}
                                   </span>
                                 </div>
                               </div>
@@ -1192,21 +1191,21 @@ const NewFeeddetail = (props) => {
                                   <div className="item-in-right hashtag-wrap">
                                     {data
                                       ? data &&
-                                        data?.tag_ids.map((tag) => {
-                                          return (
-                                            <span className="mr">
-                                              #{tag.name}
-                                            </span>
-                                          );
-                                        })
+                                      data?.tag_ids.map((tag) => {
+                                        return (
+                                          <span className="mr">
+                                            #{tag.name}
+                                          </span>
+                                        );
+                                      })
                                       : fav &&
-                                        fav?.content_id?.tag_ids.map((tag) => {
-                                          return (
-                                            <span className="mr">
-                                              #{tag.name}
-                                            </span>
-                                          );
-                                        })}
+                                      fav?.content_id?.tag_ids.map((tag) => {
+                                        return (
+                                          <span className="mr">
+                                            #{tag.name}
+                                          </span>
+                                        );
+                                      })}
                                   </div>
                                 </div>
                               </div>
@@ -1251,8 +1250,8 @@ const NewFeeddetail = (props) => {
                                     {data
                                       ? capitalizeFirstLetter(data?.type)
                                       : capitalizeFirstLetter(
-                                          fav?.content_id?.type
-                                        )}
+                                        fav?.content_id?.type
+                                      )}
                                   </span>
                                 </div>
                               </div>
@@ -1278,8 +1277,8 @@ const NewFeeddetail = (props) => {
                                   Offer
                                 </Button>
                               ) : messages?.filter(
-                                  (el) => el.message_type === "PaymentIntent"
-                                )?.[0]?.amount ? (
+                                (el) => el.message_type === "PaymentIntent"
+                              )?.[0]?.amount ? (
                                 <Button
                                   className="offeredPrice_btn bigBtn"
                                   disabled={true}
@@ -1319,52 +1318,52 @@ const NewFeeddetail = (props) => {
 
                               {(data
                                 ? !data?.purchased_mediahouse.find(
-                                    (el) =>
-                                      el ==
-                                      JSON.parse(localStorage.getItem("user"))
-                                        ?._id
-                                  )
+                                  (el) =>
+                                    el ==
+                                    JSON.parse(localStorage.getItem("user"))
+                                      ?._id
+                                )
                                 : !fav?.content_id?.purchased_mediahouse.find(
-                                    (el) =>
-                                      el ==
-                                      JSON.parse(localStorage.getItem("user"))
-                                        ?._id
-                                  )) && (
-                                <Link to={`/auto-invoice/${param.id}`}>
-                                  {" "}
-                                  {/* <Button variant="primary" onClick={() => paymentintentnew(data)}> */}
-                                  <Button variant="primary">
-                                    £
-                                    {data
-                                      ? data?.ask_price?.toLocaleString(
+                                  (el) =>
+                                    el ==
+                                    JSON.parse(localStorage.getItem("user"))
+                                      ?._id
+                                )) && (
+                                  <Link to={`/auto-invoice/${param.id}`}>
+                                    {" "}
+                                    {/* <Button variant="primary" onClick={() => paymentintentnew(data)}> */}
+                                    <Button variant="primary">
+                                      £
+                                      {data
+                                        ? data?.ask_price?.toLocaleString(
                                           "en-US",
                                           { maximumFractionDigits: 2 }
                                         ) || 0
-                                      : fav?.content_id?.ask_price?.toLocaleString(
+                                        : fav?.content_id?.ask_price?.toLocaleString(
                                           "en-US",
                                           { maximumFractionDigits: 2 }
                                         ) || 0}
-                                  </Button>
-                                </Link>
-                              )}
+                                    </Button>
+                                  </Link>
+                                )}
                               {(data
                                 ? data?.purchased_mediahouse.find(
-                                    (el) =>
-                                      el ===
-                                      JSON.parse(localStorage.getItem("user"))
-                                        ?._id
-                                  )
+                                  (el) =>
+                                    el ===
+                                    JSON.parse(localStorage.getItem("user"))
+                                      ?._id
+                                )
                                 : fav?.content_id?.purchased_mediahouse.find(
-                                    (el) =>
-                                      el ===
-                                      JSON.parse(localStorage.getItem(user))
-                                        ?._id
-                                  )) && (
-                                <Link className="w-100">
-                                  {" "}
-                                  <Button className="greyBtn">Paid</Button>
-                                </Link>
-                              )}
+                                  (el) =>
+                                    el ===
+                                    JSON.parse(localStorage.getItem(user))
+                                      ?._id
+                                )) && (
+                                  <Link className="w-100">
+                                    {" "}
+                                    <Button className="greyBtn">Paid</Button>
+                                  </Link>
+                                )}
                             </div>
                           </div>
                         </CardContent>
@@ -1440,32 +1439,30 @@ const NewFeeddetail = (props) => {
                                                   src={
                                                     curr.user_info
                                                       ? profileData?.hasOwnProperty(
-                                                          "admin_detail"
-                                                        )
+                                                        "admin_detail"
+                                                      )
                                                         ? profileData
-                                                            ?.admin_detail
-                                                            ?.admin_profile
+                                                          ?.admin_detail
+                                                          ?.admin_profile
                                                         : profileData?.profile_image
                                                       : curr?.sender_id
-                                                          ?.profile_image
+                                                        ?.profile_image
                                                   }
                                                   alt="user"
                                                 />
                                               </div>
                                               <div className="postedcmnt_info">
                                                 <h5>
-                                                  {`${
-                                                    curr.user_info
-                                                      ? curr?.user_info
-                                                          ?.first_name
-                                                      : curr?.sender_id
-                                                          ?.first_name
-                                                  } 
-                                                ${
-                                                  curr.user_info
-                                                    ? curr?.user_info?.last_name
-                                                    : curr?.sender_id?.last_name
-                                                }`}
+                                                  {`${curr.user_info
+                                                    ? curr?.user_info
+                                                      ?.first_name
+                                                    : curr?.sender_id
+                                                      ?.first_name
+                                                    } 
+                                                ${curr.user_info
+                                                      ? curr?.user_info?.last_name
+                                                      : curr?.sender_id?.last_name
+                                                    }`}
                                                   <span className="text-secondary time">
                                                     {moment(
                                                       curr?.createdAt
@@ -1535,7 +1532,7 @@ const NewFeeddetail = (props) => {
                                             "admin_detail"
                                           )
                                             ? profileData?.admin_detail
-                                                ?.admin_profile
+                                              ?.admin_profile
                                             : profileData?.profile_image
                                         }
                                         alt=""
@@ -1587,7 +1584,7 @@ const NewFeeddetail = (props) => {
                                         >
                                           <Tooltip id="overlay-example">
                                             <div className="recordingPopup">
-                                              <h5>Record Audio</h5>
+                                              <h5>Record audio</h5>
                                               <div className="d-flex mt-3 justify-content-evenly">
                                                 <Button
                                                   className="rec_aud_btn"
@@ -1655,11 +1652,10 @@ const NewFeeddetail = (props) => {
                                           <div className="tab_in_card_items">
                                             <div className="checkWrap">
                                               <FormControlLabel
-                                                className={`me-0 ${
-                                                  !selectedIds.includes(
-                                                    curr._id
-                                                  ) && "afterCheck"
-                                                }`}
+                                                className={`me-0 ${!selectedIds.includes(
+                                                  curr._id
+                                                ) && "afterCheck"
+                                                  }`}
                                                 checked={
                                                   selectedIds.includes(
                                                     curr._id
@@ -1802,7 +1798,7 @@ const NewFeeddetail = (props) => {
                                                       messages[1]
                                                         ?.initial_offer_price
                                                         ? messages[1]
-                                                            ?.initial_offer_price
+                                                          ?.initial_offer_price
                                                         : offer_value
                                                     }
                                                     placeholder={
@@ -1812,11 +1808,11 @@ const NewFeeddetail = (props) => {
                                                           "Mediahouse_initial_offer"
                                                       )[0]?.initial_offer_price
                                                         ? messages?.filter(
-                                                            (el) =>
-                                                              el.message_type ==
-                                                              "Mediahouse_initial_offer"
-                                                          )[0]
-                                                            ?.initial_offer_price
+                                                          (el) =>
+                                                            el.message_type ==
+                                                            "Mediahouse_initial_offer"
+                                                        )[0]
+                                                          ?.initial_offer_price
                                                         : "Enter price here ..."
                                                     }
                                                     onChange={(e) => {
@@ -1889,21 +1885,21 @@ const NewFeeddetail = (props) => {
                                                   src={
                                                     data
                                                       ? data?.hopper_id
-                                                          ?.avatar_id?.avatar
+                                                        ?.avatar_id?.avatar
                                                         ? process.env
-                                                            .REACT_APP_AVATAR_IMAGE +
-                                                          data?.hopper_id
-                                                            ?.avatar_id?.avatar
+                                                          .REACT_APP_AVATAR_IMAGE +
+                                                        data?.hopper_id
+                                                          ?.avatar_id?.avatar
                                                         : null
                                                       : fav?.content_id
-                                                          ?.hopper_id?.avatar_id
-                                                          ?.avatar
-                                                      ? process.env
+                                                        ?.hopper_id?.avatar_id
+                                                        ?.avatar
+                                                        ? process.env
                                                           .REACT_APP_AVATAR_IMAGE +
                                                         fav?.content_id
                                                           ?.hopper_id?.avatar_id
                                                           ?.avatar
-                                                      : null
+                                                        : null
                                                   }
                                                   alt="User"
                                                   className="usr_img"
@@ -1914,10 +1910,10 @@ const NewFeeddetail = (props) => {
                                                   <h5 className="usr_name mb-0">
                                                     {data
                                                       ? data?.hopper_id
-                                                          ?.user_name
+                                                        ?.user_name
                                                       : fav?.content_id
-                                                          ?.hopper_id
-                                                          ?.user_name}
+                                                        ?.hopper_id
+                                                        ?.user_name}
                                                     <span className="text-secondary time">
                                                       {moment(
                                                         curr?.createdAt
@@ -2078,21 +2074,21 @@ const NewFeeddetail = (props) => {
                                                   src={
                                                     data
                                                       ? data?.hopper_id
-                                                          ?.avatar_id?.avatar
+                                                        ?.avatar_id?.avatar
                                                         ? process.env
-                                                            .REACT_APP_AVATAR_IMAGE +
-                                                          data?.hopper_id
-                                                            ?.avatar_id?.avatar
+                                                          .REACT_APP_AVATAR_IMAGE +
+                                                        data?.hopper_id
+                                                          ?.avatar_id?.avatar
                                                         : null
                                                       : fav?.content_id
-                                                          ?.hopper_id?.avatar_id
-                                                          ?.avatar
-                                                      ? process.env
+                                                        ?.hopper_id?.avatar_id
+                                                        ?.avatar
+                                                        ? process.env
                                                           .REACT_APP_AVATAR_IMAGE +
                                                         fav?.content_id
                                                           ?.hopper_id?.avatar_id
                                                           ?.avatar
-                                                      : null
+                                                        : null
                                                   }
                                                   alt="User"
                                                   className="usr_img"
@@ -2145,21 +2141,21 @@ const NewFeeddetail = (props) => {
                                                   src={
                                                     data
                                                       ? data?.hopper_id
-                                                          ?.avatar_id?.avatar
+                                                        ?.avatar_id?.avatar
                                                         ? process.env
-                                                            .REACT_APP_AVATAR_IMAGE +
-                                                          data?.hopper_id
-                                                            ?.avatar_id?.avatar
+                                                          .REACT_APP_AVATAR_IMAGE +
+                                                        data?.hopper_id
+                                                          ?.avatar_id?.avatar
                                                         : null
                                                       : fav?.content_id
-                                                          ?.hopper_id?.avatar_id
-                                                          ?.avatar
-                                                      ? process.env
+                                                        ?.hopper_id?.avatar_id
+                                                        ?.avatar
+                                                        ? process.env
                                                           .REACT_APP_AVATAR_IMAGE +
                                                         fav?.content_id
                                                           ?.hopper_id?.avatar_id
                                                           ?.avatar
-                                                      : null
+                                                        : null
                                                   }
                                                   alt="User"
                                                   className="usr_img"
@@ -2185,7 +2181,7 @@ const NewFeeddetail = (props) => {
                                               </div>
                                             </div>
                                           ) : curr.message_type ===
-                                              "PaymentIntent" &&
+                                            "PaymentIntent" &&
                                             PaymentIntent ? (
                                             <div className="crd chatting_itm auto_msg sngl_cht d-flex align-items-start">
                                               <div className="img">
@@ -2198,7 +2194,7 @@ const NewFeeddetail = (props) => {
                                               <div className="cht_txt postedcmnt_info">
                                                 <div className="d-flex align-items-center">
                                                   <h5 className="usr_name mb-0">
-                                                  PressHop
+                                                    PressHop
                                                     <span className="text-secondary time">
                                                       {moment(
                                                         curr?.createdAt
@@ -2264,7 +2260,7 @@ const NewFeeddetail = (props) => {
                                               <div className="cht_txt postedcmnt_info">
                                                 <div className="d-flex align-items-center">
                                                   <h5 className="usr_name mb-0">
-                                                  PressHop
+                                                    PressHop
                                                     <span className="text-secondary time">
                                                       {moment(
                                                         curr?.createdAt
@@ -2329,7 +2325,7 @@ const NewFeeddetail = (props) => {
                                               </div>
                                             </div>
                                           ) : curr.message_type ===
-                                              "reject_mediaHouse_offer" &&
+                                            "reject_mediaHouse_offer" &&
                                             !curr.paid_status ? (
                                             <div className="crd chatting_itm auto_msg rating sngl_cht d-flex align-items-start">
                                               <div className="img">
@@ -2342,7 +2338,7 @@ const NewFeeddetail = (props) => {
                                               <div className="cht_txt postedcmnt_info">
                                                 <div className="d-flex align-items-center">
                                                   <h5 className="usr_name mb-0">
-                                                  PressHop
+                                                    PressHop
                                                     <span className="text-secondary time">
                                                       {moment(
                                                         curr?.createdAt
@@ -2370,7 +2366,7 @@ const NewFeeddetail = (props) => {
                                                         ? Number(Ratings)
                                                         : 0
                                                     }
-                                                    // defaultValue={3}
+                                                  // defaultValue={3}
                                                   />
                                                   <Form.Group
                                                     className="mb-3"
@@ -2674,13 +2670,13 @@ const NewFeeddetail = (props) => {
                               feedImg={
                                 curr?.content[0]?.media_type === "video"
                                   ? curr?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.thumbnail
+                                  process.env.REACT_APP_CONTENT_MEDIA +
+                                  curr?.content[0]?.thumbnail
                                   : curr?.content[0]?.media_type === "audio"
-                                  ? audioic
-                                  : curr?.content[0]?.watermark ||
+                                    ? audioic
+                                    : curr?.content[0]?.watermark ||
                                     process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.media
+                                    curr?.content[0]?.media
                               }
                               // feedType={contentVideo}
                               feedTag={"Most Viewed"}
@@ -2789,12 +2785,12 @@ const NewFeeddetail = (props) => {
                               feedImg={
                                 curr?.content[0]?.media_type === "video"
                                   ? process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.thumbnail
+                                  curr?.content[0]?.thumbnail
                                   : curr?.content[0]?.media_type === "audio"
-                                  ? audioic
-                                  : curr?.content[0]?.watermark ||
+                                    ? audioic
+                                    : curr?.content[0]?.watermark ||
                                     process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.media
+                                    curr?.content[0]?.media
                               }
                               // postcount={curr?.content?.length}
 
@@ -2803,14 +2799,14 @@ const NewFeeddetail = (props) => {
                                 curr?.sales_prefix
                                   ? `${curr?.sales_prefix} ${curr?.discount_percent}% Off`
                                   : curr?.content_view_type == "mostpopular"
-                                  ? "Most Popular"
-                                  : curr?.content_view_type == "mostviewed"
-                                  ? "Most viewed"
-                                  : null
+                                    ? "Most Popular"
+                                    : curr?.content_view_type == "mostviewed"
+                                      ? "Most viewed"
+                                      : null
                               }
                               user_avatar={
                                 process.env.REACT_APP_AVATAR_IMAGE +
-                                  curr?.hopper_id?.avatar_id?.avatar ||
+                                curr?.hopper_id?.avatar_id?.avatar ||
                                 authorimg
                               }
                               author_Name={curr.hopper_id?.user_name}
@@ -2827,7 +2823,7 @@ const NewFeeddetail = (props) => {
                               // feedTypeImg={curr.content[0].media_type === "audio" ? interviewic : cameraic}
                               fvticns={
                                 curr?.favourite_status == true ||
-                                curr?.favourite_status == "true"
+                                  curr?.favourite_status == "true"
                                   ? favouritedic
                                   : favic
                               }
