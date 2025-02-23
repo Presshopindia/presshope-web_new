@@ -62,6 +62,21 @@ const Invoice = () => {
     return val;
   };
 
+  const handleInvoiveDownload = async () => {
+    if( !data.invoice_id ) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const resp = await Get(`mediaHouse/download-invoice?invoiceId=${data.invoice_id}`);
+      setLoading(false);
+      window.open( resp.data.data, "_blank" );
+    } catch (error) {
+      setLoading(false);
+    }
+  }
+
   return (
     <>
       {loading && <Loader />}
@@ -538,7 +553,12 @@ const Invoice = () => {
             </Col>
           </Row>
           <div className="download-invoice-container">
-            <Button className="theme-btn custom-ab mb-4 mt-2 sm_btn download-invoice-btn">Download Invoice</Button>
+            <Button
+              className="theme-btn custom-ab mb-4 mt-2 sm_btn download-invoice-btn"
+              onClick={handleInvoiveDownload}
+            >
+              Download Invoice
+            </Button>
           </div>
           <div className="mt-0">
             <TopSearchesTipsCard />
