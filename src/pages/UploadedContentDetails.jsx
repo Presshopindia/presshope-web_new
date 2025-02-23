@@ -243,7 +243,7 @@ const UploadedContentDetails = (props) => {
 
         getCountOfBasketItems();
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // const AddToBasket = async () => {
@@ -317,7 +317,7 @@ const UploadedContentDetails = (props) => {
       image_id: curr?.image_id,
     };
     socket.emit("rating", obj);
-    socket.on("rating", (obj) => {});
+    socket.on("rating", (obj) => { });
     getMessages(JSON.parse(localStorage.getItem("external_chat_room_detail")));
   };
 
@@ -840,7 +840,7 @@ const UploadedContentDetails = (props) => {
           JSON.parse(localStorage.getItem("external_chat_room_detail"))
         );
       });
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const DownloadContent = async (id) => {
@@ -1077,98 +1077,98 @@ const UploadedContentDetails = (props) => {
                           >
                             {data
                               ? data?.task_id?.content?.map((curr) => {
-                                  return (
-                                    <SwiperSlide key={curr._id}>
-                                      {curr?.media_type === "image" ? (
+                                return (
+                                  <SwiperSlide key={curr._id}>
+                                    {curr?.media_type === "image" ? (
+                                      <img
+                                        src={curr?.watermark || curr?.media}
+                                        alt={`Image ${curr._id}`}
+                                      />
+                                    ) : curr?.media_type === "audio" ? (
+                                      <div>
                                         <img
-                                          src={curr?.watermark || curr?.media}
-                                          alt={`Image ${curr._id}`}
+                                          src={audioic}
+                                          alt={`Audio ${curr._id}`}
+                                          className="slider-img"
+                                          onClick={toggleAudio}
                                         />
-                                      ) : curr?.media_type === "audio" ? (
-                                        <div>
-                                          <img
-                                            src={audioic}
-                                            alt={`Audio ${curr._id}`}
-                                            className="slider-img"
-                                            onClick={toggleAudio}
-                                          />
-                                          <audio
-                                            controls
-                                            src={
-                                              process.env
-                                                .REACT_APP_UPLOADED_CONTENT +
-                                              curr?.media
-                                            }
-                                            type="audio/mpeg"
-                                            className="slider-audio"
-                                            ref={audioRef}
-                                          />
-                                        </div>
-                                      ) : curr?.media_type === "video" ? (
-                                        <video
+                                        <audio
                                           controls
-                                          className="slider-vddo"
-                                          // src={
-                                          //   process.env
-                                          //     .REACT_APP_UPLOADED_CONTENT +
-                                          //   curr?.media
-                                          // }
-                                          src={curr?.watermark}
-                                        />
-                                      ) : (
-                                        <embed
-                                          src="https://uat-presshope.s3.eu-west-2.amazonaws.com/public/contentData/169383718859210044629829-1025-123123122222121_seller_invoice.pdf"
-                                          type="application/pdf"
-                                          width="100%"
-                                          height="500"
-                                        />
-                                      )}
-                                    </SwiperSlide>
-                                  );
-                                })
-                              : fav?.content_id?.content?.map((curr) => {
-                                  return (
-                                    <SwiperSlide key={curr._id}>
-                                      {curr?.media_type === "image" ? (
-                                        <img
                                           src={
-                                            curr?.watermark ||
+                                            process.env
+                                              .REACT_APP_UPLOADED_CONTENT +
+                                            curr?.media
+                                          }
+                                          type="audio/mpeg"
+                                          className="slider-audio"
+                                          ref={audioRef}
+                                        />
+                                      </div>
+                                    ) : curr?.media_type === "video" ? (
+                                      <video
+                                        controls
+                                        className="slider-vddo"
+                                        // src={
+                                        //   process.env
+                                        //     .REACT_APP_UPLOADED_CONTENT +
+                                        //   curr?.media
+                                        // }
+                                        src={curr?.watermark}
+                                      />
+                                    ) : (
+                                      <embed
+                                        src="https://uat-presshope.s3.eu-west-2.amazonaws.com/public/contentData/169383718859210044629829-1025-123123122222121_seller_invoice.pdf"
+                                        type="application/pdf"
+                                        width="100%"
+                                        height="500"
+                                      />
+                                    )}
+                                  </SwiperSlide>
+                                );
+                              })
+                              : fav?.content_id?.content?.map((curr) => {
+                                return (
+                                  <SwiperSlide key={curr._id}>
+                                    {curr?.media_type === "image" ? (
+                                      <img
+                                        src={
+                                          curr?.watermark ||
+                                          process.env
+                                            .REACT_APP_CONTENT_MEDIA +
+                                          curr?.media
+                                        }
+                                        alt={`Image ${curr._id}`}
+                                      />
+                                    ) : curr?.media_type === "audio" ? (
+                                      <div>
+                                        <img
+                                          src={audioic}
+                                          alt={`Audio ${curr._id}`}
+                                          className="slider-img"
+                                          onClick={toggleAudio}
+                                        />
+                                        <audio
+                                          controls
+                                          src={
                                             process.env
                                               .REACT_APP_CONTENT_MEDIA +
-                                              curr?.media
+                                            curr?.media
                                           }
-                                          alt={`Image ${curr._id}`}
+                                          type="audio/mpeg"
+                                          className="slider-audio"
+                                          ref={audioRef}
                                         />
-                                      ) : curr?.media_type === "audio" ? (
-                                        <div>
-                                          <img
-                                            src={audioic}
-                                            alt={`Audio ${curr._id}`}
-                                            className="slider-img"
-                                            onClick={toggleAudio}
-                                          />
-                                          <audio
-                                            controls
-                                            src={
-                                              process.env
-                                                .REACT_APP_CONTENT_MEDIA +
-                                              curr?.media
-                                            }
-                                            type="audio/mpeg"
-                                            className="slider-audio"
-                                            ref={audioRef}
-                                          />
-                                        </div>
-                                      ) : curr?.media_type === "video" ? (
-                                        <video
-                                          controls
-                                          className="slider-vddo"
-                                          src={curr?.media}
-                                        />
-                                      ) : null}
-                                    </SwiperSlide>
-                                  );
-                                })}
+                                      </div>
+                                    ) : curr?.media_type === "video" ? (
+                                      <video
+                                        controls
+                                        className="slider-vddo"
+                                        src={curr?.media}
+                                      />
+                                    ) : null}
+                                  </SwiperSlide>
+                                );
+                              })}
 
                             {/* )
                             })} */}
@@ -1334,10 +1334,10 @@ const UploadedContentDetails = (props) => {
                                       data?.type == "image"
                                         ? data?.task_id?.hopper_photo_price
                                         : data?.type == "video"
-                                        ? data?.task_id?.hopper_videos_price
-                                        : data?.type == "audio"
-                                        ? data?.task_id?.hopper_interview_price
-                                        : "";
+                                          ? data?.task_id?.hopper_videos_price
+                                          : data?.type == "audio"
+                                            ? data?.task_id?.hopper_interview_price
+                                            : "";
                                     // Payment(
                                     //   +data?.task_id?.hopper_photo_price,
                                     //   +contentCost,
@@ -1351,10 +1351,10 @@ const UploadedContentDetails = (props) => {
                                   {data?.type == "image"
                                     ? data?.task_id?.hopper_photo_price
                                     : data?.type == "video"
-                                    ? data?.task_id?.hopper_videos_price
-                                    : data?.type == "audio"
-                                    ? data?.task_id?.hopper_interview_price
-                                    : ""}
+                                      ? data?.task_id?.hopper_videos_price
+                                      : data?.type == "audio"
+                                        ? data?.task_id?.hopper_interview_price
+                                        : ""}
                                 </button>
                               </div>
                             </div>
@@ -1428,27 +1428,25 @@ const UploadedContentDetails = (props) => {
                                                 src={
                                                   curr.user_info
                                                     ? curr?.user_info
-                                                        ?.profile_image
+                                                      ?.profile_image
                                                     : curr?.sender_id
-                                                        ?.profile_image
+                                                      ?.profile_image
                                                 }
                                                 alt="user"
                                               />
                                             </div>
                                             <div className="postedcmnt_info">
                                               <h5>
-                                                {`${
-                                                  curr.user_info
-                                                    ? curr?.user_info
-                                                        ?.first_name
-                                                    : curr?.sender_id
-                                                        ?.first_name
-                                                } 
-                                                ${
-                                                  curr.user_info
+                                                {`${curr.user_info
+                                                  ? curr?.user_info
+                                                    ?.first_name
+                                                  : curr?.sender_id
+                                                    ?.first_name
+                                                  } 
+                                                ${curr.user_info
                                                     ? curr?.user_info?.last_name
                                                     : curr?.sender_id?.last_name
-                                                }`}
+                                                  }`}
                                                 <span className="text-secondary time">
                                                   {moment(
                                                     curr?.createdAt
@@ -1514,7 +1512,7 @@ const UploadedContentDetails = (props) => {
                                             "admin_detail"
                                           )
                                             ? profileData?.admin_detail
-                                                ?.admin_profile
+                                              ?.admin_profile
                                             : profileData?.profile_image
                                         }
                                         alt=""
@@ -1566,7 +1564,7 @@ const UploadedContentDetails = (props) => {
                                         >
                                           <Tooltip id="overlay-example">
                                             <div className="recordingPopup">
-                                              <h5>Record Audio</h5>
+                                              <h5>Record audio</h5>
                                               <div className="d-flex mt-3 justify-content-evenly">
                                                 <Button
                                                   className="rec_aud_btn"
@@ -1632,11 +1630,10 @@ const UploadedContentDetails = (props) => {
                                             <div className="tab_in_card_items">
                                               <div className="checkWrap">
                                                 <FormControlLabel
-                                                  className={`me-0 ${
-                                                    !selectedIds.includes(
-                                                      curr._id
-                                                    ) && "afterCheck"
-                                                  }`}
+                                                  className={`me-0 ${!selectedIds.includes(
+                                                    curr._id
+                                                  ) && "afterCheck"
+                                                    }`}
                                                   checked={
                                                     selectedIds.includes(
                                                       curr._id
@@ -1724,7 +1721,7 @@ const UploadedContentDetails = (props) => {
                                           <div className="cht_txt">
                                             <div className="d-flex align-items-center">
                                               <p className="usr_name mb-0">
-                                              PressHop
+                                                PressHop
                                               </p>
                                               <p className="cht_time mb-0">
                                                 {moment(
@@ -1755,15 +1752,15 @@ const UploadedContentDetails = (props) => {
                                                 <div className="sngl_btn">
                                                   <p className="prc">
                                                     {taskDetails?.need_photos ===
-                                                    true
+                                                      true
                                                       ? "£" +
-                                                        formatAmountInMillion(
-                                                          Number(
-                                                            taskDetails?.hopper_photo_price.toFixed(
-                                                              2
-                                                            )
+                                                      formatAmountInMillion(
+                                                        Number(
+                                                          taskDetails?.hopper_photo_price.toFixed(
+                                                            2
                                                           )
                                                         )
+                                                      )
                                                       : "--"}
                                                   </p>
                                                   <p className="offrd_txt">
@@ -1776,13 +1773,13 @@ const UploadedContentDetails = (props) => {
                                                 <div className="sngl_btn">
                                                   <p className="prc">
                                                     {taskDetails?.need_interview ===
-                                                    true
+                                                      true
                                                       ? "£" +
-                                                        formatAmountInMillion(
-                                                          Number(
-                                                            taskDetails?.hopper_interview_price
-                                                          )
+                                                      formatAmountInMillion(
+                                                        Number(
+                                                          taskDetails?.hopper_interview_price
                                                         )
+                                                      )
                                                       : "--"}
                                                   </p>
 
@@ -1796,11 +1793,11 @@ const UploadedContentDetails = (props) => {
                                                 <div className="sngl_btn">
                                                   <p className="prc">
                                                     {taskDetails?.need_videos ===
-                                                    true
+                                                      true
                                                       ? "£" +
-                                                        formatAmountInMillion(
-                                                          taskDetails?.hopper_videos_price
-                                                        )
+                                                      formatAmountInMillion(
+                                                        taskDetails?.hopper_videos_price
+                                                      )
                                                       : "--"}
                                                   </p>
                                                   <p className="offrd_txt">
@@ -1831,45 +1828,45 @@ const UploadedContentDetails = (props) => {
                                             <>
                                               {curr.message_type ===
                                                 "media" && (
-                                                <div className="chatting_itm sngl_cht d-flex align-items-start">
-                                                  <img
-                                                    src={
-                                                      process.env
-                                                        .REACT_APP_AVATAR_IMAGE +
-                                                      roomDetails
-                                                        ?.avatar_detals[0]
-                                                        ?.avatar
-                                                    }
-                                                    alt="User"
-                                                    className="usr_img"
-                                                  />
-                                                  <div className="cht_txt">
-                                                    <div className="d-flex align-items-center">
-                                                      <p className="usr_name mb-0">
-                                                        {
-                                                          curr?.sender_id
-                                                            ?.user_name
-                                                        }
+                                                  <div className="chatting_itm sngl_cht d-flex align-items-start">
+                                                    <img
+                                                      src={
+                                                        process.env
+                                                          .REACT_APP_AVATAR_IMAGE +
+                                                        roomDetails
+                                                          ?.avatar_detals[0]
+                                                          ?.avatar
+                                                      }
+                                                      alt="User"
+                                                      className="usr_img"
+                                                    />
+                                                    <div className="cht_txt">
+                                                      <div className="d-flex align-items-center">
+                                                        <p className="usr_name mb-0">
+                                                          {
+                                                            curr?.sender_id
+                                                              ?.user_name
+                                                          }
+                                                        </p>
+                                                        <p className="cht_time mb-0">
+                                                          {moment(
+                                                            curr?.createdAt
+                                                          ).format(
+                                                            "h:mm A, D MMM YYYY"
+                                                          )}
+                                                        </p>
+                                                      </div>
+                                                      <p className="mb-0 msg">
+                                                        Has uploaded 1{" "}
+                                                        {curr?.media?.mime ==
+                                                          "video"
+                                                          ? "Video"
+                                                          : curr?.media?.mime ==
+                                                            "image"
+                                                            ? "Image"
+                                                            : "Audio"}
                                                       </p>
-                                                      <p className="cht_time mb-0">
-                                                        {moment(
-                                                          curr?.createdAt
-                                                        ).format(
-                                                          "h:mm A, D MMM YYYY"
-                                                        )}
-                                                      </p>
-                                                    </div>
-                                                    <p className="mb-0 msg">
-                                                      Has uploaded 1{" "}
-                                                      {curr?.media?.mime ==
-                                                      "video"
-                                                        ? "Video"
-                                                        : curr?.media?.mime ==
-                                                          "image"
-                                                        ? "Image"
-                                                        : "Audio"}
-                                                    </p>
-                                                    {/* <div className="content_uplded position-relative vido_cnt">
+                                                      {/* <div className="content_uplded position-relative vido_cnt">
                                                     
                                                       {curr?.media?.mime ===
                                                       "image" ? (
@@ -1917,7 +1914,7 @@ const UploadedContentDetails = (props) => {
                                                         </div>
                                                       )}
                                                     </div> */}
-                                                    {/* <div className="content_uplded position-relative vido_cnt">
+                                                      {/* <div className="content_uplded position-relative vido_cnt">
                                                       {curr?.media?.map(
                                                         (item, index) => (
                                                           <>
@@ -2013,268 +2010,264 @@ const UploadedContentDetails = (props) => {
                                                         )
                                                       )}
                                                     </div> */}
-                                                    <div className="content_uplded position-relative vido_cnt">
-                                                      {curr?.media?.map(
-                                                        (item, index) => (
-                                                          <>
-                                                            {!item.paid_status ? (
-                                                              <div
-                                                                key={
-                                                                  item?._id ||
-                                                                  index
-                                                                }
-                                                                className="media-item"
-                                                              >
-                                                                <label className="checkbox-label">
-                                                                  <input
-                                                                    type="checkbox"
-                                                                    className="media-checkbox"
-                                                                    onChange={(
-                                                                      e
-                                                                    ) => {
-                                                                      // Handle checkbox state change here
-                                                                      handleSelectionChange(
-                                                                        item,
-                                                                        e.target
-                                                                          .checked
-                                                                      );
-                                                                      console.log(
-                                                                        `Checkbox for media ${
-                                                                          item?._id ||
+                                                      <div className="content_uplded position-relative vido_cnt">
+                                                        {curr?.media?.map(
+                                                          (item, index) => (
+                                                            <>
+                                                              {!item.paid_status ? (
+                                                                <div
+                                                                  key={
+                                                                    item?._id ||
+                                                                    index
+                                                                  }
+                                                                  className="media-item"
+                                                                >
+                                                                  <label className="checkbox-label">
+                                                                    <input
+                                                                      type="checkbox"
+                                                                      className="media-checkbox"
+                                                                      onChange={(
+                                                                        e
+                                                                      ) => {
+                                                                        // Handle checkbox state change here
+                                                                        handleSelectionChange(
+                                                                          item,
+                                                                          e.target
+                                                                            .checked
+                                                                        );
+                                                                        console.log(
+                                                                          `Checkbox for media ${item?._id ||
                                                                           index
-                                                                        } is ${
-                                                                          e
+                                                                          } is ${e
                                                                             .target
                                                                             .checked
-                                                                        }`
-                                                                      );
-                                                                    }}
-                                                                  />
-                                                                  {/* <span>
+                                                                          }`
+                                                                        );
+                                                                      }}
+                                                                    />
+                                                                    {/* <span>
                                                                 Select
                                                               </span> */}
-                                                                </label>
+                                                                  </label>
 
-                                                                {item?.mime ===
-                                                                "image" ? (
-                                                                  <img
-                                                                    // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
-                                                                    src={`${item?.thumbnail_url}`}
-                                                                    className="usr_upld_cont"
-                                                                    alt={`Content Image ${
-                                                                      index + 1
-                                                                    }`}
-                                                                  />
-                                                                ) : item?.mime ===
-                                                                  "video" ? (
-                                                                  <video
-                                                                    controls
-                                                                    className="slider-vddo"
-                                                                    // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
-                                                                    src={`${item?.thumbnail_url}`}
-                                                                  />
-                                                                ) : item?.mime ===
-                                                                    "audio" ||
-                                                                  item?.mime ==
-                                                                    "" ? (
-                                                                  <div>
+                                                                  {item?.mime ===
+                                                                    "image" ? (
                                                                     <img
-                                                                      src={
-                                                                        audioic
-                                                                      }
-                                                                      alt={`Audio ${item?._id}`}
-                                                                      className="slider-img"
-                                                                      onClick={
-                                                                        toggleAudio
-                                                                      }
-                                                                    />
-                                                                    <audio
-                                                                      controls
                                                                       // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
                                                                       src={`${item?.thumbnail_url}`}
-                                                                      type="audio/mpeg"
-                                                                      className="slider-audio"
-                                                                      ref={
-                                                                        audioRef
-                                                                      }
+                                                                      className="usr_upld_cont"
+                                                                      alt={`Content Image ${index + 1
+                                                                        }`}
                                                                     />
-                                                                  </div>
-                                                                ) : (
-                                                                  <p>
-                                                                    Unsupported
-                                                                    media type
-                                                                  </p>
-                                                                )}
-                                                              </div>
-                                                            ) : (
-                                                              <>
-                                                                {item?.mime ===
-                                                                "image" ? (
-                                                                  <img
-                                                                    // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
-                                                                    src={`${item?.thumbnail_url}`}
-                                                                    className="usr_upld_cont"
-                                                                    alt={`Content Image ${
-                                                                      index + 1
-                                                                    }`}
-                                                                  />
-                                                                ) : item?.mime ===
-                                                                  "video" ? (
-                                                                  <video
-                                                                    controls
-                                                                    className="slider-vddo"
-                                                                    // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
-                                                                    src={`${item?.thumbnail_url}`}
-                                                                  />
-                                                                ) : item?.mime ===
-                                                                    "audio" ||
-                                                                  item?.mime ==
-                                                                    "" ? (
-                                                                  <div>
-                                                                    <img
-                                                                      src={
-                                                                        audioic
-                                                                      }
-                                                                      alt={`Audio ${item?._id}`}
-                                                                      className="slider-img"
-                                                                      onClick={
-                                                                        toggleAudio
-                                                                      }
-                                                                    />
-                                                                    <audio
+                                                                  ) : item?.mime ===
+                                                                    "video" ? (
+                                                                    <video
                                                                       controls
+                                                                      className="slider-vddo"
                                                                       // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
                                                                       src={`${item?.thumbnail_url}`}
-                                                                      type="audio/mpeg"
-                                                                      className="slider-audio"
-                                                                      ref={
-                                                                        audioRef
-                                                                      }
                                                                     />
-                                                                  </div>
-                                                                ) : (
-                                                                  <p>
-                                                                    Unsupported
-                                                                    media type
-                                                                  </p>
-                                                                )}
-
-                                                                <div className="usr_upld_opts">
-                                                                  <button
-                                                                    className="theme_btn"
-                                                                    onClick={() =>
-                                                                      DownloadContent(
-                                                                        item?.image_id
-                                                                      )
-                                                                    }
-                                                                  >
-                                                                    Download
-                                                                  </button>
+                                                                  ) : item?.mime ===
+                                                                    "audio" ||
+                                                                    item?.mime ==
+                                                                    "" ? (
+                                                                    <div>
+                                                                      <img
+                                                                        src={
+                                                                          audioic
+                                                                        }
+                                                                        alt={`Audio ${item?._id}`}
+                                                                        className="slider-img"
+                                                                        onClick={
+                                                                          toggleAudio
+                                                                        }
+                                                                      />
+                                                                      <audio
+                                                                        controls
+                                                                        // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
+                                                                        src={`${item?.thumbnail_url}`}
+                                                                        type="audio/mpeg"
+                                                                        className="slider-audio"
+                                                                        ref={
+                                                                          audioRef
+                                                                        }
+                                                                      />
+                                                                    </div>
+                                                                  ) : (
+                                                                    <p>
+                                                                      Unsupported
+                                                                      media type
+                                                                    </p>
+                                                                  )}
                                                                 </div>
-                                                              </>
-                                                            )}
-                                                          </>
-                                                        )
-                                                      )}
-                                                    </div>
+                                                              ) : (
+                                                                <>
+                                                                  {item?.mime ===
+                                                                    "image" ? (
+                                                                    <img
+                                                                      // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
+                                                                      src={`${item?.thumbnail_url}`}
+                                                                      className="usr_upld_cont"
+                                                                      alt={`Content Image ${index + 1
+                                                                        }`}
+                                                                    />
+                                                                  ) : item?.mime ===
+                                                                    "video" ? (
+                                                                    <video
+                                                                      controls
+                                                                      className="slider-vddo"
+                                                                      // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
+                                                                      src={`${item?.thumbnail_url}`}
+                                                                    />
+                                                                  ) : item?.mime ===
+                                                                    "audio" ||
+                                                                    item?.mime ==
+                                                                    "" ? (
+                                                                    <div>
+                                                                      <img
+                                                                        src={
+                                                                          audioic
+                                                                        }
+                                                                        alt={`Audio ${item?._id}`}
+                                                                        className="slider-img"
+                                                                        onClick={
+                                                                          toggleAudio
+                                                                        }
+                                                                      />
+                                                                      <audio
+                                                                        controls
+                                                                        // src={`${process.env.REACT_APP_UPLOADED_CONTENT}${item?.thumbnail_url}`}
+                                                                        src={`${item?.thumbnail_url}`}
+                                                                        type="audio/mpeg"
+                                                                        className="slider-audio"
+                                                                        ref={
+                                                                          audioRef
+                                                                        }
+                                                                      />
+                                                                    </div>
+                                                                  ) : (
+                                                                    <p>
+                                                                      Unsupported
+                                                                      media type
+                                                                    </p>
+                                                                  )}
 
-                                                    <div className="usr_upld_opts">
-                                                      {curr?.paid_status !==
-                                                      true ? (
-                                                        <div className="d-flex">
-                                                          <button
-                                                            className="theme_btn me-2"
-                                                            onClick={() => {
-                                                              if (
-                                                                taskExpireDiff >=
-                                                                1
-                                                              ) {
-                                                                successToasterFun(
-                                                                  "This task has been expired"
-                                                                );
-                                                              } else {
-                                                                stripePayment(
-                                                                  curr
-                                                                );
-                                                              }
-                                                            }}
-                                                          >
-                                                            Buy
-                                                          </button>
-
-                                                          <button
-                                                            className="theme_btn"
-                                                            onClick={() => {
-                                                              if (
-                                                                taskExpireDiff >=
-                                                                1
-                                                              ) {
-                                                                successToasterFun(
-                                                                  "This task has been expired"
-                                                                );
-                                                              } else {
-                                                                stripePayment(
-                                                                  curr
-                                                                );
-                                                              }
-                                                            }}
-                                                          >
-                                                            Add to basket
-                                                          </button>
-                                                        </div>
-                                                      ) : (
-                                                        ""
-                                                      )}
-                                                      {curr?.paid_status !==
-                                                        true &&
-                                                        curr?.request_sent ===
-                                                          null && (
-                                                          <span>or</span>
+                                                                  <div className="usr_upld_opts">
+                                                                    <button
+                                                                      className="theme_btn"
+                                                                      onClick={() =>
+                                                                        DownloadContent(
+                                                                          item?.image_id
+                                                                        )
+                                                                      }
+                                                                    >
+                                                                      Download
+                                                                    </button>
+                                                                  </div>
+                                                                </>
+                                                              )}
+                                                            </>
+                                                          )
                                                         )}
-                                                      {curr?.request_sent ===
-                                                        null && (
-                                                        // taskExpireDiff >= 1 &&
-                                                        <button
-                                                          className="secondary_btn"
-                                                          onClick={() => {
-                                                            if (
-                                                              taskExpireDiff >=
-                                                              1
-                                                            ) {
-                                                              successToasterFun(
-                                                                "This task has been expired"
-                                                              );
-                                                            } else {
-                                                              requestMoreContent(
-                                                                curr
-                                                              );
-                                                            }
-                                                          }}
-                                                        >
-                                                          Request more content
-                                                        </button>
-                                                      )}
+                                                      </div>
+
+                                                      <div className="usr_upld_opts">
+                                                        {curr?.paid_status !==
+                                                          true ? (
+                                                          <div className="d-flex">
+                                                            <button
+                                                              className="theme_btn me-2"
+                                                              onClick={() => {
+                                                                if (
+                                                                  taskExpireDiff >=
+                                                                  1
+                                                                ) {
+                                                                  successToasterFun(
+                                                                    "This task has been expired"
+                                                                  );
+                                                                } else {
+                                                                  stripePayment(
+                                                                    curr
+                                                                  );
+                                                                }
+                                                              }}
+                                                            >
+                                                              Buy
+                                                            </button>
+
+                                                            <button
+                                                              className="theme_btn"
+                                                              onClick={() => {
+                                                                if (
+                                                                  taskExpireDiff >=
+                                                                  1
+                                                                ) {
+                                                                  successToasterFun(
+                                                                    "This task has been expired"
+                                                                  );
+                                                                } else {
+                                                                  stripePayment(
+                                                                    curr
+                                                                  );
+                                                                }
+                                                              }}
+                                                            >
+                                                              Add to basket
+                                                            </button>
+                                                          </div>
+                                                        ) : (
+                                                          ""
+                                                        )}
+                                                        {curr?.paid_status !==
+                                                          true &&
+                                                          curr?.request_sent ===
+                                                          null && (
+                                                            <span>or</span>
+                                                          )}
+                                                        {curr?.request_sent ===
+                                                          null && (
+                                                            // taskExpireDiff >= 1 &&
+                                                            <button
+                                                              className="secondary_btn"
+                                                              onClick={() => {
+                                                                if (
+                                                                  taskExpireDiff >=
+                                                                  1
+                                                                ) {
+                                                                  successToasterFun(
+                                                                    "This task has been expired"
+                                                                  );
+                                                                } else {
+                                                                  requestMoreContent(
+                                                                    curr
+                                                                  );
+                                                                }
+                                                              }}
+                                                            >
+                                                              Request more content
+                                                            </button>
+                                                          )}
+                                                      </div>
+                                                      <p className="buy_btn_txt mb-0">
+                                                        This content has been
+                                                        directly uploaded by the
+                                                        Hopper on our platform. We
+                                                        have not reviewed the
+                                                        content for authenticity &
+                                                        privacy, and are not
+                                                        responsible. Please review
+                                                        the content properly
+                                                        before purchasing it.
+                                                        Please{" "}
+                                                        <a className="link">
+                                                          contact us{" "}
+                                                        </a>
+                                                        should you wish to discuss
+                                                        this content.
+                                                      </p>
                                                     </div>
-                                                    <p className="buy_btn_txt mb-0">
-                                                      This content has been
-                                                      directly uploaded by the
-                                                      Hopper on our platform. We
-                                                      have not reviewed the
-                                                      content for authenticity &
-                                                      privacy, and are not
-                                                      responsible. Please review
-                                                      the content properly
-                                                      before purchasing it.
-                                                      Please{" "}
-                                                      <a className="link">
-                                                        contact us{" "}
-                                                      </a>
-                                                      should you wish to discuss
-                                                      this content.
-                                                    </p>
                                                   </div>
-                                                </div>
-                                              )}
+                                                )}
 
                                               {curr?.paid_status === true && (
                                                 <div className="chatting_itm auto_msg sngl_cht d-flex align-items-start">
@@ -2351,43 +2344,43 @@ const UploadedContentDetails = (props) => {
                                               )}
                                               {curr.message_type ===
                                                 "request_more_content" && (
-                                                <div className="chatting_itm auto_msg sngl_cht d-flex align-items-start">
-                                                  <img
-                                                    src={
-                                                      curr?.receiver_id
-                                                        ?.profile_image
-                                                    }
-                                                    alt="User"
-                                                    className="usr_img"
-                                                  />
-                                                  <div className="cht_txt">
-                                                    <div className="d-flex align-items-center">
-                                                      <p className="usr_name mb-0">
-                                                        {curr?.receiver_id
-                                                          ?.first_name +
-                                                          " " +
-                                                          curr?.receiver_id
-                                                            ?.last_name}
-                                                      </p>
-                                                      <p className="cht_time mb-0">
-                                                        {moment(
-                                                          curr?.createdAt
-                                                        ).format(
-                                                          "h:mm A, D MMM YYYY"
-                                                        )}
+                                                  <div className="chatting_itm auto_msg sngl_cht d-flex align-items-start">
+                                                    <img
+                                                      src={
+                                                        curr?.receiver_id
+                                                          ?.profile_image
+                                                      }
+                                                      alt="User"
+                                                      className="usr_img"
+                                                    />
+                                                    <div className="cht_txt">
+                                                      <div className="d-flex align-items-center">
+                                                        <p className="usr_name mb-0">
+                                                          {curr?.receiver_id
+                                                            ?.first_name +
+                                                            " " +
+                                                            curr?.receiver_id
+                                                              ?.last_name}
+                                                        </p>
+                                                        <p className="cht_time mb-0">
+                                                          {moment(
+                                                            curr?.createdAt
+                                                          ).format(
+                                                            "h:mm A, D MMM YYYY"
+                                                          )}
+                                                        </p>
+                                                      </div>
+                                                      <p className="mb-0 msg auto_press_msg">
+                                                        Has requested for more
+                                                        content from abhishek{" "}
+                                                        {
+                                                          curr?.sender_id
+                                                            ?.user_name
+                                                        }
                                                       </p>
                                                     </div>
-                                                    <p className="mb-0 msg auto_press_msg">
-                                                      Has requested for more
-                                                      content from abhishek{" "}
-                                                      {
-                                                        curr?.sender_id
-                                                          ?.user_name
-                                                      }
-                                                    </p>
                                                   </div>
-                                                </div>
-                                              )}
+                                                )}
 
                                               {curr.paid_status && (
                                                 <div className="chatting_itm auto_msg rating sngl_cht d-flex align-items-start">
@@ -2831,15 +2824,15 @@ const UploadedContentDetails = (props) => {
                             feedImg={
                               item?.type === "image"
                                 ? item?.videothubnail ||
-                                  process.env.REACT_APP_UPLOADED_CONTENT +
-                                    item?.imageAndVideo
+                                process.env.REACT_APP_UPLOADED_CONTENT +
+                                item?.imageAndVideo
                                 : item?.type === "video"
-                                ? item?.videothubnail ||
+                                  ? item?.videothubnail ||
                                   process.env.REACT_APP_UPLOADED_CONTENT +
-                                    item?.videothubnail
-                                : item?.type === "audio"
-                                ? audioic
-                                : null
+                                  item?.videothubnail
+                                  : item?.type === "audio"
+                                    ? audioic
+                                    : null
                             }
                             type={"task"}
                             postcount={1}
@@ -2847,19 +2840,19 @@ const UploadedContentDetails = (props) => {
                               item?.type === "image"
                                 ? cameraic
                                 : item?.type === "audio"
-                                ? interviewic
-                                : item?.type === "video"
-                                ? videoic
-                                : null
+                                  ? interviewic
+                                  : item?.type === "video"
+                                    ? videoic
+                                    : null
                             }
                             user_avatar={
                               item?.avatar_details?.[0]?.avatar
                                 ? process.env.REACT_APP_AVATAR_IMAGE +
-                                  item?.avatar_details?.[0]?.avatar
+                                item?.avatar_details?.[0]?.avatar
                                 : item?.avatar_detals?.[0]?.avatar
-                                ? process.env.REACT_APP_AVATAR_IMAGE +
+                                  ? process.env.REACT_APP_AVATAR_IMAGE +
                                   item?.avatar_detals?.[0]?.avatar
-                                : ""
+                                  : ""
                             }
                             author_Name={item?.hopper_id?.user_name}
                             // lnkto={`/content-details/${item?._id}`}
@@ -2885,10 +2878,10 @@ const UploadedContentDetails = (props) => {
                               item?.type === "image"
                                 ? item?.task_id?.hopper_photo_price || 0
                                 : item?.type === "audio"
-                                ? item?.task_id?.hopper_interview_price || 0
-                                : item?.type === "video"
-                                ? item?.task_id?.hopper_videos_price || 0
-                                : null
+                                  ? item?.task_id?.hopper_interview_price || 0
+                                  : item?.type === "video"
+                                    ? item?.task_id?.hopper_videos_price || 0
+                                    : null
                             )}`}
                             favourite={() => handleFavourite(index, "related")}
                             bool_fav={
@@ -3019,15 +3012,15 @@ const UploadedContentDetails = (props) => {
                             feedImg={
                               item?.type === "image"
                                 ? item?.videothubnail ||
-                                  process.env.REACT_APP_UPLOADED_CONTENT +
-                                    item?.imageAndVideo
+                                process.env.REACT_APP_UPLOADED_CONTENT +
+                                item?.imageAndVideo
                                 : item?.type === "video"
-                                ? item?.videothubnail ||
+                                  ? item?.videothubnail ||
                                   process.env.REACT_APP_UPLOADED_CONTENT +
-                                    item?.videothubnail
-                                : item?.type === "audio"
-                                ? audioic
-                                : null
+                                  item?.videothubnail
+                                  : item?.type === "audio"
+                                    ? audioic
+                                    : null
                             }
                             type={"task"}
                             postcount={1}
@@ -3035,19 +3028,19 @@ const UploadedContentDetails = (props) => {
                               item?.type === "image"
                                 ? cameraic
                                 : item?.type === "audio"
-                                ? interviewic
-                                : item?.type === "video"
-                                ? videoic
-                                : null
+                                  ? interviewic
+                                  : item?.type === "video"
+                                    ? videoic
+                                    : null
                             }
                             user_avatar={
                               item?.avatar_details?.[0]?.avatar
                                 ? process.env.REACT_APP_AVATAR_IMAGE +
-                                  item?.avatar_details?.[0]?.avatar
+                                item?.avatar_details?.[0]?.avatar
                                 : item?.avatar_detals?.[0]?.avatar
-                                ? process.env.REACT_APP_AVATAR_IMAGE +
+                                  ? process.env.REACT_APP_AVATAR_IMAGE +
                                   item?.avatar_detals?.[0]?.avatar
-                                : ""
+                                  : ""
                             }
                             author_Name={item?.hopper_id?.user_name}
                             // lnkto={`/content-details/${item?._id}`}
@@ -3073,10 +3066,10 @@ const UploadedContentDetails = (props) => {
                               item?.type === "image"
                                 ? item?.task_id?.hopper_photo_price || 0
                                 : item?.type === "audio"
-                                ? item?.task_id?.hopper_interview_price || 0
-                                : item?.type === "video"
-                                ? item?.task_id?.hopper_videos_price || 0
-                                : null
+                                  ? item?.task_id?.hopper_interview_price || 0
+                                  : item?.type === "video"
+                                    ? item?.task_id?.hopper_videos_price || 0
+                                    : null
                             )}`}
                             favourite={() => handleFavourite(index, "more")}
                             bool_fav={

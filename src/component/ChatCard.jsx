@@ -52,7 +52,7 @@ function ChatCard(props) {
   );
   const [messages, setMessages] = useState([]);
   console.log("🚀 ~ ChatCard ~ messages:", messages)
- 
+
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState();
   const [profileImage, setProfileImage] = useState();
@@ -428,17 +428,17 @@ function ChatCard(props) {
     }
   };
 
-  const userId = React.useMemo(()=>{
+  const userId = React.useMemo(() => {
     const user = localStorage.getItem('user')
     console.log("🚀 ~ userId ~ user:", user)
-    
-    return user ?  JSON.parse(user)?._id : null
-  },[])
+
+    return user ? JSON.parse(user)?._id : null
+  }, [])
   console.log("🚀 ~ userId ~ userId:", userId)
 
   const handleDeleteMessageFromMe = async (messageId) => {
 
-    if(!userId){
+    if (!userId) {
       console.log("user id not found")
       return;
     }
@@ -451,19 +451,19 @@ function ChatCard(props) {
         "Messages",
         messageId
       );
-  
+
       // Get the message document
       const messageSnap = await getDoc(messageRef);
       console.log("🚀 ~ handleDeleteMessageFromMe ~ messageSnap:", messageSnap)
-  
+
       if (!messageSnap.exists()) {
         console.log("Message does not exist");
         return;
       }
-  
+
       const messageData = messageSnap.data();
       console.log("🚀 ~ handleDeleteMessageFromMe ~ messageData:", messageData)
-  
+
       // Check if 'deletedBy' field exists
       if (messageData.deletedBy && messageData.deletedBy !== userId) {
         // If already deleted by another user, delete permanently
@@ -474,8 +474,8 @@ function ChatCard(props) {
       } else {
         // Soft delete: Add the user ID to 'deletedBy' field
         await updateDoc(messageRef, { deletedBy: userId });
-      
-  
+
+
         // Update local state to mark as deleted
         setMessages((prevMessages) =>
           prevMessages.map((message) =>
@@ -487,7 +487,7 @@ function ChatCard(props) {
       console.log("all error --->", error);
     }
   };
-  
+
 
   const setLastMessage = async (
     message,
@@ -579,15 +579,15 @@ function ChatCard(props) {
 
           <div className="chat_msgs_scrl" ref={chatBoxRef}>
             {messages?.map((curr, index) => {
-              if(curr.deletedBy === userId){
+              if (curr.deletedBy === userId) {
                 return;
               }
               return (
                 <div className="chatting_itm d-flex align-items-start">
                   <div
                     className="chat-dlt"
-                    // onClick={() => handleDeleteMessage(curr?.id)}
-                    // onClick={() => handleDeleteMessageFromMe(curr?.id)}
+                  // onClick={() => handleDeleteMessage(curr?.id)}
+                  // onClick={() => handleDeleteMessageFromMe(curr?.id)}
                   >
                     {/* <img src={dltIcn} alt="" /> */}
 
@@ -719,7 +719,7 @@ function ChatCard(props) {
                   <Tooltip id="overlay-example" className="react-mic-tooltip">
                     <div className="recordingPopup">
                       <div className="d-flex justify-content-between align-items-center">
-                        <h5>Record Audio</h5>
+                        <h5>Record audio</h5>
                         <div
                           className="close-btn"
                           onClick={() => setShow(false)}
@@ -783,8 +783,8 @@ function ChatCard(props) {
                         />
                       </div>
                       <div className="text-end">
-                        <Button
-                          className="rec_aud_btn"
+                        <button
+                          className="sendrecBtn"
                           onClick={(e) => {
                             onStopRecording(e);
                             setShow((old) => !old);
@@ -793,8 +793,8 @@ function ChatCard(props) {
                         >
                           {" "}
                           {/* <BsPause fontSize={"20px"} /> */}
-                          send
-                        </Button>
+                          Send
+                        </button>
                         {/* <button
                           className="sendrecBtn"
                           onClick={(e) => {

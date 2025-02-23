@@ -201,7 +201,7 @@ const DashboardTables = () => {
           });
         }
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -230,12 +230,9 @@ const DashboardTables = () => {
 
       delete allFilterdataToSend.allcategoryData;
       const resp = await Get(
-        `mediaHouse/Content/Count?limit=${contentOnlineLimit}&offset=${
-          (contentOnlinePage - 1) * contentOnlineLimit
-        }&${
-          filterSortField ? `${filterSortField}=${filterSortValue || ""}` : ""
-        }&month=${month ? month : ""}&year=${
-          year ? year : ""
+        `mediaHouse/Content/Count?limit=${contentOnlineLimit}&offset=${(contentOnlinePage - 1) * contentOnlineLimit
+        }&${filterSortField ? `${filterSortField}=${filterSortValue || ""}` : ""
+        }&month=${month ? month : ""}&year=${year ? year : ""
         }&allQuery=${encodeURIComponent(JSON.stringify(allFilterdataToSend))}`
       );
       if (resp) {
@@ -282,7 +279,7 @@ const DashboardTables = () => {
       if (resp) {
         // console.log(resp, `<---this is purchased contetn`)
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -352,7 +349,7 @@ const DashboardTables = () => {
                                   }
                                   setAllFilterData={setAllFilterData}
                                   allFilterData={allFilterData}
-                                  // feedMultiFilter={handleMultiFilter}
+                                // feedMultiFilter={handleMultiFilter}
                                 />
                               )}
                             </div>
@@ -489,26 +486,26 @@ const DashboardTables = () => {
                                             data?.content_ids[0]?.content[0]
                                               ?.media_type == "image"
                                               ? data?.content_ids[0]?.content[0]
+                                                ?.watermark ||
+                                              process.env
+                                                .REACT_APP_CONTENT_MEDIA +
+                                              data?.content_ids[0]
+                                                ?.content[0]?.media
+                                              : data?.content_ids[0]?.content[0]
+                                                ?.media_type == "video"
+                                                ? data?.content_ids[0]?.content[0]
                                                   ?.watermark ||
                                                 process.env
                                                   .REACT_APP_CONTENT_MEDIA +
-                                                  data?.content_ids[0]
-                                                    ?.content[0]?.media
-                                              : data?.content_ids[0]?.content[0]
-                                                  ?.media_type == "video"
-                                              ? data?.content_ids[0]?.content[0]
-                                                  ?.watermark ||
-                                                process.env
-                                                  .REACT_APP_CONTENT_MEDIA +
-                                                  data?.content_ids[0]
-                                                    ?.content[0]?.thumbnail
-                                              : data?.content_ids[0]?.content[0]
+                                                data?.content_ids[0]
+                                                  ?.content[0]?.thumbnail
+                                                : data?.content_ids[0]?.content[0]
                                                   ?.media_type == "audio"
-                                              ? audimgsm
-                                              : data?.content_ids[0]?.content[0]
-                                                  ?.media_type == "pdf" || "doc"
-                                              ? docsic
-                                              : null
+                                                  ? audimgsm
+                                                  : data?.content_ids[0]?.content[0]
+                                                    ?.media_type == "pdf" || "doc"
+                                                    ? docsic
+                                                    : null
                                           }
                                           className="content_img"
                                         />
@@ -693,7 +690,7 @@ const DashboardTables = () => {
                         mb="10px"
                       >
                         <Typography className="tbl_hdng">
-                          Broadcasted Tasks
+                          Broadcasted tasks
                         </Typography>
                         <div className="sorting_wrap d-flex">
                           <div className="feedSorting me-4">
@@ -714,7 +711,7 @@ const DashboardTables = () => {
                                   }
                                   setAllFilterData={setAllFilterData}
                                   allFilterData={allFilterData}
-                                  // feedMultiFilter={handleMultiFilter}
+                                // feedMultiFilter={handleMultiFilter}
                                 />
                               )}
                             </div>
@@ -848,7 +845,7 @@ const DashboardTables = () => {
                                                     className="content_img"
                                                   />
                                                 ) : curr?.content?.[0]
-                                                    ?.media_type === "video" ? (
+                                                  ?.media_type === "video" ? (
                                                   <img
                                                     src={
                                                       curr?.content[0]
@@ -857,7 +854,7 @@ const DashboardTables = () => {
                                                     className="content_img"
                                                   />
                                                 ) : curr?.content?.[0]
-                                                    ?.media_type === "audio" ? (
+                                                  ?.media_type === "audio" ? (
                                                   audioic
                                                 ) : (
                                                   ""
@@ -960,8 +957,8 @@ const DashboardTables = () => {
                                           />
                                           {curr?.totalfund_invested?.length > 0
                                             ? moment(curr?.updatedAt).format(
-                                                `hh:mm A`
-                                              )
+                                              `hh:mm A`
+                                            )
                                             : ""}
                                         </p>
                                         <p className="timedate">
@@ -971,8 +968,8 @@ const DashboardTables = () => {
                                           />
                                           {curr?.totalfund_invested?.length > 0
                                             ? moment(curr?.updatedAt).format(
-                                                `DD MMM YYYY`
-                                              )
+                                              `DD MMM YYYY`
+                                            )
                                             : ""}
                                         </p>
                                       </td>
@@ -1061,8 +1058,8 @@ const DashboardTables = () => {
                                       <td>
                                         {curr?.totalfund_invested?.length > 0
                                           ? formatAmountInMillion(
-                                              +curr?.totalfund_invested?.[0]
-                                            )
+                                            +curr?.totalfund_invested?.[0]
+                                          )
                                           : "No fund invested "}
                                       </td>
                                     </tr>
@@ -1175,20 +1172,20 @@ const DashboardTables = () => {
                                     ? curr.content_id.content[0].media_type ===
                                       "video"
                                       ? process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr?.content_id?.content?.[0]
-                                          ?.thumbnail
+                                      curr?.content_id?.content?.[0]
+                                        ?.thumbnail
                                       : curr.content_id.content[0]
-                                          .media_type === "audio"
-                                      ? audimgsm
-                                      : curr.content_id.content[0]
+                                        .media_type === "audio"
+                                        ? audimgsm
+                                        : curr.content_id.content[0]
                                           .media_type === "image"
-                                      ? curr.content_id.content[0].watermark ||
-                                        process.env.REACT_APP_CONTENT_MEDIA +
+                                          ? curr.content_id.content[0].watermark ||
+                                          process.env.REACT_APP_CONTENT_MEDIA +
                                           curr.content_id.content[0].media
-                                      : curr.content_id.content[0]
-                                          .media_type === "doc"
-                                      ? docsic
-                                      : null
+                                          : curr.content_id.content[0]
+                                            .media_type === "doc"
+                                            ? docsic
+                                            : null
                                     : null;
 
                                 // const askingPrice = curr?.content_id?.Vat?.find(

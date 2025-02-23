@@ -644,7 +644,7 @@ const ContentPage = () => {
                               <span className="clickable">+</span>
                             </Tooltip> */}
                           </Typography>
-                          <Typography className="mb-0 text-center txt_bold">
+                          <Typography className="mb-0 text-center txt_bold text-white">
                             Broadcast task
                           </Typography>
                         </div>
@@ -787,7 +787,7 @@ const ContentPage = () => {
                                             <div className="commonContentIconsWrap crd_in_icons d-flex justify-content-between">
                                               <span className="rateView-type dflt cmr">
                                                 <span className="volCount">
-                                                {item?.task_id?.content.length}
+                                                  {item?.task_id?.content.length}
                                                 </span>
                                                 {/* <img
                                                   className=""

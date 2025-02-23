@@ -758,7 +758,7 @@ const BroadcastedTasksSoon = () => {
                           +
                         </span>
                       </Typography>
-                      <Typography className="mb-0 text-center txt_bold">
+                      <Typography className="mb-0 text-center txt_bold text-white">
                         Broadcast task
                       </Typography>
                     </div>

@@ -68,7 +68,7 @@ const Tasktables = () => {
                         px="20px"
                         mb="10px"
                       >
-                        <Typography className="tbl_hdng">Live Tasks</Typography>
+                        <Typography className="tbl_hdng">Live tasks</Typography>
                         <div className="tbl_rt">
                           <span className="tbl_rt_txt">Daily</span>
                         </div>
@@ -324,7 +324,7 @@ const Tasktables = () => {
                         mb="10px"
                       >
                         <Typography className="tbl_hdng">
-                          Broadcasted Tasks
+                          Broadcasted tasks
                         </Typography>
                         <div className="tbl_rt">
                           <span className="tbl_rt_txt">Monthly</span>

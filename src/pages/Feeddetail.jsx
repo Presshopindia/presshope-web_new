@@ -4493,8 +4493,8 @@ const Feeddetail = (props) => {
                                   <SwiperSlide key={curr._id}>
                                     <div
                                       className={`swiper-slide-content ${data?.before_discount_value
-                                          ? "slide-offer"
-                                          : ""
+                                        ? "slide-offer"
+                                        : ""
                                         }`}
                                     >
                                       {/* Media content based on type */}
@@ -4540,7 +4540,7 @@ const Feeddetail = (props) => {
                                       {curr?.media_type === "pdf" && (
                                         <embed
                                           src={`${process.env
-                                              .REACT_APP_CONTENT_MEDIA +
+                                            .REACT_APP_CONTENT_MEDIA +
                                             curr?.media
                                             }`}
                                           type="application/pdf"
@@ -5167,7 +5167,7 @@ const Feeddetail = (props) => {
                                           <Tooltip id="overlay-example">
                                             <div className="recordingPopup">
                                               <div className="d-flex justify-content-between align-items-center">
-                                                <h5>Record Audio</h5>
+                                                <h5>Record audio</h5>
                                                 <div
                                                   className="close-btn clickable"
                                                   onClick={() =>

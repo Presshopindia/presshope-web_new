@@ -355,7 +355,7 @@ const Contenttables = () => {
                         mb="10px"
                       >
                         <Typography className="tbl_hdng">
-                          Broadcasted Tasks
+                          Broadcasted tasks
                         </Typography>
                         <div className="tbl_rt">
                           <span className="tbl_rt_txt">Monthly</span>
@@ -2061,7 +2061,7 @@ const Contenttables = () => {
                                               src={cameraic}
                                               alt="Photo"
                                               className="icn m-auto margin-right-8"
-                                            /> <span className="txt_bld ms-2">{ image?.length < 10 ? `0${image?.length}` : image?.length }</span>
+                                            /> <span className="txt_bld ms-2">{image?.length < 10 ? `0${image?.length}` : image?.length}</span>
                                           </Tooltip>
                                         )}
                                         {video.length > 0 && (
@@ -2074,8 +2074,8 @@ const Contenttables = () => {
                                           </Tooltip>
                                         )}
                                         {audio.length > 0 && (
-                                         <Tooltip title="Audio">
-                                             <img
+                                          <Tooltip title="Audio">
+                                            <img
                                               src={interviewic}
                                               alt="Audio"
                                               className="icn m-auto margin-right-8"
