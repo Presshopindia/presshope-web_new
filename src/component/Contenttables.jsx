@@ -1731,13 +1731,8 @@ const Contenttables = () => {
                           </thead>
                           <tbody>
                             {content_count?.content_online?.task
-                              ?.sort(
-                                (a, b) =>
-                                  new Date(b.published_time_date) -
-                                  new Date(a.published_time_date)
-                              )
                               ?.map((curr) => {
-                                const contentArray = curr?.content_id?.content;
+                                const contentArray = curr?.contentDetails?.content;
                                 const audio =
                                   contentArray?.filter(
                                     (item) => item.media_type === "audio"
@@ -1756,21 +1751,21 @@ const Contenttables = () => {
                                   ) || [];
 
                                 const contentSource =
-                                  curr?.content_id && curr.content_id.content[0]
-                                    ? curr.content_id.content[0].media_type ===
+                                  curr?.contentDetails && curr.contentDetails.content[0]
+                                    ? curr.contentDetails.content[0].media_type ===
                                       "video"
-                                      ? curr.content_id.content[0].watermark ||
+                                      ? curr.contentDetails.content[0].watermark ||
                                       process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr.content_id.content[0].thumbnail
-                                      : curr.content_id.content[0]
+                                      curr.contentDetails.content[0].thumbnail
+                                      : curr.contentDetails.content[0]
                                         .media_type === "audio"
                                         ? audimgsm
-                                        : curr.content_id.content[0]
+                                        : curr.contentDetails.content[0]
                                           .media_type === "image"
-                                          ? curr.content_id.content[0].watermark ||
+                                          ? curr.contentDetails.content[0].watermark ||
                                           process.env.REACT_APP_CONTENT_MEDIA +
-                                          curr.content_id.content[0].media
-                                          : curr.content_id.content[0]
+                                          curr.contentDetails.content[0].media
+                                          : curr.contentDetails.content[0]
                                             .media_type === "doc"
                                             ? docsic
                                             : null
@@ -1788,8 +1783,7 @@ const Contenttables = () => {
                                             className="content_img"
                                           />
                                           <span className="cont_count">
-                                            {curr?.content_id &&
-                                              `${curr?.content_id?.content?.length}`}
+                                            {curr?.contentDetails?.content?.length || 0}
                                           </span>
                                         </div>
                                       </Link>
@@ -1801,7 +1795,7 @@ const Contenttables = () => {
                                           className="icn_time"
                                         />
                                         {moment(
-                                          curr?.content_id?.published_time_date
+                                          curr?.updatedAt
                                         ).format("h:mm A")}
                                       </p>
                                       <p className="timedate">
@@ -1810,13 +1804,13 @@ const Contenttables = () => {
                                           className="icn_time"
                                         />
                                         {moment(
-                                          curr?.content_id?.published_time_date
+                                          curr?.updatedAt
                                         ).format("DD MMM, YYYY")}
                                       </p>
                                     </td>
                                     <td className="description_td ">
                                       <p className="desc_ht mb-0 word_ellips">
-                                        {curr?.content_id?.heading}
+                                        {curr?.contentDetails?.heading}
                                       </p>
                                     </td>
                                     <td className="text-center">
@@ -1853,14 +1847,14 @@ const Contenttables = () => {
                                     <td className="text-center">
                                       <Tooltip
                                         title={
-                                          curr?.content_id?.type === "shared"
+                                          curr?.purchased_content_type === "shared"
                                             ? "Shared"
                                             : "Exclusive"
                                         }
                                       >
                                         <img
                                           src={
-                                            curr?.content_id?.type === "shared"
+                                            curr?.purchased_content_type === "shared"
                                               ? sharedic
                                               : exclusiveic
                                           }
@@ -1870,21 +1864,21 @@ const Contenttables = () => {
                                       </Tooltip>
                                     </td>
                                     <td className="text-center">
-                                      {curr?.content_id?.category_id?.name}
+                                      {curr?.contentDetails?.categoryDetails?.name}
                                     </td>
                                     <td>
-                                      {curr?.content_id?.hopper_id?.address}
+                                      {curr?.contentDetails?.location}
                                     </td>
                                     <td>
                                       <div className="hpr_dt">
                                         <img
                                           src={
-                                            curr?.content_id?.hopper_id
-                                              ?.avatar_id?.avatar
+                                            curr?.hopperDetails
+                                              ?.avatarDetails?.avatar
                                               ? process.env
                                                 .REACT_APP_AVATAR_IMAGE +
-                                              curr?.content_id?.hopper_id
-                                                ?.avatar_id?.avatar
+                                              curr?.hopperDetails
+                                                ?.avatarDetails?.avatar
                                               : null
                                           }
                                           alt="Hopper"
@@ -1892,7 +1886,7 @@ const Contenttables = () => {
                                         />
                                         <p className="hpr_nme">
                                           {
-                                            curr?.content_id?.hopper_id
+                                            curr?.hopperDetails
                                               ?.user_name
                                           }
                                         </p>

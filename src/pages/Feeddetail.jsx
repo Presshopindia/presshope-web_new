@@ -3562,6 +3562,20 @@ const Feeddetail = (props) => {
     }
   };
 
+  const OfferPaymentChat = async () => {
+    try{
+      const payload = {
+        message_type: "Offered",
+        image_id: contentId,
+        sender_id: roomDetails.sender_id
+      };
+      await Post("mediahouse/create-offer-payment-chat", payload);
+    }
+    catch(error) {
+      console.log(error);
+    }
+  }
+
   // console.log("Messages", messages)
 
   const Payment = async (
@@ -5520,6 +5534,7 @@ const Feeddetail = (props) => {
                                                       data?.original_ask_price,
                                                       roomDetails
                                                     );
+                                                    OfferPaymentChat();
                                                   }}
                                                   className="usr_upld_opts cont_opts"
                                                 >

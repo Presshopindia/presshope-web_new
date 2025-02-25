@@ -624,6 +624,7 @@ const SignupUserN = () => {
                             </Col>
                             <Col md={6}>
                               <div className="number_inp_wrap">
+                                {/* Issue here */}
                                 <input
                                   type="number"
                                   className="input_nmbr"
@@ -973,7 +974,7 @@ const SignupUserN = () => {
                                         type="number"
                                         className="w-100"
                                         name="minimum_price"
-                                        placeholder="min"
+                                        placeholder="Min Price"
                                         value={
                                           onboardingUser?.admin_rignts
                                             ?.price_range?.minimum_price
@@ -992,7 +993,7 @@ const SignupUserN = () => {
                                         type="number"
                                         className="w-100"
                                         name="maximum_price"
-                                        placeholder="max"
+                                        placeholder="Max Price"
                                         value={
                                           onboardingUser?.admin_rignts
                                             ?.price_range?.maximum_price
