@@ -108,8 +108,8 @@ const SignupUserN = () => {
       allowed_to_purchase_content: false,
       allow_to_chat_externally: false,
       price_range: {
-        minimum_price: 0,
-        maximum_price: 0,
+        minimum_price: "",
+        maximum_price: "",
       },
     },
   });
@@ -634,9 +634,7 @@ const SignupUserN = () => {
                                   value={addOffice?.office_details?.phone}
                                   maxLength={10}
                                   onChange={(e) => {
-                                    // if (e.target.value <= 10) {
-                                    handleOfficeChange(e);
-                                    // }
+                                    e.target.value.length <= 10 ? handleOfficeChange(e) : ""
                                   }}
                                   ref={phoneInputRef1}
                                 />
@@ -857,7 +855,7 @@ const SignupUserN = () => {
                                   placeholder=" phone"
                                   name="phone"
                                   onChange={(e) =>
-                                    e.target.value?.length <= 15
+                                    e.target.value?.length <= 10
                                       ? setOnboardingUser((pre) => ({
                                         ...pre,
                                         phone: e.target.value,

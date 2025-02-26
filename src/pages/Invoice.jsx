@@ -63,7 +63,7 @@ const Invoice = () => {
   };
 
   const handleInvoiveDownload = async () => {
-    if( !data.invoice_id ) {
+    if (!data.invoice_id) {
       return;
     }
 
@@ -71,11 +71,14 @@ const Invoice = () => {
     try {
       const resp = await Get(`mediaHouse/download-invoice?invoiceId=${data.invoice_id}`);
       setLoading(false);
-      window.open( resp.data.data, "_blank" );
+      window.open(resp.data.data, "_blank");
     } catch (error) {
       setLoading(false);
     }
   }
+
+  const { profileData } = useDarkMode();
+  const userData = profileData;
 
   return (
     <>
@@ -257,24 +260,24 @@ const Invoice = () => {
                                                   alt="img"
                                                 />
                                               ) : data?.content_id?.content[0]
-                                                  ?.media_type === "video" ? (
+                                                ?.media_type === "video" ? (
                                                 <img
                                                   src={
                                                     data.content[0].watermark ||
                                                     process.env
                                                       .REACT_APP_CONTENT_MEDIA +
-                                                      data.content[0].thumbnail
+                                                    data.content[0].thumbnail
                                                   }
                                                   className="cntnt-img"
                                                 />
                                               ) : data?.content_id?.content[0]
-                                                  ?.media_type === "audio" ? (
+                                                ?.media_type === "audio" ? (
                                                 <img
                                                   src={audioic}
                                                   className="cntnt-img"
                                                 />
                                               ) : data?.content_id?.content[0]
-                                                  ?.media_type === "pdf" ? (
+                                                ?.media_type === "pdf" ? (
                                                 <img
                                                   src={docsic}
                                                   className="cntnt-img"
@@ -362,15 +365,15 @@ const Invoice = () => {
                                                 ?.media_type == "image"
                                                 ? "Photo"
                                                 : data?.content_id?.content[0]
-                                                    ?.media_type == "Audio"
-                                                ? audioicon
-                                                : data?.content_id?.content[0]
+                                                  ?.media_type == "Audio"
+                                                  ? audioicon
+                                                  : data?.content_id?.content[0]
                                                     ?.media_type == "Pdf"
-                                                ? "Pdf"
-                                                : data?.content_id?.content[0]
-                                                    ?.media_type == "Video"
-                                                ? "Video"
-                                                : "Scan"
+                                                    ? "Pdf"
+                                                    : data?.content_id?.content[0]
+                                                      ?.media_type == "Video"
+                                                      ? "Video"
+                                                      : "Scan"
                                             }
                                           >
                                             <img
@@ -379,15 +382,15 @@ const Invoice = () => {
                                                   ?.media_type == "image"
                                                   ? cameraic
                                                   : data?.content_id?.content[0]
-                                                      ?.media_type == "audio"
-                                                  ? audioicon
-                                                  : data?.content_id?.content[0]
+                                                    ?.media_type == "audio"
+                                                    ? audioicon
+                                                    : data?.content_id?.content[0]
                                                       ?.media_type == "pdf"
-                                                  ? docsic
-                                                  : data?.content_id?.content[0]
-                                                      ?.media_type == "video"
-                                                  ? videoic
-                                                  : null
+                                                      ? docsic
+                                                      : data?.content_id?.content[0]
+                                                        ?.media_type == "video"
+                                                        ? videoic
+                                                        : null
                                               }
                                               className="tbl_ic"
                                               alt="camera"
@@ -397,34 +400,10 @@ const Invoice = () => {
 
                                         <td className="text-center">
                                           <Tooltip
-                                            title={
-                                              data?.content_id?.Vat?.find(
-                                                (el) =>
-                                                  el?.purchased_mediahouse_id ==
-                                                  JSON.parse(
-                                                    localStorage.getItem("user")
-                                                  )?._id
-                                              )?.purchased_content_type ==
-                                              "shared"
-                                                ? "Shared"
-                                                : "Exclusive"
-                                            }
+                                            title={data?.payment_content_type === "shared" ? "Shared": "Exclusive"}
                                           >
                                             <img
-                                              src={
-                                                data?.content_id?.Vat?.find(
-                                                  (el) =>
-                                                    el?.purchased_mediahouse_id ==
-                                                    JSON.parse(
-                                                      localStorage.getItem(
-                                                        "user"
-                                                      )
-                                                    )?._id
-                                                )?.purchased_content_type ==
-                                                "shared"
-                                                  ? shared
-                                                  : exclusiveic
-                                              }
+                                              src={data?.payment_content_type === "shared" ? shared : exclusiveic}
                                               className="tbl_ic"
                                               alt="camera"
                                             />
@@ -457,19 +436,7 @@ const Invoice = () => {
                                               marginRight: "5px",
                                             }}
                                           >
-                                            {`£${
-                                              formatAmountInMillion(
-                                                data?.content_id?.Vat?.find(
-                                                  (el) =>
-                                                    el?.purchased_mediahouse_id ==
-                                                    JSON.parse(
-                                                      localStorage.getItem(
-                                                        "user"
-                                                      )
-                                                    )?._id
-                                                )?.amount_without_Vat
-                                              ) || data?.amount - data?.Vat
-                                            }`}
+                                            {`£${formatAmountInMillion(data?.original_Vatamount + data?.original_ask_price)}`}
                                           </p>
                                         </td>
                                       </tr>
@@ -488,8 +455,8 @@ const Invoice = () => {
                                         £
                                         {formatAmountInMillion(
                                           data?.amount -
-                                            (data?.Vat ||
-                                              data?.original_Vatamount)
+                                          (data?.Vat ||
+                                            data?.original_Vatamount)
                                         )}
                                       </span>
                                     </div>

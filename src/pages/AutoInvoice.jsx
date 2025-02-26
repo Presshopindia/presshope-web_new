@@ -286,23 +286,21 @@ const AutoInvoice = () => {
                             <span>
                               <p className="from">To</p>
 
-                              <h4>{user?.company_name}</h4>
+                              <h4>{user?.company_name || user?.media_house_id?.company_name}</h4>
                             </span>
 
                             <span className="reuters">
-                              <img src={user?.profile_image} alt="" />
+                              <img src={user?.profile_image || user?.media_house_id?.profile_image} alt="" />
                             </span>
                           </div>
                           <p>
-                            {
-                              user?.office_details?.[0]?.address
-                                ?.complete_address
-                            }{" "}
+                            { user?.office_details?.[0]?.address?.complete_address || user?.media_house_id?.office_details?.[0]?.address?.complete_address}
+                            {" "}
                             <br />
-                            {user?.office_details?.[0]?.address?.pincode}
+                            {user?.office_details?.[0]?.address?.pincode || user?.media_house_id?.office_details?.[0]?.address?.pincode}
                           </p>
-                          <p>Company # {user?.company_number}</p>
-                          <p> VAT # {user?.company_vat}</p>
+                          <p>Company # {user?.company_number || user?.media_house_id?.company_number}</p>
+                          <p> VAT # {user?.company_vat || user?.media_house_id?.company_vat}</p>
                         </div>
                       </Col>
                     </Row>
