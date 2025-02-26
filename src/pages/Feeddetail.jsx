@@ -3448,6 +3448,8 @@ const Feeddetail = (props) => {
 
   const username = profileData?.full_name;
 
+  const mediahouseId = profileData?.role === "MediaHouse" ? profileData?._id : profileData?.media_house_id?._id;
+
   useEffect(() => {
     window?.scrollTo(0, 0);
   }, [param.id]);
@@ -3567,7 +3569,7 @@ const Feeddetail = (props) => {
       const payload = {
         message_type: "Offered",
         image_id: contentId,
-        sender_id: roomDetails.sender_id
+        sender_id: mediahouseId
       };
       await Post("mediahouse/create-offer-payment-chat", payload);
     }
