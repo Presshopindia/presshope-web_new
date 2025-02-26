@@ -514,7 +514,7 @@ const DashboardTables = () => {
                                             .length || 0}
                                         </span> */}
                                       </div>
-                                      <div className="tableContentTypeIcons">
+                                      {/* <div className="tableContentTypeIcons">
                                         {image.length > 0 && (
                                           <div class="post_icns_cstm_wrp camera-ico">
                                             <div class="post_itm_icns dtl_icns">
@@ -557,7 +557,7 @@ const DashboardTables = () => {
                                             </div>
                                           </div>
                                         )}
-                                      </div>
+                                      </div> */}
                                     </Link>
                                   </td>
 
@@ -865,7 +865,7 @@ const DashboardTables = () => {
                                               </div>
                                             )}
                                           </div>
-                                          <div className="tableContentTypeIcons">
+                                          {/* <div className="tableContentTypeIcons">
                                             {imageCount > 0 && (
                                               <div class="post_icns_cstm_wrp camera-ico">
                                                 <div class="post_itm_icns dtl_icns">
@@ -894,7 +894,7 @@ const DashboardTables = () => {
                                                 </div>
                                               </div>
                                             )}
-                                            {/* <div class="post_icns_cstm_wrp audio-ico">
+                                            <div class="post_icns_cstm_wrp audio-ico">
                                                   <div class="post_itm_icns dtl_icns">
                                                     <span class="count">
                                                       1
@@ -905,8 +905,8 @@ const DashboardTables = () => {
                                                       alt=""
                                                     />
                                                   </div>
-                                                </div> */}
-                                          </div>
+                                                </div> 
+                                          </div> */}
                                         </Link>
                                       </td>
                                       <td className="timedate_wrap">
@@ -1206,7 +1206,7 @@ const DashboardTables = () => {
                                       media_house_id
                                   )?.purchased_time;
 
-                                console.log("purchasedTime", purchasedTime);
+                                // console.log("purchasedTime", purchasedTime);
                                 // const paidPrice = +curr?.content_id?.Vat?.find(
                                 //   (el) =>
                                 //     el?.purchased_mediahouse_id ==
@@ -1236,7 +1236,7 @@ const DashboardTables = () => {
                                               `${curr?.content_id?.content?.length}`}
                                           </span> */}
                                         </div>
-                                        <div className="tableContentTypeIcons">
+                                        {/* <div className="tableContentTypeIcons">
                                           {image.length > 0 && (
                                             <div class="post_icns_cstm_wrp camera-ico">
                                               <div class="post_itm_icns dtl_icns">
@@ -1279,7 +1279,7 @@ const DashboardTables = () => {
                                               </div>
                                             </div>
                                           )}
-                                        </div>
+                                        </div> */}
                                       </Link>
                                     </td>
                                     <td className="timedate_wrap">
