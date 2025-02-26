@@ -47,9 +47,11 @@ import exclusiveic from "../assets/images/exclusive.svg";
 import audimgsm from "../assets/images/audimgsmall.svg";
 import { formatAmountInMillion } from "./commonFunction";
 import { PaginationComp } from "./Pagination";
+import { useDarkMode } from "../context/DarkModeContext";
 
 const Contenttables = () => {
   const param = useParams();
+  const { profileData } = useDarkMode();
   const [taskDetails, setTaskDetails] = useState();
   const [content_count, setContent_count] = useState();
   const [loading, setLoading] = useState(false);
@@ -676,24 +678,7 @@ const Contenttables = () => {
                                           ?._id
                                     )?.amount
                                   ) || curr?.amount_paid;
-                                let allVat;
-                                let userInfo = JSON.parse(
-                                  localStorage.getItem("user")
-                                );
-                                if (userInfo?.role == "User_mediaHouse") {
-                                  allVat = curr?.Vat?.find(
-                                    (el) =>
-                                      el?.purchased_mediahouse_id ==
-                                      userInfo?.media_house_id
-                                  );
-                                } else {
-                                  allVat = curr?.Vat?.find(
-                                    (el) =>
-                                      el?.purchased_mediahouse_id ==
-                                      userInfo?._id
-                                  );
-                                }
-                                //  console.log("userinfo ----->  allVat------->",allVat);
+                                let allVat = curr?.Vat?.find((el) => el?.purchased_mediahouse_id == ( profileData?.role === "MediaHouse" ?  profileData?._id : profileData?.media_house_id?._id) );
                                 return (
                                   <tr>
                                     <td className="content_img_td position-relative add-icons-box">

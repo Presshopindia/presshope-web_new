@@ -157,14 +157,23 @@ const Invoice = () => {
                     <Row>
                       <Col md={6}>
                         <div className="ads-card">
-                          <p className="from">From</p>
+                          <div className="myflex">
+                            <span>
+                              <p className="from">From</p>
 
-                          <h4>Presshop Media UK Limited</h4>
+                              <h4>Presshop Media UK Limited</h4>
+                            </span>
+
+                            <span className="reuters">
+                            </span>
+                          </div>
                           <p>
-                            167-169, Great Portland Street, <br />
-                            London, W1W 5PF
+                          167-169, Great Portland Street, <br />
+                          London, W1W 5PF
                           </p>
-                          <p>Company # 13522872</p>
+                          <p>
+                            Company # 13522872
+                          </p>
                           <p> VAT # 450 5678 83</p>
                         </div>
                       </Col>
