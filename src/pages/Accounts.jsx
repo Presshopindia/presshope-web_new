@@ -977,11 +977,7 @@ const Accounts = () => {
                           <Col md={12}>
                             <Card className="tbl_crd bg_grey">
                               <div className="">
-                                <div
-                                  className="d-flex justify-content-between align-items-center tbl_hdr"
-                                  px="20px"
-                                  mb="10px"
-                                >
+                                <div className="d-flex justify-content-between align-items-center tbl_hdr" >
                                   <Typography className="tbl_hdng">
                                     Transaction details
                                   </Typography>
@@ -1435,11 +1431,7 @@ const Accounts = () => {
                           <Col md={12} id="vatdetail">
                             <Card className="tbl_crd bg_grey vt_dtl_wrp">
                               <div className="">
-                                <div
-                                  className="d-flex justify-content-between align-items-center tbl_hdr"
-                                  px="20px"
-                                  mb="10px"
-                                >
+                                <div className="d-flex justify-content-between align-items-center tbl_hdr">
                                   <Typography className="tbl_hdng">
                                     VAT details
                                   </Typography>
@@ -1750,7 +1742,6 @@ const Accounts = () => {
                             id="uncontrolled-tab-example"
                             className="mb-3"
                             onSelect={(k) => {
-                              console.log("all active key", k);
                               navigate(`/accounts?activekey=${k}`);
                               setActiveKey(k);
                             }}
@@ -1759,11 +1750,7 @@ const Accounts = () => {
                               eventKey="tasks"
                               title="Funds invested summary"
                             >
-                              <Link
-                                to={
-                                  "/reports-tables-content/fund_invested_summary"
-                                }
-                              >
+                              <Link to="/reports-tables-content/fund_invested_summary">
                                 <ReactApexChart
                                   options={fundInvested.options}
                                   series={fundInvested.series}
@@ -1795,11 +1782,7 @@ const Accounts = () => {
                               </div>
                             </Tab>
                             <Tab eventKey="funds" title="VAT summary">
-                              <div
-                                onClick={handleTabClick}
-                              // to={
-                              //   "/reports-tables-content/content_purchased_summary"
-                              // }
+                              <Link to="/reports-tables-content/vat_invested_details"
                               >
                                 <ReactApexChart
                                   options={vatSummary.options}
@@ -1807,7 +1790,7 @@ const Accounts = () => {
                                   type="bar"
                                   height={350}
                                 />
-                              </div>
+                              </Link>
                             </Tab>
                           </Tabs>
                         </div>
