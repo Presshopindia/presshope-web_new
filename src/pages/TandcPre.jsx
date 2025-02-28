@@ -15,7 +15,7 @@ import Loader from "../component/Loader";
 import axios from "axios";
 import { successToasterFun } from "../component/commonFunction";
 import moment from "moment";
-import { FaRegArrowAltCircleDown, FaRegArrowAltCircleUp } from "react-icons/fa";
+import { FaRegArrowAltCircleDown, FaRegArrowAltCircleUp, FaChevronCircleDown, FaChevronCircleUp } from "react-icons/fa";
 
 const TandcPre = () => {
   const navigate = useNavigate();
@@ -215,7 +215,7 @@ const TandcPre = () => {
                       <div className="onboardIntro sign_section post">
                         <div className='d-flex justify-content-between'>
                           <h1 className="mb-0 pg_hdng">Legal T&Cs</h1>
-                          <Tooltip title="Down"><Link className='back_link' onClick={() => window.scrollTo(0, document.body.scrollHeight)}><FaRegArrowAltCircleDown className='text-pink' /></Link></Tooltip>
+                          <Tooltip title="Down"><Link className='back_link' onClick={() => window.scrollTo(0, document.body.scrollHeight)}><FaChevronCircleDown className='text-pink' /></Link></Tooltip>
                         </div>
                         <span className="txt_updated">Updated on {moment(cmsData?.[0]?.data?.updatedAt)?.format("DD MMMM, YYYY")}</span>
                       </div>
@@ -225,7 +225,7 @@ const TandcPre = () => {
                         <div className="mb-4" dangerouslySetInnerHTML={{ __html: cmsData[1]?.data?.status?.description || "" }}>
                         </div>
                       </div>
-                      <Tooltip title="Down"><Link className='back_link' onClick={() => window.scrollTo(0, 0)}><FaRegArrowAltCircleUp className='text-pink' /></Link></Tooltip>
+                      <Tooltip title="Down"><Link className='back_link' onClick={() => window.scrollTo(0, 0)}><FaChevronCircleUp className='text-pink' /></Link></Tooltip>
                     </div>
                   </div>
                 </Form>

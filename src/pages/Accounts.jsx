@@ -908,7 +908,7 @@ const Accounts = () => {
 
                         <Col>
                           <Link to={"/accounts-tables/pending_payments"}>
-                            <Card className="dash-top-cards">
+                            <Card className="dash-top-cards pb-0">
                               <CardContent className="dash-c-body">
                                 <div className="cardCustomHead">
                                   <div className="sortFilter_actions">
@@ -947,7 +947,7 @@ const Accounts = () => {
                                   </div>
                                   <Typography
                                     variant="body2"
-                                    className="card-head-txt mb-2"
+                                    className="card-head-txt mb-2 mt-2"
                                   >
                                     £
                                     {formatAmountInMillion(

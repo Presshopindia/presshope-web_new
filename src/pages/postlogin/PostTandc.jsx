@@ -10,7 +10,7 @@ import html2pdf from 'html2pdf.js';
 import Loader from '../../component/Loader';
 import { Get } from '../../services/user.services';
 import moment from 'moment';
-import { FaRegArrowAltCircleDown, FaRegArrowAltCircleUp } from 'react-icons/fa';
+import { FaRegArrowAltCircleDown, FaChevronCircleDown, FaRegArrowAltCircleUp, FaChevronCircleUp } from 'react-icons/fa';
 
 const PostTandc = () => {
 
@@ -87,7 +87,7 @@ const PostTandc = () => {
                                         <div className="onboardIntro sign_section post">
                                             <div className='d-flex justify-content-between'>
                                                 <h1 className="mb-0 pg_hdng">Legal T&Cs</h1>
-                                                <Tooltip title="Down"><Link className='back_link' onClick={() => window.scrollTo(0, document.body.scrollHeight)}><FaRegArrowAltCircleDown className='text-pink' /></Link></Tooltip>
+                                                <Tooltip title="Down"><Link className='back_link' onClick={() => window.scrollTo(0, document.body.scrollHeight)}><FaChevronCircleDown className='text-pink' /></Link></Tooltip>
                                             </div>
                                             <span className="txt_updated">Updated on {moment(cmsData?.[0]?.data?.updatedAt)?.format("DD MMMM, YYYY")}</span>
                                             <div className="onboardStep b_border top_txt">
@@ -146,7 +146,7 @@ const PostTandc = () => {
                                     <div className="d-flex justify-content-between tandc_btns">
                                         <Button className='w-100' variant='secondary' onClick={handlePdfDownloadClick}>Download</Button>
                                         <Button className='w-100 theme_btn' variant='primary' onClick={handlePrintClick}>Print</Button>
-                                        <Tooltip title="Down"><Link className='back_link' onClick={() => window.scrollTo(0, 0)}><FaRegArrowAltCircleUp className='text-pink' /></Link></Tooltip>
+                                        <Tooltip title="Down"><Link className='back_link' onClick={() => window.scrollTo(0, 0)}><FaChevronCircleUp className='text-pink' /></Link></Tooltip>
                                     </div>
                                 </div>
                             </Col>

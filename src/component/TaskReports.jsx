@@ -685,7 +685,7 @@ const TaskReports = ({
                             options={taskCategories}
                             series={taskCategories.series}
                             type="pie"
-                            width="350"
+                            width="365"
                           />
                         </Link>
                       </div>
@@ -741,7 +741,7 @@ const TaskReports = ({
                             options={contentType && contentType}
                             series={contentType?.series}
                             type="pie"
-                            width="350"
+                            width="365"
                           />
                         </Link>
                       </div>
@@ -798,7 +798,7 @@ const TaskReports = ({
                             options={contentSplit}
                             series={contentSplit.series}
                             type="pie"
-                            width="350"
+                            width="365"
                           />
                         </Link>
                       </div>
@@ -855,7 +855,7 @@ const TaskReports = ({
                             options={taskLocation}
                             series={taskLocation.series}
                             type="pie"
-                            width="350"
+                            width="365"
                           />
                         </Link>
                       </div>

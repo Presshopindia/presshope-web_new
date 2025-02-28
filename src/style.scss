@@ -4011,6 +4011,7 @@ a.link {
 
   .content_stat {
     margin: 0px 20px;
+    padding-bottom: 4px;
   }
 
   .dash-c-foot {
@@ -7314,8 +7315,8 @@ button {
     // font-family: $txt-mdm;
 
     position: absolute;
-    bottom: -1px;
-    right: 5px;
+    top: 3px;
+    left: 3px;
     color: #fff;
     font-size: 13px;
     font-family: "AirbnbMedium";
@@ -7325,6 +7326,7 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
+    background: rgba(63, 78, 76, 0.696484) !important;
   }
 }
 
@@ -12836,6 +12838,7 @@ audio {
 .rating_placholder {
   color: #000 !important;
 }
+
 .rating_placholder::placeholder {
   color: #838383 !important;
 }

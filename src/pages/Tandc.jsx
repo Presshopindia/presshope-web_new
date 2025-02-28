@@ -15,7 +15,7 @@ import Loader from "../component/Loader";
 import axios from "axios";
 import { successToasterFun } from "../component/commonFunction";
 import moment from "moment";
-import { FaRegArrowAltCircleDown, FaRegArrowAltCircleUp } from "react-icons/fa";
+import { FaRegArrowAltCircleDown, FaChevronCircleDown, FaRegArrowAltCircleUp, FaChevronCircleUp } from "react-icons/fa";
 
 const Tandc = () => {
   const navigate = useNavigate();
@@ -50,20 +50,20 @@ const Tandc = () => {
     }));
   };
 
-  const deletePreOnboardDetails=async(email)=>{
-    try{
+  const deletePreOnboardDetails = async (email) => {
+    try {
       // const resp = await Get(`auth/registerMediaHouse?email=${email}`);
-      console.log("userEmail ------> ----->",email)
+      console.log("userEmail ------> ----->", email)
       const resp = await Get(
         `mediaHouse/deletePreRegistrationData?email=${email}`
       );
-      if(resp){
+      if (resp) {
         console.log(resp);
         localStorage.removeItem("UserEmailId");
-       
+
       }
-    }catch(error){
-      console.log("error -->",error);
+    } catch (error) {
+      console.log("error -->", error);
     }
   }
 
@@ -119,7 +119,7 @@ const Tandc = () => {
         admin_detail: {
           full_name: `${adminPopup?.first_name} ${adminPopup?.last_name}`,
           first_name: adminPopup?.first_name,
-          last_name: adminPopup?.last_name,  
+          last_name: adminPopup?.last_name,
           office_type: adminPopup?.designation_id,
           office_name: page1?.administrator_details?.office_name,
           department: page1?.administrator_details?.department,
@@ -181,7 +181,7 @@ const Tandc = () => {
         localStorage.removeItem("Page1");
         localStorage.removeItem("Page2");
         localStorage.removeItem("Page3");
-        const UserEmailId=localStorage.getItem("UserEmailId")
+        const UserEmailId = localStorage.getItem("UserEmailId")
         await deletePreOnboardDetails(UserEmailId)
         toast.success("Registered Successfully")
         navigate("/Success");
@@ -230,7 +230,7 @@ const Tandc = () => {
                       <div className="onboardIntro sign_section post">
                         <div className='d-flex justify-content-between'>
                           <h1 className="mb-0 pg_hdng">Legal T&Cs</h1>
-                          <Tooltip title="Down"><Link className='back_link' onClick={() => window.scrollTo(0, document.body.scrollHeight)}><FaRegArrowAltCircleDown className='text-pink' /></Link></Tooltip>
+                          <Tooltip title="Down"><Link className='back_link' onClick={() => window.scrollTo(0, document.body.scrollHeight)}><FaChevronCircleDown className='text-pink' /></Link></Tooltip>
                         </div>
                         <span className="txt_updated">Updated on {moment(cmsData?.[0]?.data?.updatedAt)?.format("DD MMMM, YYYY")}</span>
                         <div className="onboardStep b_border top_txt mt-4">
