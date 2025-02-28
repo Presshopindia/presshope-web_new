@@ -823,7 +823,7 @@ const ContentReports = ({
                             options={taskCategories}
                             series={taskCategories.series}
                             type="pie"
-                            width="350"
+                            width="365"
                           />
                         </Link>
                       </div>
@@ -874,7 +874,7 @@ const ContentReports = ({
                             options={contentType}
                             series={contentType.series}
                             type="pie"
-                            width="350"
+                            width="365"
                           />
                         </Link>
                       </div>

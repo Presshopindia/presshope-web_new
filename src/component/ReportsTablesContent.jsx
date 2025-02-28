@@ -127,7 +127,7 @@ const ReportsTablesContent = () => {
         `mediaHouse/report/content/location?${paramName}=${param}`
       );
 
-      console.log("location12345",resp?.data?.data)
+      console.log("location12345", resp?.data?.data)
       setLocation(resp?.data?.data);
       setLoading(false);
     } catch (error) {
@@ -211,7 +211,8 @@ const ReportsTablesContent = () => {
   useEffect(() => {
     if (
       params.type === "total_fund_invested" ||
-      params.type === "fund_invested_summary"
+      params.type === "fund_invested_summary" ||
+      params.type === "vat_invested_details"
     ) {
       getVatSummary("yearly", "yearly");
     }
@@ -241,7 +242,7 @@ const ReportsTablesContent = () => {
       } else {
         null;
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const months = [
@@ -344,9 +345,9 @@ const ReportsTablesContent = () => {
                                   (item) => item?.media_type === "image"
                                 );
 
-                                const purchasedPublication=curr?.purchased_publication
-                                const purchasedContentDate=curr?.Vat.find((ele)=>ele.purchased_mediahouse_id==purchasedPublication)?.purchased_time
-                                    // console.log("purchasedContentDate",purchasedContentDate)
+                                const purchasedPublication = curr?.purchased_publication
+                                const purchasedContentDate = curr?.Vat.find((ele) => ele.purchased_mediahouse_id == purchasedPublication)?.purchased_time
+                                // console.log("purchasedContentDate",purchasedContentDate)
                                 return (
                                   <tr
                                     className="clickable"
@@ -359,13 +360,13 @@ const ReportsTablesContent = () => {
                                     <td className="content_img_td">
                                       <div className="tbl_cont_wrp">
                                         {curr?.content[0].media_type ===
-                                        "image" ? (
+                                          "image" ? (
                                           <img
                                             src={
                                               curr?.content[0]?.watermark ||
                                               process.env
                                                 .REACT_APP_CONTENT_MEDIA +
-                                                curr?.content[0]?.media
+                                              curr?.content[0]?.media
                                             }
                                             className="content_img"
                                           />
@@ -376,7 +377,7 @@ const ReportsTablesContent = () => {
                                               curr?.content[0]?.watermark ||
                                               process.env
                                                 .REACT_APP_CONTENT_MEDIA +
-                                                curr?.content[0]?.thumbnail
+                                              curr?.content[0]?.thumbnail
                                             }
                                             className="content_img"
                                           />
@@ -593,12 +594,12 @@ const ReportsTablesContent = () => {
                                     JSON.parse(localStorage.getItem("user"))
                                       ?._id
                                 )?.amount || curr?.amount_paid;
-                                   
 
-                                
-                                const purchasedPublication=curr?.purchased_publication
-                                const purchasedContentDate=curr?.Vat.find((ele)=>ele.purchased_mediahouse_id==purchasedPublication)?.purchased_time
-                                    console.log("purchasedContentDatepurchasedContentDate",purchasedContentDate)
+
+
+                              const purchasedPublication = curr?.purchased_publication
+                              const purchasedContentDate = curr?.Vat.find((ele) => ele.purchased_mediahouse_id == purchasedPublication)?.purchased_time
+                              console.log("purchasedContentDatepurchasedContentDate", purchasedContentDate)
                               return (
                                 <tr
                                   onClick={() =>
@@ -611,7 +612,7 @@ const ReportsTablesContent = () => {
                                   <td className="content_img_td">
                                     <div className="tbl_cont_wrp">
                                       {curr?.content[0]?.media_type ===
-                                      "image" ? (
+                                        "image" ? (
                                         <img
                                           src={
                                             process.env
@@ -910,26 +911,26 @@ const ReportsTablesContent = () => {
                                     )?.amount_without_Vat
                                   ) || curr?.amount - curr?.Vat;
                                 // const vat = (+paidAmount - askPrice).toFixed(2);
-                              let  vat=((curr?.Vat?.find(
+                                let vat = ((curr?.Vat?.find(
                                   (el) =>
                                     el?.purchased_mediahouse_id ==
                                     JSON.parse(localStorage.getItem("user"))
                                       ?._id
-                                )?.amount)|| curr?.amount_paid)  -   
-                                (( curr?.Vat?.find(
-                                  (el) =>
-                                    el?.purchased_mediahouse_id ==
-                                    JSON.parse(localStorage.getItem("user"))
-                                      ?._id
-                                )?.amount_without_Vat
-                              ) || curr?.amount - curr?.Vat)
-                                       
+                                )?.amount) || curr?.amount_paid) -
+                                  ((curr?.Vat?.find(
+                                    (el) =>
+                                      el?.purchased_mediahouse_id ==
+                                      JSON.parse(localStorage.getItem("user"))
+                                        ?._id
+                                  )?.amount_without_Vat
+                                  ) || curr?.amount - curr?.Vat)
 
-                                  const purchasedPublication=curr?.purchased_publication
-                                const purchasedContentDate=curr?.Vat.find((ele)=>ele.purchased_mediahouse_id==purchasedPublication)?.purchased_time
-                                    console.log("purchasedContentDateonline",moment(purchasedContentDate).format(
-                                          `DD MMM YYYY`
-                                        ))
+
+                                const purchasedPublication = curr?.purchased_publication
+                                const purchasedContentDate = curr?.Vat.find((ele) => ele.purchased_mediahouse_id == purchasedPublication)?.purchased_time
+                                console.log("purchasedContentDateonline", moment(purchasedContentDate).format(
+                                  `DD MMM YYYY`
+                                ))
 
                                 return (
                                   <tr
@@ -943,13 +944,13 @@ const ReportsTablesContent = () => {
                                     <td className="content_img_td">
                                       <div className="tbl_cont_wrp">
                                         {curr?.content[0]?.media_type ===
-                                        "image" ? (
+                                          "image" ? (
                                           <img
                                             src={
                                               curr?.content[0]?.watermark ||
                                               process.env
                                                 .REACT_APP_CONTENT_MEDIA +
-                                                curr?.content[0]?.media
+                                              curr?.content[0]?.media
                                             }
                                             className="content_img"
                                           />
@@ -960,7 +961,7 @@ const ReportsTablesContent = () => {
                                               curr?.content[0]?.watermark ||
                                               process.env
                                                 .REACT_APP_CONTENT_MEDIA +
-                                                curr?.content[0]?.thumbnail
+                                              curr?.content[0]?.thumbnail
                                             }
                                             className="content_img"
                                           />
@@ -1131,12 +1132,10 @@ const ReportsTablesContent = () => {
                                   onClick={() =>
                                     navigate(
                                       data?.type === "task"
-                                        ? `/dashboard-tables/fund_invested?month=${
-                                            months[curr?._id?.month - 1]
-                                          }&year=${curr?._id?.year}`
-                                        : `/dashboard-tables/fund_invested?month=${
-                                            months[curr?._id?.month - 1]
-                                          }&year=${curr?._id?.year}`
+                                        ? `/dashboard-tables/fund_invested?month=${months[curr?._id?.month - 1]
+                                        }&year=${curr?._id?.year}`
+                                        : `/dashboard-tables/fund_invested?month=${months[curr?._id?.month - 1]
+                                        }&year=${curr?._id?.year}`
                                     )
                                   }
                                 >
@@ -1203,7 +1202,7 @@ const ReportsTablesContent = () => {
                                     £
                                     {formatAmountInMillion(
                                       +(curr?.total_price - curr?.total_vat) ||
-                                        0
+                                      0
                                     )}
                                   </td>
                                   <td>
@@ -1261,7 +1260,7 @@ const ReportsTablesContent = () => {
                             {contentCategoryData && contentCategoryData
                               ?.sort((a, b) => b.month - a.month)
                               ?.map((value) => {
-                                console.log("allvalue",value);
+                                console.log("allvalue", value);
                                 const businessCount = value?.categories?.find(
                                   (el) => el?.category_id == "Business"
                                 );
@@ -1297,50 +1296,49 @@ const ReportsTablesContent = () => {
                                     onClick={() =>
                                       navigate(
                                         data?.type === "task"
-                                          ? `/dashboard-tables/content_purchased_online?month=${
-                                              months[value?.month - 1]
-                                            }&year=${value?.year}`
-                                          : `/dashboard-tables/content_purchased_online?month=${
-                                              months[value?.month - 1]
-                                            }&year=${value?.year}`
+                                          ? `/dashboard-tables/content_purchased_online?month=${months[value?.month - 1]
+                                          }&year=${value?.year}`
+                                          : `/dashboard-tables/content_purchased_online?month=${months[value?.month - 1]
+                                          }&year=${value?.year}`
                                       )
                                     }
                                   >
                                     <td className="content_wrap more_contnt_wrap">
                                       <div className="content_imgs_wrap">
                                         <div className="content_imgs">
-                                          {value?.content?.slice(0,5)?.map((el) =>{
-                                          
-                                          {console.log("allelementimage",el)}
-                                          return(
-                                            el?.content?.[0]?.media_type ===
-                                            "image" ? (
-                                              <img
-                                                src={
-                                                  process.env
-                                                    .REACT_APP_CONTENT_MEDIA +
-                                                  el?.content?.[0]?.media
-                                                }
-                                                className="content_img"
-                                              />
-                                            ) : el?.content?.[0]?.media_type ===
-                                              "video" ? (
-                                              <img
-                                                src={
-                                                  process.env
-                                                    .REACT_APP_CONTENT_MEDIA +
-                                                  el?.content?.[0]?.thumbnail
-                                                }
-                                                className="content_img"
-                                              />
-                                            ) : el?.content?.[0]?.media_type ===
-                                              "audio" ? (
-                                              <img
-                                                src={audioic}
-                                                className="content_img"
-                                              />
-                                            ) : null
-                                          )})}
+                                          {value?.content?.slice(0, 5)?.map((el) => {
+
+                                            { console.log("allelementimage", el) }
+                                            return (
+                                              el?.content?.[0]?.media_type ===
+                                                "image" ? (
+                                                <img
+                                                  src={
+                                                    process.env
+                                                      .REACT_APP_CONTENT_MEDIA +
+                                                    el?.content?.[0]?.media
+                                                  }
+                                                  className="content_img"
+                                                />
+                                              ) : el?.content?.[0]?.media_type ===
+                                                "video" ? (
+                                                <img
+                                                  src={
+                                                    process.env
+                                                      .REACT_APP_CONTENT_MEDIA +
+                                                    el?.content?.[0]?.thumbnail
+                                                  }
+                                                  className="content_img"
+                                                />
+                                              ) : el?.content?.[0]?.media_type ===
+                                                "audio" ? (
+                                                <img
+                                                  src={audioic}
+                                                  className="content_img"
+                                                />
+                                              ) : null
+                                            )
+                                          })}
                                           <span className="arrow_span">
                                             <svg
                                               stroke="currentColor"
@@ -1422,21 +1420,19 @@ const ReportsTablesContent = () => {
                                   onClick={() =>
                                     navigate(
                                       data?.type === "task"
-                                        ? `/dashboard-tables/content_purchased_online?month=${
-                                            months[value?.month - 1]
-                                          }&year=${value?.year}`
-                                        : `/dashboard-tables/content_purchased_online?month=${
-                                            months[value?.month - 1]
-                                          }&year=${value?.year}`
+                                        ? `/dashboard-tables/content_purchased_online?month=${months[value?.month - 1]
+                                        }&year=${value?.year}`
+                                        : `/dashboard-tables/content_purchased_online?month=${months[value?.month - 1]
+                                        }&year=${value?.year}`
                                     )
                                   }
                                 >
                                   <td className="content_wrap more_contnt_wrap">
                                     <div className="content_imgs_wrap">
                                       <div className="content_imgs">
-                                        {value?.content?.slice(0,5).map((el) =>
+                                        {value?.content?.slice(0, 5).map((el) =>
                                           el?.content?.[0]?.media_type ===
-                                          "image" ? (
+                                            "image" ? (
                                             <img
                                               src={
                                                 process.env
@@ -1535,19 +1531,17 @@ const ReportsTablesContent = () => {
                               splitC
                             )?.map((curr) => {
 
-                              
+
                               return (
                                 <tr
                                   className="clickable"
                                   onClick={() =>
                                     navigate(
                                       data?.type === "task"
-                                        ? `/dashboard-tables/content_purchased_online?month=${
-                                            months[curr?._id?.month - 1]
-                                          }&year=${curr?._id?.year}`
-                                        : `/dashboard-tables/content_purchased_online?month=${
-                                            months[curr?._id?.month - 1]
-                                          }&year=${curr?._id?.year}`
+                                        ? `/dashboard-tables/content_purchased_online?month=${months[curr?._id?.month - 1]
+                                        }&year=${curr?._id?.year}`
+                                        : `/dashboard-tables/content_purchased_online?month=${months[curr?._id?.month - 1]
+                                        }&year=${curr?._id?.year}`
                                     )
                                   }
                                 >
@@ -1555,23 +1549,23 @@ const ReportsTablesContent = () => {
                                     <div className="content_imgs_wrap">
                                       <div className="content_imgs">
                                         {curr?.content_id
-                                          ?.slice(0,5)
+                                          ?.slice(0, 5)
                                           ?.map((el) => {
                                             const mediaUrl =
                                               el?.content[0]?.media_type ===
-                                              "image"
+                                                "image"
                                                 ? process.env
-                                                    .REACT_APP_CONTENT_MEDIA +
-                                                  el?.content[0]?.media
+                                                  .REACT_APP_CONTENT_MEDIA +
+                                                el?.content[0]?.media
                                                 : el?.content[0]?.media_type ===
                                                   "video"
-                                                ? process.env
+                                                  ? process.env
                                                     .REACT_APP_CONTENT_MEDIA +
                                                   el?.content[0]?.thumbnail
-                                                : el?.content[0]?.media_type ===
-                                                  "audio"
-                                                ? audioic
-                                                : null;
+                                                  : el?.content[0]?.media_type ===
+                                                    "audio"
+                                                    ? audioic
+                                                    : null;
 
                                             return mediaUrl ? (
                                               <img
@@ -1663,22 +1657,20 @@ const ReportsTablesContent = () => {
                                   onClick={() =>
                                     navigate(
                                       data?.type === "task"
-                                        ? `/dashboard-tables/content_purchased_online?month=${
-                                            months[value?._id?.month - 1]
-                                          }&year=${value?.year}`
-                                        : `/dashboard-tables/content_purchased_online?month=${
-                                            months[value?._id?.month - 1]
-                                          }&year=${value?._id?.year}`
+                                        ? `/dashboard-tables/content_purchased_online?month=${months[value?._id?.month - 1]
+                                        }&year=${value?.year}`
+                                        : `/dashboard-tables/content_purchased_online?month=${months[value?._id?.month - 1]
+                                        }&year=${value?._id?.year}`
                                     )
                                   }
                                 >
                                   <td className="content_wrap more_contnt_wrap">
                                     <div className="content_imgs_wrap">
 
-                                    <div className="content_imgs">
-                                        {value?.content_id?.slice(0,5).map((el) =>
+                                      <div className="content_imgs">
+                                        {value?.content_id?.slice(0, 5).map((el) =>
                                           el?.content?.[0]?.media_type ===
-                                          "image" ? (
+                                            "image" ? (
                                             <img
                                               src={
                                                 process.env
@@ -1828,9 +1820,9 @@ const ReportsTablesContent = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            {purchaseContent?.map((curr) => {     
+                            {purchaseContent?.map((curr) => {
                               return (
-                                <tr className="clickable" onClick={()=>{navigate(`/dashboard-tables/content_purchased_online?month=${months[curr?._id?.month - 1]}&year=${curr?._id?.year}`)}}>
+                                <tr className="clickable" onClick={() => { navigate(`/dashboard-tables/content_purchased_online?month=${months[curr?._id?.month - 1]}&year=${curr?._id?.year}`) }}>
                                   <td className="content_wrap more_contnt_wrap">
                                     <div className="content_imgs_wrap">
                                       <div className="content_imgs">
@@ -2052,12 +2044,10 @@ const ReportsTablesContent = () => {
                                   <tr className="clickable" onClick={() =>
                                     navigate(
                                       data?.type === "task"
-                                        ? `/dashboard-tables/fund_invested?month=${
-                                            months[curr?._id?.month - 1]
-                                          }&year=${curr?._id?.year}`
-                                        : `/dashboard-tables/fund_invested?month=${
-                                            months[curr?._id?.month - 1]
-                                          }&year=${curr?._id?.year}`
+                                        ? `/dashboard-tables/fund_invested?month=${months[curr?._id?.month - 1]
+                                        }&year=${curr?._id?.year}`
+                                        : `/dashboard-tables/fund_invested?month=${months[curr?._id?.month - 1]
+                                        }&year=${curr?._id?.year}`
                                     )
                                   }>
                                     <td className="content_wrap more_contnt_wrap">
@@ -2134,6 +2124,123 @@ const ReportsTablesContent = () => {
                                   </tr>
                                 );
                               })}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </Card>
+                ) : params?.type === "vat_invested_details" ? (
+                  <Card className="tbl_crd">
+                    <div className="">
+                      <div
+                        className="d-flex justify-content-between align-items-center tbl_hdr"
+                        px="20px"
+                        mb="10px"
+                      >
+                        <Typography className="tbl_hdng">
+                          VAT details
+                        </Typography>
+                      </div>
+                      <div className="fix_ht_table">
+                        <table
+                          width="100%"
+                          mx="20px"
+                          variant="simple"
+                          className="common_table les_colm"
+                        >
+                          <thead>
+                            <tr>
+                              <th className="">Content purchased online</th>
+                              <th>Periods</th>
+                              <th>20% VAT </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {vatData?.map((curr) => {
+                              return (
+                                <tr className="clickable" onClick={() =>
+                                  navigate(
+                                    data?.type === "task"
+                                      ? `/dashboard-tables/fund_invested?month=${months[curr?._id?.month - 1]
+                                      }&year=${curr?._id?.year}`
+                                      : `/dashboard-tables/fund_invested?month=${months[curr?._id?.month - 1]
+                                      }&year=${curr?._id?.year}`
+                                  )
+                                }>
+                                  <td className="content_wrap more_contnt_wrap">
+                                    <div className="content_imgs_wrap">
+                                      <div className="content_imgs">
+                                        {curr?.content_id[0] &&
+                                          curr?.content_id[0]?.content?.map(
+                                            (curr) => {
+                                              return curr?.media_type ===
+                                                "image" ? (
+                                                <img
+                                                  src={
+                                                    process.env
+                                                      .REACT_APP_CONTENT_MEDIA +
+                                                    curr?.media
+                                                  }
+                                                  className="content_img"
+                                                />
+                                              ) : curr?.media_type ===
+                                                "video" ? (
+                                                <img
+                                                  src={
+                                                    process.env
+                                                      .REACT_APP_CONTENT_MEDIA +
+                                                    curr?.thumbnail
+                                                  }
+                                                  className="content_img"
+                                                />
+                                              ) : curr?.media_type ===
+                                                "audio" ? (
+                                                <img
+                                                  src={audioic}
+                                                  className="content_img"
+                                                />
+                                              ) : null;
+                                            }
+                                          )}
+
+                                        <span className="arrow_span">
+                                          <svg
+                                            stroke="currentColor"
+                                            fill="currentColor"
+                                            stroke-width="0"
+                                            viewBox="0 0 16 16"
+                                            height="1em"
+                                            width="1em"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              fill-rule="evenodd"
+                                              d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
+                                            ></path>
+                                          </svg>
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="timedate_wrap">
+                                    <p className="timedate">
+                                      <img
+                                        src={calendar}
+                                        className="icn_time"
+                                      />
+                                      {months[curr?._id?.month - 1]}{" "}
+                                      {curr?._id?.year}
+                                    </p>
+                                  </td>
+                                  <td>
+                                    £
+                                    {formatAmountInMillion(
+                                      +curr?.total_vat || 0
+                                    )}
+                                  </td>
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
                       </div>

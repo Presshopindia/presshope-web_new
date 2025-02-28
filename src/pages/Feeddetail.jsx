@@ -3448,6 +3448,8 @@ const Feeddetail = (props) => {
 
   const username = profileData?.full_name;
 
+  const mediahouseId = profileData?.role === "MediaHouse" ? profileData?._id : profileData?.media_house_id?._id;
+
   useEffect(() => {
     window?.scrollTo(0, 0);
   }, [param.id]);
@@ -3561,6 +3563,20 @@ const Feeddetail = (props) => {
       console.log(error);
     }
   };
+
+  const OfferPaymentChat = async () => {
+    try{
+      const payload = {
+        message_type: "Offered",
+        image_id: contentId,
+        sender_id: mediahouseId
+      };
+      await Post("mediahouse/create-offer-payment-chat", payload);
+    }
+    catch(error) {
+      console.log(error);
+    }
+  }
 
   // console.log("Messages", messages)
 
@@ -5520,6 +5536,7 @@ const Feeddetail = (props) => {
                                                       data?.original_ask_price,
                                                       roomDetails
                                                     );
+                                                    OfferPaymentChat();
                                                   }}
                                                   className="usr_upld_opts cont_opts"
                                                 >

@@ -913,18 +913,17 @@ const PurchasedContentDetail = () => {
                                     <span className="icon_trnsctns">
                                       <img src={bank} alt="" />
                                     </span>
-                                    Payer bank{" "}
+                                    Payment method{" "}
                                   </h6>
                                   <h6>
                                     {
-                                      transactionDetails?.media_house_id
-                                        ?.company_bank_details?.bank_name
+                                      transactionDetails?.payment_method?.type
                                     }
                                   </h6>
                                 </div>
                               </div>
                               {/* <hr /> */}
-                              <div className="transactional_detail">
+                              {/* <div className="transactional_detail">
                                 <div className="single_tranInfo">
                                   <h6>
                                     <span className="icon_trnsctns">
@@ -955,7 +954,7 @@ const PurchasedContentDetail = () => {
                                     }
                                   </h6>
                                 </div>
-                              </div>
+                              </div> */}
                             </div>
                           </Col>
                         </Row>

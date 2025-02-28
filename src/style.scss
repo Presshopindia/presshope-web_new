@@ -4011,6 +4011,7 @@ a.link {
 
   .content_stat {
     margin: 0px 20px;
+    padding-bottom: 4px;
   }
 
   .dash-c-foot {
@@ -6973,10 +6974,10 @@ input[type="number"] {
 .tbl_crd.vt_dtl_wrp {
   margin-bottom: 0px !important;
 
-  .fix_ht_table {
-    height: 380px;
-    overflow: auto;
-  }
+  // .fix_ht_table {
+  //   height: 380px;
+  //   overflow: auto;
+  // }
 }
 
 .manage_usr_wrp {
@@ -7314,8 +7315,8 @@ button {
     // font-family: $txt-mdm;
 
     position: absolute;
-    bottom: -1px;
-    right: 5px;
+    top: 3px;
+    left: 3px;
     color: #fff;
     font-size: 13px;
     font-family: "AirbnbMedium";
@@ -7325,6 +7326,7 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
+    background: rgba(63, 78, 76, 0.696484) !important;
   }
 }
 
@@ -12484,7 +12486,7 @@ span.cht_time {
   background: #ffffff;
   border-radius: 20px;
   padding: 14px;
-  height: 505px;
+  height: 500px;
   overflow: auto;
 }
 
@@ -12836,6 +12838,7 @@ audio {
 .rating_placholder {
   color: #000 !important;
 }
+
 .rating_placholder::placeholder {
   color: #838383 !important;
 }
@@ -12853,4 +12856,8 @@ audio {
 .download-invoice-btn {
   border-radius: 17px !important;
   padding: 0 2rem !important;
+}
+
+.mr-0 {
+  margin-right: 0 !important;
 }

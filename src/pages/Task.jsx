@@ -258,7 +258,7 @@ const BroadcastedTask = () => {
     setDashboardPayload(payload);
     setDashboardSort({ ...dashboardSort, type: "" });
   }
-  
+
 
   return (
     <>
@@ -343,10 +343,10 @@ const BroadcastedTask = () => {
             </Col>
 
             <Col md={2} className="mb-4 p-0 add-task-card">
-              <Card className="dash-top-cards h-100 add-br d-flex align-items-center me-0 justify-content-center">
+              <Card className="dash-top-cards mb-0 add-br rt_crd d-flex align-items-center justify-content-center mr-0">
                 <CardContent className="dash-c-body rev">
                   <div className="broadcast">
-                    <Typography className="mb-3 text-center d-flex justify-content-center align-items-center">
+                    <Typography className="mb-3 text-center d-flex justify-content-center">
                       <span className="clickable" onClick={handleShow}>
                         <svg
                           width="31"
@@ -372,12 +372,14 @@ const BroadcastedTask = () => {
                         </svg>
                       </span>
                     </Typography>
-                    <Typography className="mb-0 text-center txt_bold">
+                    <Typography className="mb-0 text-center txt_bold text-white font-14">
                       Broadcast task
                     </Typography>
                   </div>
                 </CardContent>
-                {show && <AddBroadcastTask isOpen={show} show={handleShow} />}
+                {show && (
+                  <AddBroadcastTask isOpen={show} show={handleShow} />
+                )}
               </Card>
             </Col>
           </Row>

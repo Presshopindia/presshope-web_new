@@ -108,8 +108,8 @@ const SignupUserN = () => {
       allowed_to_purchase_content: false,
       allow_to_chat_externally: false,
       price_range: {
-        minimum_price: 0,
-        maximum_price: 0,
+        minimum_price: "",
+        maximum_price: "",
       },
     },
   });
@@ -624,6 +624,7 @@ const SignupUserN = () => {
                             </Col>
                             <Col md={6}>
                               <div className="number_inp_wrap">
+                                {/* Issue here */}
                                 <input
                                   type="number"
                                   className="input_nmbr"
@@ -633,9 +634,7 @@ const SignupUserN = () => {
                                   value={addOffice?.office_details?.phone}
                                   maxLength={10}
                                   onChange={(e) => {
-                                    // if (e.target.value <= 10) {
-                                    handleOfficeChange(e);
-                                    // }
+                                    e.target.value.length <= 10 ? handleOfficeChange(e) : ""
                                   }}
                                   ref={phoneInputRef1}
                                 />
@@ -856,7 +855,7 @@ const SignupUserN = () => {
                                   placeholder=" phone"
                                   name="phone"
                                   onChange={(e) =>
-                                    e.target.value?.length <= 15
+                                    e.target.value?.length <= 10
                                       ? setOnboardingUser((pre) => ({
                                         ...pre,
                                         phone: e.target.value,
@@ -973,7 +972,7 @@ const SignupUserN = () => {
                                         type="number"
                                         className="w-100"
                                         name="minimum_price"
-                                        placeholder="min"
+                                        placeholder="Min Price"
                                         value={
                                           onboardingUser?.admin_rignts
                                             ?.price_range?.minimum_price
@@ -992,7 +991,7 @@ const SignupUserN = () => {
                                         type="number"
                                         className="w-100"
                                         name="maximum_price"
-                                        placeholder="max"
+                                        placeholder="Max Price"
                                         value={
                                           onboardingUser?.admin_rignts
                                             ?.price_range?.maximum_price

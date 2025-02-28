@@ -11,7 +11,7 @@ import moment from 'moment/moment';
 import html2pdf from 'html2pdf.js';
 import Footerlandingpage from '../component/Footerlandingpage';
 import HeaderN from '../component/HeaderN';
-import { FaRegArrowAltCircleDown, FaRegArrowAltCircleUp } from 'react-icons/fa';
+import { FaRegArrowAltCircleDown, FaRegArrowAltCircleUp, FaChevronCircleDown, FaChevronCircleUp } from 'react-icons/fa';
 
 const PrePrivacyPolicy = () => {
 
@@ -72,9 +72,9 @@ const PrePrivacyPolicy = () => {
                                     <Link className='back_link' onClick={() => window.history.back()}><BsArrowLeft className='text-pink' /> Back </Link>
                                     <div className='onboardMain' id="print-content">
                                         <div className="onboardIntro sign_section post">
-                                        <div className='d-flex justify-content-between'>
+                                            <div className='d-flex justify-content-between'>
                                                 <h1 className="mb-0 pg_hdng">Privacy Policy</h1>
-                                                <Tooltip title="Down"><Link className='back_link' onClick={() => window.scrollTo(0, document.body.scrollHeight)}><FaRegArrowAltCircleDown className='text-pink' /></Link></Tooltip>
+                                                <Tooltip title="Down"><Link className='back_link' onClick={() => window.scrollTo(0, document.body.scrollHeight)}><FaChevronCircleDown className='text-pink' /></Link></Tooltip>
                                             </div>
                                             <span className="txt_updated">Updated on {moment(privacy?.updatedAt).format("DD MMMM, YYYY")}</span>
                                             <div className="onboardStep b_border top_txt">
@@ -91,7 +91,7 @@ const PrePrivacyPolicy = () => {
                                     <div className="d-flex justify-content-between tandc_btns">
                                         <Button className='w-100' variant='secondary' onClick={handlePdfDownloadClick}>Download</Button>
                                         <Button className='w-100 theme_btn' variant='primary' onClick={handlePrintClick}>Print</Button>
-                                        <Tooltip title="Down"><Link className='back_link' onClick={() => window.scrollTo(0, 0)}><FaRegArrowAltCircleUp className='text-pink' /></Link></Tooltip>
+                                        <Tooltip title="Down"><Link className='back_link' onClick={() => window.scrollTo(0, 0)}><FaChevronCircleUp className='text-pink' /></Link></Tooltip>
                                     </div>
                                 </div>
                             </Col>
