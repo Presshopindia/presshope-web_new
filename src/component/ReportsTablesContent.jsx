@@ -2138,7 +2138,7 @@ const ReportsTablesContent = () => {
                         mb="10px"
                       >
                         <Typography className="tbl_hdng">
-                          VAT details
+                          Vat details
                         </Typography>
                       </div>
                       <div className="fix_ht_table">
@@ -2152,95 +2152,97 @@ const ReportsTablesContent = () => {
                             <tr>
                               <th className="">Content purchased online</th>
                               <th>Periods</th>
-                              <th>20% VAT </th>
+                              <th>20% Vat </th>
                             </tr>
                           </thead>
                           <tbody>
                             {vatData?.map((curr) => {
-                              return (
-                                <tr className="clickable" onClick={() =>
-                                  navigate(
-                                    data?.type === "task"
-                                      ? `/dashboard-tables/fund_invested?month=${months[curr?._id?.month - 1]
-                                      }&year=${curr?._id?.year}`
-                                      : `/dashboard-tables/fund_invested?month=${months[curr?._id?.month - 1]
-                                      }&year=${curr?._id?.year}`
-                                  )
-                                }>
-                                  <td className="content_wrap more_contnt_wrap">
-                                    <div className="content_imgs_wrap">
-                                      <div className="content_imgs">
-                                        {curr?.content_id[0] &&
-                                          curr?.content_id[0]?.content?.map(
-                                            (curr) => {
-                                              return curr?.media_type ===
-                                                "image" ? (
-                                                <img
-                                                  src={
-                                                    process.env
-                                                      .REACT_APP_CONTENT_MEDIA +
-                                                    curr?.media
-                                                  }
-                                                  className="content_img"
-                                                />
-                                              ) : curr?.media_type ===
-                                                "video" ? (
-                                                <img
-                                                  src={
-                                                    process.env
-                                                      .REACT_APP_CONTENT_MEDIA +
-                                                    curr?.thumbnail
-                                                  }
-                                                  className="content_img"
-                                                />
-                                              ) : curr?.media_type ===
-                                                "audio" ? (
-                                                <img
-                                                  src={audioic}
-                                                  className="content_img"
-                                                />
-                                              ) : null;
-                                            }
-                                          )}
+                                return (
+                                  <tr className="clickable" onClick={() =>
+                                    navigate(
+                                      data?.type === "task"
+                                        ? `/dashboard-tables/fund_invested?month=${
+                                            months[curr?._id?.month - 1]
+                                          }&year=${curr?._id?.year}`
+                                        : `/dashboard-tables/fund_invested?month=${
+                                            months[curr?._id?.month - 1]
+                                          }&year=${curr?._id?.year}`
+                                    )
+                                  }>
+                                    <td className="content_wrap more_contnt_wrap">
+                                      <div className="content_imgs_wrap">
+                                        <div className="content_imgs">
+                                          {curr?.content_id[0] &&
+                                            curr?.content_id[0]?.content?.map(
+                                              (curr) => {
+                                                return curr?.media_type ===
+                                                  "image" ? (
+                                                  <img
+                                                    src={
+                                                      process.env
+                                                        .REACT_APP_CONTENT_MEDIA +
+                                                      curr?.media
+                                                    }
+                                                    className="content_img"
+                                                  />
+                                                ) : curr?.media_type ===
+                                                  "video" ? (
+                                                  <img
+                                                    src={
+                                                      process.env
+                                                        .REACT_APP_CONTENT_MEDIA +
+                                                      curr?.thumbnail
+                                                    }
+                                                    className="content_img"
+                                                  />
+                                                ) : curr?.media_type ===
+                                                  "audio" ? (
+                                                  <img
+                                                    src={audioic}
+                                                    className="content_img"
+                                                  />
+                                                ) : null;
+                                              }
+                                            )}
 
-                                        <span className="arrow_span">
-                                          <svg
-                                            stroke="currentColor"
-                                            fill="currentColor"
-                                            stroke-width="0"
-                                            viewBox="0 0 16 16"
-                                            height="1em"
-                                            width="1em"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path
-                                              fill-rule="evenodd"
-                                              d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
-                                            ></path>
-                                          </svg>
-                                        </span>
+                                          <span className="arrow_span">
+                                            <svg
+                                              stroke="currentColor"
+                                              fill="currentColor"
+                                              stroke-width="0"
+                                              viewBox="0 0 16 16"
+                                              height="1em"
+                                              width="1em"
+                                              xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                              <path
+                                                fill-rule="evenodd"
+                                                d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
+                                              ></path>
+                                            </svg>
+                                          </span>
+                                        </div>
                                       </div>
-                                    </div>
-                                  </td>
-                                  <td className="timedate_wrap">
-                                    <p className="timedate">
-                                      <img
-                                        src={calendar}
-                                        className="icn_time"
-                                      />
-                                      {months[curr?._id?.month - 1]}{" "}
-                                      {curr?._id?.year}
-                                    </p>
-                                  </td>
-                                  <td>
-                                    £
-                                    {formatAmountInMillion(
-                                      +curr?.total_vat || 0
-                                    )}
-                                  </td>
-                                </tr>
-                              );
-                            })}
+                                    </td>
+                                    <td className="timedate_wrap">
+                                      <p className="timedate">
+                                        <img
+                                          src={calendar}
+                                          className="icn_time"
+                                        />
+                                        {months[curr?._id?.month - 1]}{" "}
+                                        {curr?._id?.year}
+                                      </p>
+                                    </td>
+                                    <td>
+                                      £
+                                      {formatAmountInMillion(
+                                        +curr?.total_vat || 0
+                                      )}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
                           </tbody>
                         </table>
                       </div>
