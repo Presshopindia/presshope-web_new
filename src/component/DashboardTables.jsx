@@ -1051,8 +1051,7 @@ const DashboardTables = () => {
                       </div>
                     </div>
                   </Card>
-                ) : (
-                  <Card className="tbl_crd">
+                ) : ( <Card className="tbl_crd">
                     <div className="">
                       <div
                         className="d-flex justify-content-between align-items-center tbl_hdr"

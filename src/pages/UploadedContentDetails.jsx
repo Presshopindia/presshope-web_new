@@ -139,7 +139,7 @@ const UploadedContentDetails = (props) => {
   const [searchParams] = useSearchParams();
 
   // Extract the 'task_content_id' parameter
-  const taskContentId = searchParams.get("task_content_id");
+  const taskHopperId = searchParams.get("hopper_id");
   const taskContentType = searchParams.get("task_content_type");
 
   // External Chat
@@ -361,9 +361,9 @@ const UploadedContentDetails = (props) => {
     setLoading(true);
     try {
       const resp = await Get(
-        `mediaHouse/getuploadedContentbyHoppers?_id=${param.id}&contentId=${taskContentId}`
+        `mediaHouse/getuploadedContentbyHoppers?_id=${param.id}&hopper_id=${taskHopperId}`
       );
-      setData(resp.data.data[0]);
+      setData(resp.data.data);
 
       // const getHoppers = await Get(`mediaHouse/findacceptedtasks?task_id=${Livetask?.data?.tasks?.find?.((el) => el?._id == resp.data.data[0]?.task_id?._id)?._id}&receiver_id=${User && User._id || User.id}&type=task_content`);
       setRoomDetails(resp.data.data[0]);
@@ -492,23 +492,27 @@ const UploadedContentDetails = (props) => {
   useEffect(() => {
     ContentByID();
     GetUserList();
-  }, [param?.id, taskContentId]);
+  }, [param?.id, taskHopperId]);
 
-  const Audio = data
-    ? data.task_id.content.filter((item) => item.media_type === "audio")
-    : fav?.content_id?.content?.filter((item) => item?.media_type === "audio");
-  const Video = data
-    ? data.task_id.content.filter((item) => item.media_type === "video")
-    : fav?.content_id?.content?.filter((item) => item?.media_type === "video");
-  const images = data
-    ? data.task_id.content.filter((item) => item.media_type === "image")
-    : fav?.content_id?.content?.filter((item) => item?.media_type === "image");
-  const Pdf = data
-    ? data.task_id.content.filter((item) => item.media_type === "pdf")
-    : fav?.content_id?.content?.filter((item) => item?.media_type === "pdf");
-  const Doc = data
-    ? data.task_id.content.filter((item) => item.media_type === "doc")
-    : fav?.content_id?.content?.filter((item) => item?.media_type === "doc");
+  console.log("Data ----->", data);
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  const handleSelectionChange = (item, isChecked) => {
+    setSelectedItems((prev) => {
+      if (isChecked) {
+        // Add the item if it is checked
+        return [...prev, item];
+      } else {
+        // Remove the item if it is unchecked
+        return prev.filter((selectedItem) => selectedItem._id !== item._id);
+      }
+    });
+  };
+
+  
+  const Audio = data?.filter((item) => item.type === "audio")
+  const Video = data?.filter((item) => item.type === "video")
+  const images = data?.filter((item) => item.type === "image")
 
   function capitalizeFirstLetter(string) {
     return string?.charAt(0)?.toUpperCase() + string?.slice(1);
@@ -803,6 +807,7 @@ const UploadedContentDetails = (props) => {
   // })
 
   const stripePayment = async (curr) => {
+    setLoading(true);
     console.log("all paid data ---->money", UserDetails);
     console.log("all paid data ---->money cuuuuuuu", curr);
     let totalAmount = 0;
@@ -811,16 +816,23 @@ const UploadedContentDetails = (props) => {
     });
     let obj = {
       items: selectedItems,
-      image_id: curr?.image_id,
       customer_id: UserDetails?.stripe_customer_id,
       stripe_account_id: curr?.sender_id?.stripe_account_id || "no data",
       amount: totalAmount || curr?.media?.amount,
       type: "task_content",
       task_id: taskDetails?._id,
+      description: taskDetails?.heading,
+      room_id: roomDetails?.roomsdetails?.room_id,
+      chat_id: curr?._id,
+      hopper_id: taskHopperId
     };
-    const resp = await Post("mediahouse/createPayment", obj);
-    window.open(resp.data.url, "_blank");
-    if (resp) {
+    try{
+      const resp = await Post("mediahouse/createPayment", obj);
+      setLoading(false);
+      window.open(resp.data.url, "_blank");
+    }
+    catch(error) {
+      setLoading(false);
     }
   };
 
@@ -921,20 +933,6 @@ const UploadedContentDetails = (props) => {
     }
   };
 
-  const [selectedItems, setSelectedItems] = useState([]);
-
-  const handleSelectionChange = (item, isChecked) => {
-    setSelectedItems((prev) => {
-      if (isChecked) {
-        // Add the item if it is checked
-        return [...prev, item];
-      } else {
-        // Remove the item if it is unchecked
-        return prev.filter((selectedItem) => selectedItem._id !== item._id);
-      }
-    });
-  };
-
   console.log("all task item data-->", data);
   console.log("message ---->messages", messages);
   console.log("all items that are checked --->", selectedItems);
@@ -1014,41 +1012,6 @@ const UploadedContentDetails = (props) => {
                                 )}
                               </div>
                             )}
-                            {Pdf && Pdf.length > 0 && (
-                              <div className="post_itm_icns dtl_icns">
-                                {Pdf && Pdf.length > 0 && (
-                                  <span className="count">
-                                    {Pdf && Pdf.length > 0 && Pdf.length}
-                                  </span>
-                                )}
-
-                                {Pdf && Pdf.length > 0 && (
-                                  <img
-                                    className="feedMediaType iconBg"
-                                    src={pdfic}
-                                    alt=""
-                                  />
-                                )}
-                              </div>
-                            )}
-
-                            {Doc && Doc.length > 0 && (
-                              <div className="post_itm_icns dtl_icns">
-                                {Doc && Doc.length > 0 && (
-                                  <span className="count">
-                                    {Doc && Doc.length > 0 && Doc.length}
-                                  </span>
-                                )}
-
-                                {Doc && Doc.length > 0 && (
-                                  <img
-                                    className="feedMediaType iconBg"
-                                    src={docsic}
-                                    alt=""
-                                  />
-                                )}
-                              </div>
-                            )}
                           </div>
                           <div
                             className="post_itm_icns right dtl_icns"
@@ -1076,15 +1039,15 @@ const UploadedContentDetails = (props) => {
                             pagination={{ clickable: true }}
                           >
                             {data
-                              ? data?.task_id?.content?.map((curr) => {
+                              ? data?.map((curr) => {
                                 return (
                                   <SwiperSlide key={curr._id}>
-                                    {curr?.media_type === "image" ? (
+                                    {curr?.type === "image" ? (
                                       <img
-                                        src={curr?.watermark || curr?.media}
+                                        src={curr?.videothubnail}
                                         alt={`Image ${curr._id}`}
                                       />
-                                    ) : curr?.media_type === "audio" ? (
+                                    ) : curr?.type === "audio" ? (
                                       <div>
                                         <img
                                           src={audioic}
@@ -1094,17 +1057,13 @@ const UploadedContentDetails = (props) => {
                                         />
                                         <audio
                                           controls
-                                          src={
-                                            process.env
-                                              .REACT_APP_UPLOADED_CONTENT +
-                                            curr?.media
-                                          }
+                                          src={curr?.videothubnail}
                                           type="audio/mpeg"
                                           className="slider-audio"
                                           ref={audioRef}
                                         />
                                       </div>
-                                    ) : curr?.media_type === "video" ? (
+                                    ) : curr?.type === "video" ? (
                                       <video
                                         controls
                                         className="slider-vddo"
@@ -1113,16 +1072,9 @@ const UploadedContentDetails = (props) => {
                                         //     .REACT_APP_UPLOADED_CONTENT +
                                         //   curr?.media
                                         // }
-                                        src={curr?.watermark}
+                                        src={curr?.videothubnail}
                                       />
-                                    ) : (
-                                      <embed
-                                        src="https://uat-presshope.s3.eu-west-2.amazonaws.com/public/contentData/169383718859210044629829-1025-123123122222121_seller_invoice.pdf"
-                                        type="application/pdf"
-                                        width="100%"
-                                        height="500"
-                                      />
-                                    )}
+                                    ) : null}
                                   </SwiperSlide>
                                 );
                               })
@@ -1169,26 +1121,17 @@ const UploadedContentDetails = (props) => {
                                   </SwiperSlide>
                                 );
                               })}
-
-                            {/* )
-                            })} */}
                           </Swiper>
 
                           <div className="feedTitle_content">
                             <h1 className="feedTitle">
-                              {data
-                                ? data?.task_id?.heading
-                                : fav?.content_id?.heading}
+                              {data?.[0]?.task_id?.heading}
                             </h1>
 
                             <textarea
                               className="form-control custom_textarea"
                               readOnly
-                              value={
-                                data
-                                  ? data?.task_id?.task_description
-                                  : fav?.content_id?.description
-                              }
+                              value={data?.[0]?.task_id?.task_description}
                             ></textarea>
                           </div>
                         </CardContent>
@@ -1227,15 +1170,13 @@ const UploadedContentDetails = (props) => {
                                     <img
                                       src={
                                         process.env.REACT_APP_AVATAR_IMAGE +
-                                        data?.avatar_detals[0]?.avatar
+                                        data?.[0]?.avatar_detals[0]?.avatar
                                       }
                                       alt=""
                                     />
 
                                     <span className="hpr_nme">
-                                      {data
-                                        ? data?.hopper_id?.user_name
-                                        : fav?.content_id?.hopper_id?.user_name}
+                                      {data?.[0]?.hopper_id?.user_name}
                                     </span>
                                   </div>
                                 </div>
@@ -1246,7 +1187,7 @@ const UploadedContentDetails = (props) => {
                                   <div className="item-in-right loc">
                                     <span>
                                       <SlLocationPin />{" "}
-                                      <div>{data?.task_id?.location}</div>
+                                      <div>{data?.[0]?.task_id?.location}</div>
                                     </span>
                                   </div>
                                 </div>
@@ -1257,7 +1198,7 @@ const UploadedContentDetails = (props) => {
                                   <div className="item-in-right loc">
                                     <span>
                                       <MdOutlineWatchLater />
-                                      {moment(data?.task_id?.createdAt).format(
+                                      {moment(data?.[0]?.task_id?.createdAt).format(
                                         "h:mm A, DD MMM YYYY"
                                       )}
                                     </span>
@@ -1269,13 +1210,13 @@ const UploadedContentDetails = (props) => {
                                   <span className="fnt-bold">Category</span>
                                   <div className="">
                                     <img
-                                      src={data?.category_details[0]?.icon}
+                                      src={data?.[0]?.category_details[0]?.icon}
                                       className="exclusive-img"
                                       alt=""
                                     />
                                     <span className="txt_catg_licn">
                                       {capitalizeFirstLetter(
-                                        data?.category_details[0]?.name
+                                        data?.[0]?.category_details[0]?.name
                                       )}
                                     </span>
                                   </div>
@@ -1292,14 +1233,14 @@ const UploadedContentDetails = (props) => {
                                   <div className="btn-1">
                                     <p>Photo</p>
                                     <button className="btn-price">
-                                      £ {data?.task_id?.hopper_photo_price || 0}
+                                      £ {data?.[0]?.task_id?.hopper_photo_price || 0}
                                     </button>
                                   </div>
                                   <div className="btn-1">
                                     <p>Interview</p>
                                     <button className="btn-price">
                                       £{" "}
-                                      {data?.task_id?.hopper_interview_price ||
+                                      {data?.[0]?.task_id?.hopper_interview_price ||
                                         0}
                                     </button>
                                   </div>
@@ -1307,7 +1248,7 @@ const UploadedContentDetails = (props) => {
                                     <p>Video</p>
                                     <button className="btn-price">
                                       £{" "}
-                                      {data?.task_id?.hopper_videos_price || 0}
+                                      {data?.[0]?.task_id?.hopper_videos_price || 0}
                                     </button>
                                   </div>
                                 </div>
@@ -1316,44 +1257,26 @@ const UploadedContentDetails = (props) => {
                               <div className="add-to-basket-btn">
                                 {/* <button className="black-btn"  onClick={AddToBasket}>Add to Basket</button> */}
                                 <button
-                                  onClick={() => AddToBasket(data, "task")}
+                                  onClick={() => AddToBasket(data?.[0], "task")}
                                   className="red-btn"
                                 >
-                                  Add to Basket
+                                  Go to Basket
                                 </button>
                                 <button
                                   className="red-btn"
                                   onClick={() => {
                                     navigate(
-                                      `/task-invoice/${data?._id}?taskContentId=${taskContentId}`
+                                      `/task-invoice/${data?.[0]?._id}?taskHopperId=${taskHopperId}`
                                     );
-                                    console.log(
-                                      "button -------> ----> -----> onClick"
-                                    );
-                                    const contentCost =
-                                      data?.type == "image"
-                                        ? data?.task_id?.hopper_photo_price
-                                        : data?.type == "video"
-                                          ? data?.task_id?.hopper_videos_price
-                                          : data?.type == "audio"
-                                            ? data?.task_id?.hopper_interview_price
-                                            : "";
-                                    // Payment(
-                                    //   +data?.task_id?.hopper_photo_price,
-                                    //   +contentCost,
-                                    //   data?._id,
-                                    //   false,
-                                    //   0
-                                    // );
                                   }}
                                 >
                                   £{" "}
-                                  {data?.type == "image"
-                                    ? data?.task_id?.hopper_photo_price
-                                    : data?.type == "video"
-                                      ? data?.task_id?.hopper_videos_price
-                                      : data?.type == "audio"
-                                        ? data?.task_id?.hopper_interview_price
+                                  {data?.[0]?.type == "image"
+                                    ? data?.[0]?.task_id?.hopper_photo_price
+                                    : data?.[0]?.type == "video"
+                                      ? data?.[0]?.task_id?.hopper_videos_price
+                                      : data?.[0]?.type == "audio"
+                                        ? data?.[0]?.task_id?.hopper_interview_price
                                         : ""}
                                 </button>
                               </div>
@@ -2029,20 +1952,7 @@ const UploadedContentDetails = (props) => {
                                                                       onChange={(
                                                                         e
                                                                       ) => {
-                                                                        // Handle checkbox state change here
-                                                                        handleSelectionChange(
-                                                                          item,
-                                                                          e.target
-                                                                            .checked
-                                                                        );
-                                                                        console.log(
-                                                                          `Checkbox for media ${item?._id ||
-                                                                          index
-                                                                          } is ${e
-                                                                            .target
-                                                                            .checked
-                                                                          }`
-                                                                        );
+                                                                        handleSelectionChange( item, e.target.checked);
                                                                       }}
                                                                     />
                                                                     {/* <span>
@@ -2743,7 +2653,7 @@ const UploadedContentDetails = (props) => {
                         )}
                       </div>
                       <Link
-                        to={`/related-content-task/:tag_id/${data?.hopper_id?._id}/${data?.category_details[0]?._id}`}
+                        to={`/related-content-task/:tag_id/${data?.[0]?.hopper_id?._id}/${data?.[0]?.category_details[0]?._id}`}
                         className="next_link"
                       >
                         View all
@@ -2818,7 +2728,7 @@ const UploadedContentDetails = (props) => {
                             content_id={item._id}
                            
                             task_content_id={item?._id || item?.task_id?._id}
-                            taskContentId={item?._id}
+                            taskHopperId={item?._id}
                           /> */}
                           <ContentFeedCard
                             feedImg={
@@ -2892,7 +2802,7 @@ const UploadedContentDetails = (props) => {
                             // content_id={item?.content_id}
                             content_id={item?._id}
                             task_content_id={item?._id || item?.task_id?._id}
-                            taskContentId={item?._id}
+                            taskHopperId={item?._id}
                           />
                         </Col>
                       );
@@ -2902,7 +2812,7 @@ const UploadedContentDetails = (props) => {
 
                 <div className="feedsContainer mb-0">
                   <div className="feedContent_header">
-                    <h1>More content from {data?.hopper_id?.user_name}</h1>
+                    <h1>More content from {data?.[0]?.hopper_id?.user_name}</h1>
                     <div className="d-flex align-items-center">
                       <div className="fltrs_prnt me-3 ht_sort">
                         <Button
@@ -2922,7 +2832,7 @@ const UploadedContentDetails = (props) => {
                         )}
                       </div>
                       <Link
-                        to={`/more-content-task/${data?.hopper_id?._id}/${data?.task_id?._id}`}
+                        to={`/more-content-task/${data?.[0]?.hopper_id?._id}/${data?.[0]?.task_id?._id}`}
                         className="next_link"
                       >
                         View all
@@ -3006,7 +2916,7 @@ const UploadedContentDetails = (props) => {
                       
                             content_id={item?._id}
                             taskc_ontent_id={item?._id || item?.task_id?._id}
-                            taskContentId={item?._id}
+                            taskHopperId={item?._id}
                           /> */}
                           <ContentFeedCard
                             feedImg={
@@ -3080,7 +2990,7 @@ const UploadedContentDetails = (props) => {
                             // content_id={item?.content_id}
                             content_id={item?._id}
                             task_content_id={item?._id || item?.task_id?._id}
-                            taskContentId={item?._id}
+                            taskHopperId={item?._id}
                           />
                         </Col>
                       );
