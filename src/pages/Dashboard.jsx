@@ -134,7 +134,6 @@ const Dashboard = () => {
         `mediahouse/recentactivity?${recentActivityValues.field && recentActivityValues.field
         }=${recentActivityValues.value && recentActivityValues.value}`
       );
-      console.log("responseee", resp);
       const sortedData = resp?.data?.data
         ?.filter((el) => el.content_id != null)
         ?.sort((a, b) => new Date(b?.updatedAt) - new Date(a?.updatedAt));
@@ -402,9 +401,6 @@ const Dashboard = () => {
                     handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, content_purchased_online: "" } })}
                   />
                 </Col>
-                {
-                  console.log("Broadcasted task", getDeepModifiedTaskContent(dashboardData?.task?.broadcastedTask?.data))
-                }
                 {/* Broadcast Tasks */}
                 <Col md={4} className="p-0">
                   <DashboardCardInfo
@@ -422,7 +418,6 @@ const Dashboard = () => {
                     handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, broadcasted_task: "" } })}
                   />
                 </Col>
-
                 {/* Total Fund Invested */}
                 <Col md={4} className="p-0">
                   <DashboardCardInfo
@@ -644,7 +639,7 @@ const Dashboard = () => {
                     {pending_payment &&
                       pending_payment?.data?.slice(0, 2)?.map((curr) => {
                         return (
-                          <Link to={`/auto-invoice/${curr?.id}`}>
+                          <Link to={`/auto-invoice/${curr?.id}`} key={curr?._id}>
                             <DashBoardPayment
                               imgtab={
                                 curr?.content[0]?.media_type === "video"
@@ -659,7 +654,6 @@ const Dashboard = () => {
                                       process.env.REACT_APP_CONTENT_MEDIA +
                                       curr?.content[0]?.media
                               }
-                              // imgtab={curr?.content[0]?.watermark || process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media}
                               imgtab1={
                                 process.env.REACT_APP_AVATAR_IMAGE +
                                 curr?.hopper_id?.avatar_id?.avatar
@@ -681,10 +675,6 @@ const Dashboard = () => {
                           </Link>
                         );
                       })}
-                    {
-                      // console.log('pending_payment---->', pending_payment)
-                    }
-                    {/* <DashBoardPayment imgtab={imgtab2} tabcarddata={"In political crosshairs U.S. Supreme Court weighs abortion and guns"} tabcard3={"mrpopular"} paying={"Pay £500"} /> */}
                   </div>
                 </Col>
               </Row>

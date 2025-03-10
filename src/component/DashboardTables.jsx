@@ -734,7 +734,6 @@ const DashboardTables = () => {
                             {data?.broad_casted_tasks_details &&
                               data?.broad_casted_tasks_details?.task.map(
                                 (curr) => {
-                                  console.log("all map data ===>", curr);
                                   let imageCount = 0;
                                   let audioCount = 0;
                                   let videoCount = 0;
@@ -751,7 +750,7 @@ const DashboardTables = () => {
                                     <tr
                                       onClick={() =>
                                         navigate(
-                                          `/broadcasted-taks/${curr?._id}`
+                                          `/task?task_ids=${curr?._id}`
                                         )
                                       }
                                       style={{ cursor: "pointer" }}

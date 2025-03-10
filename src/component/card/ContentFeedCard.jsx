@@ -234,7 +234,7 @@ function ContentFeedCard(props) {
               <img className="feedMedia" src={props?.feedImg} alt="" />
               <div className="backgroundOverlay"></div>
             </div>
-            {!props?.is_sale_status ? (
+            {props.fvticns ? (
               <div
                 onClick={(event) => {
                   event.stopPropagation();

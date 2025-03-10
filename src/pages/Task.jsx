@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import interviewic from "../assets/images/interview.svg";
 import Header from "../component/Header";
 import BroadcastedTrackings from "./BroadcastedList";
@@ -22,31 +22,24 @@ import TopFilterComn from "../component/Sortfilters/Content/TopFilterComn";
 import Fundsinvested from "../component/Sortfilters/Dashboard/Fundsinvested";
 import ContentFeedCard from "../component/card/ContentFeedCard";
 import { formatAmountInMillion, getDeepModifiedTaskContent, getTaskContent } from "../component/commonFunction";
-import { initStateOfSortFilterPurchasedContent } from "../component/staticData";
 import { Get, Post } from "../services/user.services";
 import { DashboardCardInfo } from "../component/DashboardCardInfo";
 
 const BroadcastedTask = () => {
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const taskId = searchParams?.get('task_ids');
+
   const [viewTask, setViewTask] = useState({
     open: false,
-    taskDetails: {}
-  })
+    taskDetails: {},
+    taskId: taskId || ""
+  });
+
   const [show, setShow] = useState(false);
-  const [stats, setStats] = useState();
-  const [uploadedContent, setUploadedContent] = useState([]);
-  // const [loading, setLoading] = useState(false);
-  const [active, setActive] = useState("");
-  const [openreportPurchased, setOpenReportPurchased] = useState(false);
-
-  const [sortFilterPurchasedContent, setSortFilterPurchasedContent] = useState(
-    initStateOfSortFilterPurchasedContent
-  );
-
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
-  const [limit, setLimit] = useState(8);
+  const [limit, setLimit] = useState(6);
   const [allFilterData, setAllFilterData] = useState({
     filterdata: [],
     allcategoryData: [],
@@ -59,78 +52,8 @@ const BroadcastedTask = () => {
     toggle_sort: false,
   });
 
-  const location = useLocation();
-  const query = new URLSearchParams(location.search);
-
-  useEffect(() => {
-    const parsedSortField = query.get("sortField") || "";
-    const parsedSortValue = query.get("sortValue") || "";
-    const parsedTimeRangeStart = query.get("timeRangeStart") || "";
-    const parsedTimeRangeEnd = query.get("timeRangeEnd") || "";
-    const parsedFavContent = query.get("favContent") === "true";
-    const parsedType = query.getAll("type") || [];
-    const parsedCategory = query.getAll("category") || [];
-    const parsedChange = query.get("change") || false;
-
-    setSortFilterPurchasedContent({
-      sortField: parsedSortField,
-      sortValue: parsedSortValue,
-      timeRange: {
-        start: parsedTimeRangeStart,
-        end: parsedTimeRangeEnd,
-      },
-      favContent: parsedFavContent,
-      type: parsedType,
-      category: parsedCategory,
-      change: parsedChange,
-    });
-
-    window.scrollTo(0, 0);
-  }, []);
-
-  // content sourced from tasks-
-  const [contentSourcedTaskValue, setContentSourcedTaskValue] = useState("");
-  const handleContentRangeTimeValues = (values) => {
-    setContentSourcedTaskValue(values);
-  };
-  const [filter, setFilter] = useState({
-    content_sourced: false,
-  });
-
-  const closeFilters = () => {
-    setFilter((prevFilter) => ({
-      ...prevFilter,
-      content_sourced: false,
-    }));
-  };
-
-  const Statistics = async () => {
-    const resp = await Get(`mediaHouse/tasks/count `);
-    setStats(resp.data);
-  };
-
   const handleShow = () => {
     setShow(!show);
-  };
-
-  const Navigate = (type) => {
-    navigate(`/task-tables/${type}`);
-  };
-
-  const ContentSourced = async (name, param) => {
-    try {
-      setLoading(true);
-      const resp = await Get(
-        `mediaHouse/getuploadedContentbyHoppers?limit=20&${sortFilterPurchasedContent?.sortField}=${sortFilterPurchasedContent?.sortValue}&favContent=${sortFilterPurchasedContent?.favContent}&category=${sortFilterPurchasedContent?.category}`
-      );
-      if (resp) {
-        setUploadedContent(resp.data.data);
-        setOpenReportPurchased(false);
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading(false);
-    }
   };
 
   const [openSortComponent, setOpenSortComponent] = useState(false);
@@ -144,89 +67,29 @@ const BroadcastedTask = () => {
     setOpenSortComponent(values);
   };
 
-  const type = useParams();
-  const [taskDetails, setTaskDetails] = useState([]);
+  // New Uploaded Content -
   const [newUploadedContent, setNewUploadedContent] = useState(null);
 
   const TaskDetails = async (id) => {
     setLoading(true);
     try {
-      let resp = {};
-      // if (id) {
-      //   resp = await Get(
-      //     `mediaHouse/getuploadedContentbyHoppers?task_id=${id}&limit=${limit}&offet=${+(page - 1) * limit
-      //     }`
-      //   );
-      // } else {
-      //   resp = await Get(
-      //     `mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit
-      //     }`
-      //   );
-      // }
-      // if (resp?.data) {
-      //   if (resp?.data?.data.length < 1) {
-      //     resp = await Get(
-      //       `mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit
-      //       }`
-      //     );
-      //   }
-      //   setNewUploadedContent(resp?.data);
-      //   setTaskDetails(resp?.data?.data);
-      //   setLoading(false);
-      //   setTotalPage(Math.ceil(resp.data?.count / limit));
-      // }
-
-      resp = await Get(`mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit}`)
+      let resp = await Get(`mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit}`)
       setNewUploadedContent(resp?.data);
-      setTaskDetails(resp?.data?.data);
       setLoading(false);
-      setTotalPage(Math.ceil(resp.data?.count / limit));
+      setTotalPage(Math.ceil(resp.data?.totalUploadedContent / limit));
     } catch (error) {
       setLoading(false);
     }
   };
-  const handleBasket = (index, y, z) => {
-    TaskDetails(liveTaskId);
-  };
-  const handleFavourite = (index, y) => {
-    try {
-      TaskDetails(liveTaskId);
-    } catch (error) {
-    }
-  };
-  const [liveTaskId, setLiveTaskId] = useState(
-    localStorage.getItem("live_taskId") || "noid"
-  );
-
-  useEffect(() => {
-    const taskid = localStorage.getItem("live_taskId");
-    if (taskid) {
-      TaskDetails(taskid);
-    }
-  }, [page, liveTaskId]);
-
-  useEffect(() => {
-    const taskid = localStorage.getItem("live_taskId");
-    console.log();
-    if (taskid) {
-      TaskDetails(taskid);
-    }
-  }, [page]);
 
   useEffect(() => {
     TaskDetails();
   }, [page]);
 
-  useEffect(() => {
-    Statistics();
-  }, [show]);
+  const handleFavourite = (index, y) => {
+  };
 
-  useEffect(() => {
-    ContentSourced();
-  }, [query.get("change")]);
-
-
-  // New work -
+  // Dashboard Data -
   const [dashboardData, setDashboardData] = useState(null);
   const [dashboardSort, setDashboardSort] = useState({ type: "" });
   const [dashboardPayload, setDashboardPayload] = useState({
@@ -264,7 +127,6 @@ const BroadcastedTask = () => {
     setDashboardPayload(payload);
     setDashboardSort({ ...dashboardSort, type: "" });
   }
-
 
   return (
     <>
@@ -332,18 +194,18 @@ const BroadcastedTask = () => {
             {/* Total fund invested */}
             <Col md={3} className="p-0 task-card">
               <DashboardCardInfo
-                path="/task-tables/total-fund-invested"
+                path="/content-tables/content_sourced_from_task_funds_invested"
                 title="Total funds invested"
-                type="total_fund_invested_in_task_today"
+                type="total_fund_invested_in_task"
                 total={"£" + formatAmountInMillion(dashboardData?.task?.totalFundInvested?.totalAmount || 0)}
                 data={getTaskContent(dashboardData?.task?.totalFundInvested?.data)}
                 dashboardSort={dashboardSort}
                 setDashboardSort={setDashboardSort}
-                sort={dashboardPayload?.requestedFilter?.total_fund_invested_in_task_today}
-                setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task_today: value } })}
+                sort={dashboardPayload?.requestedFilter?.total_fund_invested_in_task}
+                setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task: value } })}
                 setSortState={handleApplySorting}
                 handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
-                handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task_today: "" } })}
+                handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task: "" } })}
                 task={true}
               />
             </Col>
@@ -446,9 +308,6 @@ const BroadcastedTask = () => {
                   </Col>
                 </Row>
               </div>
-              {
-                console.log("newUploadedContent", newUploadedContent)
-              }
               <Row className="custm-crds">
                 {newUploadedContent?.uploadedContent?.map((item, index) => {
                   const filteredContent = (mediaType) => {
@@ -504,8 +363,6 @@ const BroadcastedTask = () => {
                             : favic
                         }
                         type_tag={item?.content[0]?.category_details?.name}
-                        basket={() => handleBasket(index, "task", item)}
-                        basketValue={item?.basket_status}
                         allContent={item?.content[0]?.task_id?.content}
                         type_img={item?.content[0]?.category_details?.icon}
                         feedHead={item?.content[0]?.task_id?.task_description}
@@ -529,6 +386,7 @@ const BroadcastedTask = () => {
                         content_id={item?._id}
                         task_content_id={item?._id || item?.task_id?._id}
                         taskContentId={item?._id}
+                        is_sale_status={true}
                       />
                     </Col>
                   );
