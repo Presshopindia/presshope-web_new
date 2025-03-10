@@ -50,7 +50,6 @@ import Tasktables from "../../component/Tasktables";
 import Accounts from "../Accounts";
 import ManageUsers from "../ManageUsers";
 import UploadedContentDetails from "../UploadedContentDetails";
-import HopperUploadedContent from "../HopperUploadedContent";
 import Contenttables from '../../component/Contenttables';
 import AllTutorials from "../AllTutorials";
 import RatingReview from "../RatingReview";
@@ -181,10 +180,6 @@ function RouteAll() {
           <Route
             path="/Uploaded-Content/:type"
             element={<PrivateRoute Component={UploadedContent} />}
-          />
-          <Route
-            path="/hopper-task-content/:task_id"
-            element={<PrivateRoute Component={HopperUploadedContent} />}
           />
           <Route
             path="/Sourced-Content"

@@ -168,8 +168,8 @@ const Invoice = () => {
                             </span>
                           </div>
                           <p>
-                          167-169, Great Portland Street, <br />
-                          London, W1W 5PF
+                            167-169, Great Portland Street, <br />
+                            London, W1W 5PF
                           </p>
                           <p>
                             Company # 13522872
@@ -409,7 +409,7 @@ const Invoice = () => {
 
                                         <td className="text-center">
                                           <Tooltip
-                                            title={data?.payment_content_type === "shared" ? "Shared": "Exclusive"}
+                                            title={data?.payment_content_type === "shared" ? "Shared" : "Exclusive"}
                                           >
                                             <img
                                               src={data?.payment_content_type === "shared" ? shared : exclusiveic}
@@ -528,14 +528,19 @@ const Invoice = () => {
               </Row>
             </Col>
           </Row>
-          <div className="download-invoice-container">
-            <Button
-              className="theme-btn custom-ab mb-4 mt-2 sm_btn download-invoice-btn"
-              onClick={handleInvoiveDownload}
-            >
-              Download Invoice
-            </Button>
-          </div>
+          <Row>
+            <Col>
+              <div className="download-invoice-container transactionBank_wrap trns_tbl me-4">
+                <Button
+                  className="theme-btn custom-ab mb-4 mt-2 py-3  sm_btn download-invoice-btn"
+                  onClick={handleInvoiveDownload}
+                >
+                  Download Invoice
+                </Button>
+              </div>
+            </Col>
+          </Row>
+
           <div className="mt-0">
             <TopSearchesTipsCard />
           </div>

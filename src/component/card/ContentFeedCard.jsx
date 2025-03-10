@@ -168,7 +168,7 @@ function ContentFeedCard(props) {
         >
           <div className="feedImgTag">
             <div className="tags_prnt iflex">
-              {props?.postcount ? (
+              {props?.postcount && (
                 <div className="post_itm_icns">
                   {props?.postcount && (
                     <p className="count">{props.postcount}</p>
@@ -179,9 +179,9 @@ function ContentFeedCard(props) {
                     alt=""
                   />
                 </div>
-              ) : null}
+              )}
 
-              {props?.postcount2 ? (
+              {props?.postcount2 && (
                 <div className="post_itm_icns">
                   {props?.postcount2 && (
                     <p className="count">{props.postcount2}</p>
@@ -192,8 +192,8 @@ function ContentFeedCard(props) {
                     alt=""
                   />
                 </div>
-              ) : null}
-              {props?.postcount3 ? (
+              )}
+              {props?.postcount3 && (
                 <div className="post_itm_icns">
                   {props?.postcount3 && (
                     <p className="count">{props.postcount3}</p>
@@ -204,7 +204,7 @@ function ContentFeedCard(props) {
                     alt=""
                   />
                 </div>
-              ) : null }
+              )}
               {props?.postcount4 && (
                 <div className="post_itm_icns">
                   {props?.postcount4 && (
@@ -234,7 +234,7 @@ function ContentFeedCard(props) {
               <img className="feedMedia" src={props?.feedImg} alt="" />
               <div className="backgroundOverlay"></div>
             </div>
-            {props.fvticns ? (
+            {!props?.is_sale_status ? (
               <div
                 onClick={(event) => {
                   event.stopPropagation();

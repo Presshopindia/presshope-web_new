@@ -51,7 +51,6 @@ import { useDarkMode } from "../context/DarkModeContext";
 
 const Contenttables = () => {
   const param = useParams();
-  const [page, setPage] = useState(1);
   const { profileData } = useDarkMode();
   const [taskDetails, setTaskDetails] = useState();
   const [content_count, setContent_count] = useState();
@@ -92,12 +91,12 @@ const Contenttables = () => {
   const ContentCount = async () => {
     setLoading(true);
     try {
-      const offset = (page - 1) * 4;
       const resp = await Get(
         `mediaHouse/Content/Count?limit=${contentOnlineLimit}&offset=${(contentOnlinePage - 1) * contentOnlineLimit
-        }${sortingField && sortingField}=${sortingValue && sortingValue}&limit=${4}&offset=${offset}`
+        }${sortingField && sortingField}=${sortingValue && sortingValue}`
       );
       if (resp) {
+        // console.log(resp?.data, `<<<<<<<<<<<<<<<<<<<<<<what is this `)
         setTotalFundDetails(resp?.data?.content_online);
         setContent_count(resp.data);
         setLoading(false);
@@ -122,7 +121,7 @@ const Contenttables = () => {
   useEffect(() => {
     ContentCount();
     TaskDetails();
-  }, [sortingValue, sortingType, contentOnlinePage, page]);
+  }, [sortingValue, sortingType, contentOnlinePage]);
 
   const [hopperContri, setHopperContri] = useState([]);
   const HopperContribute = async () => {
@@ -679,7 +678,7 @@ const Contenttables = () => {
                                           ?._id
                                     )?.amount
                                   ) || curr?.amount_paid;
-                                let allVat = curr?.Vat?.find((el) => el?.purchased_mediahouse_id == (profileData?.role === "MediaHouse" ? profileData?._id : profileData?.media_house_id?._id));
+                                let allVat = curr?.Vat?.find((el) => el?.purchased_mediahouse_id == ( profileData?.role === "MediaHouse" ?  profileData?._id : profileData?.media_house_id?._id) );
                                 return (
                                   <tr>
                                     <td className="content_img_td position-relative add-icons-box">
@@ -1442,7 +1441,7 @@ const Contenttables = () => {
                       </div>
                     </div>
                   </Card>
-                ) : (param.type == "content_sourced_from_task" || param.type == "content_sourced_from_task_funds_invested") ? (
+                ) : param.type == "content_sourced_from_task" ? (
                   <Card className="tbl_crd">
                     <div className="">
                       <div
@@ -1451,9 +1450,7 @@ const Contenttables = () => {
                         mb="10px"
                       >
                         <Typography className="tbl_hdng">
-                          {
-                            param.type == "content_sourced_from_task_funds_invested" ? "Total funds invested" : "Content purchased from tasks"
-                          }
+                          Content purchased from tasks
                         </Typography>
                         <div className="tbl_rt">
                           <div className="fltrs_prnt">
@@ -1493,27 +1490,46 @@ const Contenttables = () => {
                               <th>Category</th>
                               <th>Location</th>
                               <th>Uploaded by</th>
-                              {
-                                param.type == "content_sourced_from_task_funds_invested" && <th>Vat</th>
-                              }
                               <th>Funds invested</th>
                             </tr>
                           </thead>
                           <tbody>
                             {content_count?.sourced_content_from_tasks?.task
+                              ?.sort(
+                                (a, b) =>
+                                  new Date(b.createdAt) - new Date(a.createdAt)
+                              )
                               ?.map((curr) => {
                                 return (
                                   <tr
                                     className="clickable"
                                     onClick={() =>
-                                      navigate(`/sourced-content-detail/${curr?._id}`)
+                                      navigate(
+                                        `/sourced-content-detail/${curr?._id}`
+                                      )
                                     }
                                   >
                                     <td className="content_img_td position-relative add-icons-box">
                                       <div className="tbl_cont_wrp">
                                         <img
                                           src={
-                                            (curr?.purchasedContent?.[0]?.type === "image" || curr?.purchasedContent?.[0]?.type === "video") ? curr?.purchasedContent?.[0]?.videothubnail : audioic
+                                            curr?.type === "image"
+                                              ? curr?.videothubnail ||
+                                              process.env
+                                                .REACT_APP_UPLOADED_CONTENT +
+                                              curr?.imageAndVideo
+                                              : curr?.type === "video"
+                                                ? curr?.videothubnail ||
+                                                process.env
+                                                  .REACT_APP_UPLOADED_CONTENT +
+                                                curr?.imageAndVideo
+                                                : curr?.type === "audio"
+                                                  ? audioic
+                                                  : curr?.type === "pdf"
+                                                    ? pdfic
+                                                    : curr?.type === "doc"
+                                                      ? docsic
+                                                      : null
                                           }
                                           className="content_img"
                                         />
@@ -1529,6 +1545,28 @@ const Contenttables = () => {
                                             />
                                           </div>
                                         </div>
+                                        <div class="post_icns_cstm_wrp video-ico">
+                                          <div class="post_itm_icns dtl_icns">
+                                            <span class="count">1</span>
+                                            <img
+                                              class="feedMediaType iconBg"
+                                              src={videoic}
+                                              alt=""
+                                            />
+                                          </div>
+                                        </div>
+                                        {/* <div class="post_icns_cstm_wrp audio-ico">
+                                          <div class="post_itm_icns dtl_icns">
+                                            <span class="count">
+                                              1
+                                            </span>
+                                            <img
+                                              class="feedMediaType iconBg"
+                                              src={interviewic}
+                                              alt=""
+                                            />
+                                          </div>
+                                        </div> */}
                                       </div>
                                     </td>
                                     <td className="timedate_wrap">
@@ -1537,7 +1575,7 @@ const Contenttables = () => {
                                           src={watchic}
                                           className="icn_time"
                                         />
-                                        {moment(curr?.createdAt).format(
+                                        {moment(curr?.updatedAt).format(
                                           "h:mm A"
                                         )}
                                       </p>
@@ -1546,7 +1584,7 @@ const Contenttables = () => {
                                           src={calendar}
                                           className="icn_time"
                                         />
-                                        {moment(curr?.createdAt).format(
+                                        {moment(curr?.updatedAt).format(
                                           "DD MMM, YYYY"
                                         )}
                                       </p>
@@ -1559,20 +1597,20 @@ const Contenttables = () => {
                                     <td className="text-center">
                                       <Tooltip
                                         title={
-                                          curr?.purchasedContent?.[0]?.type === "image"
+                                          curr?.type === "image"
                                             ? "Photo"
-                                            : curr?.purchasedContent?.[0]?.type === "video"
+                                            : curr?.type === "video"
                                               ? "Video"
                                               : "Interview"
                                         }
                                       >
                                         <img
                                           src={
-                                            curr?.purchasedContent?.[0]?.type === "image"
+                                            curr?.type === "image"
                                               ? cameraic
-                                              : curr?.purchasedContent?.[0]?.type === "video"
+                                              : curr?.type === "video"
                                                 ? videoic
-                                                : curr?.purchasedContent?.[0]?.type === "audio"
+                                                : curr?.type === "auido"
                                                   ? interviewic
                                                   : null
                                           }
@@ -1610,14 +1648,9 @@ const Contenttables = () => {
                                         </p>
                                       </div>
                                     </td>
-                                    {
-                                      param.type == "content_sourced_from_task_funds_invested" && <td>{formatAmountInMillion(
-                                        +curr?.Vat
-                                      )}</td>
-                                    }
                                     <td>
                                       {formatAmountInMillion(
-                                        +curr?.amount
+                                        +curr?.amount_paid
                                       )}
                                     </td>
                                   </tr>
@@ -1625,14 +1658,6 @@ const Contenttables = () => {
                               })}
                           </tbody>
                         </table>
-                        {content_count?.sourced_content_from_tasks?.task?.length > 0 && (
-                            <PaginationComp
-                              totalPage={Math.ceil(content_count?.sourced_content_from_tasks?.count / 4)}
-                              path="content-tables/content_sourced_from_task"
-                              setPage={setPage}
-                              page={page}
-                            />
-                          )}
                       </div>
                     </div>
                   </Card>

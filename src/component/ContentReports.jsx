@@ -774,7 +774,7 @@ const ContentReports = ({
         </Row>
         <div className="taskstat_chart chrts">
           <Row>
-            <Col md={7}>
+            <Col md={7} className="col-md-7-customwidtgh">
               <div className="contentChartsWrap">
                 <Row>
                   <Col md={6}>
@@ -924,7 +924,7 @@ const ContentReports = ({
                             options={contentSplit}
                             series={contentSplit.series}
                             type="pie"
-                            width="350"
+                            width="365"
                           />
                         </Link>
                       </div>
@@ -974,7 +974,7 @@ const ContentReports = ({
                             options={contentLocation}
                             series={contentLocation.series}
                             type="pie"
-                            width="350"
+                            width="365"
                           />
                         </Link>
                       </div>
@@ -983,7 +983,7 @@ const ContentReports = ({
                 </Row>
               </div>
             </Col>
-            <Col md={5}>
+            <Col md={5} className="col-md-5-customwidtgh">
               <div className="typeContentsWrap bg-grey h-100">
                 <Tabs
                   defaultActiveKey="purchased"

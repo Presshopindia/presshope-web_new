@@ -1077,7 +1077,7 @@ const Signup = () => {
                                         className="selectPlaceholder"
                                         value="option1"
                                       >
-                                        Select Office Type{" "}
+                                        Select office type{" "}
                                       </MenuItem>
                                       {officetypes &&
                                         officetypes.map((value, index) => {

@@ -251,8 +251,8 @@ export const getTaskContent = (data) => {
 
         if (media?.type === "video") {
             return { ...contentData, media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.thumbnail };
-        } else if (media?.type === "audio") {
-            return { ...contentData, mediaValue:audioicsm, media: audioicsm };
+        } else if (media?.type === "interview") {
+            return { ...contentData, media: audioicsm };
         } else {
             return { ...contentData, media: process.env.REACT_APP_UPLOADED_CONTENT + media?.imageAndVideo, mediaValue: media?.imageAndVideo };
         }
@@ -271,8 +271,8 @@ export const getDeepModifiedTaskContent = (data) => {
 
         if (media?.type === "video") {
             return { ...contentData, media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.thumbnail };
-        } else if (media?.type === "audio") {
-            return { ...contentData, mediaValue:audioicsm, media:audioicsm, };
+        } else if (media?.type === "interview") {
+            return { ...contentData, media:audioicsm, };
         } else {
             return { ...contentData, media: process.env.REACT_APP_UPLOADED_CONTENT + media?.imageAndVideo, mediaValue: media?.imageAndVideo };
         }

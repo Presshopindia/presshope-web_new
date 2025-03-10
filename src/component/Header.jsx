@@ -315,7 +315,7 @@ const Header = () => {
                       </li>
                       <li className="nav-text nme">
                         <Link className="nav-link position-relative usr_lg_name eml">
-                          {profileData?.full_name}
+                          {profileData?.email}
                           {profileData && profileData?.role != "MediaHouse" ? (
                             <span className="msg-count">User</span>
                           ) : (
@@ -444,7 +444,7 @@ const Header = () => {
                     Accounts
                   </NavLink>
                   <NavLink className="nav-link position-relative usr_lg_name eml">
-                    {profileData?.full_name}
+                    {profileData?.email}
                     {/* <span className="msg-count">Admin</span> */}
                     {profileData && profileData?.role != "MediaHouse" ? (
                       <span className="msg-count">User </span>

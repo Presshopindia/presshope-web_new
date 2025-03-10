@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import interviewic from "../assets/images/interview.svg";
 import Header from "../component/Header";
 import BroadcastedTrackings from "./BroadcastedList";
@@ -22,24 +22,31 @@ import TopFilterComn from "../component/Sortfilters/Content/TopFilterComn";
 import Fundsinvested from "../component/Sortfilters/Dashboard/Fundsinvested";
 import ContentFeedCard from "../component/card/ContentFeedCard";
 import { formatAmountInMillion, getDeepModifiedTaskContent, getTaskContent } from "../component/commonFunction";
+import { initStateOfSortFilterPurchasedContent } from "../component/staticData";
 import { Get, Post } from "../services/user.services";
 import { DashboardCardInfo } from "../component/DashboardCardInfo";
 
 const BroadcastedTask = () => {
-  const [searchParams] = useSearchParams();
-  const taskId = searchParams?.get('task_ids');
-
+  const navigate = useNavigate();
   const [viewTask, setViewTask] = useState({
     open: false,
-    taskDetails: {},
-    taskId: taskId || ""
-  });
-
+    taskDetails: {}
+  })
   const [show, setShow] = useState(false);
+  const [stats, setStats] = useState();
+  const [uploadedContent, setUploadedContent] = useState([]);
+  // const [loading, setLoading] = useState(false);
+  const [active, setActive] = useState("");
+  const [openreportPurchased, setOpenReportPurchased] = useState(false);
+
+  const [sortFilterPurchasedContent, setSortFilterPurchasedContent] = useState(
+    initStateOfSortFilterPurchasedContent
+  );
+
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
-  const [limit, setLimit] = useState(6);
+  const [limit, setLimit] = useState(8);
   const [allFilterData, setAllFilterData] = useState({
     filterdata: [],
     allcategoryData: [],
@@ -52,8 +59,78 @@ const BroadcastedTask = () => {
     toggle_sort: false,
   });
 
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+
+  useEffect(() => {
+    const parsedSortField = query.get("sortField") || "";
+    const parsedSortValue = query.get("sortValue") || "";
+    const parsedTimeRangeStart = query.get("timeRangeStart") || "";
+    const parsedTimeRangeEnd = query.get("timeRangeEnd") || "";
+    const parsedFavContent = query.get("favContent") === "true";
+    const parsedType = query.getAll("type") || [];
+    const parsedCategory = query.getAll("category") || [];
+    const parsedChange = query.get("change") || false;
+
+    setSortFilterPurchasedContent({
+      sortField: parsedSortField,
+      sortValue: parsedSortValue,
+      timeRange: {
+        start: parsedTimeRangeStart,
+        end: parsedTimeRangeEnd,
+      },
+      favContent: parsedFavContent,
+      type: parsedType,
+      category: parsedCategory,
+      change: parsedChange,
+    });
+
+    window.scrollTo(0, 0);
+  }, []);
+
+  // content sourced from tasks-
+  const [contentSourcedTaskValue, setContentSourcedTaskValue] = useState("");
+  const handleContentRangeTimeValues = (values) => {
+    setContentSourcedTaskValue(values);
+  };
+  const [filter, setFilter] = useState({
+    content_sourced: false,
+  });
+
+  const closeFilters = () => {
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      content_sourced: false,
+    }));
+  };
+
+  const Statistics = async () => {
+    const resp = await Get(`mediaHouse/tasks/count `);
+    setStats(resp.data);
+  };
+
   const handleShow = () => {
     setShow(!show);
+  };
+
+  const Navigate = (type) => {
+    navigate(`/task-tables/${type}`);
+  };
+
+  const ContentSourced = async (name, param) => {
+    try {
+      setLoading(true);
+      const resp = await Get(
+        `mediaHouse/getuploadedContentbyHoppers?limit=20&${sortFilterPurchasedContent?.sortField}=${sortFilterPurchasedContent?.sortValue}&favContent=${sortFilterPurchasedContent?.favContent}&category=${sortFilterPurchasedContent?.category}`
+      );
+      if (resp) {
+        setUploadedContent(resp.data.data);
+        setOpenReportPurchased(false);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   const [openSortComponent, setOpenSortComponent] = useState(false);
@@ -67,29 +144,83 @@ const BroadcastedTask = () => {
     setOpenSortComponent(values);
   };
 
-  // New Uploaded Content -
-  const [newUploadedContent, setNewUploadedContent] = useState(null);
+  const type = useParams();
+  const [taskDetails, setTaskDetails] = useState([]);
 
   const TaskDetails = async (id) => {
     setLoading(true);
     try {
-      let resp = await Get(`mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit}`)
-      setNewUploadedContent(resp?.data);
-      setLoading(false);
-      setTotalPage(Math.ceil(resp.data?.totalUploadedContent / limit));
+      let resp = {};
+      if (id) {
+        resp = await Get(
+          `mediaHouse/getuploadedContentbyHoppers?task_id=${id}&limit=${limit}&offet=${+(page - 1) * limit
+          }`
+        );
+      } else {
+        resp = await Get(
+          `mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit
+          }`
+        );
+      }
+      if (resp?.data) {
+        if (resp?.data?.data.length < 1) {
+          resp = await Get(
+            `mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit
+            }`
+          );
+
+          console.log("all resp4656745648--->", resp);
+        }
+        setTaskDetails(resp?.data?.data);
+        setLoading(false);
+        setTotalPage(Math.ceil(resp.data?.count / limit));
+      }
     } catch (error) {
       setLoading(false);
     }
   };
+  const handleBasket = (index, y, z) => {
+    TaskDetails(liveTaskId);
+  };
+  const handleFavourite = (index, y) => {
+    try {
+      TaskDetails(liveTaskId);
+    } catch (error) {
+    }
+  };
+  const [liveTaskId, setLiveTaskId] = useState(
+    localStorage.getItem("live_taskId") || "noid"
+  );
+
+  useEffect(() => {
+    const taskid = localStorage.getItem("live_taskId");
+    if (taskid) {
+      TaskDetails(taskid);
+    }
+  }, [page, liveTaskId]);
+
+  useEffect(() => {
+    const taskid = localStorage.getItem("live_taskId");
+    console.log();
+    if (taskid) {
+      TaskDetails(taskid);
+    }
+  }, [page]);
 
   useEffect(() => {
     TaskDetails();
   }, [page]);
 
-  const handleFavourite = (index, y) => {
-  };
+  useEffect(() => {
+    Statistics();
+  }, [show]);
 
-  // Dashboard Data -
+  useEffect(() => {
+    ContentSourced();
+  }, [query.get("change")]);
+
+
+  // New work -
   const [dashboardData, setDashboardData] = useState(null);
   const [dashboardSort, setDashboardSort] = useState({ type: "" });
   const [dashboardPayload, setDashboardPayload] = useState({
@@ -127,6 +258,7 @@ const BroadcastedTask = () => {
     setDashboardPayload(payload);
     setDashboardSort({ ...dashboardSort, type: "" });
   }
+
 
   return (
     <>
@@ -194,18 +326,18 @@ const BroadcastedTask = () => {
             {/* Total fund invested */}
             <Col md={3} className="p-0 task-card">
               <DashboardCardInfo
-                path="/content-tables/content_sourced_from_task_funds_invested"
+                path="/task-tables/total-fund-invested"
                 title="Total funds invested"
-                type="total_fund_invested_in_task"
+                type="total_fund_invested_in_task_today"
                 total={"£" + formatAmountInMillion(dashboardData?.task?.totalFundInvested?.totalAmount || 0)}
                 data={getTaskContent(dashboardData?.task?.totalFundInvested?.data)}
                 dashboardSort={dashboardSort}
                 setDashboardSort={setDashboardSort}
-                sort={dashboardPayload?.requestedFilter?.total_fund_invested_in_task}
-                setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task: value } })}
+                sort={dashboardPayload?.requestedFilter?.total_fund_invested_in_task_today}
+                setSort={(value) => setDashboardPayload({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task_today: value } })}
                 setSortState={handleApplySorting}
                 handleSortClick={(value) => setDashboardSort({ ...dashboardSort, type: value })}
-                handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task: "" } })}
+                handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, total_fund_invested_in_task_today: "" } })}
                 task={true}
               />
             </Col>
@@ -309,88 +441,83 @@ const BroadcastedTask = () => {
                 </Row>
               </div>
               <Row className="custm-crds">
-                {newUploadedContent?.uploadedContent?.map((item, index) => {
-                  const filteredContent = (mediaType) => {
-                    const content = item?.content?.filter((el) => el.type === mediaType);
-                    return content;
-                  };
-
-                  return (
-                    <Col lg={4} sm={6} key={item?._id}>
-                      <ContentFeedCard
-                        feedImg={
-                          item?.content[0]?.type === "image"
-                            ? item?.content[0]?.videothubnail ||
-                            process.env.REACT_APP_UPLOADED_CONTENT +
-                            item?.content[0]?.imageAndVideo
-                            : item?.content[0]?.type === "video"
-                              ? item?.content[0]?.videothubnail ||
+                {taskDetails.length >= 1 &&
+                  taskDetails?.map((item, index) => {
+                    return (
+                      <Col lg={4} sm={6} key={item?._id}>
+                        <ContentFeedCard
+                          feedImg={
+                            item?.type === "image"
+                              ? item?.videothubnail ||
                               process.env.REACT_APP_UPLOADED_CONTENT +
-                              item?.content[0]?.videothubnail
-                              : item?.content[0]?.type === "audio"
-                                ? audioic
-                                : null
-                        }
-                        type={"task"}
-                        postcount={filteredContent("image")?.length}
-                        postcount2={filteredContent("video")?.length}
-                        postcount3={filteredContent("interview")?.length}
-                        feedTypeImg1={
-                          item?.content[0]?.type === "image"
-                            ? cameraic
-                            : item?.content[0]?.type === "audio"
-                              ? interviewic
-                              : item?.content[0]?.type === "video"
-                                ? videoic
-                                : null
-                        }
-                        user_avatar={
-                          item?.content[0]?.avatar_details?.avatar
-                            ? process.env.REACT_APP_AVATAR_IMAGE +
-                            item?.content[0]?.avatar_details?.avatar
-                            : item?.content[0]?.avatar_detals?.[0]?.avatar
+                              item?.imageAndVideo
+                              : item?.type === "video"
+                                ? item?.videothubnail ||
+                                process.env.REACT_APP_UPLOADED_CONTENT +
+                                item?.videothubnail
+                                : item?.type === "audio"
+                                  ? audioic
+                                  : null
+                          }
+                          type={"task"}
+                          postcount={1}
+                          feedTypeImg1={
+                            item?.type === "image"
+                              ? cameraic
+                              : item?.type === "audio"
+                                ? interviewic
+                                : item?.type === "video"
+                                  ? videoic
+                                  : null
+                          }
+                          user_avatar={
+                            item?.avatar_details?.[0]?.avatar
                               ? process.env.REACT_APP_AVATAR_IMAGE +
-                              item?.content[0]?.avatar_detals?.avatar
-                              : ""
-                        }
-                        author_Name={item?.uploaded_by?.user_name}
-                        lnkto={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
-                        viewTransaction="View details"
-                        viewDetail={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
-                        fvticns={
-                          item?.favourite_status === "true"
-                            ? favouritedic
-                            : favic
-                        }
-                        type_tag={item?.content[0]?.category_details?.name}
-                        allContent={item?.content[0]?.task_id?.content}
-                        type_img={item?.content[0]?.category_details?.icon}
-                        feedHead={item?.content[0]?.task_id?.task_description}
-                        feedTime={moment(item?.content[0]?.createdAt).format(
-                          " hh:mm A, DD MMM YYYY"
-                        )}
-                        feedLocation={item?.content[0]?.task_id?.location}
-                        contentPrice={`${formatAmountInMillion(
-                          item?.content[0]?.type === "image"
-                            ? item?.content[0]?.task_id?.hopper_photo_price || 0
-                            : item?.content[0]?.type === "audio"
-                              ? item?.content[0]?.task_id?.hopper_interview_price || 0
-                              : item?.content[0]?.type === "video"
-                                ? item?.content[0]?.task_id?.hopper_videos_price || 0
-                                : null
-                        )}`}
-                        favourite={() => handleFavourite(index, "task")}
-                        bool_fav={
-                          item?.favourite_status === "true" ? "false" : "true"
-                        }
-                        content_id={item?._id}
-                        task_content_id={item?._id || item?.task_id?._id}
-                        taskContentId={item?._id}
-                        is_sale_status={true}
-                      />
-                    </Col>
-                  );
-                })}
+                              item?.avatar_details?.[0]?.avatar
+                              : item?.avatar_detals?.[0]?.avatar
+                                ? process.env.REACT_APP_AVATAR_IMAGE +
+                                item?.avatar_detals?.[0]?.avatar
+                                : ""
+                          }
+                          author_Name={item?.hopper_id?.user_name}
+                          lnkto={`/content-details/${item?._id}?task_content_id=${item?.content_id}`}
+                          viewTransaction="View details"
+                          viewDetail={`/content-details/${item?._id}?task_content_id=${item?.content_id}`}
+                          fvticns={
+                            item?.favourite_status === "true"
+                              ? favouritedic
+                              : favic
+                          }
+                          type_tag={item?.category_details[0]?.name}
+                          basket={() => handleBasket(index, "task", item)}
+                          basketValue={item?.basket_status}
+                          allContent={item?.task_id?.content}
+                          type_img={item?.category_details[0]?.icon}
+                          feedHead={item?.task_id?.task_description}
+                          feedTime={moment(item?.createdAt).format(
+                            " hh:mm A, DD MMM YYYY"
+                          )}
+                          feedLocation={item?.task_id?.location}
+                          contentPrice={`${formatAmountInMillion(
+                            item?.type === "image"
+                              ? item?.task_id?.hopper_photo_price || 0
+                              : item?.type === "audio"
+                                ? item?.task_id?.hopper_interview_price || 0
+                                : item?.type === "video"
+                                  ? item?.task_id?.hopper_videos_price || 0
+                                  : null
+                          )}`}
+                          favourite={() => handleFavourite(index, "task")}
+                          bool_fav={
+                            item?.favourite_status === "true" ? "false" : "true"
+                          }
+                          content_id={item?._id}
+                          task_content_id={item?._id || item?.task_id?._id}
+                          taskContentId={item?._id}
+                        />
+                      </Col>
+                    );
+                  })}
                 {totalPage ? (
                   <PaginationComp
                     totalPage={totalPage}

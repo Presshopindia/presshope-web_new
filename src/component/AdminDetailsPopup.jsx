@@ -221,7 +221,7 @@ const AdminDetailsPopup = (props) => {
 
         console.log("Step1 details ------>", list.data.data.step1);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // useEffect(()=>{
@@ -484,7 +484,7 @@ const AdminDetailsPopup = (props) => {
                         disabled
                         className="selectPlaceholder"
                       >
-                        Select Designation
+                        Select designation
                       </MenuItem>
                       {designation &&
                         designation.map((item) => {
@@ -611,10 +611,10 @@ const AdminDetailsPopup = (props) => {
               className="w-50 m-auto d-inline-block py-2 text-lowercase mdl_btn"
               variant="primary"
               type="submit"
-              // onClick={() => {
-              //     setSubmit(true)
-              //     Navigate()
-              // }}
+            // onClick={() => {
+            //     setSubmit(true)
+            //     Navigate()
+            // }}
             >
               <div className="link_white">Save & Continue</div>
             </Button>

@@ -738,6 +738,7 @@ const DashboardTables = () => {
                             {data?.broad_casted_tasks_details &&
                               data?.broad_casted_tasks_details?.task.map(
                                 (curr) => {
+                                  console.log("all map data ===>", curr);
                                   let imageCount = 0;
                                   let audioCount = 0;
                                   let videoCount = 0;
@@ -754,7 +755,7 @@ const DashboardTables = () => {
                                     <tr
                                       onClick={() =>
                                         navigate(
-                                          `/task?task_ids=${curr?._id}`
+                                          `/broadcasted-taks/${curr?._id}`
                                         )
                                       }
                                       style={{ cursor: "pointer" }}
@@ -1054,7 +1055,8 @@ const DashboardTables = () => {
                       </div>
                     </div>
                   </Card>
-                ) : ( <Card className="tbl_crd">
+                ) : (
+                  <Card className="tbl_crd">
                     <div className="">
                       <div
                         className="d-flex justify-content-between align-items-center tbl_hdr"

@@ -31,22 +31,25 @@ const BroadcastedTrackings = (props) => {
   const navigate = useNavigate();
   const [liveTasks, setLiveTasks] = useState();
   const [loading, setLoading] = useState(false);
+  const [view, setView] = useState("map");
   const [taskDetails, setTaskDetails] = useState({
     deadline_date: "",
   });
+  const [deadline, setDeadline] = useState();
   const [markers, setMarkers] = useState({
     positions: [],
   });
 
   useEffect(() => {
     setTaskDetails(props?.viewTask?.taskDetails);
-  }, [props?.viewTask?.open]);
-
+  }, [props?.viewTask?.open])
+  const [location, setLocation] = useState([]);
   const LiveTasks = async () => {
     setLoading(true);
     try {
       const resp = await Get(`mediaHouse/live/expired/tasks?status=live`);
       if (resp) {
+        console.log("all listed tasked---> ==>", resp);
         localStorage.setItem("live_taskId", resp?.data?.tasks[0]?._id);
       }
       setLiveTasks(resp.data.tasks);
@@ -57,12 +60,9 @@ const BroadcastedTrackings = (props) => {
           id: item._id,
         });
       });
-      console.log("props?.viewTask", props?.viewTask)
-      if(props?.viewTask?.taskId) {
-        const liveTask = resp?.data?.tasks?.find((el) => el._id === props?.viewTask?.taskId);
-        props?.setViewTask({ open: true, taskDetails: liveTask, taskId: props?.viewTask?.taskId })
+      if (resp) {
+        setLoading(false);
       }
-      setLoading(false);
     } catch (error) {
       setLoading(false);
     }
@@ -70,6 +70,7 @@ const BroadcastedTrackings = (props) => {
 
   const TaskDetails = async (id) => {
     setLoading(true);
+    // localStorage.setItem("live_taskId", resp[0]?._id);
     const liveId = localStorage.getItem("live_taskId");
     try {
       console.log("chakalalalalal");
@@ -77,11 +78,39 @@ const BroadcastedTrackings = (props) => {
         `mediaHouse/live/expired/tasks?status=live&id=${id || liveId || param?.id
         }`
       );
+      setDeadline(resp.data?.tasks?.deadline_date);
       setTaskDetails(resp?.data?.tasks);
-      setLoading(false);
+      console.log(resp?.data?.tasks, `<---this is a task details`);
+      if (resp) {
+        setLocation(resp.data.tasks.address_location.coordinates);
+        setLoading(false);
+      }
     } catch (error) {
       setLoading(false);
     }
+  };
+
+  function switchTaskView() {
+    var mapView = document.querySelector(".mapView");
+    var mapBtn = document.querySelector(".mapButton");
+    var listBtn = document.querySelector(".listButton");
+    var listView = document.querySelector(".listView_task_wrap");
+    if (mapView.style.display !== "none") {
+      mapView.style.display = "none";
+      listView.style.display = "block";
+      mapBtn.style.display = "block";
+      listBtn.style.display = "none";
+    } else {
+      mapView.style.display = "block";
+      listView.style.display = "none";
+      mapBtn.style.display = "none";
+      listBtn.style.display = "block";
+    }
+  }
+
+  const markerSize = {
+    width: 30,
+    height: 30,
   };
 
   useEffect(() => {
@@ -90,9 +119,14 @@ const BroadcastedTrackings = (props) => {
     }
     LiveTasks();
     TaskDetails();
-  }, []);
+  }, [props.show]);
 
   const [openSortComponent, setOpenSortComponent] = useState(false);
+  const [openFilterComponent, setOpenFilterComponent] = useState(false);
+
+  const handleCloseFilterComponent = (values) => {
+    setOpenFilterComponent(values);
+  };
 
   const handleCloseSortComponent = (values) => {
     setOpenSortComponent(values);
@@ -119,13 +153,7 @@ const BroadcastedTrackings = (props) => {
             <div className="bTask_list_card">
               <div className="taskcard_headr d-flex justify-content-between align-items-center mb-13">
                 {
-                  props?.viewTask?.open ? <div className="clickable" onClick={() => {
-                    if(props?.viewTask?.taskId) {
-                      window.history.back();
-                    } else {
-                      props?.setViewTask({...props?.viewTask, open: false })
-                    }
-                  }}><BsArrowLeft className="text-pink " /> <span>Back</span></div> : null
+                  props?.viewTask?.open ? <div className="clickable" onClick={() => props?.setViewTask({...props?.viewTask, open: false })}><BsArrowLeft className="text-pink " /> <span>Back</span></div> : null
                 }
                 <h2 className="dashCard-heading">
                   <span className="text-pink">Live</span> tracking
@@ -182,7 +210,7 @@ const BroadcastedTrackings = (props) => {
                         <span className="me-4">
 
                           <MdMyLocation />{" "}
-                          {props?.viewTask?.taskDetails?.hasOwnProperty("accepted_by")
+                          {props?.viewTask?.taskDetails.hasOwnProperty("accepted_by")
                             ? props?.viewTask?.taskDetails?.accepted_by?.length === 0 ||
                               props?.viewTask?.taskDetails?.accepted_by?.length === 1
                               ? `${props?.viewTask?.taskDetails?.accepted_by?.length} Hopper tasked`
@@ -197,9 +225,10 @@ const BroadcastedTrackings = (props) => {
                     </div>
                   ) : (
                     <div className="list_view_wrap">
-                      {liveTasks?.map((curr) => {
+                      {liveTasks &&
+                        liveTasks.map((curr) => {
                           return (
-                            <div className="listView_task" key={curr?._id}>
+                            <div className="listView_task">
                               <div className="mapInput">
                                 <GoogleMap
                                   googleMapsApiKey={
@@ -470,12 +499,30 @@ const BroadcastedTrackings = (props) => {
                       <div
                         className="taskUploads_media clickable"
                         onClick={() =>
-                          navigate(`/hopper-task-content/${taskDetails?._id}`)
+                          taskDetails?.content?.length > 0 &&
+                          navigate(`/Uploaded-Content/uploaded`)
                         }
                       >
+                        {/* <div className="mediaWrap uploaded_mda">
+                          {taskDetails?.content &&
+                            taskDetails?.content.map((curr) => {
+                              if (curr?.media_type === "image")
+                                return <img src={curr?.watermark} alt="" />;
+                              if (curr?.media_type === "video")
+                                return (
+                                  <img
+                                    src={
+                                      process.env.REACT_APP_CONTENT_MEDIA +
+                                      curr?.thumbnail
+                                    }
+                                    alt=""
+                                  />
+                                );
+                            })}
+                        </div> */}
                         <Link
                           className="text-dark"
-                          to={`/hopper-task-content/${taskDetails?._id}`}
+                          to={"/Uploaded-Content/uploaded"}
                         >
                           <small className="font-bold">
                             View all uploaded content{" "}

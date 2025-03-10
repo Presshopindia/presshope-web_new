@@ -219,9 +219,19 @@ const PurchasedContentDetail = () => {
                 <div className="feedsContainer">
                   <div className="feedContent_header">
                     <div
-                      className="back_link clickable"
+                      className="back_link"
                       style={{ pointer: "cursor" }}
-                      onClick={() => window.history.back()}
+                      onClick={() => {
+                        const lastUrl =
+                          sessionStorage.getItem("lastPageWithQuery");
+                        console.log("lasturl ---> ", lastUrl);
+                        if (lastUrl) {
+                          navigate(lastUrl);
+                          sessionStorage.removeItem("lastPageWithQuery");
+                        } else {
+                          navigate(-1);
+                        }
+                      }}
                     >
                       <BsArrowLeft className="text-pink" />
                       Back{" "}

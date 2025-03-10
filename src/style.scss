@@ -6590,9 +6590,11 @@ input[type="number"] {
     flex-direction: row-reverse;
     height: 40px;
   }
+
   .task_noti_color {
     color: #ec4e54;
   }
+
   .placeholder_icons svg {
     top: 14px;
   }
@@ -12875,4 +12877,24 @@ audio {
 
 .contantUsby {
   font-size: 14px;
+}
+
+.sm_btn.download-invoice-btn.btn.btn-primary {
+  height: 48px;
+  border-radius: 12px !important;
+  padding: 0px 20px !important;
+}
+
+.download-invoice-container.transactionBank_wrap.trns_tbl.me-4 {
+  margin-right: 20px !important;
+}
+
+@media(min-width:767px) {
+  .col-md-7-customwidtgh.col-md-7 {
+    width: 59.92%;
+  }
+
+  .col-md-5-customwidtgh.col-md-5 {
+    width: 40.02%;
+  }
 }

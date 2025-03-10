@@ -192,7 +192,7 @@ const ReportsTablesTask = () => {
       } else if (type === "task_categories") {
         get_location(param);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   function myFunction(start, end) {
@@ -375,7 +375,7 @@ const ReportsTablesTask = () => {
                                         ) : (
                                           <>
                                             {curr?.content_details[0]?.type ===
-                                            "image" ? (
+                                              "image" ? (
                                               <img
                                                 src={
                                                   process.env
@@ -386,7 +386,7 @@ const ReportsTablesTask = () => {
                                                 className="content_img"
                                               />
                                             ) : curr?.content_details[0]
-                                                ?.type === "video" ? (
+                                              ?.type === "video" ? (
                                               <img
                                                 src={
                                                   process.env
@@ -397,7 +397,7 @@ const ReportsTablesTask = () => {
                                                 className="content_img"
                                               />
                                             ) : curr?.content_details[0]
-                                                ?.type === "audio" ? (
+                                              ?.type === "audio" ? (
                                               <img
                                                 src={interviewic}
                                                 className="content_img"
@@ -459,8 +459,8 @@ const ReportsTablesTask = () => {
                                         />
                                         {curr?.totalfund_invested?.length > 0
                                           ? moment(curr?.updatedAt).format(
-                                              `hh:mm A`
-                                            )
+                                            `hh:mm A`
+                                          )
                                           : ""}
                                       </p>
                                       <p className="timedate">
@@ -470,8 +470,8 @@ const ReportsTablesTask = () => {
                                         />
                                         {curr?.totalfund_invested?.length > 0
                                           ? moment(curr?.updatedAt).format(
-                                              `DD MMM YYYY`
-                                            )
+                                            `DD MMM YYYY`
+                                          )
                                           : ""}
                                       </p>
                                     </td>
@@ -546,8 +546,8 @@ const ReportsTablesTask = () => {
                                     <td>
                                       {curr?.totalfund_invested?.length > 0
                                         ? `£${formatAmountInMillion(
-                                            +curr?.totalfund_invested?.[0]
-                                          )}`
+                                          +curr?.totalfund_invested?.[0]
+                                        )}`
                                         : "No fund invested "}
                                     </td>
                                   </tr>
@@ -979,29 +979,29 @@ const ReportsTablesTask = () => {
                                       £
                                       {curr
                                         ? formatAmountInMillion(
-                                            +(
-                                              curr?.task_id
-                                                ?.totalfund_invested[0] -
-                                              curr?.task_id?.Vat[0]
-                                            )
-                                          ) || 0
+                                          +(
+                                            curr?.task_id
+                                              ?.totalfund_invested[0] -
+                                            curr?.task_id?.Vat[0]
+                                          )
+                                        ) || 0
                                         : 0}
                                     </td>
                                     <td>
                                       £
                                       {curr
                                         ? formatAmountInMillion(
-                                            +curr?.task_id?.Vat[0]
-                                          )
+                                          +curr?.task_id?.Vat[0]
+                                        )
                                         : 0}
                                     </td>
                                     <td>
                                       £
                                       {curr
                                         ? formatAmountInMillion(
-                                            +curr?.task_id
-                                              ?.totalfund_invested[0]
-                                          )
+                                          +curr?.task_id
+                                            ?.totalfund_invested[0]
+                                        )
                                         : 0}
                                     </td>
                                   </tr>
@@ -1278,9 +1278,9 @@ const ReportsTablesTask = () => {
                                           />
                                           {curr?.content_details[0]?.createdAt
                                             ? moment(
-                                                curr?.content_details[0]
-                                                  ?.createdAt
-                                              ).format("hh:mm a")
+                                              curr?.content_details[0]
+                                                ?.createdAt
+                                            ).format("hh:mm a")
                                             : ""}
                                         </p>
                                         <p className="timedate">
@@ -1290,9 +1290,9 @@ const ReportsTablesTask = () => {
                                           />
                                           {curr?.content_details[0]?.createdAt
                                             ? moment(
-                                                curr?.content_details[0]
-                                                  ?.createdAt
-                                              ).format("DD MMM, YYYY")
+                                              curr?.content_details[0]
+                                                ?.createdAt
+                                            ).format("DD MMM, YYYY")
                                             : ""}
                                         </p>
                                       </td>
@@ -1306,15 +1306,14 @@ const ReportsTablesTask = () => {
                                             curr?.content_details[0]
                                               ?.createdAt && (
                                               <span
-                                                className={`${
-                                                  myFunction(
-                                                    curr?.deadline_date,
-                                                    curr?.content_details[0]
-                                                      ?.createdAt
-                                                  )?.sign == "+"
+                                                className={`${myFunction(
+                                                  curr?.deadline_date,
+                                                  curr?.content_details[0]
+                                                    ?.createdAt
+                                                )?.sign == "+"
                                                     ? "text-green"
                                                     : "text-red"
-                                                } txt_mdm`}
+                                                  } txt_mdm`}
                                               >
                                                 {
                                                   myFunction(
@@ -1376,7 +1375,7 @@ const ReportsTablesTask = () => {
                                   item?.category_details?.name !== "Crime" &&
                                   item?.category_details?.name !== "Business" &&
                                   item?.category_details?.name !==
-                                    "Political" &&
+                                  "Political" &&
                                   item?.category_details?.name !== "Fashion"
                               );
                               const Bussines = curr?.task_details?.filter(
@@ -2172,29 +2171,29 @@ const ReportsTablesTask = () => {
                                       £{" "}
                                       {curr
                                         ? formatAmountInMillion(
-                                            +(
-                                              curr?.task_id
-                                                ?.totalfund_invested[0] -
-                                              curr?.task_id?.Vat[0]
-                                            )
-                                          ) || 0
+                                          +(
+                                            curr?.task_id
+                                              ?.totalfund_invested[0] -
+                                            curr?.task_id?.Vat[0]
+                                          )
+                                        ) || 0
                                         : 0}
                                     </td>
                                     <td>
                                       £
                                       {curr
                                         ? formatAmountInMillion(
-                                            +curr?.task_id?.Vat[0]
-                                          )
+                                          +curr?.task_id?.Vat[0]
+                                        )
                                         : 0}
                                     </td>
                                     <td>
                                       £
                                       {curr
                                         ? formatAmountInMillion(
-                                            +curr?.task_id
-                                              ?.totalfund_invested[0]
-                                          )
+                                          +curr?.task_id
+                                            ?.totalfund_invested[0]
+                                        )
                                         : 0}
                                     </td>
                                   </tr>
