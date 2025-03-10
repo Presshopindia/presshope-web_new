@@ -546,6 +546,9 @@ const AddBroadcastTask = (props) => {
                       )}
                     />
                   </LocalizationProvider>
+                  <span className="task_noti_color">
+                      Tasks need at least 24 hours' notice
+                  </span>
                 </Form.Group>
               </Col>
               <Col md={12}>
@@ -684,7 +687,7 @@ const AddBroadcastTask = (props) => {
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-4 form-group">
-                  <Form.Label>Enter Location</Form.Label>
+                  <Form.Label>Enter location</Form.Label>
                   <div className="placeholder_icons">
                     <svg
                       width="14"
@@ -707,7 +710,7 @@ const AddBroadcastTask = (props) => {
                       />
                     </svg>
                     <input
-                      placeholder="Enter Apartment number/Building name "
+                      placeholder="Enter apartment number/Building name "
                       className="tsk_loc_inp form-control"
                       onChange={(e) => {
                         handleChange(e);
@@ -752,7 +755,7 @@ const AddBroadcastTask = (props) => {
                       />
                     </svg>
                     <input
-                      placeholder="Enter Postcode"
+                      placeholder="Enter postcode"
                       name="street_address"
                       className="tsk_loc_inp form-control"
                       type="textarea"

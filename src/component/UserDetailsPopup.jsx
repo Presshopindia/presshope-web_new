@@ -198,7 +198,7 @@ const UserDetailsPopup = (props) => {
                           <span>{option?.company_name}</span>
                         </li>
                       )}
-                      renderInput={(params) => <TextField {...params} placeholder="Search company name / company number" />}
+                      renderInput={(params) => <TextField {...params} placeholder="Enter your company name OR company number" />}
                     />
                   </Col>
                 </Row>
