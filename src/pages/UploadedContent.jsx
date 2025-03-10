@@ -230,45 +230,6 @@ const UploadedContent = () => {
                     <BsArrowLeft className="text-pink" /> Back
                   </Link>
                 </div>
-                {/* <div className="sorting_wrap d-flex">
-                  <div className="feedSorting me-4">
-                    <div className="fltrs_prnt top_fltr">
-                      <p className="lbl_fltr">Filter</p>
-                      <button
-                        className="sortTrigger"
-                        onClick={() => {
-                          setOpenFilterComponent(true);
-                        }}
-                      >
-                        Filter <AiFillCaretDown />
-                      </button>
-                      {openFilterComponent && (
-                        <TopFilterComn
-                          closeFilterComponent={handleCloseFilterComponent}
-                        />
-                      )}
-                    </div>
-                  </div>
-                  <div className="feedSorting">
-                    <div className="fltrs_prnt top_fltr">
-                      <p className="lbl_fltr">Sort</p>
-                      <button
-                        className="sortTrigger"
-                        onClick={() => {
-                          setOpenSortComponent(true);
-                        }}
-                      >
-                        Sort <AiFillCaretDown />
-                      </button>
-                      {openSortComponent && (
-                        <Fundsinvested
-                          rangeTimeValues={timeValuesHandler}
-                          closeSortComponent={handleCloseSortComponent}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div> */}
               </div>
             </Col>
           </Row>

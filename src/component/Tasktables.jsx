@@ -51,8 +51,11 @@ import typeInterviewwt from "../assets/images/typeinterview-wt.svg";
 import { formatAmountInMillion } from "./commonFunction";
 import { AiFillCaretDown } from "react-icons/ai";
 import LiveTaskFilter from "./Sortfilters/Dashboard/LiveTaskFilter";
+import { PaginationComp } from "./Pagination";
 
 const Tasktables = () => {
+  const [page, setPage] = useState(1);
+  console.log("Page", page)
   const param = useParams();
   const navigate = useNavigate();
   const [taskDetails, setTaskDetails] = useState();
@@ -62,24 +65,11 @@ const Tasktables = () => {
   const [deadline_met, setdead] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Content Purchased Online-
-  const [openContentPuchased, setOpenContentPuchased] = useState(false);
-  const handleCloseContentPurchased = (values) => {
-    setOpenContentPuchased(values);
-  };
-
   // Sorting-
   const [sortingField, setSortingField] = useState("");
   const [sortingValue, setSortingValue] = useState("");
   const [sortingType, setSortingType] = useState("");
 
-  // content purchased online-
-  const newContentPurchasedValueHandler = (value) => {
-    setSortingField(value.field);
-    setSortingValue(value.values);
-    setSortingType(value.type);
-    // console.log("newContentPurchasedValueHandler", value)
-  };
 
   const [hopper, setHopperUsedForTask] = useState([]);
 
@@ -115,11 +105,11 @@ const Tasktables = () => {
     };
   }
 
-  const TaskDetails = async () => {
+  const TaskDetails = async (limit = 4) => {
     setLoading(true);
+    const offset = (page - 1) * 4;
     const resp = await Get(
-      `mediaHouse/tasks/count?${sortingField && sortingField}=${sortingValue && sortingValue
-      }`
+      `mediaHouse/tasks/count?${sortingField && sortingField}=${sortingValue && sortingValue}&limit=${limit}&offset=${offset}`
     );
     const totalFundInvested = await Get(
       `mediahouse/taskPurchasedOnlinesummary`
@@ -156,7 +146,7 @@ const Tasktables = () => {
 
   useEffect(() => {
     TaskDetails();
-  }, [sortingType, sortingValue]);
+  }, [sortingType, sortingValue, page]);
 
   const months = [
     "January",
@@ -254,7 +244,7 @@ const Tasktables = () => {
                                 return (
                                   <tr
                                     onClick={() =>
-                                      navigate(`/broadcasted-taks/${curr?._id}`)
+                                      navigate(`/task/?task_ids=${curr?._id}`)
                                     }
                                     style={{ cursor: "pointer" }}
                                   >
@@ -413,6 +403,14 @@ const Tasktables = () => {
                             )}
                           </tbody>
                         </table>
+                        {taskDetails?.live_tasks_details?.task?.length > 0 && (
+                          <PaginationComp
+                            totalPage={Math.ceil(taskDetails?.live_tasks_details?.count/4)}
+                            path="task-tables/liveTasks"
+                            setPage={setPage}
+                            page={page}
+                          />
+                        )}
                       </div>
                     </div>
                   </Card>
