@@ -538,14 +538,14 @@ const PurchasedContentDetail = () => {
                                       {moment(
                                         transactionDetails?.content_id
                                           ?.createdAt
-                                      ).format(`hh:mm A, DD MMMM YYYY`)}
+                                      ).format(`hh:mm A, DD MMM YYYY`)}
                                     </span>
                                   ) : (
                                     <span>
                                       <MdOutlineWatchLater />{" "}
                                       {moment(
                                         transactionDetails?.task_id?.timestamp
-                                      ).format(`hh:mm A, DD MMMM YYYY`)}
+                                      ).format(`hh:mm A, DD MMM YYYY`)}
                                     </span>
                                   )}
                                 </div>

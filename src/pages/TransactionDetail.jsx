@@ -301,14 +301,14 @@ const TransactionDetail = () => {
                                       {moment(
                                         transactionDetails?.content_id
                                           ?.published_time_date
-                                      ).format(`hh:mm A, DD MMMM YYYY`)}
+                                      ).format(`hh:mm A, DD MMM YYYY`)}
                                     </span>
                                   ) : (
                                     <span>
                                       <MdOutlineWatchLater />{" "}
                                       {moment(
                                         transactionDetails?.task_id?.timestamp
-                                      ).format(`hh:mm A, DD MMMM YYYY`)}
+                                      ).format(`hh:mm A, DD MMM YYYY`)}
                                     </span>
                                   )}
                                 </div>
@@ -732,7 +732,7 @@ const TransactionDetail = () => {
                                 curr?.type === "exclusive" && "Exclusive"
                               }
                               feedHead={curr?.description}
-                              feedTime={curr?.type == "content" ? moment(curr?.content_id?.published_time_date).format(`hh:mm A, DD MMMM YYYY`) : moment(curr?.timestamp).format(`hh:mm A, DD MMMM YYYY`)}
+                              feedTime={curr?.type == "content" ? moment(curr?.content_id?.published_time_date).format(`hh:mm A, DD MMM YYYY`) : moment(curr?.timestamp).format(`hh:mm A, DD MMM YYYY`)}
                               feedLocation={curr?.location}
                               contentPrice={`${formatAmountInMillion(curr?.ask_price)}`}
                               postcount={2}

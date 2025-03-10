@@ -288,12 +288,16 @@ const UploadedContent = () => {
                             ? "Latest"
                             : type.type === "exclusive"
                             ? "Exclusive"
+                            : type.type === "Crime"
+                            ? "Crime"
+                            : type.type === "Celebrity"
+                            ? "Celebrity"
                             : type.type === "shared"
                             ? "Shared"
                             : ""
                           // type.type
                         }{" "}
-                        {type.type == "Special" ? "offers" : "content"}
+                        {type.type == "Special" ? "Special offers" : "content"}
                       </h1>
                       {/* <div>hello content</div> */}
                     </div>

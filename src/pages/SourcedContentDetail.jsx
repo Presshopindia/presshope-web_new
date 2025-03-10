@@ -87,7 +87,7 @@ const SourcedContentDetail = () => {
                       <Card className="feeddetail-card left-card">
                         <CardContent className="card-content position-relative">
                           <div className="post_itm_icns dtl_icns">
-                            <span>1</span>
+                            <span class="count">1</span>
                             <img
                               className="feedMediaType iconBg"
                               src={transactionDetails?.type === "audio" ? interviewic : transactionDetails?.type === "video" ? videoic : cameraic}
@@ -204,14 +204,14 @@ const SourcedContentDetail = () => {
                                     <span>
                                       <MdOutlineWatchLater />
                                       {moment(
-                                        transactionDetails?.createdAt).format(`hh:mm A, DD MMMM YYYY`)}
+                                        transactionDetails?.createdAt).format(`hh:mm A, DD MMM YYYY`)}
                                     </span>
                                   ) : (
                                     <span>
                                       <MdOutlineWatchLater />{" "}
                                       {moment(
                                         transactionDetails?.createdAt
-                                      ).format(`hh:mm A, DD MMMM YYYY`)}
+                                      ).format(`hh:mm A, DD MMM YYYY`)}
                                     </span>
                                   )}
                                 </div>
