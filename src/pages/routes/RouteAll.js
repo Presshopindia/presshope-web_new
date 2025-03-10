@@ -91,6 +91,7 @@ import FeeddetailCopy from "../FeeddetailCopy";
 import BroadcastedTasksSoon from "../BroadcastedTasksSoon";
 import UploadDocPost from "../UploadDocPost";
 import TandcPre from "../TandcPre";
+import PurchasedTaskContentDetail from "../PurchasedTaskContentDetail";
 function RouteAll() {
   const token = localStorage.getItem("token");
 
@@ -286,6 +287,7 @@ function RouteAll() {
           <Route path="/hopper-content/:hopper_id" element={<HopperContent />} />
           <Route path="/sourced-content-detail/:id" element={<SourcedContentDetail />} />
           <Route path="/purchased-content-detail/:id" element={<PurchasedContentDetail />} />
+          <Route path="/purchased-task-content-detail/:id" element={<PurchasedTaskContentDetail />} />
           <Route path="/archieve-dates" element={<ArchieveDates />} />
           <Route path="/archieve-items/:startDate/:endDate" element={<ArchieveItems />} />
 

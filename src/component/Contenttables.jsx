@@ -1506,7 +1506,7 @@ const Contenttables = () => {
                                   <tr
                                     className="clickable"
                                     onClick={() =>
-                                      navigate(`/sourced-content-detail/${curr?._id}`)
+                                      navigate(`/purchased-task-content-detail/${curr?._id}`)
                                     }
                                   >
                                     <td className="content_img_td position-relative add-icons-box">
