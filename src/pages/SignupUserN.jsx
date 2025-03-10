@@ -767,7 +767,7 @@ const SignupUserN = () => {
                                         className="selectPlaceholder"
                                         value="option1"
                                       >
-                                        Select Office Name
+                                        Select office name
                                       </MenuItem>
                                       {officeNames &&
                                         officeNames.map((value, index) => {

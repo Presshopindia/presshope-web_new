@@ -107,7 +107,7 @@ const Signup = () => {
       if (resp.data.data === "Data exist") {
         setErrorData({ ...errorData, vat: "Company vat already exists" });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // Check phone function-
@@ -123,24 +123,24 @@ const Signup = () => {
           phone: "This mobile number already exists.",
         });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
-    // Check company name function-
-    const checkCompanyName = async (value) => {
-      try {
-        const resp = await Post(`mediaHouse/checkcompanyvalidation`, {
-          key: "company_name",
-          value,
+  // Check company name function-
+  const checkCompanyName = async (value) => {
+    try {
+      const resp = await Post(`mediaHouse/checkcompanyvalidation`, {
+        key: "company_name",
+        value,
+      });
+      if (resp.data.data === "Data exist") {
+        setErrorData({
+          ...errorData,
+          company_name: "This company name already exists.",
         });
-        if (resp.data.data === "Data exist") {
-          setErrorData({
-            ...errorData,
-            company_name: "This company name already exists.",
-          });
-        }
-      } catch (error) {}
-    };
+      }
+    } catch (error) { }
+  };
 
   // Handle company change-
   const handleCompanyChange = (event) => {
@@ -191,8 +191,7 @@ const Signup = () => {
   const getOfficeDetails = async (vat) => {
     if (localStorage.getItem("OfficeDetails")) {
       const list = await Get(
-        `mediaHouse/getOfficeDetail?company_vat=${
-          vat ? vat : localOffice?.company_vat
+        `mediaHouse/getOfficeDetail?company_vat=${vat ? vat : localOffice?.company_vat
         }`
       );
       if (list) setOfficeNames(list.data.data);
@@ -619,7 +618,7 @@ const Signup = () => {
         //  setAdminDetails({...AdminDetails,company_details,office_details})
         setMultiOffice(office_details);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // Add office-
@@ -762,7 +761,7 @@ const Signup = () => {
         //  setAdminDetails({...AdminDetails,company_details,office_details})
         setMultiOffice(office_details);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
   useEffect(() => {
     setTimeout(() => {
@@ -902,7 +901,7 @@ const Signup = () => {
                                     </Select>
                                   </Form.Group>
                                 </Col>
-                                <Col md={6} sm={12} xs={12} style={{marginTop: errorData?.company_name ? "0.5rem" : 0}}>
+                                <Col md={6} sm={12} xs={12} style={{ marginTop: errorData?.company_name ? "0.5rem" : 0 }}>
                                   <Form.Group className="form-group">
                                     <img src={hash} alt="company" />
                                     <Form.Control
@@ -946,7 +945,7 @@ const Signup = () => {
                                     )}
                                   </Form.Group>
                                 </Col>
-                                <Col md={6} sm={12} xs={12} style={{marginTop: errorData?.company_name ? "0.5rem" : 0}}>
+                                <Col md={6} sm={12} xs={12} style={{ marginTop: errorData?.company_name ? "0.5rem" : 0 }}>
                                   <Form.Group className="form-group">
                                     <img src={Receipt} alt="company" />
                                     <Form.Control
@@ -997,25 +996,25 @@ const Signup = () => {
                               <div className="currentPic logo_inp position-relative text-center p-0">
                                 {AdminDetails?.company_details
                                   ?.profile_image === "" && (
-                                  <img src={addPic} alt="" />
-                                )}
+                                    <img src={addPic} alt="" />
+                                  )}
                                 {AdminDetails?.company_details
                                   ?.profile_image !== "" && (
-                                  <img
-                                    className="uploaded"
-                                    src={
-                                      AdminDetails?.company_details
-                                        ?.profile_image
-                                    }
-                                    alt=""
-                                  />
-                                )}
+                                    <img
+                                      className="uploaded"
+                                      src={
+                                        AdminDetails?.company_details
+                                          ?.profile_image
+                                      }
+                                      alt=""
+                                    />
+                                  )}
                                 {AdminDetails?.company_details
                                   ?.profile_image === "" && (
-                                  <span className="mt-2 d-block">
-                                    Add company logo
-                                  </span>
-                                )}
+                                    <span className="mt-2 d-block">
+                                      Add company logo
+                                    </span>
+                                  )}
                                 {/* {!AdminDetails?.company_details */}
                                 {/* // ?.profile_image && ( */}
                                 <input
@@ -1357,7 +1356,7 @@ const Signup = () => {
                                           AdminDetails.administrator_details
                                             .office_name
                                             ? AdminDetails.administrator_details
-                                                .office_name
+                                              .office_name
                                             : "option1"
                                         }
                                         name="office_name"
@@ -1368,7 +1367,7 @@ const Signup = () => {
                                           className="selectPlaceholder"
                                           value="option1"
                                         >
-                                          Select Office Name
+                                          Select office name
                                         </MenuItem>
                                         {officeNames &&
                                           officeNames.map((value, index) => {
@@ -1387,25 +1386,25 @@ const Signup = () => {
                                 <div className="currentPic adm_profile position-relative text-center">
                                   {AdminDetails.administrator_details
                                     .admin_profile === "" && (
-                                    <img src={addPic} alt="" />
-                                  )}
+                                      <img src={addPic} alt="" />
+                                    )}
                                   {AdminDetails.administrator_details
                                     .admin_profile !== "" && (
-                                    <img
-                                      className="uploaded"
-                                      src={
-                                        AdminDetails.administrator_details
-                                          .admin_profile
-                                      }
-                                      alt=""
-                                    />
-                                  )}
+                                      <img
+                                        className="uploaded"
+                                        src={
+                                          AdminDetails.administrator_details
+                                            .admin_profile
+                                        }
+                                        alt=""
+                                      />
+                                    )}
                                   {AdminDetails.administrator_details
                                     .admin_profile === "" && (
-                                    <span className="mt-2 d-block">
-                                      Add current photo
-                                    </span>
-                                  )}
+                                      <span className="mt-2 d-block">
+                                        Add current photo
+                                      </span>
+                                    )}
                                   {/* {AdminDetails.administrator_details
                                     .admin_profile === "" && ( */}
                                   <input
@@ -1427,7 +1426,7 @@ const Signup = () => {
                                       AdminDetails.administrator_details
                                         .department
                                         ? AdminDetails.administrator_details
-                                            .department
+                                          .department
                                         : "option1"
                                     }
                                     name="department"
@@ -1438,7 +1437,7 @@ const Signup = () => {
                                       className="selectPlaceholder"
                                       value="option1"
                                     >
-                                      Select Department
+                                      Select department
                                     </MenuItem>
                                     {departmentTypes &&
                                       departmentTypes.map((value, index) => {
@@ -1528,7 +1527,7 @@ const Signup = () => {
                                         },
                                       }));
                                     }}
-                                    // readOnly
+                                  // readOnly
                                   />
                                   {AdminDetails.administrator_details.phone
                                     .length < 10 ? (

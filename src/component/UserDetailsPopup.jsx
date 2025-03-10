@@ -66,7 +66,7 @@ const UserDetailsPopup = (props) => {
 
   const [mediahouseList, setMediahouseList] = useState([]);
   const getMediahouseList = async (search = "") => {
-    try{
+    try {
       setMediahouseListLoading(true);
       const list = await Get(`auth/mediahouse-list?search=${search}`);
       const updatedData = list?.data?.data?.map((el) => {
@@ -78,7 +78,7 @@ const UserDetailsPopup = (props) => {
       setMediahouseList(updatedData);
       setMediahouseListLoading(false);
     }
-    catch(error){
+    catch (error) {
       setMediahouseListLoading(false);
     }
   };
@@ -94,12 +94,12 @@ const UserDetailsPopup = (props) => {
     Formdata.append("path", "user");
     Formdata.append("media", file);
     setLoading(true);
-    try{
+    try {
       const filepath = await Post("mediaHouse/uploadUserMedia", Formdata);
       setDetails({ ...details, profile_image: filepath.data.path });
       setLoading(false);
     }
-    catch(error) {
+    catch (error) {
       setLoading(false);
     }
   };
@@ -148,7 +148,7 @@ const UserDetailsPopup = (props) => {
   };
 
   const handleSearch = debounce((value) => {
-    getMediahouseList( value );
+    getMediahouseList(value);
   }, 500);
 
   return (
@@ -176,33 +176,33 @@ const UserDetailsPopup = (props) => {
                 <Row className="mb-4">
                   <p className="bg_lbl">Administrator details</p>
                   <Col>
-                  <Autocomplete
-                    name="administator_email"
-                    size="small"
-                    className="w-100 slct_sign"
-                    options={mediahouseList}
-                    loading={mediahouseListLoading}
-                    noOptionsText="No data found"
-                    getOptionLabel={(option) => option?.company_name}
-                    onInputChange={(event, value) => handleSearch(value)}
-                    onChange={async (event, newValue) => {
-                      setDetails({...details, "administator_email": newValue?.email})
-                      if(newValue?.email) {
-                        const list = await Post("mediaHouse/getOfficeListBasedUponMediahouseEmail", { email: newValue?.email });
-                        setOffice(list?.data?.data);
-                      }
-                    }}
-                    renderOption={(props, option) => (
-                      <li {...props} className="mediahouse-list" key={option?.email}>
-                        <img src={option?.profile_image} alt={option?.company_name} />
-                        <span>{option?.company_name}</span>
-                      </li>
-                    )}
-                    renderInput={(params) => <TextField {...params} placeholder="Search company name / company number" />}
-                  />
+                    <Autocomplete
+                      name="administator_email"
+                      size="small"
+                      className="w-100 slct_sign"
+                      options={mediahouseList}
+                      loading={mediahouseListLoading}
+                      noOptionsText="No data found"
+                      getOptionLabel={(option) => option?.company_name}
+                      onInputChange={(event, value) => handleSearch(value)}
+                      onChange={async (event, newValue) => {
+                        setDetails({ ...details, "administator_email": newValue?.email })
+                        if (newValue?.email) {
+                          const list = await Post("mediaHouse/getOfficeListBasedUponMediahouseEmail", { email: newValue?.email });
+                          setOffice(list?.data?.data);
+                        }
+                      }}
+                      renderOption={(props, option) => (
+                        <li {...props} className="mediahouse-list" key={option?.email}>
+                          <img src={option?.profile_image} alt={option?.company_name} />
+                          <span>{option?.company_name}</span>
+                        </li>
+                      )}
+                      renderInput={(params) => <TextField {...params} placeholder="Search company name / company number" />}
+                    />
                   </Col>
                 </Row>
-                <Row>
+                <div>
                   <p className="bg_lbl">Your details</p>
                   <Row className="rw_gp_sml">
                     <Col lg={9} md={9} sm={12}>
@@ -238,13 +238,13 @@ const UserDetailsPopup = (props) => {
                                 className="selectPlaceholder"
                                 value="option1"
                               >
-                                Select Designation
+                                Select designation
                               </MenuItem>
                               {designation?.map((value) => (
-                                  <MenuItem key={value._id} value={value._id}>
-                                    {value.name}
-                                  </MenuItem>
-                                ))}
+                                <MenuItem key={value._id} value={value._id}>
+                                  {value.name}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </Form.Group>
                         </Col>
@@ -265,12 +265,12 @@ const UserDetailsPopup = (props) => {
                                 Select office name *
                               </MenuItem>
                               {office?.map((value) => {
-                                  return (
-                                    <MenuItem value={value._id} key={value._id}>
-                                      {value.name}
-                                    </MenuItem>
-                                  );
-                                })}
+                                return (
+                                  <MenuItem value={value._id} key={value._id}>
+                                    {value.name}
+                                  </MenuItem>
+                                );
+                              })}
                             </Select>
                           </Form.Group>
                         </Col>
@@ -295,15 +295,15 @@ const UserDetailsPopup = (props) => {
                                 className="selectPlaceholder"
                                 value="option1"
                               >
-                                Select Department
+                                Select department
                               </MenuItem>
                               {departmentTypes?.map((value) => {
-                                  return (
-                                    <MenuItem value={value._id} key={value._id}>
-                                      {value.name}
-                                    </MenuItem>
-                                  );
-                                })}
+                                return (
+                                  <MenuItem value={value._id} key={value._id}>
+                                    {value.name}
+                                  </MenuItem>
+                                );
+                              })}
                             </Select>
                           </Form.Group>
                         </Col>
@@ -375,7 +375,7 @@ const UserDetailsPopup = (props) => {
                       </Col>
                     </Row>
                   </Row>
-                </Row>
+                </div>
 
                 <Col md={12} className="mb-3">
                   <Row>

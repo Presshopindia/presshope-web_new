@@ -304,6 +304,9 @@ body .page-wrap {
 
     .MuiSelect-select {
       padding-left: 0;
+      color: var(--bs-body-color);
+      font-weight: 100;
+      font-family: "Airbnb";
     }
 
     ::placeholder {

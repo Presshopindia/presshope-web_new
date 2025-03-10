@@ -473,47 +473,21 @@ const DashboardTables = () => {
                                   className="clickable"
                                   onClick={() =>
                                     navigate(
-                                      data?.type === "content"
-                                        ? `/purchased-content-detail/${data?._id}`
-                                        : `task-details/${data?._id}`
+                                      `/purchased-content-detail/${curr?._id}?page=${contentOnlinePage}`
                                     )
                                   }
                                 >
                                   <td className="content_img_td position-relative add-icons-box">
                                     <Link>
-                                      <div className="tbl_cont_wrp">
+                                      <div className="tbl_cont_wrp cnt_online_img noGrid">
                                         <img
-                                          src={
-                                            data?.content_ids[0]?.content[0]
-                                              ?.media_type == "image"
-                                              ? data?.content_ids[0]?.content[0]
-                                                ?.watermark ||
-                                              process.env
-                                                .REACT_APP_CONTENT_MEDIA +
-                                              data?.content_ids[0]
-                                                ?.content[0]?.media
-                                              : data?.content_ids[0]?.content[0]
-                                                ?.media_type == "video"
-                                                ? data?.content_ids[0]?.content[0]
-                                                  ?.watermark ||
-                                                process.env
-                                                  .REACT_APP_CONTENT_MEDIA +
-                                                data?.content_ids[0]
-                                                  ?.content[0]?.thumbnail
-                                                : data?.content_ids[0]?.content[0]
-                                                  ?.media_type == "audio"
-                                                  ? audimgsm
-                                                  : data?.content_ids[0]?.content[0]
-                                                    ?.media_type == "pdf" || "doc"
-                                                    ? docsic
-                                                    : null
-                                          }
+                                          src={contentSource}
                                           className="content_img"
                                         />
                                         {/* <span className="cont_count">
-                                          {data?.content_ids[0]?.content
-                                            .length || 0}
-                                        </span> */}
+                                            {curr?.content_id &&
+                                              `${curr?.content_id?.content?.length}`}
+                                          </span> */}
                                       </div>
                                       <div className="tableContentTypeIcons">
                                         {image.length > 0 && (

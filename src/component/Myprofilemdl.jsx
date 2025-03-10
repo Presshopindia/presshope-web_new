@@ -406,7 +406,7 @@ const Myprofilemdl = (props) => {
                           // disabled
                           className="selectPlaceholder"
                         >
-                          Select Department
+                          Select department
                         </MenuItem>
                         {designation &&
                           designation.map((item) => {

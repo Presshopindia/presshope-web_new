@@ -35,7 +35,7 @@ const Success = () => {
       {/* {console.log(AdminDetails, ",---------AdminDetails")} */}
       {/* <HeaderN /> */}
       {/* <HeaderN scrollToDiv={scrollToDiv} activeHeader={activeHeader} Navigate={navigate}/> */}
-      <LoginHeader/>
+      <LoginHeader />
 
 
       <div className="page-wrap login-page p-0">
@@ -61,7 +61,7 @@ const Success = () => {
                     <div className='onboardIntro_success_info border-0'>
                       <Row className='row-w-m m-0 justify-content-between'>
                         <Col lg={5} className='bg-white p-0 ' >
-                          <div className="player-wrapper">
+                          <div className="player-wrapper player-wrapper ttr_vd_item">
                             <ReactPlayer
                               className='react-player'
                               url={tutorials && tutorials[0]?.video}
@@ -73,7 +73,7 @@ const Success = () => {
                           </div>
                         </Col>
                         <Col lg={5} className='bg-white p-0'>
-                          <div className="player-wrapper">
+                          <div className="player-wrapper player-wrapper ttr_vd_item">
                             <ReactPlayer
                               className='react-player'
                               url={tutorials && tutorials[1]?.video}
