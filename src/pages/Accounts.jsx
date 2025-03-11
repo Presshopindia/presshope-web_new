@@ -1032,64 +1032,24 @@ const Accounts = () => {
                                     </thead>
                                     <tbody>
                                       {transaction_details?.map((curr) => {
-                                        console.log(
-                                          "curr element ------> ---->",
-                                          curr
-                                        );
-                                        const image =
-                                          curr?.content_id?.content?.filter(
+                                        const getMediaType = (type) => {
+                                          const mediaType = curr?.type === "content" ? curr?.content_id?.content?.filter(
                                             (item) =>
-                                              item.media_type === "image"
-                                          );
-                                        const audio =
-                                          curr?.content_id?.content?.filter(
+                                              item.media_type === type
+                                          ) : curr?.purchased_task_content?.filter(
                                             (item) =>
-                                              item.media_type === "audio"
+                                              item.type === type
                                           );
-                                        const video =
-                                          curr?.content_id?.content?.filter(
-                                            (item) =>
-                                              item.media_type === "video"
-                                          );
-                                        const doc =
-                                          curr?.content_id?.content?.filter(
-                                            (item) => item.media_type === "doc"
-                                          );
-                                        const pdf =
-                                          curr?.content_id?.content?.filter(
-                                            (item) => item.media_type === "pdf"
-                                          );
+                                          return mediaType.length || 0;
+                                        }
                                         {
                                           return (
-                                            <tr className="clickable">
+                                            <tr className="clickable" key={curr?._id}>
                                               <td className="">
                                                 <div className="cont_wrp d-flex flex-column">
                                                   {curr?.type ==
-                                                    "task_content" ? (
-                                                    <div className="d-flex cnt_inn">
-                                                      {
-                                                        <img
-                                                          src={
-                                                            curr
-                                                              ?.task_content_id
-                                                              ?.type === "video"
-                                                              ? curr
-                                                                ?.task_content_id
-                                                                ?.videothubnail
-                                                              : curr
-                                                                ?.task_content_id
-                                                                ?.type ===
-                                                                "audio"
-                                                                ? audiosm
-                                                                : curr
-                                                                  ?.task_content_id
-                                                                  ?.videothubnail
-                                                          }
-                                                        />
-                                                      }
-                                                    </div>
-                                                  ) : (
-                                                    <div className="d-flex cnt_inn">
+                                                    "content" ? (
+                                                      <div className="d-flex cnt_inn">
                                                       {curr?.content_id?.content
                                                         ?.slice(0, 3)
                                                         .map((item) => {
@@ -1114,13 +1074,26 @@ const Accounts = () => {
                                                           );
                                                         })}
                                                     </div>
+                                                  ) : (
+                                                    <div className="d-flex cnt_inn">
+                                                      {curr?.purchased_task_content
+                                                        ?.slice(0, 3)
+                                                        .map((item) => {
+                                                          return (
+                                                            <img
+                                                              src={(item?.type === "video" || item?.type === "image") ? item?.videothubnail : audiosm
+                                                              }
+                                                              className="content_img"
+                                                            />
+                                                          );
+                                                        })}
+                                                    </div>
                                                   )}
                                                   <Link
                                                     to={
-                                                      curr?.type !==
-                                                        "task_content"
+                                                      curr?.type ==="content"
                                                         ? `/purchased-content-detail/${curr?._id}`
-                                                        : `/sourced-content-detail/${curr?.task_content_id?._id}`
+                                                        : `/purchased-task-content-detail/${curr?._id}`
                                                     }
                                                     className="link view_link d-flex align-items-center"
                                                   >
@@ -1131,34 +1104,17 @@ const Accounts = () => {
                                               </td>
                                               <td className="text-center">
                                                 {/* tooptip Start */}
-                                                <Tooltip
-                                                  title={
-                                                    curr?.content_id?.Vat?.find(
-                                                      (el) =>
-                                                        el?.purchased_mediahouse_id ==
-                                                        JSON.parse(
-                                                          localStorage.getItem(
-                                                            "user"
-                                                          )
-                                                        )?._id
-                                                    )?.purchased_content_type ==
+                                                {
+                                                  curr?.type === "content" ? (
+                                                    <Tooltip
+                                                  title={curr?.payment_content_type ==
                                                       "exclusive"
                                                       ? "Exclusive"
                                                       : "Shared"
                                                   }
                                                 >
                                                   <img
-                                                    src={
-                                                      curr?.content_id?.Vat?.find(
-                                                        (el) =>
-                                                          el?.purchased_mediahouse_id ==
-                                                          JSON.parse(
-                                                            localStorage.getItem(
-                                                              "user"
-                                                            )
-                                                          )?._id
-                                                      )
-                                                        ?.purchased_content_type ==
+                                                    src={curr?.payment_content_type ===
                                                         "exclusive"
                                                         ? exclusiveic
                                                         : shared
@@ -1167,12 +1123,13 @@ const Accounts = () => {
                                                     alt="Exclusive"
                                                   />
                                                 </Tooltip>
+                                                  ) : "-"
+                                                }
                                                 {/* tooptip End */}
                                               </td>
                                               <td className="text-center">
                                                 <div className="">
-                                                  {image &&
-                                                    image.length > 0 && (
+                                                  {getMediaType("image") ? (
                                                       <Tooltip title="Photo">
                                                         <img
                                                           src={cameraic}
@@ -1180,10 +1137,9 @@ const Accounts = () => {
                                                           className="icn"
                                                         />{" "}
                                                       </Tooltip>
-                                                    )}
+                                                    ) : null}
                                                   <br />
-                                                  {video &&
-                                                    video.length > 0 && (
+                                                  {getMediaType("video") ? (
                                                       <Tooltip title="Video">
                                                         {" "}
                                                         <img
@@ -1192,10 +1148,9 @@ const Accounts = () => {
                                                           className="icn"
                                                         />
                                                       </Tooltip>
-                                                    )}
+                                                    ) : null}
                                                   <br />
-                                                  {audio &&
-                                                    audio.length > 0 && (
+                                                  {getMediaType("audio") ? (
                                                       <Tooltip title="Audio">
                                                         <img
                                                           src={interviewic}
@@ -1203,8 +1158,8 @@ const Accounts = () => {
                                                           className="icn"
                                                         />
                                                       </Tooltip>
-                                                    )}
-                                                  {pdf && pdf.length > 0 && (
+                                                    ) : null}
+                                                  {getMediaType("pdf") ? (
                                                     <Tooltip title="Pdf">
                                                       <img
                                                         src={docsic}
@@ -1212,40 +1167,23 @@ const Accounts = () => {
                                                         className="icn"
                                                       />
                                                     </Tooltip>
-                                                  )}
-                                                  {doc && doc.length > 0 && (
-                                                    <Tooltip title="Doc">
-                                                      <img
-                                                        src={docsic}
-                                                        alt="Doc"
-                                                        className="icn"
-                                                      />
-                                                    </Tooltip>
-                                                  )}
+                                                  ) : null}
                                                 </div>
                                               </td>
                                               <td>
                                                 <p className="d-flex flex-column align-items-center volum">
                                                   <span>
-                                                    {
-                                                      curr?.content_id?.content
-                                                        ?.length
-                                                    }
+                                                    {curr?.type === "content" ? curr?.content_id?.content?.length : curr?.purchased_task_content?.length}
                                                   </span>
                                                 </p>
                                               </td>
                                               <td className="text-center">
                                                 <Tooltip
-                                                  title={
-                                                    curr?.content_id
-                                                      ?.category_id?.name
+                                                  title={curr?.type === "content" ? curr?.content_id?.category_id?.name : curr?.task_id?.category_id?.name
                                                   }
                                                 >
                                                   <img
-                                                    src={
-                                                      curr?.content_id
-                                                        ?.category_id?.icon
-                                                    }
+                                                    src={curr?.type === "content" ? curr?.content_id?.category_id?.icon : curr?.task_id?.category_id?.icon}
                                                     className="tbl_ic"
                                                     alt="Content category"
                                                   />
@@ -1272,10 +1210,7 @@ const Accounts = () => {
                                                 </p>
                                               </td>
                                               <td>
-                                                {curr?.type !== "task_content"
-                                                  ? curr?.content_id?.location
-                                                  : curr?.task_content_id
-                                                    ?.task_id?.location}
+                                                {curr?.type === "content" ? curr?.content_id?.location : curr?.task_id?.location}
                                               </td>
                                               <td className="timedate_wrap">
                                                 <p className="timedate">
@@ -1286,7 +1221,7 @@ const Accounts = () => {
                                                   ID- {curr?._id}
                                                 </p>
                                                 <Link
-                                                  to={`/purchased-content-detail/${curr._id}`}
+                                                  to={curr?.type === "content" ? `/purchased-content-detail/${curr._id}` : `/purchased-task-content-detail/${curr?._id}`}
                                                   className="link view_link"
                                                 >
                                                   <BsEye className="icn_time" />
@@ -1499,31 +1434,8 @@ const Accounts = () => {
                                               <td className="">
                                                 <div className="cont_wrp d-flex flex-column">
                                                   {curr?.type ==
-                                                    "task_content" ? (
-                                                    <div className="d-flex cnt_inn">
-                                                      {
-                                                        <img
-                                                          src={
-                                                            curr
-                                                              ?.task_content_id
-                                                              ?.type === "video"
-                                                              ? curr
-                                                                ?.task_content_id
-                                                                ?.videothubnail
-                                                              : curr
-                                                                ?.task_content_id
-                                                                ?.type ===
-                                                                "audio"
-                                                                ? audiosm
-                                                                : curr
-                                                                  ?.task_content_id
-                                                                  ?.videothubnail
-                                                          }
-                                                        />
-                                                      }
-                                                    </div>
-                                                  ) : (
-                                                    <div className="d-flex cnt_inn">
+                                                    "content" ? (
+                                                      <div className="d-flex cnt_inn">
                                                       {curr?.content_id?.content
                                                         ?.slice(0, 3)
                                                         .map((item) => {
@@ -1548,13 +1460,26 @@ const Accounts = () => {
                                                           );
                                                         })}
                                                     </div>
+                                                  ) : (
+                                                    <div className="d-flex cnt_inn">
+                                                      {curr?.purchased_task_content
+                                                        ?.slice(0, 3)
+                                                        .map((item) => {
+                                                          return (
+                                                            <img
+                                                              src={(item?.type === "video" || item?.type === "image") ? item?.videothubnail : audiosm
+                                                              }
+                                                              className="content_img"
+                                                            />
+                                                          );
+                                                        })}
+                                                    </div>
                                                   )}
                                                   <Link
                                                     to={
-                                                      curr?.type !==
-                                                        "task_content"
+                                                      curr?.type ==="content"
                                                         ? `/purchased-content-detail/${curr?._id}`
-                                                        : `/sourced-content-detail/${curr?.task_content_id?._id}`
+                                                        : `/purchased-task-content-detail/${curr?._id}`
                                                     }
                                                     className="link view_link d-flex align-items-center"
                                                   >
@@ -1584,10 +1509,7 @@ const Accounts = () => {
                                                 </p>
                                               </td>
                                               <td>
-                                                {curr?.type !== "task_content"
-                                                  ? curr?.content_id?.location
-                                                  : curr?.task_content_id
-                                                    ?.task_id?.location}
+                                              {curr?.type === "content" ? curr?.content_id?.location : curr?.task_id?.location}
                                               </td>
                                               <td className="timedate_wrap">
                                                 <p className="timedate">
@@ -1598,7 +1520,7 @@ const Accounts = () => {
                                                   ID- {curr?._id}
                                                 </p>
                                                 <Link
-                                                  to={`/purchased-content-detail/${curr._id}`}
+                                                  to={curr?.type === "content" ? `/purchased-content-detail/${curr._id}` : `/purchased-task-content-detail/${curr?._id}`}
                                                   className="link view_link"
                                                 >
                                                   <BsEye className="icn_time" />

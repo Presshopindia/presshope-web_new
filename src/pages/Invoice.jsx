@@ -1,41 +1,32 @@
 import { Card, Tooltip, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { BsArrowLeft } from "react-icons/bs";
-// import Logo from "../assets/images/dashboard_logo.png";
-import Logo from "../assets/images/presshopinvoice.png";
 import logo from "../assets/images/presshop_new_logo.png";
-import logoDark from "../assets/images/footerlogoDarkMode.png";
 
 // presshopinvoice
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import audioic from "../assets/images/audimg.svg";
 import audioicon from "../assets/images/audio-icon.svg";
 import calendericn from "../assets/images/calendarnic.svg";
 import cameraic from "../assets/images/camera.svg";
-import celebrity from "../assets/images/celebrity.svg";
 import exclusiveic from "../assets/images/exclusive.svg";
-import pdfic from "../assets/images/pdfic.svg";
 import docsic from "../assets/images/docsic.svg";
-import reuters from "../assets/images/reuters.png";
+import interviewic from "../assets/images/interview.svg";
 import shared from "../assets/images/share.png";
 import videoic from "../assets/images/video.svg";
-import contentVideo from "../assets/images/contentVideo.svg";
 import watchic from "../assets/images/watch.svg";
 import Header from "../component/Header";
-const moment = require("moment");
 
 import { Button, Col, Container, Row } from "react-bootstrap";
 import TopSearchesTipsCard from "../component/card/TopSearchesTipsCard";
 
 import DbFooter from "../component/DbFooter";
 
-import { useElements, useStripe } from "@stripe/react-stripe-js";
 import calendar from "../assets/images/calendar.svg";
 import Loader from "../component/Loader";
-import { UserDetails } from "../component/Utils";
-import { Get, Post } from "../services/user.services";
-import { useDarkMode } from "../context/DarkModeContext";
+import { Get } from "../services/user.services";
 import { formatAmountInMillion } from "../component/commonFunction";
+import moment from "moment";
 
 const Invoice = () => {
   const { id } = useParams();
@@ -57,11 +48,6 @@ const Invoice = () => {
     getInvoiceDetail();
   }, []);
 
-  const claculatedFun = () => {
-    let val = (20 * data?.ask_price) / 100;
-    return val;
-  };
-
   const handleInvoiveDownload = async () => {
     if (!data.invoice_id) {
       return;
@@ -77,8 +63,16 @@ const Invoice = () => {
     }
   }
 
-  const { profileData } = useDarkMode();
-  const userData = profileData;
+  const getMediaType = (type) => {
+    const mediaType = data?.type === "content" ? data?.content_id?.content?.filter(
+      (item) =>
+        item.media_type === type
+    ) : data?.purchased_task_content?.filter(
+      (item) =>
+        item.type === type
+    );
+    return mediaType?.length || 0;
+  }
 
   return (
     <>
@@ -168,8 +162,8 @@ const Invoice = () => {
                             </span>
                           </div>
                           <p>
-                          167-169, Great Portland Street, <br />
-                          London, W1W 5PF
+                            167-169, Great Portland Street, <br />
+                            London, W1W 5PF
                           </p>
                           <p>
                             Company # 13522872
@@ -243,7 +237,11 @@ const Invoice = () => {
                                         Time & date
                                       </th>
                                       <th className="text-center">Type</th>
-                                      <th className="text-center">License</th>
+                                      {
+                                        data?.type === "content" && (
+                                          <th className="text-center">License</th>
+                                        )
+                                      }
                                       <th className="text-center">Category</th>
                                       <th style={{ textAlign: "right" }}>
                                         Amount
@@ -255,95 +253,86 @@ const Invoice = () => {
                                       <tr>
                                         <td className="content_img_td position-relative add-icons-box">
                                           <Link
-                                            to={`/purchased-content-detail/${id}`}
+                                            to={data?.type === "content" ? `/purchased-content-detail/${id}` : `/purchased-task-content-detail/${id}`}
                                           >
                                             <div className="tbl_cont_wrp">
-                                              {data?.content_id?.content[0]
-                                                ?.media_type === "image" ? (
+                                              {data?.type === "content" ? (
+                                                data?.content_id?.content[0]
+                                                  ?.media_type === "image" ? (
+                                                  <img
+                                                    src={
+                                                      data?.content_id?.content[0]
+                                                        ?.watermark
+                                                    }
+                                                    className="cntnt-img"
+                                                    alt="img"
+                                                  />
+                                                ) : data?.content_id?.content[0]
+                                                  ?.media_type === "video" ? (
+                                                  <img
+                                                    src={
+                                                      data.content[0].watermark ||
+                                                      process.env
+                                                        .REACT_APP_CONTENT_MEDIA +
+                                                      data.content[0].thumbnail
+                                                    }
+                                                    className="cntnt-img"
+                                                  />
+                                                ) : data?.content_id?.content[0]
+                                                  ?.media_type === "audio" ? (
+                                                  <img
+                                                    src={audioic}
+                                                    className="cntnt-img"
+                                                  />
+                                                ) : data?.content_id?.content[0]
+                                                  ?.media_type === "pdf" ? (
+                                                  <img
+                                                    src={docsic}
+                                                    className="cntnt-img"
+                                                  />
+                                                ) : null
+                                              ) : (data?.purchased_task_content?.[0]?.type === "image" || data?.purchased_task_content?.[0]?.type === "video") ? (
                                                 <img
-                                                  src={
-                                                    data?.content_id?.content[0]
-                                                      ?.watermark
-                                                  }
+                                                  src={data?.purchased_task_content?.[0]?.videothubnail}
                                                   className="cntnt-img"
                                                   alt="img"
                                                 />
-                                              ) : data?.content_id?.content[0]
-                                                ?.media_type === "video" ? (
-                                                <img
-                                                  src={
-                                                    data.content[0].watermark ||
-                                                    process.env
-                                                      .REACT_APP_CONTENT_MEDIA +
-                                                    data.content[0].thumbnail
-                                                  }
-                                                  className="cntnt-img"
-                                                />
-                                              ) : data?.content_id?.content[0]
-                                                ?.media_type === "audio" ? (
-                                                <img
-                                                  src={audioic}
-                                                  className="cntnt-img"
-                                                />
-                                              ) : data?.content_id?.content[0]
-                                                ?.media_type === "pdf" ? (
-                                                <img
-                                                  src={docsic}
-                                                  className="cntnt-img"
-                                                />
-                                              ) : null}
-                                              {/* <span className="cont_count">
-                                                {data?.content_id?.content
-                                                  ?.length || 0}
-                                              </span> */}
+                                              ) : <img
+                                                src={audioic}
+                                                className="cntnt-img"
+                                              />}
                                             </div>
-                                            <div className="tableContentTypeIcons">
-                                              {/* {imageCount > 0 && ( */}
-                                              <div class="post_icns_cstm_wrp camera-ico">
-                                                <div class="post_itm_icns dtl_icns">
-                                                  <span class="count">
-                                                    {/* {imageCount} */}1
+                                            {/* <div className="tableContentTypeIcons">
+                                              <div className="post_icns_cstm_wrp camera-ico">
+                                                <div className="post_itm_icns dtl_icns">
+                                                  <span className="count">
+                                                    1
                                                   </span>
                                                   <img
-                                                    class="feedMediaType iconBg"
+                                                    className="feedMediaType iconBg"
                                                     src={cameraic}
                                                     alt=""
                                                   />
                                                 </div>
                                               </div>
-                                              {/* )}
-                                              {videoCount > 0 && ( */}
-                                              <div class="post_icns_cstm_wrp video-ico">
-                                                <div class="post_itm_icns dtl_icns">
-                                                  <span class="count">
-                                                    {/* {videoCount} */}1
+                                              <div className="post_icns_cstm_wrp video-ico">
+                                                <div className="post_itm_icns dtl_icns">
+                                                  <span className="count">
+                                                    1
                                                   </span>
                                                   <img
-                                                    class="feedMediaType iconBg"
+                                                    className="feedMediaType iconBg"
                                                     src={videoic}
                                                     alt=""
                                                   />
                                                 </div>
                                               </div>
-                                              {/* )} */}
-                                              {/* <div class="post_icns_cstm_wrp audio-ico">
-                                                  <div class="post_itm_icns dtl_icns">
-                                                    <span class="count">
-                                                      1
-                                                    </span>
-                                                    <img
-                                                      class="feedMediaType iconBg"
-                                                      src={interviewic}
-                                                      alt=""
-                                                    />
-                                                  </div>
-                                                </div> */}
-                                            </div>
+                                            </div> */}
                                           </Link>
                                         </td>
                                         <td>
                                           <div className="desc">
-                                            <p>{data?.content_id?.heading}</p>
+                                            <p>{data?.type === "content" ? data?.content_id?.heading : data?.task_id?.heading}</p>
                                           </div>
                                         </td>
                                         <td className="timedate_wrap">
@@ -353,7 +342,7 @@ const Invoice = () => {
                                               className="icn_time"
                                             />
                                             {moment(
-                                              data?.content_id?.createdAt
+                                              data?.createdAt
                                             ).format("h:mm:A")}
                                           </p>
                                           <p className="timedate">
@@ -362,74 +351,82 @@ const Invoice = () => {
                                               className="icn_time"
                                             />
                                             {moment(
-                                              data?.content_id?.createdAt
+                                              data?.createdAt
                                             ).format("DD MMM YYYY")}
                                           </p>
                                         </td>
 
                                         <td className="text-center">
+                                          <div className="">
+                                            {getMediaType("image") ? (
+                                              <Tooltip title="Photo">
+                                                <img
+                                                  src={cameraic}
+                                                  alt="Photo"
+                                                  className="icn"
+                                                />{" "}
+                                              </Tooltip>
+                                            ) : null}
+                                            <br />
+                                            {getMediaType("video") ? (
+                                              <Tooltip title="Video">
+                                                {" "}
+                                                <img
+                                                  src={videoic}
+                                                  alt="Video"
+                                                  className="icn"
+                                                />
+                                              </Tooltip>
+                                            ) : null}
+                                            <br />
+                                            {getMediaType("audio") ? (
+                                              <Tooltip title="Audio">
+                                                <img
+                                                  src={interviewic}
+                                                  alt="Audio"
+                                                  className="icn"
+                                                />
+                                              </Tooltip>
+                                            ) : null}
+                                            {getMediaType("pdf") ? (
+                                              <Tooltip title="Pdf">
+                                                <img
+                                                  src={docsic}
+                                                  alt="Pdf"
+                                                  className="icn"
+                                                />
+                                              </Tooltip>
+                                            ) : null}
+                                          </div>
+                                        </td>
+
+                                        {
+                                          data?.type === "content" && (
+                                            <td className="text-center">
+                                              <Tooltip
+                                                title={data?.payment_content_type === "shared" ? "Shared" : "Exclusive"}
+                                              >
+                                                <img
+                                                  src={data?.payment_content_type === "shared" ? shared : exclusiveic}
+                                                  className="tbl_ic"
+                                                  alt="camera"
+                                                />
+                                              </Tooltip>
+                                            </td>
+                                          )
+                                        }
+
+                                        <td className="text-center">
                                           <Tooltip
                                             title={
-                                              data?.content_id?.content[0]
-                                                ?.media_type == "image"
-                                                ? "Photo"
-                                                : data?.content_id?.content[0]
-                                                  ?.media_type == "Audio"
-                                                  ? audioicon
-                                                  : data?.content_id?.content[0]
-                                                    ?.media_type == "Pdf"
-                                                    ? "Pdf"
-                                                    : data?.content_id?.content[0]
-                                                      ?.media_type == "Video"
-                                                      ? "Video"
-                                                      : "Scan"
+                                              data?.type === "content" ? data?.content_id?.category_id
+                                                ?.name : data?.task_id?.category_id?.name
                                             }
                                           >
                                             <img
                                               src={
-                                                data?.content_id?.content[0]
-                                                  ?.media_type == "image"
-                                                  ? cameraic
-                                                  : data?.content_id?.content[0]
-                                                    ?.media_type == "audio"
-                                                    ? audioicon
-                                                    : data?.content_id?.content[0]
-                                                      ?.media_type == "pdf"
-                                                      ? docsic
-                                                      : data?.content_id?.content[0]
-                                                        ?.media_type == "video"
-                                                        ? videoic
-                                                        : null
-                                              }
-                                              className="tbl_ic"
-                                              alt="camera"
-                                            />
-                                          </Tooltip>
-                                        </td>
-
-                                        <td className="text-center">
-                                          <Tooltip
-                                            title={data?.payment_content_type === "shared" ? "Shared": "Exclusive"}
-                                          >
-                                            <img
-                                              src={data?.payment_content_type === "shared" ? shared : exclusiveic}
-                                              className="tbl_ic"
-                                              alt="camera"
-                                            />
-                                          </Tooltip>
-                                        </td>
-
-                                        <td className="text-center">
-                                          <Tooltip
-                                            title={
-                                              data?.content_id?.category_id
-                                                ?.name
-                                            }
-                                          >
-                                            <img
-                                              src={
-                                                data?.content_id?.category_id
-                                                  ?.icon
+                                                data?.type === "content" ? data?.content_id?.category_id
+                                                  ?.icon : data?.task_id?.category_id?.icon
                                               }
                                               className="tbl_ic"
                                               alt="Content category"
@@ -445,7 +442,7 @@ const Invoice = () => {
                                               marginRight: "5px",
                                             }}
                                           >
-                                            {`£${formatAmountInMillion(data?.original_Vatamount + data?.original_ask_price)}`}
+                                            {`£${formatAmountInMillion(data?.type === "content" ? data?.original_Vatamount + data?.original_ask_price : data?.amount)}`}
                                           </p>
                                         </td>
                                       </tr>

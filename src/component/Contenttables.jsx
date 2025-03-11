@@ -1611,12 +1611,12 @@ const Contenttables = () => {
                                       </div>
                                     </td>
                                     {
-                                      param.type == "content_sourced_from_task_funds_invested" && <td>{formatAmountInMillion(
+                                      param.type == "content_sourced_from_task_funds_invested" && <td>£{formatAmountInMillion(
                                         +curr?.Vat
                                       )}</td>
                                     }
                                     <td>
-                                      {formatAmountInMillion(
+                                    £{formatAmountInMillion(
                                         +curr?.amount
                                       )}
                                     </td>

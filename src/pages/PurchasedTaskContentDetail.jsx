@@ -1,16 +1,14 @@
 import { React, useState, useEffect, useRef } from "react";
-import { Link, useParams, useLocation, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import account from "../assets/images/piggy.svg";
 import code from "../assets/images/code.svg";
 import bank from "../assets/images/bank.svg";
 import { Container, Row, Col } from "react-bootstrap";
 import ContentFeedCard from "../component/card/ContentFeedCard";
 import exclusive from "../assets/images/exclusive.png";
-import sharedic from "../assets/images/shared.svg";
 import audioic from "../assets/images/audimg.svg";
 import { Button, Card, CardContent, Typography } from "@mui/material";
 import { BsArrowRight, BsArrowLeft } from "react-icons/bs";
-import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import authorimg from "../assets/images/profile.webp";
 import { MdOutlineWatchLater } from "react-icons/md";
 import contentVideo from "../assets/images/contentVideo.svg";
@@ -46,9 +44,6 @@ const PurchasedTaskContentDetail = () => {
   const [openContent, setOpenContent] = useState(false);
   const [showContent, setShowContent] = useState({});
   const [imageSize, setImageSize] = useState({ height: 0, width: 0 });
-  const location = useLocation();
-  const navigate = useNavigate();
-  const queryParams = new URLSearchParams(location.search);
 
   const getTransactionDetails = async () => {
     setLoading(true);
@@ -121,7 +116,7 @@ const PurchasedTaskContentDetail = () => {
 
   const DownloadContent = async (id) => {
     window.open(
-      `${process.env.REACT_APP_BASE_URL}mediahouse/image_pathdownload?image_id=${id}&type=content`,
+      `${process.env.REACT_APP_BASE_URL}mediahouse/image_pathdownload?image_id=${id}&type=task`,
       "_blank"
     );
   };
@@ -408,7 +403,7 @@ const PurchasedTaskContentDetail = () => {
                                   variant="primary"
                                   onClick={() =>
                                     DownloadContent(
-                                      transactionDetails?.content_id?._id
+                                      transactionDetails?.purchased_content?.map(el => el?._id)?.join(",")
                                     )
                                   }
                                 >
