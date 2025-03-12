@@ -622,8 +622,7 @@ const PurchasedContentDetail = () => {
                                   £
                                   {formatAmountInMillion(
                                     +(
-                                      transactionDetails?.amount -
-                                      transactionDetails?.Vat
+                                      transactionDetails?.amount
                                     )
                                   )}
                                 </Button>
