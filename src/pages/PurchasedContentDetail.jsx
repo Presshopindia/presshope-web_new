@@ -165,7 +165,7 @@ const PurchasedContentDetail = () => {
       if (resp) {
         getTransactionDetails();
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   // recent activity
@@ -356,7 +356,7 @@ const PurchasedContentDetail = () => {
                               onSlideChange={(e) => {
                                 setShowContent(
                                   transactionDetails?.content_id?.content[
-                                    e.activeIndex
+                                  e.activeIndex
                                   ]
                                 );
                                 if (
@@ -383,7 +383,6 @@ const PurchasedContentDetail = () => {
                                   (curr) => (
                                     <SwiperSlide key={curr._id}>
                                       <div className="swiper-slide-content">
-                                        {/* Media content based on type */}
                                         {curr?.media_type === "image" && (
                                           <img
                                             src={curr?.watermark}
@@ -404,7 +403,7 @@ const PurchasedContentDetail = () => {
                                                 curr?.watermark ||
                                                 process.env
                                                   .REACT_APP_CONTENT_MEDIA +
-                                                  curr?.media
+                                                curr?.media
                                               }
                                               type="audio/mpeg"
                                               className="slider-audio"
@@ -421,11 +420,10 @@ const PurchasedContentDetail = () => {
                                         )}
                                         {curr?.media_type === "pdf" && (
                                           <embed
-                                            src={`${
-                                              process.env
+                                            src={`${process.env
                                                 .REACT_APP_CONTENT_MEDIA +
                                               curr?.media
-                                            }`}
+                                              }`}
                                             type="application/pdf"
                                             width="100%"
                                             height="500"
@@ -603,53 +601,24 @@ const PurchasedContentDetail = () => {
                             <div className="sub-content">
                               <div className="item d-flex justify-content-between align-items-center">
                                 <span className="fnt-bold">License</span>
-
-                                {transactionDetails?.type === "content" &&
-                                transactionDetails?.content_id?.Vat?.find(
-                                  (el) =>
-                                    el?.purchased_mediahouse_id ==
-                                    JSON.parse(localStorage.getItem("user"))
-                                      ?._id
-                                )?.purchased_content_type == "shared" ? (
-                                  <div className="">
-                                    <img
-                                      src={sharedic}
-                                      className="exclusive-img"
-                                      alt=""
-                                    />
-                                    <span className="txt_catg_licn">
-                                      Shared
-                                    </span>
-                                  </div>
-                                ) : (
-                                  <div className="">
-                                    <img
-                                      src={exclusive}
-                                      className="exclusive-img"
-                                      alt=""
-                                    />
-                                    <span className="txt_catg_licn">
-                                      Exclusive
-                                    </span>
-                                  </div>
-                                )}
+                                <div className="">
+                                  <img
+                                    src={transactionDetails?.payment_content_type === "shared" ? sharedic : exclusive}
+                                    className="exclusive-img"
+                                    alt=""
+                                  />
+                                  <span className="txt_catg_licn">
+                                    {transactionDetails?.payment_content_type === "shared" ? "Shared" : "Exclusive"}
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                            {/* <div className="foot cont-info-actions d-flex justify-content-between align-items-center">
-                              <span className="greyBtn">
-                                £{formatAmountInMillion(+(transactionDetails?.amount))}
-                              </span>
-                            </div> */}
                             <div className="foot d-flex gap-5 justify-content-between align-items-center foot-button">
                               <Link to={``}>
                                 <Button
                                   disabled={true}
                                   className="greyBtn custm_grey_btn"
                                 >
-                                  {console.log(
-                                    "transactionDetails ----------->>>>>>>>>>>>>",
-                                    transactionDetails
-                                  )}
                                   £
                                   {formatAmountInMillion(
                                     +(
@@ -732,9 +701,9 @@ const PurchasedContentDetail = () => {
                               £
                               {formatAmountInMillion(
                                 transactionDetails?.amount -
-                                  (transactionDetails?.Vat != 0
-                                    ? transactionDetails?.Vat
-                                    : transactionDetails?.original_Vatamount)
+                                (transactionDetails?.Vat != 0
+                                  ? transactionDetails?.Vat
+                                  : transactionDetails?.original_Vatamount)
                               )}
                             </h6>
                           </div>
@@ -1015,13 +984,13 @@ const PurchasedContentDetail = () => {
                               feedImg={
                                 curr?.content[0]?.media_type === "video"
                                   ? curr?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.thumbnail
+                                  process.env.REACT_APP_CONTENT_MEDIA +
+                                  curr?.content[0]?.thumbnail
                                   : curr?.content[0]?.media_type === "audio"
-                                  ? audioic
-                                  : curr?.content[0]?.watermark ||
+                                    ? audioic
+                                    : curr?.content[0]?.watermark ||
                                     process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.media
+                                    curr?.content[0]?.media
                               }
                               // feedType={contentVideo}
                               feedTag={"Most Viewed"}
@@ -1141,12 +1110,12 @@ const PurchasedContentDetail = () => {
                               feedImg={
                                 curr?.content[0]?.media_type === "video"
                                   ? process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.thumbnail
+                                  curr?.content[0]?.thumbnail
                                   : curr?.content[0]?.media_type === "audio"
-                                  ? audioic
-                                  : curr?.content[0]?.watermark ||
+                                    ? audioic
+                                    : curr?.content[0]?.watermark ||
                                     process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.media
+                                    curr?.content[0]?.media
                               }
                               // postcount={curr?.content?.length}
 
@@ -1155,14 +1124,14 @@ const PurchasedContentDetail = () => {
                                 curr?.sales_prefix
                                   ? `${curr?.sales_prefix} ${curr?.discount_percent}% Off`
                                   : curr?.content_view_type == "mostpopular"
-                                  ? "Most Popular"
-                                  : curr?.content_view_type == "mostviewed"
-                                  ? "Most viewed"
-                                  : null
+                                    ? "Most Popular"
+                                    : curr?.content_view_type == "mostviewed"
+                                      ? "Most viewed"
+                                      : null
                               }
                               user_avatar={
                                 process.env.REACT_APP_AVATAR_IMAGE +
-                                  curr?.hopper_id?.avatar_id?.avatar ||
+                                curr?.hopper_id?.avatar_id?.avatar ||
                                 authorimg
                               }
                               author_Name={curr.hopper_id?.user_name}

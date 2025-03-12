@@ -14,6 +14,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { formatAmountInMillion } from "./commonFunction";
 import { initStateOfTaskGraph } from "./staticData";
 import { DashboardCardInfo } from "./DashboardCardInfo";
+import audioic from "../assets/images/audimg.svg";
+
 // import { Get } from '../services/user.services';
 const TaskReports = ({
   dashboardData,
@@ -573,7 +575,7 @@ const TaskReports = ({
           <Col md={2}>
             <DashboardCardInfo
               title="Total content purchased from tasks"
-              path="/reports-tables-task/total_content_sourced_today"
+              path="/content-tables/content_sourced_from_task"
               trend={dashboardData?.contentPurchasedFromTask?.trend}
               total={dashboardData?.contentPurchasedFromTask?.totalCount}
               dashboardSort={dashboardSort}
@@ -602,7 +604,7 @@ const TaskReports = ({
           <Col md={2}>
             <DashboardCardInfo
               title="Total funds invested"
-              path="/reports-tables-task/total_fund_invested_today"
+              path="/content-tables/content_sourced_from_task_funds_invested"
               trend={dashboardData?.totalFundInvested?.trend}
               total={"£" + formatAmountInMillion(dashboardData?.totalFundInvested?.totalAmount || 0)}
               dashboardSort={dashboardSort}
@@ -905,19 +907,13 @@ const TaskReports = ({
                               className="contentCard"
                               onClick={() =>
                                 navigate(
-                                  `/sourced-content-detail/${curr?._id}`
+                                  `/purchased-task-content-detail/${curr?._id}`
                                 )
                               }
                             >
                               <img
                                 className="reportcontentImg img-fluid"
-                                src={
-                                  curr.type === "video"
-                                    ? process.env.REACT_APP_UPLOADED_CONTENT +
-                                    curr.videothubnail
-                                    : process.env.REACT_APP_UPLOADED_CONTENT +
-                                    curr.imageAndVideo
-                                }
+                                src={(curr?.purchased_task_content?.type === "image" || curr?.purchased_task_content?.type === "video") ? curr?.purchased_task_content?.videothubnail : audioic}
                                 alt=""
                               />
                               <div className="contInfo d-flex">
@@ -935,7 +931,7 @@ const TaskReports = ({
                                 >
                                   {" "}
                                   £
-                                  {formatAmountInMillion(curr?.amount_paid)}
+                                  {formatAmountInMillion(curr?.amount)}
                                 </span>
                               </div>
                             </div>

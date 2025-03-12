@@ -1,56 +1,29 @@
 import React, { useEffect, useState } from "react";
 import Header from "../component/Header";
 import DbFooter from "../component/DbFooter";
-import { Container, Row, Col, Tabs, Tab, Table } from "react-bootstrap";
-import AccountsReports from "../component/AccountsReports";
-import ContentReports from "../component/ContentReports";
-import TaskReports from "../component/TaskReports";
+import { Container, Row, Col, Tabs, Tab } from "react-bootstrap";
 import TopSearchesTipsCard from "../component/card/TopSearchesTipsCard";
 import {
-  Select,
-  MenuItem,
   FormControl,
   Card,
   CardContent,
   Typography,
   Button,
   Tooltip,
-  Stack,
-  Pagination,
 } from "@mui/material";
 import {
-  BsArrowUp,
-  BsArrowRight,
-  BsArrowDown,
   BsEye,
   BsChevronDown,
   BsArrowLeft,
 } from "react-icons/bs";
-import { AiFillCaretDown, AiOutlineClose } from "react-icons/ai";
-import taskIcon from "../assets/images/taskIcon.svg";
-import barclays from "../assets/images/bankLogos/Barclays.png";
-import lloyds from "../assets/images/bankLogos/lloyds.svg";
-import { FiEdit, FiX } from "react-icons/fi";
+import { AiFillCaretDown } from "react-icons/ai";
 import ReactApexChart from "react-apexcharts";
-import SortingDialog from "../popups/SortingDialog";
-import avatar from "../assets/images/avatar.png";
 import task from "../assets/images/task.svg";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import TransactionSort from "../popups/TransactionSort";
-import { MdAdd } from "react-icons/md";
-import audioic from "../assets/images/audio-icon.svg";
-import debitL from "../assets/images/bankLogos/debitL.png";
-import debitM from "../assets/images/bankLogos/debitM.png";
-import cont1 from "../assets/images/img1.png";
-import cont2 from "../assets/images/img2.png";
-import cont3 from "../assets/images/img3.jpg";
 import calendar from "../assets/images/calendar.svg";
 import cameraic from "../assets/images/camera.svg";
 import interviewic from "../assets/images/interview.svg";
-import celebrity from "../assets/images/celebrity.svg";
-import idimg from "../assets/images/celebrity.svg";
 import videoic from "../assets/images/video.svg";
-import recic from "../assets/images/recording.svg";
 import watchic from "../assets/images/watch.svg";
 import exclusiveic from "../assets/images/exclusive.svg";
 import shared from "../assets/images/share.png";
@@ -59,13 +32,9 @@ import invic from "../assets/images/invoice.svg";
 import Loader from "../component/Loader";
 import { Get, Post } from "../services/user.services";
 import moment from "moment";
-import Fundsinvested from "../component/Sortfilters/Dashboard/Fundsinvested";
 import AccountsFilter from "../component/Sortfilters/Content/AccountsFilter";
-import TopFilterComn from "../component/Sortfilters/Content/TopFilterComn";
 import ChartsSort from "../component/Sortfilters/Dashboard/ChartsSort";
-import audiobg from "../assets/images/audimgbg.svg";
 import audiosm from "../assets/images/audimgsmall.svg";
-import audioimg from "../assets/images/audimg.svg";
 import docsic from "../assets/images/docsic.svg";
 import { formatAmountInMillion } from "../component/commonFunction";
 import {
@@ -243,76 +212,6 @@ const Accounts = () => {
     }
   };
 
-  // const FundInvested = async () => {
-  //   setLoading(true);
-
-  //   try {
-  //     const resp = await Get(
-  //       `mediahouse/AccountfundInvested?${taskState}=${taskState}`
-  //     );
-  //     if (resp) {
-  //       setFundInvested((prevTaskSummary) => ({
-  //         ...prevTaskSummary,
-  //         options: {
-  //           ...prevTaskSummary.options,
-  //           xaxis: {
-  //             ...prevTaskSummary.options.xaxis,
-  //             categories: [
-  //               "Jan",
-  //               "Feb",
-  //               "Mar",
-  //               "Apr",
-  //               "May",
-  //               "Jun",
-  //               "Jul",
-  //               "Aug",
-  //               "Sep",
-  //               "Oct",
-  //               "Nov",
-  //               "Dec",
-  //             ],
-  //           },
-  //         },
-
-  //         tooltip: {
-  //           enabled: true,
-  //           custom: function({ series, seriesIndex, dataPointIndex, w }) {
-  //             const value = series[seriesIndex][dataPointIndex];
-  //             return `<div class="custom-tooltip">
-  //                       <span>Custom Tooltip Message</span>
-  //                     </div>`;
-  //           },
-  //         },
-
-  //         series: [
-  //           {
-  //             ...prevTaskSummary.series[0],
-  //             data: [
-  //               (resp.data.data.jan).toFixed(2),
-  //               (resp.data.data.feb).toFixed(2),
-  //               (resp.data.data.mar).toFixed(2),
-  //               (resp.data.data.apr).toFixed(2),
-  //               (resp.data.data.may).toFixed(2),
-  //               (resp.data.data.june).toFixed(2),
-  //               (resp.data.data.july).toFixed(2),
-  //               (resp.data.data.aug).toFixed(2),
-  //               (resp.data.data.sept).toFixed(2),
-  //               (resp.data.data.oct).toFixed(2),
-  //               (resp.data.data.nov).toFixed(2),
-  //               (resp.data.data.dec).toFixed(2),
-  //             ],
-  //           },
-  //         ],
-  //       }));
-  //       setLoading(false);
-  //       setChartName({ ...chartName, task: "" });
-  //     }
-  //   } catch (error) {
-  //     // console.log(error);
-  //     setLoading(false);
-  //     setChartName({ ...chartName, task: "" });
-  //   }
-  // };
   const FundInvested = async () => {
     setLoading(true);
 
@@ -345,36 +244,26 @@ const Accounts = () => {
             tooltip: {
               enabled: true,
               x: {
-                // Customize tooltip to show "Month sales"
                 formatter: function (val, opts) {
-                  return `${val} sales`; // For example, "July sales"
+                  return `${val} sales`;
                 },
               },
               y: {
                 formatter: function (val) {
-                  // return `$${val.toFixed(2)}`;  // Formats the sales value, e.g., "$123.45"
                   return "£" + formatAmountInMillion(val);
                 },
               },
             },
             dataLabels: {
-              enabled: true, // Enables showing values on the bars
+              enabled: true,
               formatter: function (val) {
-                // return "£"+formatAmountInMillion(val);
-                return val ? "£" + formatAmountInMillion(val) : ""; // e.g., "$123.45"
-
-                // Adds $ before value on top of the bars
+                return val ? "£" + formatAmountInMillion(val) : "";
               },
-              // style: {
-              //   colors: ['#000']  // Change color of the labels if necessary
-              // }
             },
           },
 
           series: [
             {
-              // Content purchased
-              // name: "Content purchased",
               name: "Funds invested",
 
               data: [
@@ -402,146 +291,7 @@ const Accounts = () => {
       setChartName({ ...chartName, task: "" });
     }
   };
-  // const FundInvested = async () => {
-  //   setLoading(true);
 
-  //   try {
-  //     const resp = await Get(
-  //       `mediahouse/AccountfundInvested?${taskState}=${taskState}`
-  //     );
-  //     if (resp) {
-  //       setFundInvested((prevTaskSummary) => ({
-  //         ...prevTaskSummary,
-  //         options: {
-  //           ...prevTaskSummary.options,
-  //           xaxis: {
-  //             categories: [
-  //               "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  //               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-  //             ],
-  //           },
-  //           tooltip: {
-  //             enabled: true,
-  //             x: {
-  //               formatter: function (val) {
-  //                 return `${val} sales`;  // Custom tooltip for X-axis (e.g., "July sales")
-  //               }
-  //             },
-  //             y: {
-  //               formatter: function (val) {
-  //                 return `$${val.toFixed(2)}`;  // Show "$" before the value
-  //               }
-  //             }
-  //           },
-  //           dataLabels: {
-  //             enabled: true, // Enables showing values on the bars
-  //             formatter: function (val) {
-  //               return `$${val.toFixed(2)}`; // Adds $ before value on top of the bars
-  //             },
-  //             style: {
-  //               colors: ['#000']  // Change color of the labels if necessary
-  //             }
-  //           }
-  //         },
-  //         series: [
-  //           {
-  //             name: "Funds invested",
-  //             data: [
-  //               resp.data.data.jan.toFixed(2),
-  //               resp.data.data.feb.toFixed(2),
-  //               resp.data.data.mar.toFixed(2),
-  //               resp.data.data.apr.toFixed(2),
-  //               resp.data.data.may.toFixed(2),
-  //               resp.data.data.june.toFixed(2),
-  //               resp.data.data.july.toFixed(2),
-  //               resp.data.data.aug.toFixed(2),
-  //               resp.data.data.sept.toFixed(2),
-  //               resp.data.data.oct.toFixed(2),
-  //               resp.data.data.nov.toFixed(2),
-  //               resp.data.data.dec.toFixed(2),
-  //             ]
-  //           }
-  //         ]
-  //       }));
-  //       setLoading(false);
-  //       setChartName({ ...chartName, task: "" });
-  //     }
-  //   } catch (error) {
-  //     setLoading(false);
-  //     setChartName({ ...chartName, task: "" });
-  //   }
-  // };
-
-  // const VatSummary = async () => {
-  //   setLoading(true);
-
-  //   try {
-  //     const resp = await Get(`mediahouse/AccountcontentPurchasedOnline?${taskState}=${taskState}`);
-  //     if (resp) {
-  //       setVatSummary((prevTaskSummary) => ({
-  //         ...prevTaskSummary,
-  //         options: {
-  //           ...prevTaskSummary.options,
-  //           xaxis: {
-  //             ...prevTaskSummary.options.xaxis,
-  //             categories: [
-  //               "Jan",
-  //               "Feb",
-  //               "Mar",
-  //               "Apr",
-  //               "May",
-  //               "Jun",
-  //               "Jul",
-  //               "Aug",
-  //               "Sep",
-  //               "Oct",
-  //               "Nov",
-  //               "Dec",
-  //             ],
-  //           },
-  //         },
-
-  //         tooltip: {
-  //           enabled: true,
-  //           x: {
-  //             // Customize tooltip to show "Month sales"
-  //             formatter: function (val, opts) {
-  //               return `${val} VAT paid`; // For example, "July sales"
-  //             },
-  //           },
-  //           y: {
-  //             formatter: function (val) {
-  //               return `$${val.toFixed(2)}`; // Formats the sales value, e.g., "$123.45"
-  //             },
-  //           },
-  //         },
-  //         series: [
-  //           {
-  //             ...prevTaskSummary.series[0],
-  //             data: [
-  //               resp.data.data.jan,
-  //               resp.data.data.feb,
-  //               resp.data.data.mar,
-  //               resp.data.data.apr,
-  //               resp.data.data.may,
-  //               resp.data.data.june,
-  //               resp.data.data.july ?? 0,
-  //               resp.data.data.aug,
-  //               resp.data.data.sept,
-  //               resp.data.data.oct,
-  //               resp.data.data.nov,
-  //               resp.data.dec,
-  //             ],
-  //           },
-  //         ],
-  //       }));
-  //       setLoading(false);
-  //     }
-  //   } catch (error) {
-  //     // console.log(error);
-  //     setLoading(false);
-  //   }
-  // };
   const VatSummary = async () => {
     setLoading(true);
 
@@ -590,12 +340,7 @@ const Accounts = () => {
               formatter: function (val) {
                 // return "£"+formatAmountInMillion(val);
                 return val ? "£" + formatAmountInMillion(val) : ""; // e.g., "$123.45"
-
-                // Adds $ before value on top of the bars
               },
-              // style: {
-              //   colors: ['#000']  // Change color of the labels if necessary
-              // }
             },
           },
           series: [
@@ -615,20 +360,6 @@ const Accounts = () => {
                 resp.data.data.nov.toFixed(2),
                 resp.data.data.dec.toFixed(2),
               ],
-              // data: [
-              //   resp.data.data.jan || 0,
-              //   resp.data.data.feb || 0,
-              //   resp.data.data.mar || 0,
-              //   resp.data.data.apr || 0,
-              //   resp.data.data.may || 0,
-              //   resp.data.data.june || 0,
-              //   resp.data.data.july ?? 0, // Safeguard for missing value
-              //   resp.data.data.aug || 0,
-              //   resp.data.data.sept || 0,
-              //   resp.data.data.oct || 0,
-              //   resp.data.data.nov || 0,
-              //   resp.data.data.dec || 0,
-              // ],
             },
           ],
         }));
@@ -1049,7 +780,7 @@ const Accounts = () => {
                                                 <div className="cont_wrp d-flex flex-column">
                                                   {curr?.type ==
                                                     "content" ? (
-                                                      <div className="d-flex cnt_inn">
+                                                    <div className="d-flex cnt_inn">
                                                       {curr?.content_id?.content
                                                         ?.slice(0, 3)
                                                         .map((item) => {
@@ -1091,7 +822,7 @@ const Accounts = () => {
                                                   )}
                                                   <Link
                                                     to={
-                                                      curr?.type ==="content"
+                                                      curr?.type === "content"
                                                         ? `/purchased-content-detail/${curr?._id}`
                                                         : `/purchased-task-content-detail/${curr?._id}`
                                                     }
@@ -1106,59 +837,60 @@ const Accounts = () => {
                                                 {/* tooptip Start */}
                                                 {
                                                   curr?.type === "content" ? (
-                                                    <Tooltip
-                                                  title={curr?.payment_content_type ==
-                                                      "exclusive"
-                                                      ? "Exclusive"
-                                                      : "Shared"
-                                                  }
-                                                >
-                                                  <img
-                                                    src={curr?.payment_content_type ===
-                                                        "exclusive"
-                                                        ? exclusiveic
-                                                        : shared
-                                                    }
-                                                    className="tbl_ic"
-                                                    alt="Exclusive"
-                                                  />
-                                                </Tooltip>
-                                                  ) : "-"
+                                                    <Tooltip title={curr?.payment_content_type == "exclusive" ? "Exclusive" : "Shared"}
+                                                    >
+                                                      <img
+                                                        src={curr?.payment_content_type ===
+                                                          "exclusive"
+                                                          ? exclusiveic
+                                                          : shared
+                                                        }
+                                                        className="tbl_ic"
+                                                        alt="Exclusive"
+                                                      />
+                                                    </Tooltip>
+                                                  ) : <Tooltip title="Task">
+                                                    <img
+                                                      src={task}
+                                                      className="tbl_ic"
+                                                      alt="Exclusive"
+                                                    />
+                                                  </Tooltip>
                                                 }
                                                 {/* tooptip End */}
                                               </td>
                                               <td className="text-center">
                                                 <div className="">
                                                   {getMediaType("image") ? (
-                                                      <Tooltip title="Photo">
-                                                        <img
-                                                          src={cameraic}
-                                                          alt="Photo"
-                                                          className="icn"
-                                                        />{" "}
-                                                      </Tooltip>
-                                                    ) : null}
+                                                    <Tooltip title="Photo">
+                                                      <img
+                                                        src={cameraic}
+                                                        alt="Photo"
+                                                        className="icn"
+                                                      />{" "}
+                                                    </Tooltip>
+                                                  ) : null}
                                                   <br />
                                                   {getMediaType("video") ? (
-                                                      <Tooltip title="Video">
-                                                        {" "}
-                                                        <img
-                                                          src={videoic}
-                                                          alt="Video"
-                                                          className="icn"
-                                                        />
-                                                      </Tooltip>
-                                                    ) : null}
+                                                    <Tooltip title="Video">
+                                                      {" "}
+                                                      <img
+                                                        src={videoic}
+                                                        alt="Video"
+                                                        className="icn"
+                                                      />
+                                                    </Tooltip>
+                                                  ) : null}
                                                   <br />
                                                   {getMediaType("audio") ? (
-                                                      <Tooltip title="Audio">
-                                                        <img
-                                                          src={interviewic}
-                                                          alt="Audio"
-                                                          className="icn"
-                                                        />
-                                                      </Tooltip>
-                                                    ) : null}
+                                                    <Tooltip title="Audio">
+                                                      <img
+                                                        src={interviewic}
+                                                        alt="Audio"
+                                                        className="icn"
+                                                      />
+                                                    </Tooltip>
+                                                  ) : null}
                                                   {getMediaType("pdf") ? (
                                                     <Tooltip title="Pdf">
                                                       <img
@@ -1435,7 +1167,7 @@ const Accounts = () => {
                                                 <div className="cont_wrp d-flex flex-column">
                                                   {curr?.type ==
                                                     "content" ? (
-                                                      <div className="d-flex cnt_inn">
+                                                    <div className="d-flex cnt_inn">
                                                       {curr?.content_id?.content
                                                         ?.slice(0, 3)
                                                         .map((item) => {
@@ -1477,7 +1209,7 @@ const Accounts = () => {
                                                   )}
                                                   <Link
                                                     to={
-                                                      curr?.type ==="content"
+                                                      curr?.type === "content"
                                                         ? `/purchased-content-detail/${curr?._id}`
                                                         : `/purchased-task-content-detail/${curr?._id}`
                                                     }
@@ -1509,7 +1241,7 @@ const Accounts = () => {
                                                 </p>
                                               </td>
                                               <td>
-                                              {curr?.type === "content" ? curr?.content_id?.location : curr?.task_id?.location}
+                                                {curr?.type === "content" ? curr?.content_id?.location : curr?.task_id?.location}
                                               </td>
                                               <td className="timedate_wrap">
                                                 <p className="timedate">

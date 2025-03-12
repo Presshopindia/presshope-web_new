@@ -323,7 +323,7 @@ const ReportsTablesTask = () => {
                                 return (
                                   <tr
                                     onClick={() =>
-                                      navigate(`/broadcasted-taks/${curr?._id}`)
+                                      navigate(`/task?task_ids=${curr?._id}`)
                                     }
                                     style={{ cursor: "pointer" }}
                                   >
@@ -1178,7 +1178,7 @@ const ReportsTablesTask = () => {
                                       className="clickable"
                                       onClick={() =>
                                         navigate(
-                                          `/broadcasted-taks/${curr?._id}`
+                                          `/task?task_ids=${curr?._id}`
                                         )
                                       }
                                     >

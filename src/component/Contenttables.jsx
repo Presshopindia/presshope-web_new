@@ -1494,7 +1494,7 @@ const Contenttables = () => {
                               <th>Location</th>
                               <th>Uploaded by</th>
                               {
-                                param.type == "content_sourced_from_task_funds_invested" && <th>Vat</th>
+                                param.type == "content_sourced_from_task_funds_invested" && <th>VAT</th>
                               }
                               <th>Funds invested</th>
                             </tr>
