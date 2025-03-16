@@ -53,8 +53,9 @@ const PurchasedTaskContentDetail = () => {
         setTransactionDetails(res?.data?.resp);
         setShowContent(res?.data?.resp?.content_id?.content?.[0]);
 
-        const resp1 = await Post(`mediaHouse/MoreContent`, {
-          hopper_id: res?.data?.resp?.hopper_id?._id,
+        const resp1 = await Post(`mediaHouse/MoreContentforTask`, {
+          hopper_id: res?.data?.resp?.hopper_details?._id,
+          task_id: res?.data?.resp?.task_details?._id,
         });
         setMoreContent(resp1?.data.content);
         const resp2 = await Post(`mediaHouse/relatedContent`, {
@@ -768,7 +769,7 @@ const PurchasedTaskContentDetail = () => {
                     </h1>
                     <div className="d-flex align-items-center">
                       <Link
-                        to={`/more-content/${transactionDetails?.hopper_id?._id}`}
+                        to={`/more-content-task/${transactionDetails?.hopper_id?._id}/${transactionDetails?.task_details?._id}`}
                         className="next_link"
                       >
                         View all
@@ -777,99 +778,97 @@ const PurchasedTaskContentDetail = () => {
                     </div>
                   </div>
                   <Row className="">
-                    {moreContent?.slice(0, 4)?.map((curr) => {
-                      const Audio = curr?.content?.filter(
-                        (curr) => curr?.media_type === "audio"
+                    {moreContent?.slice(0, 4)?.map((item) => {
+                      const Audio = item?.content?.filter(
+                        (item) => item?.media_type === "audio"
                       );
-                      const Video = curr?.content?.filter(
-                        (curr) => curr?.media_type === "video"
+                      const Video = item?.content?.filter(
+                        (item) => item?.media_type === "video"
                       );
-                      const Image = curr?.content?.filter(
-                        (curr) => curr?.media_type === "image"
+                      const Image = item?.content?.filter(
+                        (item) => item?.media_type === "image"
                       );
-                      const Pdf = curr?.content?.filter(
-                        (curr) => curr?.media_type === "pdf"
+                      const Pdf = item?.content?.filter(
+                        (item) => item?.media_type === "pdf"
                       );
-                      const Doc = curr?.content?.filter(
-                        (curr) => curr?.media_type === "doc"
+                      const Doc = item?.content?.filter(
+                        (item) => item?.media_type === "doc"
                       );
-
-                      const imageCount = Image.length;
-                      const videoCount = Video.length;
-                      const audioCount = Audio.length;
-                      const pdfCount = Pdf.length;
-                      const docCount = Doc.length;
                       return (
                         <Col md={3}>
                           <ContentFeedCard
-                            key={curr?._id}
-                            lnkto={`/Feeddetail/content/${curr._id}`}
-                            viewTransaction={"View details"}
-                            viewDetail={`/Feeddetail/content/${curr._id}`}
                             feedImg={
-                              curr?.content[0]?.media_type === "video"
-                                ? process.env.REACT_APP_CONTENT_MEDIA +
-                                curr?.content[0]?.thumbnail
-                                : curr?.content[0]?.media_type === "audio"
-                                  ? audioic
-                                  : curr?.content[0]?.watermark ||
-                                  process.env.REACT_APP_CONTENT_MEDIA +
-                                  curr?.content[0]?.media
+                              item?.type === "image"
+                                ? item?.videothubnail ||
+                                process.env.REACT_APP_UPLOADED_CONTENT +
+                                item?.imageAndVideo
+                                : item?.type === "video"
+                                  ? item?.videothubnail ||
+                                  process.env.REACT_APP_UPLOADED_CONTENT +
+                                  item?.videothubnail
+                                  : item?.type === "audio"
+                                    ? audioic
+                                    : null
                             }
-                            // postcount={curr?.content?.length}
-
-                            feedType={contentVideo}
-                            feedTag={
-                              curr?.sales_prefix
-                                ? `${curr?.sales_prefix} ${curr?.discount_percent}% Off`
-                                : curr?.content_view_type == "mostpopular"
-                                  ? "Most Popular"
-                                  : curr?.content_view_type == "mostviewed"
-                                    ? "Most viewed"
+                            type={"task"}
+                            postcount={1}
+                            feedTypeImg1={
+                              item?.type === "image"
+                                ? cameraic
+                                : item?.type === "audio"
+                                  ? interviewic
+                                  : item?.type === "video"
+                                    ? videoic
                                     : null
                             }
                             user_avatar={
-                              process.env.REACT_APP_AVATAR_IMAGE +
-                              curr?.hopper_id?.avatar_id?.avatar ||
-                              authorimg
+                              item?.avatar_details?.[0]?.avatar
+                                ? process.env.REACT_APP_AVATAR_IMAGE +
+                                item?.avatar_details?.[0]?.avatar
+                                : item?.avatar_detals?.[0]?.avatar
+                                  ? process.env.REACT_APP_AVATAR_IMAGE +
+                                  item?.avatar_detals?.[0]?.avatar
+                                  : ""
                             }
-                            author_Name={curr.hopper_id?.user_name}
-                            type_img={
-                              curr?.type === "shared" ? shared : exclusive
-                            }
-                            type_tag={curr?.type}
-                            feedHead={curr.heading}
-                            feedTime={moment(
-                              curr?.published_time_date
-                            ).format("hh:mm A, DD MMM YYYY")}
-                            feedLocation={curr.location}
-                            contentPrice={formatAmountInMillion(
-                              curr.ask_price
-                            )}
-                            // feedTypeImg={curr.content[0].media_type === "audio" ? interviewic : cameraic}
+                            author_Name={item?.hopper_id?.user_name}
+                            // lnkto={`/content-details/${item?._id}`}
+                            lnkto={`/content-details/${item?._id}?task_content_id=${item?.content_id}`}
+                            viewTransaction="View details"
+                            viewDetail={`/content-details/${item?._id}?task_content_id=${item?.content_id}`}
                             fvticns={
-                              curr?.favourite_status === "true"
+                              item?.favourite_status === "true"
                                 ? favouritedic
                                 : favic
                             }
-                            content_id={curr._id}
-                            basket={() => {
-                              //  handleBasket(index, i)
-                              console.log("success");
-                              getTransactionDetails();
-                            }}
-                            basketValue={curr.basket_status}
-                            allContent={curr?.content}
-                            feedTypeImg1={imageCount > 0 ? cameraic : null}
-                            postcount={imageCount > 0 ? imageCount : null}
-                            feedTypeImg2={videoCount > 0 ? videoic : null}
-                            postcount2={videoCount > 0 ? videoCount : null}
-                            feedTypeImg3={audioCount > 0 ? interviewic : null}
-                            postcount3={audioCount > 0 ? audioCount : null}
-                            feedTypeImg4={pdfCount > 0 ? docsic : null}
-                            postcount4={pdfCount > 0 ? pdfCount : null}
-                            feedTypeImg5={docCount > 0 ? docsic : null}
-                            postcount5={docCount > 0 ? docCount : null}
+                            type_tag={item?.category_details[0]?.name}
+                            basket={() => handleBasket(index, "more")}
+                            basketValue={item?.basket_status}
+                            allContent={item?.task_id?.content}
+                            type_img={item?.category_details[0]?.icon}
+                            feedHead={item?.task_id?.task_description}
+                            feedTime={moment(item?.createdAt).format(
+                              " hh:mm A, DD MMM YYYY"
+                            )}
+                            feedLocation={item?.task_id?.location}
+                            contentPrice={`${formatAmountInMillion(
+                              item?.type === "image"
+                                ? item?.task_id?.hopper_photo_price || 0
+                                : item?.type === "audio"
+                                  ? item?.task_id?.hopper_interview_price || 0
+                                  : item?.type === "video"
+                                    ? item?.task_id?.hopper_videos_price || 0
+                                    : null
+                            )}`}
+                            favourite={() => handleFavourite(index, "more")}
+                            bool_fav={
+                              item?.favourite_status === "true"
+                                ? "false"
+                                : "true"
+                            }
+                            // content_id={item?.content_id}
+                            content_id={item?._id}
+                            task_content_id={item?._id || item?.task_id?._id}
+                            taskHopperId={item?._id}
                           />
                         </Col>
                       );

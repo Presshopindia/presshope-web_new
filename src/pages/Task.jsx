@@ -365,20 +365,20 @@ const BroadcastedTask = () => {
                         type_tag={item?.content[0]?.category_details?.name}
                         allContent={item?.content[0]?.task_id?.content}
                         type_img={item?.content[0]?.category_details?.icon}
-                        feedHead={item?.content[0]?.task_id?.task_description}
-                        feedTime={moment(item?.content[0]?.createdAt).format(
+                        feedHead={item?.content[0]?.task_id?.heading}
+                        feedTime={moment(item?.content[0]?.updatedAt).format(
                           " hh:mm A, DD MMM YYYY"
                         )}
                         feedLocation={item?.content[0]?.task_id?.location}
-                        contentPrice={`${formatAmountInMillion(
-                          item?.content[0]?.type === "image"
-                            ? item?.content[0]?.task_id?.hopper_photo_price || 0
-                            : item?.content[0]?.type === "audio"
-                              ? item?.content[0]?.task_id?.hopper_interview_price || 0
-                              : item?.content[0]?.type === "video"
-                                ? item?.content[0]?.task_id?.hopper_videos_price || 0
-                                : null
-                        )}`}
+                        // contentPrice={`${formatAmountInMillion(
+                        //   item?.content[0]?.type === "image"
+                        //     ? item?.content[0]?.task_id?.hopper_photo_price || 0
+                        //     : item?.content[0]?.type === "audio"
+                        //       ? item?.content[0]?.task_id?.hopper_interview_price || 0
+                        //       : item?.content[0]?.type === "video"
+                        //         ? item?.content[0]?.task_id?.hopper_videos_price || 0
+                        //         : null
+                        // )}`}
                         favourite={() => handleFavourite(index, "task")}
                         bool_fav={
                           item?.favourite_status === "true" ? "false" : "true"

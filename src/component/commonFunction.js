@@ -278,3 +278,33 @@ export const getDeepModifiedTaskContent = (data) => {
         }
     });
 };
+
+
+export const contentUploadedMsgInTaskChat = (data) => {
+    const getImage = data?.filter((el) => el.mime === "image")?.length || 0;
+    const getVideo = data?.filter((el) => el.mime === "video")?.length || 0;
+    const getAudio = data?.filter((el) => el.mime === "audio")?.length || 0;
+
+    let msg = "";
+
+    if (getImage && getVideo && getAudio) {
+        msg = `Has uploaded ${getImage} image, ${getVideo} video, and ${getAudio} audio`;
+    } else if (getImage && getVideo) {
+        msg = `Has uploaded ${getImage} image and ${getVideo} video`;
+    } else if (getImage && getAudio) {
+        msg = `Has uploaded ${getImage} image and ${getAudio} audio`;
+    } else if (getVideo && getAudio) {
+        msg = `Has uploaded ${getVideo} video and ${getAudio} audio`;
+    } else if (getImage) {
+        msg = `Has uploaded ${getImage} image`;
+    } else if (getVideo) {
+        msg = `Has uploaded ${getVideo} video`;
+    } else if (getAudio) {
+        msg = `Has uploaded ${getAudio} audio`;
+    } else {
+        msg = "No media uploaded";
+    }
+
+    return msg;
+};
+

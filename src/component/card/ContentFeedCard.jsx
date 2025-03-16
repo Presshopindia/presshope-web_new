@@ -386,7 +386,7 @@ function ContentFeedCard(props) {
                   </button>
                 </>
               </Link>
-            ) : (
+            ) : props?.contentPrice ? (
               <Link
                 to={props.viewDetail}
                 onClick={() => navigate(`${props.viewDetail}`)}
@@ -398,7 +398,7 @@ function ContentFeedCard(props) {
                   }) || 0}
                 </button>
               </Link>
-            )}
+            ) : ""}
           </div>
         </CardActions>
       </Card>

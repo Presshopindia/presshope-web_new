@@ -1,39 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-// import HeaderN from "../component/HeaderN"
-import imgs from "../assets/images/imgn6.jpg";
-import img2 from "../assets/images/img2.webp";
-import avatar from "../assets/images/avatar.png";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import ContentFeedCard from "../component/card/ContentFeedCard";
-import exclusive from "../assets/images/exclusive.png";
-import { Button, Card, CardContent, Typography } from "@mui/material";
-import { BsArrowRight, BsArrowLeft, BsMic } from "react-icons/bs";
-import feedcontimg from "../assets/images/imgn6.jpg";
-import { AiOutlineStar } from "react-icons/ai";
-import authorimg from "../assets/images/profile.webp";
-import { MdOutlineWatchLater, MdAdd } from "react-icons/md";
-import Tab from "react-bootstrap/Tab";
-// import audioic from "../assets/images/audio-icon.svg";
+import { BsArrowLeft } from "react-icons/bs";
 import audioic from "../assets/images/audimg.svg";
-
-import Tabs from "react-bootstrap/Tabs";
-import { IoCallOutline } from "react-icons/io5";
-import imgprofile from "../assets/images/profile.webp";
-import { AiOutlinePlus } from "react-icons/ai";
-import InputGroup from "react-bootstrap/InputGroup";
-import inpimg from "../assets/images/profile.webp";
-import contentCamera from "../assets/images/contentCamera.svg";
-import contentVideo from "../assets/images/contentVideo.svg";
-import { VscDeviceCameraVideo } from "react-icons/vsc";
 import TopSearchesTipsCard from "../component/card/TopSearchesTipsCard";
-import { SlLocationPin } from "react-icons/sl";
 import Header from "../component/Header";
 import DbFooter from "../component/DbFooter";
-import { Get, Patch, Post } from "../services/user.services";
+import { Post } from "../services/user.services";
 import moment from "moment/moment";
-import { toast } from "react-toastify";
-import shared from "../assets/images/share.png";
 import Loader from "../component/Loader";
 import videoic from "../assets/images/video.svg";
 import interviewic from "../assets/images/interview.svg";
@@ -41,11 +16,17 @@ import cameraic from "../assets/images/camera.svg";
 import favic from "../assets/images/star.svg";
 import favouritedic from "../assets/images/favouritestar.svg";
 import { formatAmountInMillion } from "../component/commonFunction";
+import { PaginationComp } from "../component/Pagination";
 
 const MoreContentFromUserForTask = () => {
   const [moreContent, setMoreContent] = useState([]);
   const [loading, setLoading] = useState(false);
   const { hopper_id, task_id } = useParams();
+
+    // Pagination-
+    const [page, setPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(0);
+    const [limit, setLimit] = useState(8)
 
   const ContentByID = async () => {
     try {
@@ -53,9 +34,11 @@ const MoreContentFromUserForTask = () => {
       const resp1 = await Post(`mediaHouse/MoreContentforTask`, {
         hopper_id,
         task_id,
-        limit: 50,
+        limit,
+        offset: (+(page-1)) * limit
       });
       setMoreContent(resp1.data.content);
+      setTotalPage(Math.ceil(resp1.data?.totalCount / limit))
 
       if (resp1) {
         setLoading(false);
@@ -68,7 +51,7 @@ const MoreContentFromUserForTask = () => {
 
   useEffect(() => {
     ContentByID();
-  }, []);
+  }, [page]);
 
   const handleFavourite = (i) => {
     setMoreContent((prev) => {
@@ -149,12 +132,12 @@ const MoreContentFromUserForTask = () => {
                               item?.avatar_detals[0]?.avatar
                             }
                             author_Name={item?.hopper_id?.user_name}
-                            lnkto={`/content-details/${item?._id}`}
+                            lnkto={`/content-details/${item?.task_id?._id}?hopper_id=${item?.hopper_id?._id}`}
                             basket={() => handleBasket(index)}
                             basketValue={item?.basket_status}
                             // lnkto={`/Feeddetail/content/${item._id}uploaded`}
                             viewTransaction="View details"
-                            viewDetail={`/content-details/${item?._id}`}
+                            viewDetail={`/content-details/${item?.task_id?._id}?hopper_id=${item?.hopper_id?._id}`}
                             fvticns={
                               item.favourite_status === "true"
                                 ? favouritedic
@@ -194,6 +177,7 @@ const MoreContentFromUserForTask = () => {
               </div>
             </Col>
           </Row>
+          <PaginationComp totalPage={totalPage} path={`more-content-task/${hopper_id}/${task_id}`} type="more" setPage={setPage} page={page} />
           <div className="mt-0">
             <TopSearchesTipsCard />
           </div>
