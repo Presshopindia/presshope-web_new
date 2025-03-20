@@ -1033,7 +1033,6 @@ const Signup = () => {
                           <p className="onbrdheading sign_hdng">
                             Office details
                           </p>
-
                           {/* New work for multi offices adding */}
                           {multiOffice.map((el, index) => (
                             <>
