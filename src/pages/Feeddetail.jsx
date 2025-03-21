@@ -3564,12 +3564,16 @@ const Feeddetail = (props) => {
     }
   };
 
-  const OfferPaymentChat = async () => {
+  const OfferPaymentChat = async (hopperPrice, offerPrice) => {
     try{
+      let markupPrice = ( hopperPrice * 20 ) / 100;
+      let hopperAmountWithoutMarkup = offerPrice - markupPrice;
+
       const payload = {
         message_type: "Offered",
         image_id: contentId,
-        sender_id: mediahouseId
+        sender_id: mediahouseId,
+        amount: hopperAmountWithoutMarkup
       };
       await Post("mediahouse/create-offer-payment-chat", payload);
     }
@@ -5536,7 +5540,7 @@ const Feeddetail = (props) => {
                                                       data?.original_ask_price,
                                                       roomDetails
                                                     );
-                                                    OfferPaymentChat();
+                                                    OfferPaymentChat(data?.original_ask_price, offer_value);
                                                   }}
                                                   className="usr_upld_opts cont_opts"
                                                 >
