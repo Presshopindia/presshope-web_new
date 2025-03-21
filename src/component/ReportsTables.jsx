@@ -342,7 +342,7 @@ const Tasktables = () => {
                               <th className="">Broadcasted tasks</th>
                               <th>Period</th>
                               <th>Number of tasks</th>
-                              <th>Funds Invested</th>
+                              <th>Funds invested</th>
                               <th>Trend</th>
                             </tr>
                           </thead>
@@ -445,7 +445,7 @@ const Tasktables = () => {
                               <th className="">Broadcasted tasks</th>
                               <th>Period</th>
                               <th>Number of tasks</th>
-                              <th>Funds Invested</th>
+                              <th>Funds invested</th>
                               <th>Trend</th>
                             </tr>
                           </thead>

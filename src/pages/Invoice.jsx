@@ -526,12 +526,17 @@ const Invoice = () => {
             </Col>
           </Row>
           <div className="download-invoice-container">
-            <Button
-              className="theme-btn custom-ab mb-4 mt-2 sm_btn download-invoice-btn"
-              onClick={handleInvoiveDownload}
-            >
-              Download Invoice
-            </Button>
+            <div className="dash-tabs-wrap text-end col-md-12">
+              <div className="">
+                <Button
+                  className="theme-btn custom-ab mb-4 mt-2 sm_btn download-invoice-btn"
+                  onClick={handleInvoiveDownload}
+                >
+                  Download Invoice
+                </Button>
+              </div>
+            </div>
+
           </div>
           <div className="mt-0">
             <TopSearchesTipsCard />

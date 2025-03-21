@@ -376,7 +376,7 @@ const Contenttables = () => {
                               <th className="">Broadcasted tasks</th>
                               <th>Period</th>
                               <th>Number of tasks</th>
-                              <th>Funds Invested</th>
+                              <th>Funds invested</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -1616,7 +1616,7 @@ const Contenttables = () => {
                                       )}</td>
                                     }
                                     <td>
-                                    £{formatAmountInMillion(
+                                      £{formatAmountInMillion(
                                         +curr?.amount
                                       )}
                                     </td>
@@ -1626,13 +1626,13 @@ const Contenttables = () => {
                           </tbody>
                         </table>
                         {content_count?.sourced_content_from_tasks?.task?.length > 0 && (
-                            <PaginationComp
-                              totalPage={Math.ceil(content_count?.sourced_content_from_tasks?.count / 4)}
-                              path="content-tables/content_sourced_from_task"
-                              setPage={setPage}
-                              page={page}
-                            />
-                          )}
+                          <PaginationComp
+                            totalPage={Math.ceil(content_count?.sourced_content_from_tasks?.count / 4)}
+                            path="content-tables/content_sourced_from_task"
+                            setPage={setPage}
+                            page={page}
+                          />
+                        )}
                       </div>
                     </div>
                   </Card>
