@@ -405,7 +405,7 @@ const Tasktables = () => {
                         </table>
                         {taskDetails?.live_tasks_details?.task?.length > 0 && (
                           <PaginationComp
-                            totalPage={Math.ceil(taskDetails?.live_tasks_details?.count/4)}
+                            totalPage={Math.ceil(taskDetails?.live_tasks_details?.count / 4)}
                             path="task-tables/liveTasks"
                             setPage={setPage}
                             page={page}
@@ -438,7 +438,7 @@ const Tasktables = () => {
                               <th className="">Broadcasted tasks</th>
                               <th>Period</th>
                               <th>Number of tasks</th>
-                              <th>Funds Invested</th>
+                              <th>Funds invested</th>
                             </tr>
                           </thead>
                           <tbody>

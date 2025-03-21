@@ -452,18 +452,18 @@ const AccountsReports = () => {
               className="mb-3"
             >
               <Tab eventKey="tasks" title="Content purchased summary">
-              <Link to={"/reports-tables-content/content_purchased_summary"}>
-                <ReactApexChart options={chartData.options} series={chartData.series} type="bar" height={350} />
+                <Link to={"/reports-tables-content/content_purchased_summary"}>
+                  <ReactApexChart options={chartData.options} series={chartData.series} type="bar" height={350} />
                 </Link>
-             
+
               </Tab>
               <Tab eventKey="content" title="Content sourced summary">
                 <ReactApexChart options={chartData2.options} series={chartData2.series} type="bar" height={350} />
               </Tab>
-              <Tab eventKey="funds" title="Funds Invested summary">
-              <Link to={"/reports-tables-content/fund_invested_summary"}>
-               
-                <ReactApexChart options={chartData3.options} series={chartData3.series} type="bar" height={350} />
+              <Tab eventKey="funds" title="Funds invested summary">
+                <Link to={"/reports-tables-content/fund_invested_summary"}>
+
+                  <ReactApexChart options={chartData3.options} series={chartData3.series} type="bar" height={350} />
                 </Link>
               </Tab>
             </Tabs>

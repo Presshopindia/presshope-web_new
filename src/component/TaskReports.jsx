@@ -633,7 +633,7 @@ const TaskReports = ({
         {/* 3 Task Chart */}
         <div className="taskstat_chart chrts">
           <Row>
-            <Col md={7}>
+            <Col md={7} className="for-min60">
               <div className="contentChartsWrap">
                 <Row>
                   <Col md={6}>
@@ -866,7 +866,7 @@ const TaskReports = ({
                 </Row>
               </div>
             </Col>
-            <Col md={5}>
+            <Col md={5} className="for-min39">
               <div className="typeContentsWrap bg-grey h-100">
                 <Tabs
                   defaultActiveKey="purchased"
@@ -1012,7 +1012,7 @@ const TaskReports = ({
                     options={taskSummary.options}
                     series={taskSummary.series}
                     type="bar"
-                    height={350}
+                    height={365}
                   />
                 </Link>
               </Tab>
@@ -1035,7 +1035,7 @@ const TaskReports = ({
                     options={contentsourced.options}
                     series={contentsourced.series}
                     type="bar"
-                    height={350}
+                    height={365}
                   />
                 </Link>
               </Tab>
@@ -1055,7 +1055,7 @@ const TaskReports = ({
                     options={fundInvested.options}
                     series={fundInvested.series}
                     type="bar"
-                    height={350}
+                    height={365}
                   />
                 </Link>
               </Tab>

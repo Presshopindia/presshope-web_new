@@ -347,6 +347,26 @@ nav {
   }
 }
 
+.download-invoice-container .download-invoice-btn {
+  padding: 11px !important;
+  border-radius: 15px !important;
+  font-size: 20px !important;
+  height: auto;
+
+}
+
+@media (min-width: 768px) {
+  .col-md-5.for-min39 {
+
+    width: 39.9%;
+  }
+
+  .col-md-7.for-min60 {
+
+    width: 60.1%;
+  }
+}
+
 .trending-search {
   margin-top: 20px;
   background-color: $white;
@@ -5977,8 +5997,9 @@ input[type="number"] {
 }
 
 .cntnt-img {
-  width: 58px;
-  height: 58px;
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
   object-fit: cover;
 }
 
@@ -6590,9 +6611,11 @@ input[type="number"] {
     flex-direction: row-reverse;
     height: 40px;
   }
+
   .task_noti_color {
     color: #ec4e54;
   }
+
   .placeholder_icons svg {
     top: 14px;
   }

@@ -893,7 +893,7 @@ const Dashboard = () => {
           <div className="mt-4">
             <div className="topSearches_tipsCard">
               <Row>
-                <Col lg={12} className="p-0">
+                <Col lg={12} className="">
                   <Card className="dash-top-cards listing trending-search mt-0 mr-0 p-0">
                     <CardContent className="dash-c-body rev">
                       <div className="mb-3">

@@ -774,7 +774,7 @@ const ContentReports = ({
         </Row>
         <div className="taskstat_chart chrts">
           <Row>
-            <Col md={7}>
+            <Col md={7} className="for-min60">
               <div className="contentChartsWrap">
                 <Row>
                   <Col md={6}>
@@ -924,7 +924,7 @@ const ContentReports = ({
                             options={contentSplit}
                             series={contentSplit.series}
                             type="pie"
-                            width="350"
+                            width="365"
                           />
                         </Link>
                       </div>
@@ -974,7 +974,7 @@ const ContentReports = ({
                             options={contentLocation}
                             series={contentLocation.series}
                             type="pie"
-                            width="350"
+                            width="365"
                           />
                         </Link>
                       </div>
@@ -983,7 +983,7 @@ const ContentReports = ({
                 </Row>
               </div>
             </Col>
-            <Col md={5}>
+            <Col md={5} className="for-min39">
               <div className="typeContentsWrap bg-grey h-100">
                 <Tabs
                   defaultActiveKey="purchased"
@@ -1236,7 +1236,7 @@ const ContentReports = ({
                     options={contentSummary.options}
                     series={contentSummary.series}
                     type="bar"
-                    height={350}
+                    height={365}
                   />
                 </Link>
               </Tab>
@@ -1250,12 +1250,12 @@ const ContentReports = ({
                     options={contentsourced.options}
                     series={contentsourced.series}
                     type="bar"
-                    height={350}
+                    height={365}
                   />
                 </Link>
               </Tab> */}
 
-              <Tab eventKey="funds" title="Funds Invested summary">
+              <Tab eventKey="funds" title="Funds invested summary">
                 <Link to={"/reports-tables-content/fund_invested_summary"}>
                   <img src={taskIcon} alt="" className="tbles_icn" />
                 </Link>
@@ -1264,7 +1264,7 @@ const ContentReports = ({
                     options={fundInvested.options}
                     series={fundInvested.series}
                     type="bar"
-                    height={350}
+                    height={365}
                   />
                 </Link>
               </Tab>

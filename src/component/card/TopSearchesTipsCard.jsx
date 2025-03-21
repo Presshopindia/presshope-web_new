@@ -3,7 +3,7 @@ import { Card, CardContent } from "@mui/material";
 import { Row, Col } from "react-bootstrap";
 import { Get } from "../../services/user.services";
 import { Link } from "react-router-dom";
-import {capitalizeWord} from "../commonFunction"
+import { capitalizeWord } from "../commonFunction"
 
 function TopSearchesTipsCard(props) {
   const [content_count, setContent_count] = useState([]);
@@ -27,7 +27,7 @@ function TopSearchesTipsCard(props) {
     <>
       <div className="topSearches_tipsCard">
         <Row>
-          <Col lg={12} className="p-0">
+          <Col lg={12} className="">
             <Card className="dash-top-cards listing trending-search mt-0 mr-0 p-0">
               <CardContent className="dash-c-body rev">
                 <div className="mb-3">
@@ -38,7 +38,7 @@ function TopSearchesTipsCard(props) {
                     {content_count.length &&
                       content_count
                         .filter((el) => el._id !== "")
-                        .slice(0,7)
+                        .slice(0, 7)
                         .map((curr) => {
                           return (
                             <span key={curr._id}>

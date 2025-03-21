@@ -45,7 +45,7 @@ const DashBoardN = () => {
                   <DashBoardCard cardhead={"8"} ccontent={"Content under negotiation"} imgs={imgs} img1={img1} img2={img2} />
                 </Col>
                 <Col md={4} className="mb-0 p-0 w-fit">
-                  <DashBoardCard cardhead={"7"} ccontent={"Favourite content"} imgs={imgs} img1={img1} img2={img2} />
+                  <DashBoardCard cardhead={"7"} ccontent={"Favourited content"} imgs={imgs} img1={img1} img2={img2} />
                 </Col>
                 <Col md={4} className="mb-0 p-0 w-fit">
                   <DashBoardCard cardhead={"198"} ccontent={"Total purchases"} imgs={imgs} img1={img1} img2={img2} />
