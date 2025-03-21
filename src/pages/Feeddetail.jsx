@@ -3573,7 +3573,7 @@ const Feeddetail = (props) => {
         message_type: "Offered",
         image_id: contentId,
         sender_id: mediahouseId,
-        amount: hopperAmountWithoutMarkup
+        amount: `${hopperAmountWithoutMarkup}`
       };
       await Post("mediahouse/create-offer-payment-chat", payload);
     }
