@@ -584,6 +584,8 @@ const Contenttables = () => {
                         mb="10px"
                       >
                         <Typography className="tbl_hdng">
+                          Funds invested today
+
                           {param.type === "fund_invested_today" ? "Funds invested" : "Content purchased online"} today
                         </Typography>
                         <div className="tbl_rt sorting_wrap d-flex align-items-center">

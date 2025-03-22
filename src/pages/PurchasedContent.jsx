@@ -80,9 +80,10 @@ const Purchasedcontent = () => {
     PurchasedContent(type.type);
   }, [purchaseContent.filter.active, purchaseContent.sort.active, page]);
 
+
    const handleBasket = ()=>{
     PurchasedContent(type.type);
-   }
+  }
   const handleFavourite = (index) => {
     setPurchaseContent((prev) => {
       const updatedData = { ...prev };
@@ -183,7 +184,7 @@ const Purchasedcontent = () => {
                 <div className="feedsContainer feedpurchaseContent mb-0">
                   <div className="feedContent_header">
                     <h1>
-                      Purchased Content | {capitalizeFirstLetter(type.type)}
+                      Purchased content | {capitalizeFirstLetter(type.type)}
                     </h1>
                   </div>
                   {
@@ -277,7 +278,7 @@ const Purchasedcontent = () => {
             <PaginationComp
               totalPage={totalPage}
               // path="Favourited-Content"
-              path={`purchased-content/${type?.type}`} 
+              path={`purchased-content/${type?.type}`}
               type="fav"
               setPage={setPage}
               page={page}

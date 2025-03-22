@@ -453,7 +453,7 @@ const ManageUsers = () => {
                                         visibility1 ? <BsEye onClick={() => setVisibility1(false)} /> : <BsEyeSlash onClick={() => setVisibility1(true)} />
                                       }
                                     </div>
-                                  {errorMessage && (
+                                    {errorMessage && (
                                       <span className="errorInput">
                                         {errorMessage}
                                       </span>
@@ -629,20 +629,20 @@ const ManageUsers = () => {
                                       Select office
                                     </MenuItem>
                                     {officeNames?.map((value, index) => {
-                                        return (
-                                          <MenuItem
-                                            key={value?._id}
-                                            onClick={() => {
-                                              Profile(index);
-                                              getUsersOfOffice(value?._id)
-                                              setGetUserProfile(null)
-                                            }}
-                                            value={value._id}
-                                          >
-                                            {value.name}
-                                          </MenuItem>
-                                        );
-                                      })}
+                                      return (
+                                        <MenuItem
+                                          key={value?._id}
+                                          onClick={() => {
+                                            Profile(index);
+                                            getUsersOfOffice(value?._id)
+                                            setGetUserProfile(null)
+                                          }}
+                                          value={value._id}
+                                        >
+                                          {value.name}
+                                        </MenuItem>
+                                      );
+                                    })}
                                   </Select>
                                 </Form.Group>
                               </Col>
@@ -779,12 +779,13 @@ const ManageUsers = () => {
                                                 </td>
                                                 <td className="text-center">
                                                   <FormControlLabel
+                                                    style={{ fontSize: "13px" }}
                                                     className="check_label"
                                                     checked={el?.is_deleted}
                                                     onChange={(e) => handleUpdateUsers("is_deleted", e.target.checked, i, "delete")}
                                                     control={<Checkbox />}
                                                     name=""
-                                                    label={el?.is_deleted ? "Blocked" : "Unblocked"}
+                                                    label={el?.is_deleted ? "Blocked" : "Active"}
                                                   />
                                                 </td>
                                               </tr>)

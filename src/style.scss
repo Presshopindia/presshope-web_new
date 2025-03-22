@@ -6605,6 +6605,13 @@ input[type="number"] {
   margin-bottom: 20px !important;
 }
 
+table.common_table.vat_dtls label .MuiTypography-root {
+
+  font-size: 13px !important;
+  white-space: nowrap;
+  line-height: 25px;
+}
+
 // 16 may start
 .add_tsk_frm {
   .tsk_time_inp .MuiInputBase-root {
@@ -6614,6 +6621,8 @@ input[type="number"] {
 
   .task_noti_color {
     color: #ec4e54;
+    font-size: 12px;
+    font-weight: 600;
   }
 
   .placeholder_icons svg {

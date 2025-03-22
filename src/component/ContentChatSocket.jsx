@@ -193,10 +193,10 @@ function ContentChatSocket(props) {
               </h6>
 
               <div className="crd chatting_itm sngl_cht d-flex align-items-start">
-                <div className="img">
+                <div className="img" style={{ width: '50px' }}>
                   <img src={presshopchatic} alt="User" className="usr_img" />
                 </div>
-                <div className="cht_txt postedcmnt_info">
+                <div className="cht_txt postedcmnt_info" style={{ width: 'calc(100% - 50px)' }}>
                   <h5>
                     {"PressHop"}
                     <span className="text-secondary time">
@@ -221,16 +221,16 @@ function ContentChatSocket(props) {
                   console.log("all message current type---->---->", curr);
                   return curr?.message_type === "offer_started" ? (
                     <div className="crd chatting_itm sngl_cht d-flex align-items-start">
-                      <div className="img">
+                      <div className="img" style={{ width: '50px' }}>
                         <img
                           src={presshopchatic}
                           alt="User"
                           className="usr_img"
                         />
                       </div>
-                      <div className="cht_txt postedcmnt_info">
+                      <div className="cht_txt postedcmnt_info" style={{ width: 'calc(100% - 50px)' }}>
                         <h5>
-                        PressHop
+                          PressHop
                           <span className="text-secondary time">
                             {moment(curr?.createdAt).format(
                               "h:mm A, D MMM YYYY"
@@ -261,15 +261,14 @@ function ContentChatSocket(props) {
                             }
                             placeholder={
                               props?.messages?.length > 1
-                                ? `£${
-                                    props?.messages?.find(
-                                      (el) =>
-                                        el?.message_type ==
-                                          "accept_mediaHouse_offer" ||
-                                        el?.message_type ==
-                                          "decline_mediaHouse_offer"
-                                    )?.amount
-                                  }`
+                                ? `£${props?.messages?.find(
+                                  (el) =>
+                                    el?.message_type ==
+                                    "accept_mediaHouse_offer" ||
+                                    el?.message_type ==
+                                    "decline_mediaHouse_offer"
+                                )?.amount
+                                }`
                                 : "Enter price here ..."
                             }
                             onChange={(e) => {
@@ -317,7 +316,7 @@ function ContentChatSocket(props) {
                               props?.data
                                 ? props?.data?.hopper_id?.avatar_id?.avatar
                                   ? process.env.REACT_APP_AVATAR_IMAGE +
-                                    props?.data?.hopper_id?.avatar_id?.avatar
+                                  props?.data?.hopper_id?.avatar_id?.avatar
                                   : null
                                 : null
                             }
@@ -398,7 +397,7 @@ function ContentChatSocket(props) {
                               props?.data
                                 ? props?.data?.hopper_id?.avatar_id?.avatar
                                   ? process.env.REACT_APP_AVATAR_IMAGE +
-                                    props?.data?.hopper_id?.avatar_id?.avatar
+                                  props?.data?.hopper_id?.avatar_id?.avatar
                                   : null
                                 : null
                             }
@@ -436,7 +435,7 @@ function ContentChatSocket(props) {
                           </div>
                           <div className="cht_txt postedcmnt_info">
                             <h5>
-                            PressHop
+                              PressHop
                               <span className="text-secondary time">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -501,7 +500,7 @@ function ContentChatSocket(props) {
                         <div className="cht_txt postedcmnt_info">
                           <div className="d-flex align-items-center msg-worries">
                             <h5 className="usr_name mb-0">
-                            PressHop
+                              PressHop
                               <span className="text-secondary time">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -541,7 +540,7 @@ function ContentChatSocket(props) {
                         <div className="cht_txt postedcmnt_info">
                           <div className="d-flex align-items-center msg-worries">
                             <h5 className="usr_name mb-0">
-                            PressHop
+                              PressHop
                               <span className="text-secondary time">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -587,7 +586,7 @@ function ContentChatSocket(props) {
                         <div className="cht_txt postedcmnt_info rating-update">
                           <div className="d-flex align-items-center msg-worries">
                             <h5 className="usr_name mb-0">
-                            PressHop
+                              PressHop
                               <span className="text-secondary time">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -630,7 +629,7 @@ function ContentChatSocket(props) {
                                         "rating_by_mediahouse"
                                     )
                                     ?.features?.includes("Experience") ||
-                                  features.includes("Experience")
+                                    features.includes("Experience")
                                     ? "selected clickable"
                                     : "clickable"
                                 }
@@ -647,7 +646,7 @@ function ContentChatSocket(props) {
                                         "rating_by_mediahouse"
                                     )
                                     ?.features?.includes("Easy to use") ||
-                                  features.includes("Easy to use")
+                                    features.includes("Easy to use")
                                     ? "selected clickable"
                                     : "clickable"
                                 }
@@ -668,7 +667,7 @@ function ContentChatSocket(props) {
                                     ?.features?.includes(
                                       "Connectivity with Hoppers"
                                     ) ||
-                                  features.includes("Connectivity with Hoppers")
+                                    features.includes("Connectivity with Hoppers")
                                     ? "selected clickable"
                                     : "clickable"
                                 }
@@ -685,7 +684,7 @@ function ContentChatSocket(props) {
                                         "rating_by_mediahouse"
                                     )
                                     ?.features?.includes("Pricing") ||
-                                  features.includes("Pricing")
+                                    features.includes("Pricing")
                                     ? "selected clickable"
                                     : "clickable"
                                 }
@@ -702,7 +701,7 @@ function ContentChatSocket(props) {
                                         "rating_by_mediahouse"
                                     )
                                     ?.features?.includes("Secure payment") ||
-                                  features.includes("Secure payment")
+                                    features.includes("Secure payment")
                                     ? "selected clickable"
                                     : "clickable"
                                 }
@@ -719,7 +718,7 @@ function ContentChatSocket(props) {
                                         "rating_by_mediahouse"
                                     )
                                     ?.features?.includes("Support") ||
-                                  features.includes("Support")
+                                    features.includes("Support")
                                     ? "selected clickable"
                                     : "clickable"
                                 }
@@ -823,7 +822,7 @@ function ContentChatSocket(props) {
                       <div className="cht_txt postedcmnt_info">
                         <div className="d-flex align-items-center msg-worries">
                           <h5 className="usr_name mb-0">
-                          PressHop
+                            PressHop
                             <span className="text-secondary time">
                               {moment(curr?.createdAt).format(
                                 "h:mm A, D MMM YYYY"
