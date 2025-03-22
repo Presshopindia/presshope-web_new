@@ -178,7 +178,7 @@ const DashboardTables = () => {
               res?.data?.broad_casted_tasks_details?.count / contentOnlineLimit
             )
           );
-        } else if (param?.type == "fund_invested") {
+        } else if (param?.type == "fund_invested" || param?.type === "content_average_price") {
           setContentOnlineTotalPage(
             Math.ceil(
               res?.data?.total_fund_invested?.count / contentOnlineLimit
@@ -316,7 +316,7 @@ const DashboardTables = () => {
                 </Link>
               </div>
               <div className="tbl_wrap_cmn">
-                {param.type === "fund_invested" ? (
+                {param.type === "fund_invested" || param?.type === "content_average_price" ? (
                   <Card className="tbl_crd">
                     <div className="">
                       <div
@@ -325,7 +325,9 @@ const DashboardTables = () => {
                         mb="10px"
                       >
                         <Typography className="tbl_hdng">
-                          Total funds invested
+                          {
+                            param?.type === "content_average_price" ? "Content average price" : "Total funds invested"
+                          }
                         </Typography>
                         <div className="tbl_rt sorting_wrap d-flex align-items-center">
                           <div className="feedSorting me-4">
@@ -349,31 +351,10 @@ const DashboardTables = () => {
                                   }
                                   setAllFilterData={setAllFilterData}
                                   allFilterData={allFilterData}
-                                // feedMultiFilter={handleMultiFilter}
                                 />
                               )}
                             </div>
                           </div>
-                          {/* <div className="fltrs_prnt">
-                            <Button
-                              className="sort_btn"
-                              onClick={() => {
-                                setOpenFundsInevested(true);
-                              }}
-                            >
-                              Sort
-                              <BsChevronDown />
-                            </Button>
-                            {openFundsInvested && (
-                              <Fundsinvested
-                                active={activeState}
-                                setActive={setActiveState}
-                                rangeTimeValues={fundsTimeValuesHandler}
-                                closeSortComponent={handleCloseFundsInvested}
-                              />
-                            )}
-                          </div> */}
-
                           <div className="feedSorting">
                             <div className="fltrs_prnt top_fltr">
                               <p className="lbl_fltr">Sort</p>
@@ -417,187 +398,210 @@ const DashboardTables = () => {
                               <th className="tbl_icn_th catgr">Category</th>
                               <th className="tsk_dlts">Location</th>
                               <th>Published by</th>
-                              <th>Nett price paid</th>
-                              <th>VAT paid</th>
-                              <th>Total funds invested</th>
+                              {
+                                param?.type === "content_average_price" && (
+                                  <>
+                                    <th>Average price</th>
+                                    <th>Amount paid (ex VAT)</th>
+                                  </>
+                                )
+                              }
+                              {
+                                param?.type !== "content_average_price" && (
+                                  <>
+                                    <th>Nett price paid</th>
+                                    <th>VAT paid</th>
+                                    <th>Total funds invested</th>
+                                  </>
+                                )
+                              }
                             </tr>
                           </thead>
                           <tbody>
-                            {contentOnline &&
-                              contentOnline?.task.map((curr, index) => {
-                                const media_house_id = curr?.media_house_id;
+                            {contentOnline?.task.map((curr, index) => {
+                              const contentArray = curr?.contentDetails?.content;
+                              const audio =
+                                contentArray?.filter(
+                                  (item) => item.media_type === "audio"
+                                ) || [];
+                              const video =
+                                contentArray?.filter(
+                                  (item) => item.media_type === "video"
+                                ) || [];
+                              const image =
+                                contentArray?.filter(
+                                  (item) => item.media_type === "image"
+                                ) || [];
+                              const Doc =
+                                contentArray?.filter(
+                                  (item) => item.media_type === "pdf" || "doc"
+                                ) || [];
 
-                                const contentArray = curr?.contentDetails?.content;
-                                const audio =
-                                  contentArray?.filter(
-                                    (item) => item.media_type === "audio"
-                                  ) || [];
-                                const video =
-                                  contentArray?.filter(
-                                    (item) => item.media_type === "video"
-                                  ) || [];
-                                const image =
-                                  contentArray?.filter(
-                                    (item) => item.media_type === "image"
-                                  ) || [];
-                                const Doc =
-                                  contentArray?.filter(
-                                    (item) => item.media_type === "pdf" || "doc"
-                                  ) || [];
-
-                                const contentSource =
-                                  curr?.contentDetails && curr.contentDetails.content[0]
-                                    ? curr.contentDetails.content[0].media_type ===
-                                      "video"
-                                      ? process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.contentDetails?.content?.[0]
-                                        ?.thumbnail
+                              const contentSource =
+                                curr?.contentDetails && curr.contentDetails.content[0]
+                                  ? curr.contentDetails.content[0].media_type ===
+                                    "video"
+                                    ? process.env.REACT_APP_CONTENT_MEDIA +
+                                    curr?.contentDetails?.content?.[0]
+                                      ?.thumbnail
+                                    : curr.contentDetails.content[0]
+                                      .media_type === "audio"
+                                      ? audimgsm
                                       : curr.contentDetails.content[0]
-                                        .media_type === "audio"
-                                        ? audimgsm
+                                        .media_type === "image"
+                                        ? curr.contentDetails.content[0].watermark ||
+                                        process.env.REACT_APP_CONTENT_MEDIA +
+                                        curr.contentDetails.content[0].media
                                         : curr.contentDetails.content[0]
-                                          .media_type === "image"
-                                          ? curr.contentDetails.content[0].watermark ||
-                                          process.env.REACT_APP_CONTENT_MEDIA +
-                                          curr.contentDetails.content[0].media
-                                          : curr.contentDetails.content[0]
-                                            .media_type === "doc"
-                                            ? docsic
-                                            : null
-                                    : null;
+                                          .media_type === "doc"
+                                          ? docsic
+                                          : null
+                                  : null;
 
-                                return (
-                                  <tr
-                                    className="clickable"
-                                    onClick={() =>
-                                      navigate(
-                                        `/purchased-content-detail/${curr?._id}?page=${contentOnlinePage}`
-                                      )
-                                    }
-                                  >
-                                    <td className="content_img_td position-relative add-icons-box">
-                                      <Link>
-                                        <div className="tbl_cont_wrp cnt_online_img noGrid">
+                              return (
+                                <tr
+                                  className="clickable"
+                                  onClick={() =>
+                                    navigate(
+                                      `/purchased-content-detail/${curr?._id}?page=${contentOnlinePage}`
+                                    )
+                                  }
+                                >
+                                  <td className="content_img_td position-relative add-icons-box">
+                                    <Link>
+                                      <div className="tbl_cont_wrp cnt_online_img noGrid">
+                                        <img
+                                          src={contentSource}
+                                          className="content_img"
+                                        />
+                                      </div>
+                                      <div className="tableContentTypeIcons">
+                                        {/* 1 */}
+                                      </div>
+                                    </Link>
+                                  </td>
+
+                                  <td className="timedate_wrap">
+                                    <p className="timedate">
+                                      <img
+                                        src={watchic}
+                                        className="icn_time"
+                                      />
+                                      {moment(
+                                        // curr?.content_id?.purchasedTime
+                                        curr?.createdAt
+                                      ).format(`hh:mm A`)}
+                                    </p>
+                                    <p className="timedate">
+                                      <img
+                                        src={calendar}
+                                        className="icn_time"
+                                      />
+                                      {moment(
+                                        // curr?.content_id?.curr?.updatedAt
+                                        curr?.createdAt
+                                      ).format(`DD MMM YYYY`)}
+                                    </p>
+                                  </td>
+
+                                  <td className="description_td">
+                                    <p className="desc_ht">
+                                      {curr?.contentDetails?.heading}
+                                    </p>
+                                  </td>
+
+                                  <td className="text-center">
+                                    <div className=" d-flex flex-column gap-2">
+                                      {image.length > 0 && (
+                                        <Tooltip title="Photo">
                                           <img
-                                            src={contentSource}
-                                            className="content_img"
+                                            src={cameraic}
+                                            alt="Photo"
+                                            className="icn m-auto"
+                                          />{" "}
+                                        </Tooltip>
+                                      )}
+                                      {video.length > 0 && (
+                                        <Tooltip title="Video">
+                                          <img
+                                            src={videoic}
+                                            alt="Video"
+                                            className="icn m-auto"
                                           />
-                                        </div>
-                                        <div className="tableContentTypeIcons">
-                                          {/* 1 */}
-                                        </div>
-                                      </Link>
-                                    </td>
+                                        </Tooltip>
+                                      )}
+                                      {audio.length > 0 && (
+                                        <Tooltip title="Audio">
+                                          <img
+                                            src={interviewic}
+                                            alt="Audio"
+                                            className="icn m-auto"
+                                          />
+                                        </Tooltip>
+                                      )}
+                                    </div>
+                                  </td>
+                                  <td className="text-center">
+                                    <Tooltip title={curr?.payment_content_type === "shared" ? "Shared" : "Exclusive"}>
+                                      <img
+                                        src={curr?.payment_content_type === "shared" ? sharedic : exclusiveic}
+                                        alt={curr?.payment_content_type === "shared" ? "Shared" : "Exclusive"}
+                                        className="icn"
+                                      />
+                                    </Tooltip>
+                                  </td>
+                                  <td className="text-center">
+                                    <Tooltip title={curr?.contentDetails?.categoryDetails?.name}>
+                                      <img
+                                        src={curr?.contentDetails?.categoryDetails?.icon}
+                                        alt={curr?.contentDetails?.categoryDetails?.name}
+                                        className="icn"
+                                      />
+                                    </Tooltip>
+                                  </td>
 
-                                    <td className="timedate_wrap">
-                                      <p className="timedate">
-                                        <img
-                                          src={watchic}
-                                          className="icn_time"
-                                        />
-                                        {moment(
-                                          // curr?.content_id?.purchasedTime
-                                          curr?.createdAt
-                                        ).format(`hh:mm A`)}
+                                  <td>{curr?.contentDetails?.location}</td>
+                                  <td>
+                                    <div className="hpr_dt">
+                                      <img
+                                        src={
+                                          process.env.REACT_APP_AVATAR_IMAGE +
+                                          curr?.hopperDetails?.avatarDetails?.avatar
+                                        }
+                                        alt="Hopper"
+                                        className="big_img"
+                                      />
+                                      <p className="hpr_nme">
+                                        {curr?.hopperDetails?.user_name}
                                       </p>
-                                      <p className="timedate">
-                                        <img
-                                          src={calendar}
-                                          className="icn_time"
-                                        />
-                                        {moment(
-                                          // curr?.content_id?.curr?.updatedAt
-                                          curr?.createdAt
-                                        ).format(`DD MMM YYYY`)}
-                                      </p>
-                                    </td>
-
-                                    <td className="description_td">
-                                      <p className="desc_ht">
-                                        {curr?.contentDetails?.heading}
-                                      </p>
-                                    </td>
-
-                                    <td className="text-center">
-                                      <div className=" d-flex flex-column gap-2">
-                                        {image.length > 0 && (
-                                          <Tooltip title="Photo">
-                                            <img
-                                              src={cameraic}
-                                              alt="Photo"
-                                              className="icn m-auto"
-                                            />{" "}
-                                          </Tooltip>
-                                        )}
-                                        {video.length > 0 && (
-                                          <Tooltip title="Video">
-                                            <img
-                                              src={videoic}
-                                              alt="Video"
-                                              className="icn m-auto"
-                                            />
-                                          </Tooltip>
-                                        )}
-                                        {audio.length > 0 && (
-                                          <Tooltip title="Audio">
-                                            <img
-                                              src={interviewic}
-                                              alt="Audio"
-                                              className="icn m-auto"
-                                            />
-                                          </Tooltip>
-                                        )}
-                                      </div>
-                                    </td>
-                                    <td className="text-center">
-                                      <Tooltip title={curr?.payment_content_type === "shared" ? "Shared" : "Exclusive"}>
-                                        <img
-                                          src={curr?.payment_content_type === "shared" ? sharedic : exclusiveic}
-                                          alt={curr?.payment_content_type === "shared" ? "Shared" : "Exclusive"}
-                                          className="icn"
-                                        />
-                                      </Tooltip>
-                                    </td>
-                                    <td className="text-center">
-                                      <Tooltip title={curr?.contentDetails?.categoryDetails?.name}>
-                                        <img
-                                          src={curr?.contentDetails?.categoryDetails?.icon}
-                                          alt={curr?.contentDetails?.categoryDetails?.name}
-                                          className="icn"
-                                        />
-                                      </Tooltip>
-                                    </td>
-
-                                    <td>{curr?.contentDetails?.location}</td>
-                                    <td>
-                                      <div className="hpr_dt">
-                                        <img
-                                          src={
-                                            process.env.REACT_APP_AVATAR_IMAGE +
-                                            curr?.hopperDetails?.avatarDetails?.avatar
-                                          }
-                                          alt="Hopper"
-                                          className="big_img"
-                                        />
-                                        <p className="hpr_nme">
-                                          {curr?.hopperDetails?.user_name}
-                                        </p>
-                                      </div>
-                                    </td>
-                                    <td>£{formatAmountInMillion(curr?.amount - curr?.Vat)}</td>
-                                    {/* <td>£{vat=="NaN"?data?.Vat:vat}</td> */}
-                                    <td>£{formatAmountInMillion(curr?.Vat)}</td>
-
-                                    <td>£{formatAmountInMillion(curr?.amount)}</td>
-                                  </tr>
-                                );
-                              })}
+                                    </div>
+                                  </td>
+                                  {
+                                    param?.type === "content_average_price" && (
+                                      <>
+                                        <td>£{formatAmountInMillion(curr?.amount / curr?.contentDetails?.content?.length || 0)}</td>
+                                        <td>£{formatAmountInMillion(curr?.amount)}</td>
+                                      </>
+                                    )
+                                  }
+                                  {
+                                    param?.type !== "content_average_price" && (
+                                      <>
+                                        <td>£{formatAmountInMillion(curr?.amount)}</td>
+                                        <td>£{formatAmountInMillion(curr?.Vat)}</td>
+                                        <td>£{formatAmountInMillion(curr?.amount + curr?.Vat)}</td>
+                                      </>
+                                    )
+                                  }
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
                         {dataset?.length > 0 && (
                           <PaginationComp
                             totalPage={contentOnlineTotalPage}
-                            path="dashboard-tables/fund_invested"
+                            path={`dashboard-tables/${param?.type}`}
                             type="fav"
                             setPage={setContentOnlinePage}
                             page={contentOnlinePage}
@@ -1049,7 +1053,7 @@ const DashboardTables = () => {
                       >
                         <thead>
                           <tr>
-                            <th className="">Content purchased online</th>
+                            <th className="">Content</th>
                             <th>Time & date</th>
                             <th className="tsk_dlts">Heading</th>
                             <th className="tbl_icn_th">Type</th>
@@ -1058,196 +1062,188 @@ const DashboardTables = () => {
                             <th>Location</th>
                             <th>Purchased by</th>
                             <th>Published by</th>
-                            <th>
-                              Published price
-                              {/* (inc VAT) */}
-                            </th>
-                            <th>
-                              Amount paid
-                              {/* (inc VAT) */}
-                            </th>
+                            <th>Purchase price</th>
+                            <th>Amount paid</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {contentOnline &&
-                            contentOnline?.task.map((curr, index) => {
-                              const media_house_id = curr?.media_house_id;
+                          {contentOnline?.task.map((curr, index) => {
+                            const media_house_id = curr?.media_house_id;
 
-                              const contentArray = curr?.contentDetails?.content;
-                              const audio =
-                                contentArray?.filter(
-                                  (item) => item.media_type === "audio"
-                                ) || [];
-                              const video =
-                                contentArray?.filter(
-                                  (item) => item.media_type === "video"
-                                ) || [];
-                              const image =
-                                contentArray?.filter(
-                                  (item) => item.media_type === "image"
-                                ) || [];
-                              const Doc =
-                                contentArray?.filter(
-                                  (item) => item.media_type === "pdf" || "doc"
-                                ) || [];
+                            const contentArray = curr?.contentDetails?.content;
+                            const audio =
+                              contentArray?.filter(
+                                (item) => item.media_type === "audio"
+                              ) || [];
+                            const video =
+                              contentArray?.filter(
+                                (item) => item.media_type === "video"
+                              ) || [];
+                            const image =
+                              contentArray?.filter(
+                                (item) => item.media_type === "image"
+                              ) || [];
+                            const Doc =
+                              contentArray?.filter(
+                                (item) => item.media_type === "pdf" || "doc"
+                              ) || [];
 
-                              const contentSource =
-                                curr?.contentDetails && curr.contentDetails.content[0]
-                                  ? curr.contentDetails.content[0].media_type ===
-                                    "video"
-                                    ? process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.contentDetails?.content?.[0]
-                                      ?.thumbnail
+                            const contentSource =
+                              curr?.contentDetails && curr.contentDetails.content[0]
+                                ? curr.contentDetails.content[0].media_type ===
+                                  "video"
+                                  ? process.env.REACT_APP_CONTENT_MEDIA +
+                                  curr?.contentDetails?.content?.[0]
+                                    ?.thumbnail
+                                  : curr.contentDetails.content[0]
+                                    .media_type === "audio"
+                                    ? audimgsm
                                     : curr.contentDetails.content[0]
-                                      .media_type === "audio"
-                                      ? audimgsm
+                                      .media_type === "image"
+                                      ? curr.contentDetails.content[0].watermark ||
+                                      process.env.REACT_APP_CONTENT_MEDIA +
+                                      curr.contentDetails.content[0].media
                                       : curr.contentDetails.content[0]
-                                        .media_type === "image"
-                                        ? curr.contentDetails.content[0].watermark ||
-                                        process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr.contentDetails.content[0].media
-                                        : curr.contentDetails.content[0]
-                                          .media_type === "doc"
-                                          ? docsic
-                                          : null
-                                  : null;
+                                        .media_type === "doc"
+                                        ? docsic
+                                        : null
+                                : null;
 
-                              return (
-                                <tr
-                                  className="clickable"
-                                  onClick={() =>
-                                    navigate(
-                                      `/purchased-content-detail/${curr?._id}?page=${contentOnlinePage}`
-                                    )
-                                  }
-                                >
-                                  <td className="content_img_td position-relative add-icons-box">
-                                    <Link>
-                                      <div className="tbl_cont_wrp cnt_online_img noGrid">
+                            return (
+                              <tr
+                                className="clickable"
+                                onClick={() =>
+                                  navigate(
+                                    `/purchased-content-detail/${curr?._id}?page=${contentOnlinePage}`
+                                  )
+                                }
+                              >
+                                <td className="content_img_td position-relative add-icons-box">
+                                  <Link>
+                                    <div className="tbl_cont_wrp cnt_online_img noGrid">
+                                      <img
+                                        src={contentSource}
+                                        className="content_img"
+                                      />
+                                    </div>
+                                  </Link>
+                                </td>
+                                <td className="timedate_wrap">
+                                  <p className="timedate">
+                                    <img
+                                      src={watchic}
+                                      className="icn_time"
+                                    />
+                                    {moment(
+                                      // curr?.content_id?.purchasedTime
+                                      curr?.createdAt
+                                    ).format(`hh:mm A`)}
+                                  </p>
+                                  <p className="timedate">
+                                    <img
+                                      src={calendar}
+                                      className="icn_time"
+                                    />
+                                    {moment(
+                                      // curr?.content_id?.curr?.updatedAt
+                                      curr?.createdAt
+                                    ).format(`DD MMM YYYY`)}
+                                  </p>
+                                </td>
+                                <td className="description_td">
+                                  <p className="desc_ht">
+                                    {curr?.contentDetails?.heading}
+                                  </p>
+                                </td>
+                                <td className="text-center">
+                                  <div className=" d-flex flex-column gap-2">
+                                    {image.length > 0 && (
+                                      <Tooltip title="Photo">
                                         <img
-                                          src={contentSource}
-                                          className="content_img"
+                                          src={cameraic}
+                                          alt="Photo"
+                                          className="icn m-auto"
+                                        />{" "}
+                                      </Tooltip>
+                                    )}
+                                    {video.length > 0 && (
+                                      <Tooltip title="Video">
+                                        <img
+                                          src={videoic}
+                                          alt="Video"
+                                          className="icn m-auto"
                                         />
-                                      </div>
-                                    </Link>
-                                  </td>
-                                  <td className="timedate_wrap">
-                                    <p className="timedate">
-                                      <img
-                                        src={watchic}
-                                        className="icn_time"
-                                      />
-                                      {moment(
-                                        // curr?.content_id?.purchasedTime
-                                        curr?.createdAt
-                                      ).format(`hh:mm A`)}
-                                    </p>
-                                    <p className="timedate">
-                                      <img
-                                        src={calendar}
-                                        className="icn_time"
-                                      />
-                                      {moment(
-                                        // curr?.content_id?.curr?.updatedAt
-                                        curr?.createdAt
-                                      ).format(`DD MMM YYYY`)}
-                                    </p>
-                                  </td>
-                                  <td className="description_td">
-                                    <p className="desc_ht">
-                                      {curr?.contentDetails?.heading}
-                                    </p>
-                                  </td>
-                                  <td className="text-center">
-                                    <div className=" d-flex flex-column gap-2">
-                                      {image.length > 0 && (
-                                        <Tooltip title="Photo">
-                                          <img
-                                            src={cameraic}
-                                            alt="Photo"
-                                            className="icn m-auto"
-                                          />{" "}
-                                        </Tooltip>
-                                      )}
-                                      {video.length > 0 && (
-                                        <Tooltip title="Video">
-                                          <img
-                                            src={videoic}
-                                            alt="Video"
-                                            className="icn m-auto"
-                                          />
-                                        </Tooltip>
-                                      )}
-                                      {audio.length > 0 && (
-                                        <Tooltip title="Audio">
-                                          <img
-                                            src={interviewic}
-                                            alt="Audio"
-                                            className="icn m-auto"
-                                          />
-                                        </Tooltip>
-                                      )}
-                                    </div>
-                                  </td>
+                                      </Tooltip>
+                                    )}
+                                    {audio.length > 0 && (
+                                      <Tooltip title="Audio">
+                                        <img
+                                          src={interviewic}
+                                          alt="Audio"
+                                          className="icn m-auto"
+                                        />
+                                      </Tooltip>
+                                    )}
+                                  </div>
+                                </td>
 
-                                  <td className="text-center">
-                                    <Tooltip title={curr?.payment_content_type === "shared" ? "Shared" : "Exclusive"}>
-                                      <img
-                                        src={curr?.payment_content_type === "shared" ? sharedic : exclusiveic}
-                                        alt={curr?.payment_content_type === "shared" ? "Shared" : "Exclusive"}
-                                        className="icn"
-                                      />
-                                    </Tooltip>
-                                  </td>
-                                  <td className="text-center">
-                                    <Tooltip title={curr?.contentDetails?.categoryDetails?.name}>
-                                      <img
-                                        src={curr?.contentDetails?.categoryDetails?.icon}
-                                        alt={curr?.contentDetails?.categoryDetails?.name}
-                                        className="icn"
-                                      />
-                                    </Tooltip>
-                                  </td>
-                                  <td>{curr?.contentDetails?.location}</td>
-                                  <td>
-                                    <div className="hpr_dt">
-                                      <img
-                                        src={
-                                          curr?.purchasedUser?.profile_image
-                                        }
-                                        alt="Hopper"
-                                        className="big_img"
-                                      />
-                                      <p className="hpr_nme">
-                                        {curr?.purchasedUser?.full_name}
-                                      </p>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    <div className="hpr_dt">
-                                      <img
-                                        src={
-                                          process.env.REACT_APP_AVATAR_IMAGE +
-                                          curr?.hopperDetails?.avatarDetails?.avatar
-                                        }
-                                        alt="Hopper"
-                                        className="big_img"
-                                      />
-                                      <p className="hpr_nme">
-                                        {curr?.hopperDetails?.user_name}
-                                      </p>
-                                    </div>
-                                  </td>
-                                  <td>
-                                    {/* £{formatAmountInMillion((askingPrice + curr.Vat))} */}
-                                    £{formatAmountInMillion(curr?.contentDetails?.ask_price)}
-                                  </td>
-                                  <td>
-                                    £{formatAmountInMillion(curr?.amount)}
-                                  </td>
-                                </tr>
-                              );
-                            })}
+                                <td className="text-center">
+                                  <Tooltip title={curr?.payment_content_type === "shared" ? "Shared" : "Exclusive"}>
+                                    <img
+                                      src={curr?.payment_content_type === "shared" ? sharedic : exclusiveic}
+                                      alt={curr?.payment_content_type === "shared" ? "Shared" : "Exclusive"}
+                                      className="icn"
+                                    />
+                                  </Tooltip>
+                                </td>
+                                <td className="text-center">
+                                  <Tooltip title={curr?.contentDetails?.categoryDetails?.name}>
+                                    <img
+                                      src={curr?.contentDetails?.categoryDetails?.icon}
+                                      alt={curr?.contentDetails?.categoryDetails?.name}
+                                      className="icn"
+                                    />
+                                  </Tooltip>
+                                </td>
+                                <td>{curr?.contentDetails?.location}</td>
+                                <td>
+                                  <div className="hpr_dt">
+                                    <img
+                                      src={
+                                        curr?.purchasedUser?.profile_image
+                                      }
+                                      alt="Hopper"
+                                      className="big_img"
+                                    />
+                                    <p className="hpr_nme">
+                                      {curr?.purchasedUser?.full_name}
+                                    </p>
+                                  </div>
+                                </td>
+                                <td>
+                                  <div className="hpr_dt">
+                                    <img
+                                      src={
+                                        process.env.REACT_APP_AVATAR_IMAGE +
+                                        curr?.hopperDetails?.avatarDetails?.avatar
+                                      }
+                                      alt="Hopper"
+                                      className="big_img"
+                                    />
+                                    <p className="hpr_nme">
+                                      {curr?.hopperDetails?.user_name}
+                                    </p>
+                                  </div>
+                                </td>
+                                <td>
+                                  £{formatAmountInMillion(curr?.amount)}
+                                </td>
+                                <td>
+                                  £{formatAmountInMillion(curr?.amount + curr?.Vat)}
+                                </td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                       {contentOnline?.task?.length > 0 && (

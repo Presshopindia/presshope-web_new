@@ -442,7 +442,7 @@ const Invoice = () => {
                                               marginRight: "5px",
                                             }}
                                           >
-                                            {`£${formatAmountInMillion(data?.type === "content" ? data?.original_Vatamount + data?.original_ask_price : data?.amount)}`}
+                                            {`£${formatAmountInMillion(data?.amount || 0)}`}
                                           </p>
                                         </td>
                                       </tr>
@@ -459,11 +459,7 @@ const Invoice = () => {
                                       </span>
                                       <span>
                                         £
-                                        {formatAmountInMillion(
-                                          data?.amount -
-                                          (data?.Vat ||
-                                            data?.original_Vatamount)
-                                        )}
+                                        {formatAmountInMillion(data?.amount || 0)}
                                       </span>
                                     </div>
 
@@ -472,9 +468,7 @@ const Invoice = () => {
                                         {" "}
                                         <b>VAT @20%</b>{" "}
                                       </span>
-                                      <span>{`£${formatAmountInMillion(
-                                        data?.Vat || data?.original_Vatamount
-                                      )}`}</span>
+                                      <span>{`£${formatAmountInMillion(data?.Vat || 0)}`}</span>
                                     </div>
 
                                     <div className="sub-items amountBold">
@@ -482,9 +476,7 @@ const Invoice = () => {
                                         {" "}
                                         <b>Total</b>{" "}
                                       </span>
-                                      <span>{`£${formatAmountInMillion(
-                                        data?.amount
-                                      )}`}</span>
+                                      <span>{`£${formatAmountInMillion((data?.amount + data?.Vat) || 0)}`}</span>
                                     </div>
 
                                     <div className="sub-items">
@@ -493,9 +485,7 @@ const Invoice = () => {
                                         <b>Paid</b>{" "}
                                       </span>
 
-                                      <span>{`£${formatAmountInMillion(
-                                        data?.amount
-                                      )}`}</span>
+                                      <span>{`£${formatAmountInMillion((data?.amount + data?.Vat) || 0)}`}</span>
                                       {/* <span>£118</span> */}
                                     </div>
 

@@ -253,11 +253,8 @@ const ContentReports = ({
   const PurchasedContent = async () => {
     setLoading(true);
     try {
-      const resp = await Get(
-        `mediaHouse/publish/content?is_sold=true&limit=9&${sortFilterPurchasedContent?.sortField}=${sortFilterPurchasedContent?.sortValue}&favContent=${sortFilterPurchasedContent?.favContent}&category=${sortFilterPurchasedContent?.category}&type=${sortFilterPurchasedContent?.type}`
-      );
-
-      setPurcahsedContent(resp.data.content);
+      const resp = await Get(`mediaHouse/purchasedContents?limit=9`);
+      setPurcahsedContent(resp.data.data);
       setOpenReportPurchased(false);
       if (resp) {
         setLoading(false);
@@ -699,7 +696,7 @@ const ContentReports = ({
               showSort={false}
               type="content_purchased_online_today"
               title="Content purchased online today"
-              path="/reports-tables-content/content_purchased_online_today"
+              path="/content-tables/content_purchased_online_today"
               trend={dashboardData?.purchasedOnlineToday?.trend}
               total={dashboardData?.purchasedOnlineToday?.totalCount}
             />
@@ -728,7 +725,7 @@ const ContentReports = ({
             <DashboardCardInfo
               type="content_average_price"
               title="Content average price"
-              path="/reports-tables-content/content_avg_price"
+              path="/dashboard-tables/content_average_price"
               trend={dashboardData?.contentAveragePrice?.trend}
               total={"£" + formatAmountInMillion(dashboardData?.contentAveragePrice?.contentAveragePrice || 0)}
               dashboardSort={dashboardSort}
@@ -747,20 +744,20 @@ const ContentReports = ({
               showSort={false}
               title="Funds invested today"
               type="total_fund_invested_today"
-              path="/reports-tables-content/fund_invested_today"
+              path="/content-tables/fund_invested_today"
               trend={dashboardData?.totalFundInvestedToday?.trend}
-              total={"£" + formatAmountInMillion(dashboardData?.totalFundInvestedToday?.totalAmount || 0)}
+              total={"£" + formatAmountInMillion(dashboardData?.totalFundInvestedToday?.totalAmount + dashboardData?.totalFundInvestedToday?.totalVat || 0)}
             />
           </Col>
 
-          {/* Content average price */}
+          {/* Total fund invested */}
           <Col>
             <DashboardCardInfo
               title="Total funds invested"
               type="total_fund_invested"
-              path="/reports-tables-content/total_fund_invested"
+              path="/dashboard-tables/fund_invested"
               trend={dashboardData?.totalFundInvested?.trend}
-              total={"£" + formatAmountInMillion(dashboardData?.totalFundInvested?.totalAmount || 0)}
+              total={"£" + formatAmountInMillion(dashboardData?.totalFundInvested?.totalAmount + dashboardData?.totalFundInvested?.totalVat || 0)}
               dashboardSort={dashboardSort}
               setDashboardSort={setDashboardSort}
               sort={dashboardPayload?.requestedFilter?.total_fund_invested}
@@ -1034,61 +1031,43 @@ const ContentReports = ({
                         }
 
                         return (
-                          <Col md={4} className="CntPurFeed">
+                          <Col md={4} className="CntPurFeed" key={curr?._id}>
                             <div
                               className="contentCard"
                               onClick={() =>
                                 navigate(
-                                  `/purchased-content-detail/${curr?.transaction_id}`
+                                  `/purchased-content-detail/${curr?._id}`
                                 )
                               }
                             >
                               <img
                                 className="reportcontentImg img-fluid"
                                 src={
-                                  curr?.content[0]?.media_type === "video"
+                                  curr?.contentDetails?.content[0]?.media_type === "video"
                                     ? process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.thumbnail
-                                    : curr?.content[0]?.media_type === "audio"
+                                    curr?.contentDetails?.content[0]?.thumbnail
+                                    : curr?.contentDetails?.content[0]?.media_type === "audio"
                                       ? audioic
                                       : process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.media
+                                      curr?.contentDetails?.content[0]?.media
                                 }
                                 alt=""
                               />
-                              <div className="contInfo d-flex">
+                              <div className="contInfo d-flex justify-between">
                                 <h6 className="contentHeadng">
-                                  {curr?.heading}
+                                  {curr?.contentDetails?.heading}
                                 </h6>
-                                {curr?.Vat?.find(
-                                  (el) =>
-                                    el?.purchased_mediahouse_id ==
-                                    JSON.parse(localStorage.getItem("user"))
-                                      ?._id
-                                )?.purchased_content_type == "shared" ? (
-                                  <img
-                                    className="contentTag"
-                                    src={share}
-                                    alt="Shared Content"
-                                  />
-                                ) : (
-                                  <img
-                                    className="contentTag"
-                                    src={exclusive}
-                                    alt="Exclusive Content"
-                                  />
-                                )}
+                                <img
+                                  className="contentTag"
+                                  src={curr?.payment_content_type ? share : exclusive}
+                                  alt="Exclusive Content"
+                                />
                               </div>
                               <div className="contInfo d-flex justify-content-between align-items-center">
                                 <h6 className="mb-0 typeText font-md">
-                                  {curr?.Vat?.find(
-                                    (el) =>
-                                      el?.purchased_mediahouse_id ==
-                                      JSON.parse(localStorage.getItem("user"))
-                                        ?._id
-                                  )?.purchased_content_type === "shared"
-                                    ? "Shared"
-                                    : "Exclusive"}
+                                  {
+                                    curr?.payment_content_type ? "SHARED" : "EXCLUSIVE"
+                                  }
                                 </h6>
                                 <span
                                   style={{
@@ -1099,13 +1078,7 @@ const ContentReports = ({
                                 >
                                   {" "}
                                   £
-                                  {formatAmountInMillion(
-                                    +curr?.Vat?.find(
-                                      (el) =>
-                                        el?.purchased_mediahouse_id ==
-                                        mediaHouseId
-                                    )?.amount
-                                  )}
+                                  {formatAmountInMillion(curr?.amount + curr?.Vat)}
                                 </span>
                               </div>
                             </div>

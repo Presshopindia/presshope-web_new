@@ -48,6 +48,7 @@ import audimgsm from "../assets/images/audimgsmall.svg";
 import { formatAmountInMillion } from "./commonFunction";
 import { PaginationComp } from "./Pagination";
 import { useDarkMode } from "../context/DarkModeContext";
+import { AiFillCaretDown } from "react-icons/ai";
 
 const Contenttables = () => {
   const param = useParams();
@@ -105,7 +106,7 @@ const Contenttables = () => {
           setContentOnlineTotalPage(
             Math.ceil(resp?.data?.content_online?.count / contentOnlineLimit)
           );
-        } else if (param?.type == "fund_invested_today") {
+        } else if (param?.type == "fund_invested_today" || param?.type == "content_purchased_online_today") {
           setContentOnlineTotalPage(
             Math.ceil(
               resp?.data?.today_fund_invested?.totalCount / contentOnlineLimit
@@ -574,7 +575,7 @@ const Contenttables = () => {
                       </div>
                     </div>
                   </Card>
-                ) : param.type === "fund_invested_today" ? (
+                ) : param.type === "fund_invested_today" || "content_purchased_online_today" ? (
                   <Card className="tbl_crd">
                     <div className="">
                       <div
@@ -584,26 +585,58 @@ const Contenttables = () => {
                       >
                         <Typography className="tbl_hdng">
                           Funds invested today
+
+                          {param.type === "fund_invested_today" ? "Funds invested" : "Content purchased online"} today
                         </Typography>
-                        <div className="tbl_rt">
-                          <div className="fltrs_prnt">
-                            <Button
-                              className="sort_btn"
-                              onClick={() => {
-                                setOpenContentPuchased(true);
-                              }}
-                            >
-                              Sort
-                              <BsChevronDown />
-                            </Button>
-                            {openContentPuchased && (
-                              <NewContentPurchasedOnline
-                                closeContPurchased={handleCloseContentPurchased}
-                                contentPurchasedSortFilterValues={
-                                  newContentPurchasedValueHandler
-                                }
-                              />
-                            )}
+                        <div className="tbl_rt sorting_wrap d-flex align-items-center">
+                          <div className="feedSorting me-4">
+                            <div className="fltrs_prnt top_fltr">
+                              <p className="lbl_fltr">Filter</p>
+                              <button
+                                className="sortTrigger"
+                                onClick={() => {
+                                  // setOpenFilterComponent(true);
+                                }}
+                              >
+                                Filter <AiFillCaretDown />
+                              </button>
+                              {/* {openFilterComponent && (
+                                <FundsinvestedFilter
+                                  closeSortComponent={
+                                    handleCloseFilterComponent
+                                  }
+                                  closeFilterComponent={
+                                    handleCloseFilterComponent
+                                  }
+                                  setAllFilterData={setAllFilterData}
+                                  allFilterData={allFilterData}
+                                />
+                              )} */}
+                            </div>
+                          </div>
+                          <div className="feedSorting">
+                            <div className="fltrs_prnt top_fltr">
+                              <p className="lbl_fltr">Sort</p>
+                              <Button
+                                className="sort_btn"
+                                onClick={() => {
+                                  // setOpenFundsInevested(true);
+                                }}
+                              >
+                                Sort
+                                <BsChevronDown />
+                              </Button>
+                              {/* {openFundsInvested && (
+                                <Fundsinvested
+                                  active={activeState}
+                                  setActive={setActiveState}
+                                  rangeTimeValues={fundsTimeValuesHandler}
+                                  closeSortComponent={handleCloseFundsInvested}
+                                  setAllFilterData={setAllFilterData}
+                                  allFilterData={allFilterData}
+                                />
+                              )} */}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -619,263 +652,212 @@ const Contenttables = () => {
                               <th className="">Content</th>
                               <th>Time & date</th>
                               <th className="tsk_dlts">Heading</th>
-                              <th>Type</th>
-                              <th>License</th>
-                              <th>Location</th>
-                              <th>Uploaded by</th>
-                              <th>Funds invested</th>
-                              <th>20% VAT</th>
-                              <th>Total funds invested (inc VAT)</th>
+                              <th className="tbl_icn_th">Type</th>
+                              <th className="tbl_icn_th licnc">License</th>
+                              <th className="tbl_icn_th catgr">Category</th>
+                              <th className="tsk_dlts">Location</th>
+                              {param.type === "content_purchased_online_today" && <th>Purchased by</th>}
+                              <th>Published by</th>
+                              <th>{param.type === "fund_invested_today" ? "Nett price paid" : "Purchase price"}</th>
+                              {param.type === "fund_invested_today" && <th>VAT paid</th>}
+                              <th>{param.type === "fund_invested_today" ? "Total funds invested" : "Amount paid"}</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {content_count?.today_fund_invested?.task?.map(
-                              (curr) => {
-                                const image = curr?.content?.filter(
-                                  (item) => item.media_type === "image"
-                                );
-                                console.log(
-                                  "fund investement ----->  ------->",
-                                  curr
-                                );
-                                const audio = curr?.content?.filter(
+                            {content_count?.today_fund_invested?.task.map((curr, index) => {
+                              const contentArray = curr?.contentDetails?.content;
+                              const audio =
+                                contentArray?.filter(
                                   (item) => item.media_type === "audio"
-                                );
-                                const video = curr?.content?.filter(
+                                ) || [];
+                              const video =
+                                contentArray?.filter(
                                   (item) => item.media_type === "video"
-                                );
-                                const doc = curr?.content?.filter(
-                                  (item) => item.media_type === "doc"
-                                );
-                                const pdf = curr?.content?.filter(
-                                  (item) => item.media_type === "pdf"
-                                );
-                                const paidAmountWithoutVat =
-                                  (curr?.Vat?.find(
-                                    (el) =>
-                                      el?.purchased_mediahouse_id ==
-                                      JSON.parse(localStorage.getItem("user"))
-                                        ?._id
-                                  )?.amount || curr?.amount_paid) -
-                                  (curr?.Vat?.find(
-                                    (el) =>
-                                      el?.purchased_mediahouse_id ==
-                                      JSON.parse(localStorage.getItem("user"))
-                                        ?._id
-                                  )?.Vat || 0);
-                                const amountWithvat =
-                                  curr?.Vat?.find(
-                                    (el) =>
-                                      el?.purchased_mediahouse_id ==
-                                      JSON.parse(localStorage.getItem("user"))
-                                        ?._id
-                                  )?.amount || curr?.amount_paid;
-                                const paidAmount =
-                                  formatAmountInMillion(
-                                    curr?.Vat?.find(
-                                      (el) =>
-                                        el?.purchased_mediahouse_id ==
-                                        JSON.parse(localStorage.getItem("user"))
-                                          ?._id
-                                    )?.amount
-                                  ) || curr?.amount_paid;
-                                let allVat = curr?.Vat?.find((el) => el?.purchased_mediahouse_id == (profileData?.role === "MediaHouse" ? profileData?._id : profileData?.media_house_id?._id));
-                                return (
-                                  <tr>
-                                    <td className="content_img_td position-relative add-icons-box">
-                                      {
-                                        <Link
-                                          to={`/purchased-content-detail/${curr?.transaction_id}`}
-                                        >
-                                          <div className="tbl_cont_wrp noGrid">
-                                            <img
-                                              src={
-                                                curr?.content[0]?.media_type ===
-                                                  "image"
-                                                  ? curr?.content[0]?.watermark
-                                                  : curr?.content[0]
-                                                    ?.media_type === "video"
-                                                    ? curr?.content[0]?.watermark
-                                                    : curr?.content[0]
-                                                      ?.media_type === "audio"
-                                                      ? audioic
-                                                      : null
-                                              }
-                                              className="content_img"
-                                            />
-                                            {/* <span className="cont_count">
-                                              {curr?.content.length}
-                                            </span> */}
-                                          </div>
-                                          <div className="tableContentTypeIcons">
-                                            {/* {image.length > 0 && ( */}
-                                            <div class="post_icns_cstm_wrp camera-ico">
-                                              <div class="post_itm_icns dtl_icns">
-                                                <span class="count">1</span>
-                                                <img
-                                                  class="feedMediaType iconBg"
-                                                  src={cameraic}
-                                                  alt=""
-                                                />
-                                              </div>
-                                            </div>
-                                            {/* )} */}
-                                            {/* {video.length > 0 && ( */}
-                                            <div class="post_icns_cstm_wrp video-ico">
-                                              <div class="post_itm_icns dtl_icns">
-                                                <span class="count">1</span>
-                                                <img
-                                                  class="feedMediaType iconBg"
-                                                  src={videoic}
-                                                  alt=""
-                                                />
-                                              </div>
-                                            </div>
-                                            {/* )} */}
-                                            {/* {audio.length > 0 && ( */}
-                                            <div class="post_icns_cstm_wrp audio-ico">
-                                              <div class="post_itm_icns dtl_icns">
-                                                <span class="count">1</span>
-                                                <img
-                                                  class="feedMediaType iconBg"
-                                                  src={interviewic}
-                                                  alt=""
-                                                />
-                                              </div>
-                                            </div>
-                                            {/* )} */}
-                                          </div>
-                                        </Link>
-                                      }
-                                    </td>
-                                    <td className="timedate_wrap">
-                                      <p className="timedate">
-                                        <img
-                                          src={watchic}
-                                          className="icn_time"
-                                        />
-                                        {moment(curr?.createdAt).format(
-                                          "hh:mm A"
-                                        )}
-                                      </p>
-                                      <p className="timedate">
-                                        <img
-                                          src={calendar}
-                                          className="icn_time"
-                                        />
-                                        {moment(curr?.createdAt).format(
-                                          "DD MMM, YYYY"
-                                        )}
-                                      </p>
-                                    </td>
-                                    <td className="description_td">
-                                      <p className="desc_ht mb-0">
-                                        {curr?.heading}
-                                      </p>
-                                    </td>
-                                    <td>
-                                      <div className="d-flex gap-2">
-                                        {image && image.length > 0 && (
-                                          <Tooltip title="Photo">
-                                            <img
-                                              src={cameraic}
-                                              className="icn"
-                                            />
-                                          </Tooltip>
-                                        )}
-                                        {video && video.length > 0 && (
-                                          <Tooltip title="Video">
-                                            <img
-                                              src={videoic}
-                                              className="icn"
-                                            />
-                                          </Tooltip>
-                                        )}
-                                        {audio && audio.length > 0 && (
-                                          <Tooltip title="Audio">
-                                            <img
-                                              src={interviewic}
-                                              className="icn"
-                                            />
-                                          </Tooltip>
-                                        )}
-                                        {pdf && pdf.length > 0 && (
-                                          <Tooltip title="Pdf">
-                                            <img src={docsic} className="icn" />
-                                          </Tooltip>
-                                        )}
-                                        {doc && doc.length > 0 && (
-                                          <Tooltip title="Document">
-                                            <img src={docsic} className="icn" />
-                                          </Tooltip>
-                                        )}
-                                      </div>
-                                    </td>
-                                    <td className="text-center">
-                                      <Tooltip
-                                        title={
-                                          curr?.type === "shared"
-                                            ? "Shared"
-                                            : "Exclusive"
-                                        }
-                                      >
-                                        <img
-                                          src={
-                                            curr?.type === "shared"
-                                              ? sharedic
-                                              : exclusiveic
-                                          }
-                                          alt="shared"
-                                          className="icn"
-                                        />
-                                      </Tooltip>
-                                    </td>
-                                    <td>{curr?.location}</td>
-                                    <td>
-                                      <div className="hpr_dt">
-                                        <img
-                                          src={
-                                            process.env.REACT_APP_AVATAR_IMAGE +
-                                            curr?.hopper_details
-                                              ?.avatar_details[0]?.avatar
-                                          }
-                                          alt="Hopper"
-                                          className="big_img"
-                                        />
-                                        <p className="hpr_nme">
-                                          <span className="txt_light">
-                                            {curr?.hopper_details?.user_name}
-                                          </span>
-                                        </p>
-                                      </div>
-                                    </td>
-                                    {/* <td>£{paidAmount}</td> */}
-                                    <td>
-                                      £
-                                      {allVat?.amount_without_Vat ??
-                                        paidAmountWithoutVat}
-                                    </td>
-                                    <td>£{allVat?.Vat}</td>
-                                    <td>£{allVat?.amount}</td>
+                                ) || [];
+                              const image =
+                                contentArray?.filter(
+                                  (item) => item.media_type === "image"
+                                ) || [];
+                              const Doc =
+                                contentArray?.filter(
+                                  (item) => item.media_type === "pdf" || "doc"
+                                ) || [];
 
-                                    {/* <td>£{paidAmountWithoutVat}</td> */}
-                                  </tr>
-                                );
-                              }
-                            )}
+                              const contentSource =
+                                curr?.contentDetails && curr.contentDetails.content[0]
+                                  ? curr.contentDetails.content[0].media_type ===
+                                    "video"
+                                    ? process.env.REACT_APP_CONTENT_MEDIA +
+                                    curr?.contentDetails?.content?.[0]
+                                      ?.thumbnail
+                                    : curr.contentDetails.content[0]
+                                      .media_type === "audio"
+                                      ? audimgsm
+                                      : curr.contentDetails.content[0]
+                                        .media_type === "image"
+                                        ? curr.contentDetails.content[0].watermark ||
+                                        process.env.REACT_APP_CONTENT_MEDIA +
+                                        curr.contentDetails.content[0].media
+                                        : curr.contentDetails.content[0]
+                                          .media_type === "doc"
+                                          ? docsic
+                                          : null
+                                  : null;
+
+                              return (
+                                <tr
+                                  className="clickable"
+                                  onClick={() =>
+                                    navigate(
+                                      `/purchased-content-detail/${curr?._id}?page=${contentOnlinePage}`
+                                    )
+                                  }
+                                >
+                                  <td className="content_img_td position-relative add-icons-box">
+                                    <Link>
+                                      <div className="tbl_cont_wrp cnt_online_img noGrid">
+                                        <img
+                                          src={contentSource}
+                                          className="content_img"
+                                        />
+                                      </div>
+                                      <div className="tableContentTypeIcons">
+                                        {/* 1 */}
+                                      </div>
+                                    </Link>
+                                  </td>
+
+                                  <td className="timedate_wrap">
+                                    <p className="timedate">
+                                      <img
+                                        src={watchic}
+                                        className="icn_time"
+                                      />
+                                      {moment(
+                                        // curr?.content_id?.purchasedTime
+                                        curr?.createdAt
+                                      ).format(`hh:mm A`)}
+                                    </p>
+                                    <p className="timedate">
+                                      <img
+                                        src={calendar}
+                                        className="icn_time"
+                                      />
+                                      {moment(
+                                        // curr?.content_id?.curr?.updatedAt
+                                        curr?.createdAt
+                                      ).format(`DD MMM YYYY`)}
+                                    </p>
+                                  </td>
+
+                                  <td className="description_td">
+                                    <p className="desc_ht">
+                                      {curr?.contentDetails?.heading}
+                                    </p>
+                                  </td>
+
+                                  <td className="text-center">
+                                    <div className=" d-flex flex-column gap-2">
+                                      {image.length > 0 && (
+                                        <Tooltip title="Photo">
+                                          <img
+                                            src={cameraic}
+                                            alt="Photo"
+                                            className="icn m-auto"
+                                          />{" "}
+                                        </Tooltip>
+                                      )}
+                                      {video.length > 0 && (
+                                        <Tooltip title="Video">
+                                          <img
+                                            src={videoic}
+                                            alt="Video"
+                                            className="icn m-auto"
+                                          />
+                                        </Tooltip>
+                                      )}
+                                      {audio.length > 0 && (
+                                        <Tooltip title="Audio">
+                                          <img
+                                            src={interviewic}
+                                            alt="Audio"
+                                            className="icn m-auto"
+                                          />
+                                        </Tooltip>
+                                      )}
+                                    </div>
+                                  </td>
+                                  <td className="text-center">
+                                    <Tooltip title={curr?.payment_content_type === "shared" ? "Shared" : "Exclusive"}>
+                                      <img
+                                        src={curr?.payment_content_type === "shared" ? sharedic : exclusiveic}
+                                        alt={curr?.payment_content_type === "shared" ? "Shared" : "Exclusive"}
+                                        className="icn"
+                                      />
+                                    </Tooltip>
+                                  </td>
+                                  <td className="text-center">
+                                    <Tooltip title={curr?.contentDetails?.categoryDetails?.name}>
+                                      <img
+                                        src={curr?.contentDetails?.categoryDetails?.icon}
+                                        alt={curr?.contentDetails?.categoryDetails?.name}
+                                        className="icn"
+                                      />
+                                    </Tooltip>
+                                  </td>
+
+                                  <td>{curr?.contentDetails?.location}</td>
+                                  {
+                                    param?.type === "content_purchased_online_today" && (
+                                      <td>
+                                        <div className="hpr_dt">
+                                          <img
+                                            src={
+                                              curr?.purchasedUser?.profile_image
+                                            }
+                                            alt="Hopper"
+                                            className="big_img"
+                                          />
+                                          <p className="hpr_nme">
+                                            {curr?.purchasedUser?.full_name}
+                                          </p>
+                                        </div>
+                                      </td>
+                                    )
+                                  }
+                                  <td>
+                                    <div className="hpr_dt">
+                                      <img
+                                        src={
+                                          process.env.REACT_APP_AVATAR_IMAGE +
+                                          curr?.hopperDetails?.avatarDetails?.avatar
+                                        }
+                                        alt="Hopper"
+                                        className="big_img"
+                                      />
+                                      <p className="hpr_nme">
+                                        {curr?.hopperDetails?.user_name}
+                                      </p>
+                                    </div>
+                                  </td>
+                                  <td>£{formatAmountInMillion(curr?.amount)}</td>
+                                  {
+                                    param.type === "fund_invested_today" && <td>£{formatAmountInMillion(curr?.Vat)}</td>
+                                  }
+                                  <td>£{formatAmountInMillion(curr?.amount + curr?.Vat)}</td>
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
-                        {totalFundDetails?.task?.length > 0 &&
-                          contentOnlineTotalPage ? (
+                        {content_count?.today_fund_invested?.task?.length > 0 && (
                           <PaginationComp
                             totalPage={contentOnlineTotalPage}
-                            path="content-tables/fund_invested_today"
+                            path={`dashboard-tables/${param?.type}`}
                             type="fav"
                             setPage={setContentOnlinePage}
                             page={contentOnlinePage}
                           />
-                        ) : (
-                          ""
                         )}
                       </div>
                     </div>

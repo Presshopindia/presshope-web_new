@@ -53,6 +53,7 @@ const AutoInvoice = () => {
     off: "",
   });
 
+  console.log("promoCode", promoCode)
   const { profileData } = useDarkMode();
   const user = profileData;
 
@@ -96,10 +97,10 @@ const AutoInvoice = () => {
           : data?.content?.ask_price),
       type: curr.hasOwnProperty("content") ? "content" : "task",
       original_ask_price: data?.content?.original_ask_price,
-      offer: false,
+      offer: data?.chatdata?.amount || promoCode?.code ? true : false,
       is_charity: data?.content?.is_charity,
       charity: data?.content?.charity,
-      description: data?.content?.heading,
+      description: data?.content?.heading
     };
 
     setLoading(true);
@@ -127,6 +128,9 @@ const AutoInvoice = () => {
       // Add coupon code
       if (promoCode.code) {
         obj1.coupon = promoCode.code;
+        obj1.promocodePercentOff = promoCode.off,
+        obj1.promocodeValue = promoCode.off,
+        obj1.amount = appliedPromoodeValue(+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price), promoCode.off)
       }
 
       const resp = await Post("mediahouse/createPayment", obj1);

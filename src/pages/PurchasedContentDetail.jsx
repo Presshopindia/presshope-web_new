@@ -621,9 +621,7 @@ const PurchasedContentDetail = () => {
                                 >
                                   £
                                   {formatAmountInMillion(
-                                    +(
-                                      transactionDetails?.amount
-                                    )
+                                    +( (transactionDetails?.amount + transactionDetails?.Vat) || 0 )
                                   )}
                                 </Button>
                               </Link>
@@ -698,12 +696,7 @@ const PurchasedContentDetail = () => {
                             <h6>Amount</h6>
                             <h6>
                               £
-                              {formatAmountInMillion(
-                                transactionDetails?.amount -
-                                (transactionDetails?.Vat != 0
-                                  ? transactionDetails?.Vat
-                                  : transactionDetails?.original_Vatamount)
-                              )}
+                              {formatAmountInMillion(transactionDetails?.amount || 0)}
                             </h6>
                           </div>
                         </div>
@@ -712,11 +705,7 @@ const PurchasedContentDetail = () => {
                             <h6>VAT 20%</h6>
                             <h6>
                               £
-                              {formatAmountInMillion(
-                                transactionDetails?.Vat != 0
-                                  ? transactionDetails?.Vat
-                                  : transactionDetails?.original_Vatamount
-                              )}
+                              {formatAmountInMillion(transactionDetails?.Vat || 0)}
                             </h6>
                           </div>
                         </div>
@@ -725,9 +714,7 @@ const PurchasedContentDetail = () => {
                             <h6>Total amount paid</h6>
                             <h6>
                               £
-                              {formatAmountInMillion(
-                                transactionDetails?.amount || 0
-                              )}
+                              {formatAmountInMillion((transactionDetails?.amount + transactionDetails?.Vat) || 0)}
                             </h6>
                           </div>
                         </div>
