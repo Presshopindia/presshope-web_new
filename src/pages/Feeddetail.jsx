@@ -3565,19 +3565,19 @@ const Feeddetail = (props) => {
   };
 
   const OfferPaymentChat = async (hopperPrice, offerPrice) => {
-    try{
-      let markupPrice = ( hopperPrice * 20 ) / 100;
+    try {
+      let markupPrice = (hopperPrice * 20) / 100;
       let hopperAmountWithoutMarkup = offerPrice - markupPrice;
 
       const payload = {
         message_type: "Offered",
         image_id: contentId,
         sender_id: mediahouseId,
-        amount: `${hopperAmountWithoutMarkup}`
+        amount: hopperAmountWithoutMarkup
       };
       await Post("mediahouse/create-offer-payment-chat", payload);
     }
-    catch(error) {
+    catch (error) {
       console.log(error);
     }
   }
@@ -5510,14 +5510,14 @@ const Feeddetail = (props) => {
                                           return curr?.message_type ===
                                             "offer_started" ? (
                                             <div className="crd chatting_itm sngl_cht d-flex align-items-start">
-                                              <div className="img">
+                                              <div className="img" style={{ width: '50px' }}>
                                                 <img
                                                   src={presshopchatic}
                                                   alt="User"
                                                   className="usr_img"
                                                 />
                                               </div>
-                                              <div className="cht_txt postedcmnt_info">
+                                              <div className="cht_txt postedcmnt_info" style={{ width: 'calc(100% - 50px)' }}>
                                                 <h5>
                                                   {"PressHop"}
                                                   <span className="text-secondary time">

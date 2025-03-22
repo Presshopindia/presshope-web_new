@@ -547,7 +547,7 @@ const AddBroadcastTask = (props) => {
                     />
                   </LocalizationProvider>
                   <span className="task_noti_color">
-                      Tasks need at least 24 hours' notice
+                    Tasks need at least 24 hours' notice
                   </span>
                 </Form.Group>
               </Col>
@@ -770,6 +770,9 @@ const AddBroadcastTask = (props) => {
                         <GoogleMap onLoad={onMapLoadStreet}></GoogleMap>
                       </div>
                     )}
+                    <span className="task_noti_color">
+                      Tasks available within Greater London only
+                    </span>
                   </div>
                 </Form.Group>
               </Col>
@@ -879,20 +882,27 @@ const AddBroadcastTask = (props) => {
                 also choose all three options
               </span>
             </Form.Group>
-            <div className="text-center">
+            <div className="text-center mb-4">
               {/* <Link to="/SignupSuccess"> */}
               <Button
                 variant=""
                 type="submit"
-                className={`theme-btn custom-ab mb-0 ${
-                  loading ? "post_task" : ""
-                }`}
+                className={`theme-btn custom-ab mb-0 ${loading ? "post_task" : ""
+                  }`}
                 disabled={loading}
               >
                 Post task
               </Button>
               {/* </Link> */}
             </div>
+            <Form.Group
+              className="mb-4 d-flex justify-content-between align-items-center check-box"
+              controlId="formBasicCheckbox"
+            >
+              <span className="selectionHint_text">
+                Disclaimer : Please broadcast your tasks with a 24-hour window to give our Hoppers adequate time to reach the location and upload your requested content. As a young business, we appreciate your patience and support as we build and strengthen our network🙌🏻
+              </span>
+            </Form.Group>
           </Form>
         </Modal.Body>
       </Modal>

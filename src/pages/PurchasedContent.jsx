@@ -87,11 +87,11 @@ const Purchasedcontent = () => {
   useEffect(() => {
     PurchasedContent(type.type);
   }, [purchaseContent.filter.active, purchaseContent.sort.active, page]);
-   const handleBasket = ()=>{
+  const handleBasket = () => {
 
     console.log("hello hii testing")
     PurchasedContent(type.type);
-   }
+  }
   const handleFavourite = (index) => {
     setPurchaseContent((prev) => {
       const updatedData = { ...prev };
@@ -192,133 +192,133 @@ const Purchasedcontent = () => {
                 <div className="feedsContainer feedpurchaseContent mb-0">
                   <div className="feedContent_header">
                     <h1>
-                      Purchased Content | {capitalizeFirstLetter(type.type)}
+                      Purchased content | {capitalizeFirstLetter(type.type)}
                     </h1>
                   </div>
                   <Row className="">
                     {purchaseContent?.data?.map((item, index) => {
-                        const Audio = item?.content?.filter(
-                          (item) => item?.media_type === "audio"
-                        );
-                        const Video = item?.content?.filter(
-                          (item) => item?.media_type === "video"
-                        );
-                        const Image = item?.content?.filter(
-                          (item) => item?.media_type === "image"
-                        );
-                        const Pdf = item?.content?.filter(
-                          (item) => item?.media_type === "pdf"
-                        );
-                        const Doc = item?.content?.filter(
-                          (item) => item?.media_type === "doc"
-                        );
-                         console.log("items ----> 12345----> ",item,item.basket_status)
-                        const imageCount = Image.length;
-                        const videoCount = Video.length;
-                        const audioCount = Audio.length;
-                        const pdfCount = Pdf.length;
-                        const docCount = Doc.length;
+                      const Audio = item?.content?.filter(
+                        (item) => item?.media_type === "audio"
+                      );
+                      const Video = item?.content?.filter(
+                        (item) => item?.media_type === "video"
+                      );
+                      const Image = item?.content?.filter(
+                        (item) => item?.media_type === "image"
+                      );
+                      const Pdf = item?.content?.filter(
+                        (item) => item?.media_type === "pdf"
+                      );
+                      const Doc = item?.content?.filter(
+                        (item) => item?.media_type === "doc"
+                      );
+                      console.log("items ----> 12345----> ", item, item.basket_status)
+                      const imageCount = Image.length;
+                      const videoCount = Video.length;
+                      const audioCount = Audio.length;
+                      const pdfCount = Pdf.length;
+                      const docCount = Doc.length;
 
-                        return (
-                          <Col md={3}>
-                            <ContentFeedCard
-                              feedImg={
-                                item.content[0]?.media_type === "video"
+                      return (
+                        <Col md={3}>
+                          <ContentFeedCard
+                            feedImg={
+                              item.content[0]?.media_type === "video"
+                                ? item.content[0]?.watermark ||
+                                process.env.REACT_APP_CONTENT_MEDIA +
+                                item.content[0].thumbnail
+                                : item.content[0]?.media_type === "image"
                                   ? item.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                      item.content[0].thumbnail
-                                  : item.content[0]?.media_type === "image"
-                                  ? item.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                      item.content[0].media
+                                  process.env.REACT_APP_CONTENT_MEDIA +
+                                  item.content[0].media
                                   : item.content[0]?.media_type === "audio"
-                                  ? audioic
-                                  : ""
-                              }
-                              // feedType={item.content[0].media_type === "video" ? contentVideo : contentCamera}
-                              feedTag={
-                                item?.content_view_type == "mostpopular"
-                                  ? "Most Popular"
-                                  : item?.content_view_type == "mostviewed"
+                                    ? audioic
+                                    : ""
+                            }
+                            // feedType={item.content[0].media_type === "video" ? contentVideo : contentCamera}
+                            feedTag={
+                              item?.content_view_type == "mostpopular"
+                                ? "Most Popular"
+                                : item?.content_view_type == "mostviewed"
                                   ? "Most viewed"
                                   : null
-                              }
-                              userAvatar={imgs}
-                              authorName={"pseudonymous"}
-                              lnkto={`/purchased-content-detail/${item?.transaction_id}`}
-                              viewTransaction={"View details"}
-                              viewDetail={`/purchased-content-detail/${item?.transaction_id}`}
-                              most_viewed={true}
-                              author_Name={item?.hopper_id?.user_name}
-                              user_avatar={
-                                process.env.REACT_APP_AVATAR_IMAGE +
-                                item?.hopper_id?.avatar_id?.avatar
-                              }
-                              fvticns={
-                                item?.favourite_status === "true"
-                                  ? favouritedic
-                                  : favic
-                              }
-                              content_id={item._id}
-                              is_sale_status={item?.sale_status=="sold" ? true:false}
-                              bool_fav={
-                                item.favourite_status === "true"
-                                  ? "false"
-                                  : "true"
-                              }
-                              favourite={() => handleFavourite(index)} // Call the function directly
-                              type_img={
+                            }
+                            userAvatar={imgs}
+                            authorName={"pseudonymous"}
+                            lnkto={`/purchased-content-detail/${item?.transaction_id}`}
+                            viewTransaction={"View details"}
+                            viewDetail={`/purchased-content-detail/${item?.transaction_id}`}
+                            most_viewed={true}
+                            author_Name={item?.hopper_id?.user_name}
+                            user_avatar={
+                              process.env.REACT_APP_AVATAR_IMAGE +
+                              item?.hopper_id?.avatar_id?.avatar
+                            }
+                            fvticns={
+                              item?.favourite_status === "true"
+                                ? favouritedic
+                                : favic
+                            }
+                            content_id={item._id}
+                            is_sale_status={item?.sale_status == "sold" ? true : false}
+                            bool_fav={
+                              item.favourite_status === "true"
+                                ? "false"
+                                : "true"
+                            }
+                            favourite={() => handleFavourite(index)} // Call the function directly
+                            type_img={
+                              item?.Vat?.find(
+                                (el) =>
+                                  el?.purchased_mediahouse_id ==
+                                  JSON.parse(localStorage.getItem("user"))
+                                    ?._id
+                              )?.purchased_content_type == "shared"
+                                ? shared
+                                : exclusive
+                            }
+                            type_tag={
+                              item?.Vat?.find(
+                                (el) =>
+                                  el?.purchased_mediahouse_id ==
+                                  JSON.parse(localStorage.getItem("user"))
+                                    ?._id
+                              )?.purchased_content_type == "shared"
+                                ? "Shared"
+                                : "Exclusive"
+                            }
+                            feedHead={item.heading}
+                            feedTime={moment(item?.createdAt).format(
+                              "hh:mm A, DD MMM YYYY"
+                            )}
+                            feedLocation={item.location}
+                            contentPrice={`${formatAmountInMillion(
+                              +(
                                 item?.Vat?.find(
                                   (el) =>
                                     el?.purchased_mediahouse_id ==
                                     JSON.parse(localStorage.getItem("user"))
                                       ?._id
-                                )?.purchased_content_type == "shared"
-                                  ? shared
-                                  : exclusive
-                              }
-                              type_tag={
-                                item?.Vat?.find(
-                                  (el) =>
-                                    el?.purchased_mediahouse_id ==
-                                    JSON.parse(localStorage.getItem("user"))
-                                      ?._id
-                                )?.purchased_content_type == "shared"
-                                  ? "Shared"
-                                  : "Exclusive"
-                              }
-                              feedHead={item.heading}
-                              feedTime={moment(item?.createdAt).format(
-                                "hh:mm A, DD MMM YYYY"
-                              )}
-                              feedLocation={item.location}
-                              contentPrice={`${formatAmountInMillion(
-                                +(
-                                  item?.Vat?.find(
-                                    (el) =>
-                                      el?.purchased_mediahouse_id ==
-                                      JSON.parse(localStorage.getItem("user"))
-                                        ?._id
-                                  )?.amount || 0
-                                )
-                              )}`}
-                              basket={() => handleBasket()}
-                              basketValue={item.basket_status}
-                              allContent={item?.content}
-                              feedTypeImg1={imageCount > 0 ? cameraic : null}
-                              postcount={imageCount > 0 ? imageCount : null}
-                              feedTypeImg2={videoCount > 0 ? videoic : null}
-                              postcount2={videoCount > 0 ? videoCount : null}
-                              feedTypeImg3={audioCount > 0 ? interviewic : null}
-                              postcount3={audioCount > 0 ? audioCount : null}
-                              feedTypeImg4={pdfCount > 0 ? pdfic : null}
-                              postcount4={pdfCount > 0 ? pdfCount : null}
-                              feedTypeImg5={docCount > 0 ? docsic : null}
-                              postcount5={docCount > 0 ? docCount : null}
-                            />
-                          </Col>
-                        );
-                      })}
+                                )?.amount || 0
+                              )
+                            )}`}
+                            basket={() => handleBasket()}
+                            basketValue={item.basket_status}
+                            allContent={item?.content}
+                            feedTypeImg1={imageCount > 0 ? cameraic : null}
+                            postcount={imageCount > 0 ? imageCount : null}
+                            feedTypeImg2={videoCount > 0 ? videoic : null}
+                            postcount2={videoCount > 0 ? videoCount : null}
+                            feedTypeImg3={audioCount > 0 ? interviewic : null}
+                            postcount3={audioCount > 0 ? audioCount : null}
+                            feedTypeImg4={pdfCount > 0 ? pdfic : null}
+                            postcount4={pdfCount > 0 ? pdfCount : null}
+                            feedTypeImg5={docCount > 0 ? docsic : null}
+                            postcount5={docCount > 0 ? docCount : null}
+                          />
+                        </Col>
+                      );
+                    })}
                   </Row>
                 </div>
               </div>
@@ -328,7 +328,7 @@ const Purchasedcontent = () => {
             <PaginationComp
               totalPage={totalPage}
               // path="Favourited-Content"
-              path={`purchased-content/${type?.type}`} 
+              path={`purchased-content/${type?.type}`}
               type="fav"
               setPage={setPage}
               page={page}

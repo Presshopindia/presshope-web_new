@@ -225,7 +225,7 @@ const AccountsTables = () => {
                           mb="10px"
                         >
                           <Typography className="tbl_hdng">
-                            Total Funds invested for content purchased online
+                            Total funds invested for content purchased online
                           </Typography>
                         </div>
                         <div className="fix_ht_table">
@@ -506,7 +506,7 @@ const AccountsTables = () => {
                                 mb="10px"
                               >
                                 <Typography className="tbl_hdng">
-                                  Pending Payments
+                                  Pending payments
                                 </Typography>
                               </div>
                               <div className="fix_ht_table">
@@ -568,14 +568,14 @@ const AccountsTables = () => {
                                                 <div class="post_icns_cstm_wrp camera-ico">
                                                   <div class="post_itm_icns dtl_icns">
                                                     <span class="count">1</span>
-                                                    <img
+                                                    {/* <img
                                                       class="feedMediaType iconBg"
                                                       src={cameraic}
                                                       alt=""
-                                                    />
+                                                    /> */}
                                                   </div>
                                                 </div>
-                                                <div class="post_icns_cstm_wrp video-ico">
+                                                {/* <div class="post_icns_cstm_wrp video-ico">
                                                   <div class="post_itm_icns dtl_icns">
                                                     <span class="count">1</span>
                                                     <img
@@ -584,7 +584,7 @@ const AccountsTables = () => {
                                                       alt=""
                                                     />
                                                   </div>
-                                                </div>
+                                                </div> */}
                                                 {/* <div class="post_icns_cstm_wrp audio-ico">
                                                   <div class="post_itm_icns dtl_icns">
                                                     <span class="count">

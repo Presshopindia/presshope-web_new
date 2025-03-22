@@ -43,7 +43,7 @@ const FAQPostLogin = () => {
                 <div className="left-side bg-white cstm_ht">
                   <Link className='back_link' onClick={() => window.history.back()}><BsArrowLeft className='text-pink' /> Back </Link>
                   <div className="pg_heading">
-                    <h1>FAQ</h1>
+                    <h1>FAQs</h1>
                   </div>
                   <div className="log_txt no_border">
                     <Typography variant="body2" className="mb-0">

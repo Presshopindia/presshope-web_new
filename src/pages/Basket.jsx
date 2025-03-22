@@ -519,7 +519,7 @@ const Basket = () => {
                                       <th className="text-center">License</th>
                                       <th className="text-center">Category</th>
                                       <th className="text-center">
-                                        Sale Amount
+                                        Sale amount
                                       </th>
                                     </tr>
                                   </thead>
@@ -629,19 +629,20 @@ const Basket = () => {
                                               {/* <span className="cont_count">
                                                 {el?.content?.length || 0}
                                               </span> */}
+
                                             </div>
                                             <div className="tableContentTypeIcons">
                                               <div class="post_icns_cstm_wrp camera-ico">
                                                 <div class="post_itm_icns dtl_icns">
                                                   <span class="count">1</span>
-                                                  <img
+                                                  {/* <img
                                                     class="feedMediaType iconBg"
                                                     src={cameraic}
                                                     alt=""
-                                                  />
+                                                  /> */}
                                                 </div>
                                               </div>
-                                              <div class="post_icns_cstm_wrp video-ico">
+                                              {/* <div class="post_icns_cstm_wrp video-ico">
                                                 <div class="post_itm_icns dtl_icns">
                                                   <span class="count">1</span>
                                                   <img
@@ -650,7 +651,7 @@ const Basket = () => {
                                                     alt=""
                                                   />
                                                 </div>
-                                              </div>
+                                              </div> */}
                                               {/* <div class="post_icns_cstm_wrp audio-ico">
                                                   <div class="post_itm_icns dtl_icns">
                                                     <span class="count">
@@ -668,7 +669,7 @@ const Basket = () => {
                                               onClick={() => {
                                                 handleRemoveBasketItems(el);
                                               }}
-                                            >
+                                              style={{ left: '63px', position: 'absolute', top: '5px' }}>
                                               <i class="bi bi-trash3 custom_delete_icon"></i>
                                               {/* <i class="bi bi-trash3-fill custom_delete_icon"></i> */}
                                             </div>
@@ -822,8 +823,8 @@ const Basket = () => {
                                             <p
                                               className="ttl_prc "
                                               style={{
-                                                textAlign: "right",
-                                                marginRight: "15px",
+                                                textAlign: "center",
+                                                // marginRight: "15px",
                                               }}
                                             >
                                               £

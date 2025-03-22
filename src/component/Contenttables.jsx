@@ -583,7 +583,7 @@ const Contenttables = () => {
                         mb="10px"
                       >
                         <Typography className="tbl_hdng">
-                          Funds Invested Today
+                          Funds invested today
                         </Typography>
                         <div className="tbl_rt">
                           <div className="fltrs_prnt">

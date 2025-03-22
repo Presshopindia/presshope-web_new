@@ -607,14 +607,15 @@ function ChatCard(props) {
                             handleDeleteMessageFromMe(curr?.id)
                           }
                         >
-                          Delete for Me
+                          <small className="time"> Delete for me</small>
                         </Dropdown.Item>
                         <Dropdown.Item
                           onClick={() =>
                             handleDeleteMessage(curr?.id)
                           }
                         >
-                          Delete for Everyone
+                          <small className="time">Delete for everyone</small>
+
                         </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
