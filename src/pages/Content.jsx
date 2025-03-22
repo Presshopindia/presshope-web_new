@@ -111,17 +111,12 @@ const ContentPage = () => {
   };
 
   const PurchasedContent = async () => {
-    const payload = {
-      limit: 2,
-      type: params?.tab1,
-    };
-
     setLoading(true);
 
     try {
       setType(type);
-      const resp = await Post(`mediaHouse/purchasedContentTypeWise`, payload);
-      setPur_content(resp.data.content);
+      const resp = await Get(`mediaHouse/purchasedContents?licenseType=${params?.tab1}`);
+      setPur_content(resp.data.data);
       if (resp) {
         setLoading(false);
       }
@@ -294,7 +289,7 @@ const ContentPage = () => {
                     path="/content-tables/fund_invested_today"
                     title="Funds invested today (inc VAT)"
                     type="total_fund_invested_today"
-                    total={"£" + formatAmountInMillion(dashboardData?.content?.totalFundInvestedToday?.totalAmount || 0)}
+                    total={"£" + formatAmountInMillion(dashboardData?.content?.totalFundInvestedToday?.totalAmount + dashboardData?.content?.totalFundInvestedToday?.totalVat || 0)}
                     data={getDeepModifiedContent(dashboardData?.content?.totalFundInvestedToday?.data)}
                   />
                 </Col>
@@ -305,7 +300,7 @@ const ContentPage = () => {
                     path="/dashboard-tables/fund_invested"
                     title="Total funds invested"
                     type="total_fund_invested"
-                    total={"£" + formatAmountInMillion(dashboardData?.content?.totalFundInvested?.totalAmount || 0)}
+                    total={"£" + formatAmountInMillion(dashboardData?.content?.totalFundInvested?.totalAmount + dashboardData?.content?.totalFundInvested?.totalVat || 0)}
                     data={getDeepModifiedContent(dashboardData?.content?.totalFundInvested?.data)}
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}
@@ -361,121 +356,74 @@ const ContentPage = () => {
                       activeKey={params?.tab1}
                     >
                       <Tab eventKey="exclusive" title="Exclusive">
-                        {pur_content?.slice(0, 2)?.map((item, index) => {
+                        {pur_content?.map((item) => {
                           return (
                             <Link
-                              to={`/purchased-content-detail/${item?.transaction_id}`}
+                              to={`/purchased-content-detail/${item?._id}`}
                               key={item._id}
                             >
                               <DashBoardTabCards
-                                imgcount={item.image_count}
-                                // hopper_id
-                                tabcard5={item?.hopper_id?.user_name}
+                                tabcard5={item?.hopperDetails?.user_name}
                                 imgtab1={
                                   process.env.REACT_APP_AVATAR_IMAGE +
-                                  item?.hopper_id?.avatar_id?.avatar
+                                  item?.hopperDetails?.avatarDetails?.avatar
                                 }
                                 imgtab={
-                                  item?.content[0]?.media_type === "video"
-                                    ? item?.content[0]?.watermark ||
+                                  item?.contentDetails?.content[0]?.media_type === "video"
+                                    ? item?.contentDetails?.content[0]?.watermark ||
                                     process.env.REACT_APP_CONTENT_MEDIA +
-                                    item?.content[0]?.thumbnail
-                                    : item?.content[0]?.media_type ===
+                                    item?.contentDetails?.content[0]?.thumbnail
+                                    : item?.contentDetails?.content[0]?.media_type ===
                                       "audio"
                                       ? audioic
-                                      : item?.content[0]?.watermark ||
+                                      : item?.contentDetails?.content[0]?.watermark ||
                                       process.env.REACT_APP_CONTENT_MEDIA +
-                                      item?.content[0]?.media
+                                      item?.contentDetails?.content[0]?.media
                                 }
-                                tabcarddata={item?.heading}
+                                tabcarddata={item?.contentDetails?.heading}
                                 tabcard2={moment(item?.createdAt).format(
                                   "hh:mm A, DD MMM YYYY"
                                 )}
-                                feedIcon={
-                                  item.content[0].media_type === "image"
-                                    ? typeCam
-                                    : item.content[0].media_type === "video"
-                                      ? typeVideo
-                                      : typeInterview
-                                }
-                                feedType={
-                                  item?.content[0]?.media_type === "image"
-                                    ? "Photo"
-                                    : item?.content[0]?.media_type ===
-                                      "video"
-                                      ? "Video"
-                                      : "Audio"
-                                }
-                                tabcard3={`£${formatAmountInMillion(
-                                  +item?.Vat?.find(
-                                    (el) =>
-                                      el?.purchased_mediahouse_id == userId
-                                  )?.amount
-                                ) || 0
-                                  }`}
+                                tabcard3={"£" + formatAmountInMillion(Number(item?.amount + item?.Vat) || 0)}
                               />
                             </Link>
                           );
                         })}
                       </Tab>
                       <Tab eventKey="shared" title="Shared">
-                        {pur_content
-                          ?.slice(0, 2)
-                          .map((item, index) => {
-                            return (
-                              <Link
-                                to={`/purchased-content-detail/${item?.transaction_id}`}
-                                key={item?._id}
-                              >
-                                <DashBoardTabCards
-                                  imgcount={item.image_count}
-                                  imgtab={
-                                    item?.content[0]?.media_type === "video"
-                                      ? item?.content[0]?.watermark ||
+                        {pur_content?.map((item) => {
+                          return (
+                            <Link
+                              to={`/purchased-content-detail/${item?._id}`}
+                              key={item._id}
+                            >
+                              <DashBoardTabCards
+                                tabcard5={item?.hopperDetails?.user_name}
+                                imgtab1={
+                                  process.env.REACT_APP_AVATAR_IMAGE +
+                                  item?.hopperDetails?.avatarDetails?.avatar
+                                }
+                                imgtab={
+                                  item?.contentDetails?.content[0]?.media_type === "video"
+                                    ? item?.contentDetails?.content[0]?.watermark ||
+                                    process.env.REACT_APP_CONTENT_MEDIA +
+                                    item?.contentDetails?.content[0]?.thumbnail
+                                    : item?.contentDetails?.content[0]?.media_type ===
+                                      "audio"
+                                      ? audioic
+                                      : item?.contentDetails?.content[0]?.watermark ||
                                       process.env.REACT_APP_CONTENT_MEDIA +
-                                      item?.content[0]?.thumbnail
-                                      : item?.content[0]?.media_type ===
-                                        "audio"
-                                        ? audioic
-                                        : item?.content[0]?.watermark ||
-                                        process.env.REACT_APP_CONTENT_MEDIA +
-                                        item?.content[0]?.media
-                                  }
-                                  tabcarddata={item.description}
-                                  tabcard2={moment(item.createdAt).format(
-                                    "hh:mm A, DD MMM YYYY"
-                                  )}
-                                  tabcard3={`£${formatAmountInMillion(
-                                    +item?.Vat?.find(
-                                      (el) =>
-                                        el?.purchased_mediahouse_id == userId
-                                    )?.amount
-                                  ) || 0
-                                    }`}
-                                  feedIcon={
-                                    item.content[0].media_type === "image"
-                                      ? typeCam
-                                      : item.content[0].media_type === "video"
-                                        ? typeVideo
-                                        : typeInterview
-                                  }
-                                  feedType={
-                                    item?.content[0]?.media_type === "image"
-                                      ? "Photo"
-                                      : item?.content[0]?.media_type ===
-                                        "video"
-                                        ? "Video"
-                                        : "Audio"
-                                  }
-                                  tabcard5={item?.hopper_id?.user_name}
-                                  imgtab1={
-                                    process.env.REACT_APP_AVATAR_IMAGE +
-                                    item?.hopper_id?.avatar_id?.avatar
-                                  }
-                                />
-                              </Link>
-                            );
-                          })}
+                                      item?.contentDetails?.content[0]?.media
+                                }
+                                tabcarddata={item?.contentDetails?.heading}
+                                tabcard2={moment(item?.createdAt).format(
+                                  "hh:mm A, DD MMM YYYY"
+                                )}
+                                tabcard3={"£" + formatAmountInMillion(Number(item?.amount + item?.Vat) || 0)}
+                              />
+                            </Link>
+                          );
+                        })}
                       </Tab>
                     </Tabs>
                   </div>

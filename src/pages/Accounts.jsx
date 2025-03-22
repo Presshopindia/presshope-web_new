@@ -566,7 +566,7 @@ const Accounts = () => {
                             task={true}
                             type="content_purchased_online"
                             title="Total content purchased online"
-                            path="/accounts-tables/total_content_purchase"
+                            path="/dashboard-tables/content_purchased_online"
                             trend={dashboardData?.content?.purchasedOnline?.trend}
                             total={dashboardData?.content?.purchasedOnline?.totalCount}
                             dashboardSort={dashboardSort}
@@ -584,10 +584,10 @@ const Accounts = () => {
                           <DashboardCardInfo
                             task={true}
                             type="total_fund_invested"
-                            path="/accounts-tables/total_funds"
+                            path="/dashboard-tables/fund_invested"
                             title="Total funds invested for purchased content"
                             trend={dashboardData?.content?.totalFundInvested?.trend}
-                            total={"£" + formatAmountInMillion(dashboardData?.content?.totalFundInvested?.totalAmount || 0)}
+                            total={"£" + formatAmountInMillion(dashboardData?.content?.totalFundInvested?.totalAmount + dashboardData?.content?.totalFundInvested?.totalVat || 0)}
                             dashboardSort={dashboardSort}
                             setDashboardSort={setDashboardSort}
                             sort={dashboardPayload?.requestedFilter?.total_fund_invested}
@@ -681,9 +681,7 @@ const Accounts = () => {
                                     className="card-head-txt mb-2 mt-2"
                                   >
                                     £
-                                    {formatAmountInMillion(
-                                      accountCount?.pending_payment
-                                    ) || 0}
+                                    {formatAmountInMillion(accountCount?.pending_payment || 0)}
                                   </Typography>
                                 </div>
                                 <Typography
@@ -981,17 +979,7 @@ const Accounts = () => {
                                               <td>
                                                 <p className="ttl_prc text-left">
                                                   £
-                                                  {formatAmountInMillion(
-                                                    // +curr?.content_id?.Vat?.find(
-                                                    //   (el) =>
-                                                    //     el?.purchased_mediahouse_id ==
-                                                    //     JSON.parse(
-                                                    //       localStorage.getItem(
-                                                    //         "user"
-                                                    //       )
-                                                    //     )?._id
-                                                    +curr?.amount
-                                                  )}
+                                                  {formatAmountInMillion((curr?.amount + curr?.Vat))}
                                                 </p>
                                               </td>
                                             </tr>
@@ -1016,85 +1004,6 @@ const Accounts = () => {
                               </div>
                             </Card>
                           </Col>
-                          {/* <Col md={5}>
-                            <div className="transactionList">
-                              <div className="allBanks">
-                                <div className="statChartHead align-items-center">
-                                  <p className="sub_hdng mb-0">Banks</p>
-                                  <Button variant="primary">
-                                    <MdAdd className="addFont" /> Add bank
-                                  </Button>
-                                </div>
-                                <div className="bank_card">
-                                  <div className="bankInfo_wrap">
-                                    <img
-                                      className="bankLogo"
-                                      src={barclays}
-                                      alt=""
-                                    />
-                                    <div className="bankInfo d-flex flex-column">
-                                      <h5 className="addedBank">
-                                        Barclays Bank
-                                      </h5>
-                                      <small className="bankLocatn">
-                                        Mayfair, London
-                                      </small>
-                                    </div>
-                                  </div>
-                                  <span className="defaultTag">Default</span>
-                                </div>
-                                <div className="bank_card">
-                                  <div className="bankInfo_wrap">
-                                    <img
-                                      className="bankLogo"
-                                      src={lloyds}
-                                      alt=""
-                                    />
-                                    <div className="bankInfo d-flex flex-column">
-                                      <h5 className="addedBank">Lloyds Bank</h5>
-                                      <small className="bankLocatn">
-                                        Thorn Apple street, London
-                                      </small>
-                                    </div>
-                                  </div>
-                                  <div className="bankActions">
-                                    <span className="editBank me-2">
-                                      <FiEdit />
-                                    </span>
-                                    <span className="removeBank">
-                                      <FiX />
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="allCards">
-                                <div className="statChartHead align-items-center">
-                                  <p className="sub_hdng mb-0">Cards</p>
-                                  <Button variant="primary">
-                                    <MdAdd className="addFont" /> Add card
-                                  </Button>
-                                </div>
-                                <div className="debitCard_wrap">
-                                  <Row>
-                                    <Col md={6}>
-                                      <img
-                                        className="dbt_card"
-                                        src={debitL}
-                                        alt=""
-                                      />
-                                    </Col>
-                                    <Col md={6}>
-                                      <img
-                                        className="dbt_card"
-                                        src={debitM}
-                                        alt=""
-                                      />
-                                    </Col>
-                                  </Row>
-                                </div>
-                              </div>
-                            </div>
-                          </Col> */}
                           <Col md={12} id="vatdetail">
                             <Card className="tbl_crd bg_grey vt_dtl_wrp">
                               <div className="">
@@ -1154,177 +1063,162 @@ const Accounts = () => {
                                     </thead>
                                     <tbody>
                                       {transaction_details?.map((curr) => {
-                                        const amount = curr?.amount ?? 0; // Default to 0 if curr?.amount is undefined or null
-                                        const vat =
-                                          (curr?.Vat ||
-                                            curr?.original_Vatamount) ??
-                                          0; // Default to 0 if curr?.Vat is undefined or null
-                                        const result = amount - vat;
-                                        {
-                                          return (
-                                            <tr>
-                                              <td className="">
-                                                <div className="cont_wrp d-flex flex-column">
-                                                  {curr?.type ==
-                                                    "content" ? (
-                                                    <div className="d-flex cnt_inn">
-                                                      {curr?.content_id?.content
-                                                        ?.slice(0, 3)
-                                                        .map((item) => {
-                                                          return (
-                                                            <img
-                                                              src={
-                                                                item?.media_type ===
-                                                                  "video"
-                                                                  ? process.env
+                                        return (
+                                          <tr>
+                                            <td className="">
+                                              <div className="cont_wrp d-flex flex-column">
+                                                {curr?.type ==
+                                                  "content" ? (
+                                                  <div className="d-flex cnt_inn">
+                                                    {curr?.content_id?.content
+                                                      ?.slice(0, 3)
+                                                      .map((item) => {
+                                                        return (
+                                                          <img
+                                                            src={
+                                                              item?.media_type ===
+                                                                "video"
+                                                                ? process.env
+                                                                  .REACT_APP_CONTENT_MEDIA +
+                                                                item?.thumbnail
+                                                                : item?.media_type ===
+                                                                  "audio"
+                                                                  ? audiosm
+                                                                  : item?.thumbnail ||
+                                                                  process.env
                                                                     .REACT_APP_CONTENT_MEDIA +
-                                                                  item?.thumbnail
-                                                                  : item?.media_type ===
-                                                                    "audio"
-                                                                    ? audiosm
-                                                                    : item?.thumbnail ||
-                                                                    process.env
-                                                                      .REACT_APP_CONTENT_MEDIA +
-                                                                    item?.media
-                                                              }
-                                                              className="content_img"
-                                                            />
-                                                          );
-                                                        })}
-                                                    </div>
-                                                  ) : (
-                                                    <div className="d-flex cnt_inn">
-                                                      {curr?.purchased_task_content
-                                                        ?.slice(0, 3)
-                                                        .map((item) => {
-                                                          return (
-                                                            <img
-                                                              src={(item?.type === "video" || item?.type === "image") ? item?.videothubnail : audiosm
-                                                              }
-                                                              className="content_img"
-                                                            />
-                                                          );
-                                                        })}
-                                                    </div>
-                                                  )}
-                                                  <Link
-                                                    to={
-                                                      curr?.type === "content"
-                                                        ? `/purchased-content-detail/${curr?._id}`
-                                                        : `/purchased-task-content-detail/${curr?._id}`
-                                                    }
-                                                    className="link view_link d-flex align-items-center"
-                                                  >
-                                                    <BsEye />
-                                                    View content
-                                                  </Link>
-                                                </div>
-                                              </td>
-                                              <td className="timedate_wrap">
-                                                <p className="timedate">
-                                                  <img
-                                                    src={watchic}
-                                                    className="icn_time"
-                                                  />
-                                                  {moment(
-                                                    curr?.createdAt
-                                                  ).format("hh:mm A")}
-                                                </p>
-                                                <p className="timedate">
-                                                  <img
-                                                    src={calendar}
-                                                    className="icn_time"
-                                                  />
-                                                  {moment(
-                                                    curr?.createdAt
-                                                  ).format("DD MMM, YYYY")}
-                                                </p>
-                                              </td>
-                                              <td>
-                                                {curr?.type === "content" ? curr?.content_id?.location : curr?.task_id?.location}
-                                              </td>
-                                              <td className="timedate_wrap">
-                                                <p className="timedate">
-                                                  <img
-                                                    src={idic}
-                                                    className="icn_time"
-                                                  />
-                                                  ID- {curr?._id}
-                                                </p>
+                                                                  item?.media
+                                                            }
+                                                            className="content_img"
+                                                          />
+                                                        );
+                                                      })}
+                                                  </div>
+                                                ) : (
+                                                  <div className="d-flex cnt_inn">
+                                                    {curr?.purchased_task_content
+                                                      ?.slice(0, 3)
+                                                      .map((item) => {
+                                                        return (
+                                                          <img
+                                                            src={(item?.type === "video" || item?.type === "image") ? item?.videothubnail : audiosm
+                                                            }
+                                                            className="content_img"
+                                                          />
+                                                        );
+                                                      })}
+                                                  </div>
+                                                )}
                                                 <Link
-                                                  to={curr?.type === "content" ? `/purchased-content-detail/${curr._id}` : `/purchased-task-content-detail/${curr?._id}`}
-                                                  className="link view_link"
+                                                  to={
+                                                    curr?.type === "content"
+                                                      ? `/purchased-content-detail/${curr?._id}`
+                                                      : `/purchased-task-content-detail/${curr?._id}`
+                                                  }
+                                                  className="link view_link d-flex align-items-center"
                                                 >
-                                                  <BsEye className="icn_time" />
-                                                  View transaction
+                                                  <BsEye />
+                                                  View content
                                                 </Link>
-                                              </td>
-                                              <td className="timedate_wrap">
-                                                <p className="timedate">
-                                                  <img
-                                                    src={calendar}
-                                                    className="icn_time"
-                                                  />
-                                                  {moment(
-                                                    curr?.createdAt
-                                                  ).format("DD MMM, YYYY")}
-                                                </p>
-                                              </td>
-                                              <td className="timedate_wrap">
-                                                <p className="timedate">
-                                                  <img
-                                                    src={invic}
-                                                    className="icn_time"
-                                                  />
-                                                  {curr?.invoiceNumber}
-                                                </p>
-                                                <Link
-                                                  className="link view_link"
-                                                  to={`/invoice/${curr._id}`}
-                                                >
-                                                  <BsEye className="icn_time" />
-                                                  View invoice
-                                                </Link>
-                                              </td>
-                                              <td className="timedate_wrap">
-                                                <p className="timedate">
-                                                  <img
-                                                    src={calendar}
-                                                    className="icn_time"
-                                                  />
-                                                  {moment(
-                                                    curr?.updatedAt
-                                                  ).format("DD MMM, YYYY")}
-                                                </p>
-                                              </td>
-                                              <td>
-                                                <p className="ttl_prc text-left">
-                                                  £
-                                                  {formatAmountInMillion(
-                                                    result
-                                                  )}
-                                                </p>
-                                              </td>
-                                              <td>
-                                                <p className="ttl_prc text-left">
-                                                  £
-                                                  {formatAmountInMillion(
-                                                    curr?.Vat ||
-                                                    curr?.original_Vatamount
-                                                  ) ?? "0"}
-                                                </p>
-                                              </td>
-                                              <td>
-                                                <p className="ttl_prc text-left">
-                                                  £
-                                                  {formatAmountInMillion(
-                                                    curr?.amount
-                                                  ) ?? "0"}
-                                                </p>
-                                              </td>
-                                            </tr>
-                                          );
-                                        }
+                                              </div>
+                                            </td>
+                                            <td className="timedate_wrap">
+                                              <p className="timedate">
+                                                <img
+                                                  src={watchic}
+                                                  className="icn_time"
+                                                />
+                                                {moment(
+                                                  curr?.createdAt
+                                                ).format("hh:mm A")}
+                                              </p>
+                                              <p className="timedate">
+                                                <img
+                                                  src={calendar}
+                                                  className="icn_time"
+                                                />
+                                                {moment(
+                                                  curr?.createdAt
+                                                ).format("DD MMM, YYYY")}
+                                              </p>
+                                            </td>
+                                            <td>
+                                              {curr?.type === "content" ? curr?.content_id?.location : curr?.task_id?.location}
+                                            </td>
+                                            <td className="timedate_wrap">
+                                              <p className="timedate">
+                                                <img
+                                                  src={idic}
+                                                  className="icn_time"
+                                                />
+                                                ID- {curr?._id}
+                                              </p>
+                                              <Link
+                                                to={curr?.type === "content" ? `/purchased-content-detail/${curr._id}` : `/purchased-task-content-detail/${curr?._id}`}
+                                                className="link view_link"
+                                              >
+                                                <BsEye className="icn_time" />
+                                                View transaction
+                                              </Link>
+                                            </td>
+                                            <td className="timedate_wrap">
+                                              <p className="timedate">
+                                                <img
+                                                  src={calendar}
+                                                  className="icn_time"
+                                                />
+                                                {moment(
+                                                  curr?.createdAt
+                                                ).format("DD MMM, YYYY")}
+                                              </p>
+                                            </td>
+                                            <td className="timedate_wrap">
+                                              <p className="timedate">
+                                                <img
+                                                  src={invic}
+                                                  className="icn_time"
+                                                />
+                                                {curr?.invoiceNumber}
+                                              </p>
+                                              <Link
+                                                className="link view_link"
+                                                to={`/invoice/${curr._id}`}
+                                              >
+                                                <BsEye className="icn_time" />
+                                                View invoice
+                                              </Link>
+                                            </td>
+                                            <td className="timedate_wrap">
+                                              <p className="timedate">
+                                                <img
+                                                  src={calendar}
+                                                  className="icn_time"
+                                                />
+                                                {moment(
+                                                  curr?.updatedAt
+                                                ).format("DD MMM, YYYY")}
+                                              </p>
+                                            </td>
+                                            <td>
+                                              <p className="ttl_prc text-left">
+                                                £
+                                                {formatAmountInMillion(curr?.amount)}
+                                              </p>
+                                            </td>
+                                            <td>
+                                              <p className="ttl_prc text-left">
+                                                £
+                                                {formatAmountInMillion(curr?.Vat)}
+                                              </p>
+                                            </td>
+                                            <td>
+                                              <p className="ttl_prc text-left">
+                                                £
+                                                {formatAmountInMillion(curr?.amount + curr?.Vat)}
+                                              </p>
+                                            </td>
+                                          </tr>
+                                        )
                                       })}
                                     </tbody>
                                   </table>

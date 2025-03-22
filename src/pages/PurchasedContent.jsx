@@ -56,23 +56,15 @@ const Purchasedcontent = () => {
   }
 
   const PurchasedContent = async (contentType) => {
-    const payload = {
-      limit: limit,
-      offset: +(page - 1) * limit,
-      sort: purchaseContent.sort.field,
-      category: purchaseContent.filter.category,
-      type: contentType,
-      favContent: purchaseContent.filter.favContent,
-      latestContent: purchaseContent.filter.latestContent,
-    };
+    const offset = (page - 1) * limit;
 
     setLoading(true);
     try {
-      const resp = await Post(`mediaHouse/purchasedContentTypeWise`, payload);
+      const resp = await Get(`mediaHouse/purchasedContents?limit=${limit}&offset=${offset}&licenseType=${contentType}`);
       const category = await Get("mediaHouse/getCategoryType?type=content");
       setPurchaseContent({
         ...purchaseContent,
-        data: resp.data.content,
+        data: resp.data.data,
         categoryData: category?.data?.data,
       });
       setTotalPage(Math.ceil(resp.data.count / limit));
@@ -87,9 +79,8 @@ const Purchasedcontent = () => {
   useEffect(() => {
     PurchasedContent(type.type);
   }, [purchaseContent.filter.active, purchaseContent.sort.active, page]);
-   const handleBasket = ()=>{
 
-    console.log("hello hii testing")
+   const handleBasket = ()=>{
     PurchasedContent(type.type);
    }
   const handleFavourite = (index) => {
@@ -195,24 +186,26 @@ const Purchasedcontent = () => {
                       Purchased Content | {capitalizeFirstLetter(type.type)}
                     </h1>
                   </div>
+                  {
+                    console.log("purchaseContent", purchaseContent)
+                  }
                   <Row className="">
                     {purchaseContent?.data?.map((item, index) => {
-                        const Audio = item?.content?.filter(
+                        const Audio = item?.contentDetails?.content?.filter(
                           (item) => item?.media_type === "audio"
                         );
-                        const Video = item?.content?.filter(
+                        const Video = item?.contentDetails?.content?.filter(
                           (item) => item?.media_type === "video"
                         );
-                        const Image = item?.content?.filter(
+                        const Image = item?.contentDetails?.content?.filter(
                           (item) => item?.media_type === "image"
                         );
-                        const Pdf = item?.content?.filter(
+                        const Pdf = item?.contentDetails?.content?.filter(
                           (item) => item?.media_type === "pdf"
                         );
-                        const Doc = item?.content?.filter(
+                        const Doc = item?.contentDetails?.content?.filter(
                           (item) => item?.media_type === "doc"
                         );
-                         console.log("items ----> 12345----> ",item,item.basket_status)
                         const imageCount = Image.length;
                         const videoCount = Video.length;
                         const audioCount = Audio.length;
@@ -220,90 +213,46 @@ const Purchasedcontent = () => {
                         const docCount = Doc.length;
 
                         return (
-                          <Col md={3}>
+                          <Col md={3} key={item?._id}>
                             <ContentFeedCard
                               feedImg={
-                                item.content[0]?.media_type === "video"
-                                  ? item.content[0]?.watermark ||
+                                item?.contentDetails?.content[0]?.media_type === "video"
+                                  ? item?.contentDetails?.content[0]?.watermark ||
                                     process.env.REACT_APP_CONTENT_MEDIA +
-                                      item.content[0].thumbnail
-                                  : item.content[0]?.media_type === "image"
-                                  ? item.content[0]?.watermark ||
+                                      item?.contentDetails?.content[0].thumbnail
+                                  : item?.contentDetails?.content[0]?.media_type === "image"
+                                  ? item?.contentDetails?.content[0]?.watermark ||
                                     process.env.REACT_APP_CONTENT_MEDIA +
-                                      item.content[0].media
-                                  : item.content[0]?.media_type === "audio"
+                                      item?.contentDetails?.content[0].media
+                                  : item?.contentDetails?.content[0]?.media_type === "audio"
                                   ? audioic
                                   : ""
                               }
-                              // feedType={item.content[0].media_type === "video" ? contentVideo : contentCamera}
                               feedTag={
-                                item?.content_view_type == "mostpopular"
+                                item?.contentDetails?.content_view_type == "mostpopular"
                                   ? "Most Popular"
-                                  : item?.content_view_type == "mostviewed"
+                                  : item?.contentDetails?.content_view_type == "mostviewed"
                                   ? "Most viewed"
                                   : null
                               }
-                              userAvatar={imgs}
-                              authorName={"pseudonymous"}
-                              lnkto={`/purchased-content-detail/${item?.transaction_id}`}
+                              lnkto={`/purchased-content-detail/${item?._id}`}
                               viewTransaction={"View details"}
-                              viewDetail={`/purchased-content-detail/${item?.transaction_id}`}
-                              most_viewed={true}
+                              viewDetail={`/purchased-content-detail/${item?._id}`}
                               author_Name={item?.hopper_id?.user_name}
                               user_avatar={
                                 process.env.REACT_APP_AVATAR_IMAGE +
-                                item?.hopper_id?.avatar_id?.avatar
-                              }
-                              fvticns={
-                                item?.favourite_status === "true"
-                                  ? favouritedic
-                                  : favic
+                                item?.hopperDetails?.avatarDetails?.avatar
                               }
                               content_id={item._id}
-                              is_sale_status={item?.sale_status=="sold" ? true:false}
-                              bool_fav={
-                                item.favourite_status === "true"
-                                  ? "false"
-                                  : "true"
-                              }
-                              favourite={() => handleFavourite(index)} // Call the function directly
-                              type_img={
-                                item?.Vat?.find(
-                                  (el) =>
-                                    el?.purchased_mediahouse_id ==
-                                    JSON.parse(localStorage.getItem("user"))
-                                      ?._id
-                                )?.purchased_content_type == "shared"
-                                  ? shared
-                                  : exclusive
-                              }
-                              type_tag={
-                                item?.Vat?.find(
-                                  (el) =>
-                                    el?.purchased_mediahouse_id ==
-                                    JSON.parse(localStorage.getItem("user"))
-                                      ?._id
-                                )?.purchased_content_type == "shared"
-                                  ? "Shared"
-                                  : "Exclusive"
-                              }
-                              feedHead={item.heading}
+                              is_sale_status={true}
+                              type_img={item?.payment_content_type === "shared" ? shared : exclusive}
+                              type_tag={item?.payment_content_type === "shared" ? "Shared" : "Exclusive"}
+                              feedHead={item?.contentDetails?.heading}
                               feedTime={moment(item?.createdAt).format(
                                 "hh:mm A, DD MMM YYYY"
                               )}
-                              feedLocation={item.location}
-                              contentPrice={`${formatAmountInMillion(
-                                +(
-                                  item?.Vat?.find(
-                                    (el) =>
-                                      el?.purchased_mediahouse_id ==
-                                      JSON.parse(localStorage.getItem("user"))
-                                        ?._id
-                                  )?.amount || 0
-                                )
-                              )}`}
-                              basket={() => handleBasket()}
-                              basketValue={item.basket_status}
+                              feedLocation={item?.contentDetails?.location}
+                              contentPrice={formatAmountInMillion(Number(item?.amount + item?.Vat) || 0)}
                               allContent={item?.content}
                               feedTypeImg1={imageCount > 0 ? cameraic : null}
                               postcount={imageCount > 0 ? imageCount : null}

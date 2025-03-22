@@ -424,7 +424,7 @@ const Dashboard = () => {
                     path="/dashboard-tables/fund_invested"
                     title="Total funds invested"
                     type="total_fund_invested"
-                    total={"£" + formatAmountInMillion(dashboardData?.content?.totalFundInvested?.totalAmount || 0)}
+                    total={"£" + formatAmountInMillion(dashboardData?.content?.totalFundInvested?.totalAmount + dashboardData?.content?.totalFundInvested?.totalVat || 0)}
                     data={getDeepModifiedContent(dashboardData?.content?.totalFundInvested?.data)}
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}

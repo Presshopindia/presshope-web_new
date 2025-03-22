@@ -6268,9 +6268,7 @@ const Feeddetail = (props) => {
                                                     {data?.content?.length}{" "}
                                                     content for{" "}
                                                     <a className="link">
-                                                      £
-                                                      {+curr?.amount +
-                                                        +curr?.amount * 0.2}
+                                                      £{formatAmountInMillion(Number(curr?.amount) || 0)}
                                                     </a>
                                                     . Please download the
                                                     water-mark free, and high
@@ -6282,7 +6280,7 @@ const Feeddetail = (props) => {
                                                       className="theme_btn"
                                                       onClick={() =>
                                                         DownloadContent(
-                                                          data?._id
+                                                          curr?.image_id
                                                         )
                                                       }
                                                     >
