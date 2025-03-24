@@ -559,44 +559,14 @@ const AccountsTables = () => {
                                                     src={contentSource}
                                                     className="content_img"
                                                   />
-                                                  {/* <span className="cont_count">
-                                                    {curr?.content?.length || 0}
-                                                  </span> */}
                                                 </div>
                                               </div>
                                               <div className="tableContentTypeIcons">
                                                 <div class="post_icns_cstm_wrp camera-ico">
                                                   <div class="post_itm_icns dtl_icns">
-                                                    <span class="count">1</span>
-                                                    {/* <img
-                                                      class="feedMediaType iconBg"
-                                                      src={cameraic}
-                                                      alt=""
-                                                    /> */}
+                                                    <span class="count">{curr?.content?.length || 0}</span>
                                                   </div>
                                                 </div>
-                                                {/* <div class="post_icns_cstm_wrp video-ico">
-                                                  <div class="post_itm_icns dtl_icns">
-                                                    <span class="count">1</span>
-                                                    <img
-                                                      class="feedMediaType iconBg"
-                                                      src={videoic}
-                                                      alt=""
-                                                    />
-                                                  </div>
-                                                </div> */}
-                                                {/* <div class="post_icns_cstm_wrp audio-ico">
-                                                  <div class="post_itm_icns dtl_icns">
-                                                    <span class="count">
-                                                      1
-                                                    </span>
-                                                    <img
-                                                      class="feedMediaType iconBg"
-                                                      src={interviewic}
-                                                      alt=""
-                                                    />
-                                                  </div>
-                                                </div> */}
                                               </div>
                                             </td>
                                             <td className="timedate_wrap">

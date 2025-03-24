@@ -575,7 +575,7 @@ const Contenttables = () => {
                       </div>
                     </div>
                   </Card>
-                ) : param.type === "fund_invested_today" || "content_purchased_online_today" ? (
+                ) : param.type === "fund_invested_today" || param.type === "content_purchased_online_today" ? (
                   <Card className="tbl_crd">
                     <div className="">
                       <div
@@ -1469,8 +1469,8 @@ const Contenttables = () => {
                               <th className="">Uploaded content</th>
                               <th>Time & date</th>
                               <th className="tsk_dlts">Task details</th>
-                              <th>Type</th>
-                              <th>Category</th>
+                              <th className="text-center">Type</th>
+                              <th className="text-center">Category</th>
                               <th>Location</th>
                               <th>Uploaded by</th>
                               {

@@ -176,7 +176,6 @@ const Header = () => {
     navColor,
     setNavColor,
   } = useDarkMode();
-  console.log("profile data admin ----->>>>>", profileData);
   useEffect(() => {
     const allDivs = document.querySelectorAll("div");
 
@@ -210,7 +209,6 @@ const Header = () => {
     try {
       const res = await Get(`mediaHouse/getBasketDataCount`);
 
-      console.log("count", res?.data?.data);
       setCartCount(res?.data?.data || 0);
       // setBasketItemsCount(res?.data?.data || 0);
     } catch (error) {
@@ -348,7 +346,7 @@ const Header = () => {
                     to={"/dashboard/exclusive"}
                     // className="nav-link dashboard"
                     className={`nav-link ${
-                      navColor == "/dashboard/exclusive" ? "active" : ""
+                      navColor.startsWith("/dashboard/") ? "active" : ""
                     }`}
                     onClick={() => {
                       // localStorage.removeItem("backBtnVisibility");
@@ -375,9 +373,7 @@ const Header = () => {
                     to={"/content/exclusive/published/favourited"}
                     // className="nav-link"
                     className={`nav-link ${
-                      navColor == "/content/exclusive/published/favourited"
-                        ? "active"
-                        : ""
+                      navColor.startsWith("/content/") ? "active" : ""
                     }`}
                     onClick={() => {
                       localStorage.removeItem("backBtnVisibility");
@@ -421,7 +417,7 @@ const Header = () => {
                     to={"/reports/content"}
                     //  className="nav-link"
                     className={`nav-link ${
-                      navColor == "/reports/content" ? "active" : ""
+                      navColor.startsWith("/reports/") ? "active" : ""
                     }`}
                     onClick={() => {
                       setNavColor("/reports/content");
@@ -431,8 +427,6 @@ const Header = () => {
                   </NavLink>
                   <NavLink
                     to={"/accounts"}
-                    // className="nav-link"
-                    // onClick={() => localStorage.removeItem("backBtnVisibility")}
                     className={`nav-link ${
                       navColor == "/accounts" ? "active" : ""
                     }`}
@@ -671,18 +665,10 @@ const Header = () => {
                                               onClick={() => {
                                                 let promoCode =
                                                   curr?.promo_code_link;
-                                                console.log(
-                                                  "Promo Code:",
-                                                  promoCode
-                                                );
-
                                                 if (promoCode) {
                                                   navigator.clipboard
                                                     .writeText(promoCode)
                                                     .then(() => {
-                                                      console.log(
-                                                        "Promo code copied to clipboard!"
-                                                      );
                                                       alert(
                                                         "Promo code copied to clipboard!"
                                                       );

@@ -332,18 +332,6 @@ const BroadcastedTask = () => {
                                 : null
                         }
                         type={"task"}
-                        postcount={filteredContent("image")?.length}
-                        postcount2={filteredContent("video")?.length}
-                        postcount3={filteredContent("interview")?.length}
-                        feedTypeImg1={
-                          item?.content[0]?.type === "image"
-                            ? cameraic
-                            : item?.content[0]?.type === "audio"
-                              ? interviewic
-                              : item?.content[0]?.type === "video"
-                                ? videoic
-                                : null
-                        }
                         user_avatar={
                           item?.content[0]?.avatar_details?.avatar
                             ? process.env.REACT_APP_AVATAR_IMAGE +
@@ -353,7 +341,7 @@ const BroadcastedTask = () => {
                               item?.content[0]?.avatar_detals?.avatar
                               : ""
                         }
-                        author_Name={item?.uploaded_by?.user_name}
+                        author_Name={item?.content[0]?.uploaded_by?.user_name}
                         lnkto={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
                         viewTransaction="View details"
                         viewDetail={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
@@ -370,15 +358,6 @@ const BroadcastedTask = () => {
                           " hh:mm A, DD MMM YYYY"
                         )}
                         feedLocation={item?.content[0]?.task_id?.location}
-                        // contentPrice={`${formatAmountInMillion(
-                        //   item?.content[0]?.type === "image"
-                        //     ? item?.content[0]?.task_id?.hopper_photo_price || 0
-                        //     : item?.content[0]?.type === "audio"
-                        //       ? item?.content[0]?.task_id?.hopper_interview_price || 0
-                        //       : item?.content[0]?.type === "video"
-                        //         ? item?.content[0]?.task_id?.hopper_videos_price || 0
-                        //         : null
-                        // )}`}
                         favourite={() => handleFavourite(index, "task")}
                         bool_fav={
                           item?.favourite_status === "true" ? "false" : "true"
@@ -387,6 +366,12 @@ const BroadcastedTask = () => {
                         task_content_id={item?._id || item?.task_id?._id}
                         taskContentId={item?._id}
                         is_sale_status={true}
+                        feedTypeImg1={filteredContent("image")?.length > 0 ? cameraic : null}
+                        feedTypeImg2={filteredContent("video")?.length > 0 ? videoic : null}
+                        feedTypeImg3={filteredContent("audio")?.length > 0 ? interviewic : null}
+                        postcount={filteredContent("image")?.length}
+                        postcount2={filteredContent("video")?.length}
+                        postcount3={filteredContent("audio")?.length}
                       />
                     </Col>
                   );

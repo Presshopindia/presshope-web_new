@@ -35,7 +35,7 @@ const Myprofilemdl = (props) => {
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState();
   const [edit, setEdit] = useState(false);
-  const [designation, setDesignation] = useState([]);
+  const [department, setDepartment] = useState([]);
   const [officeList, setOfficeList] = useState([]);
   const toggle = () => setEdit(!edit);
   const { setProfileChange, profileData } = useDarkMode();
@@ -112,7 +112,7 @@ const Myprofilemdl = (props) => {
       full_name: profile?.role !== "User_mediaHouse" || profile?.role !== "Adduser" ? `${profile?.first_name} ${profile?.last_name}` : `${profile?.user_first_name} ${profile?.user_last_name}`,
       phone: profile?.phone,
       email: profile?.email,
-      designation_id: profile?.designation_id,
+      department_id: profile?.department_id,
       country_code: profile?.country_code,
       profile_image: profile?.profile_image,
       admin_detail: profile?.admin_detail || profile?.user_id?.admin_detail,
@@ -124,7 +124,6 @@ const Myprofilemdl = (props) => {
 
     try {
       const resp = await Patch(`mediaHouse/editProfile`, obj);
-      // console.log(resp, "<---------resp of edit profile");
       if (resp) {
         setProfileChange((prev) => !prev)
         props.update();
@@ -147,8 +146,8 @@ const Myprofilemdl = (props) => {
   };
 
   const getDesignation = async () => {
-    const list = await Get(`mediaHouse/getCategoryType?type=designation`);
-    setDesignation(list.data.data);
+    const list = await Get(`mediaHouse/getCategoryType?type=department`);
+    setDepartment(list.data.data);
   };
 
   useEffect(() => {
@@ -379,7 +378,7 @@ const Myprofilemdl = (props) => {
                       <Form.Control
                         type="text"
                         className=""
-                        value={designation?.filter((el => el._id == profile?.designation_id || profile?.designation))?.[0]?.name}
+                        value={department?.find((el => el._id == (profile?.department_id || profile?.admin_detail?.department)))?.name}
                         disabled={props.profileType == "My"}
                       />
                     </Form.Group>
@@ -396,9 +395,9 @@ const Myprofilemdl = (props) => {
                       <Select
                         className="w-100 "
                         value={
-                          profile?.designation_id ? profile?.designation_id : profile?.designation
+                          profile?.department_id ? profile?.department_id : profile?.admin_detail?.department
                         }
-                        name="designation_id"
+                        name="department_id"
                         onChange={handleChange}
                       >
                         <MenuItem
@@ -408,8 +407,7 @@ const Myprofilemdl = (props) => {
                         >
                           Select department
                         </MenuItem>
-                        {designation &&
-                          designation.map((item) => {
+                        {department?.map((item) => {
                             return (
                               <MenuItem value={item._id}>{item.name}</MenuItem>
                             );

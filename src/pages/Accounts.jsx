@@ -866,9 +866,9 @@ const Accounts = () => {
                                                         alt="Photo"
                                                         className="icn"
                                                       />{" "}
+                                                      <br />
                                                     </Tooltip>
                                                   ) : null}
-                                                  <br />
                                                   {getMediaType("video") ? (
                                                     <Tooltip title="Video">
                                                       {" "}
@@ -877,9 +877,9 @@ const Accounts = () => {
                                                         alt="Video"
                                                         className="icn"
                                                       />
+                                                      <br />
                                                     </Tooltip>
                                                   ) : null}
-                                                  <br />
                                                   {getMediaType("audio") ? (
                                                     <Tooltip title="Audio">
                                                       <img

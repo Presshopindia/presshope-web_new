@@ -3442,6 +3442,7 @@ const Feeddetail = (props) => {
   };
 
   const { profileData, setCartCount } = useDarkMode();
+  const user = profileData;
   const userImage = profileData?.hasOwnProperty("admin_detail")
     ? profileData?.admin_detail?.admin_profile
     : profileData?.profile_image;
@@ -3939,6 +3940,7 @@ const Feeddetail = (props) => {
         type: "add",
         users: selectedIds,
         content_id: param.id,
+        sender_id: user._id,
         room_id: chatContentIds ? chatContentIds?.room_id : "",
       };
       // console.log("Obj ----->", obj)
@@ -3961,7 +3963,6 @@ const Feeddetail = (props) => {
     }
   };
   const RemoveChatUser = async (ids) => {
-    console.log("all chat user--->", ids);
     try {
       let obj = {
         type: "remove",
@@ -3969,11 +3970,8 @@ const Feeddetail = (props) => {
         content_id: param.id,
         room_id: chatContentIds ? chatContentIds?.room_id : "",
       };
-      console.log("Obj ----->", obj);
       const resp = await Post("mediaHouse/deleteinternalGroupChatMH", obj);
       if (resp) {
-        console.log("all content viewcheck 1235");
-
         setSelectedIds([]);
         GetUserList();
         setChatContentIds((pre) => ({
@@ -3982,13 +3980,11 @@ const Feeddetail = (props) => {
         }));
         ChatList();
         getDetailContent();
-        // toast.success('Group chat initiated');
         socketInternal.emit("leave room", {
           room_id: JSON.parse(localStorage.getItem("roomId")),
         });
       }
     } catch (error) {
-      console.log("all error --->", error);
     }
   };
 
@@ -4072,10 +4068,7 @@ const Feeddetail = (props) => {
   // internal chat end
 
   // Detail of current User
-  const user = profileData;
   const fullName = user?.first_name + " " + user?.last_name;
-
-  console.log('localStorage.setItem("roomId")', chatContentIds);
 
   const audioRef = useRef(null);
 
@@ -5020,19 +5013,24 @@ const Feeddetail = (props) => {
                                         className="baat_cheet"
                                         // ref={chatBoxRef}
                                         ref={chatBoxInternalRef}
-                                      // chatBoxInternalRef
+                                        // chatBoxInternalRef
+                                        key={curr?._id}
                                       >
                                         {curr?.type === "add" &&
                                           curr.user_id !== profileData._id ? (
                                           <p className="usrAddedTxt mb-4">
                                             <span>
-                                              You added {curr?.addedMsg}
+                                              {
+                                                user?._id === curr?.sender_id?._id ? `You added ${curr?.addedMsg}` : `You have been added by ${curr?.sender_id?.full_name}`
+                                              }
                                             </span>
                                           </p>
                                         ) : curr?.type == "remove" ? (
                                           <p className="usrAddedTxt mb-4">
                                             <span>
-                                              You removed {curr?.addedMsg}
+                                              {
+                                                user?._id === curr?.sender_id?._id ? `You removed ${curr?.addedMsg}` : `You have been removed by ${curr?.sender_id?.full_name}`
+                                              }
                                             </span>
                                           </p>
                                         ) : (

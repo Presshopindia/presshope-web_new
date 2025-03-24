@@ -99,7 +99,7 @@ const ContentPage = () => {
     setLoading(true);
 
     try {
-      const resp = await Post("mediaHouse/view/published/content");
+      const resp = await Post("mediaHouse/view/published/content", {content: "latest"});
 
       setPubContent(resp.data.content);
       if (resp) {
@@ -916,7 +916,7 @@ const ContentPage = () => {
                         </Tab>
                         <Tab eventKey="underoffer" title="Under offer">
                           <div
-                            className="DashBoardsort_wrapper_tab d-flex justify-content-between fvt_undr_ofr"
+                            className="DashBoardsort_wrapper_tab d-flex fvt_undr_ofr"
                             style={{ flexWrap: "wrap" }}
                           >
                             {underOfferContent?.slice(0, 6).map((curr) => {
