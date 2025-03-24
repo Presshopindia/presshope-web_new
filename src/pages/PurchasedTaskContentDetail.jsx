@@ -469,12 +469,7 @@ const PurchasedTaskContentDetail = () => {
                             <h6>Amount</h6>
                             <h6>
                               £
-                              {formatAmountInMillion(
-                                transactionDetails?.amount -
-                                (transactionDetails?.Vat != 0
-                                  ? transactionDetails?.Vat
-                                  : transactionDetails?.original_Vatamount)
-                              )}
+                              {formatAmountInMillion(transactionDetails?.amount || 0)}
                             </h6>
                           </div>
                         </div>
@@ -483,11 +478,7 @@ const PurchasedTaskContentDetail = () => {
                             <h6>VAT 20%</h6>
                             <h6>
                               £
-                              {formatAmountInMillion(
-                                transactionDetails?.Vat != 0
-                                  ? transactionDetails?.Vat
-                                  : transactionDetails?.original_Vatamount
-                              )}
+                              {formatAmountInMillion(transactionDetails?.Vat || 0)}
                             </h6>
                           </div>
                         </div>
@@ -496,9 +487,7 @@ const PurchasedTaskContentDetail = () => {
                             <h6>Total amount paid</h6>
                             <h6>
                               £
-                              {formatAmountInMillion(
-                                transactionDetails?.amount || 0
-                              )}
+                              {formatAmountInMillion((transactionDetails?.amount + transactionDetails?.Vat) || 0)}
                             </h6>
                           </div>
                         </div>
