@@ -25,6 +25,7 @@ import timeic from "../assets/images/watch.svg";
 import { formatAmountInMillion } from "../component/commonFunction";
 import { AiFillCaretDown } from "react-icons/ai";
 import Fundsinvested from "../component/Sortfilters/Dashboard/Fundsinvested";
+import locationPin from "../assets/images/locationPin.png";
 
 const BroadcastedTrackings = (props) => {
   const param = useParams();
@@ -174,6 +175,10 @@ const BroadcastedTrackings = (props) => {
                             lat: props?.viewTask?.taskDetails?.address_location?.coordinates[0],
                             lng: props?.viewTask?.taskDetails?.address_location?.coordinates[1],
                           }}
+                          icon={{
+                            url: locationPin,
+                            scaledSize: new window.google.maps.Size(50, 50), // Size of pin (Width, Height)
+                          }}
                         />
                       </GoogleMap>
                       <div className="hopper_content">
@@ -223,6 +228,10 @@ const BroadcastedTrackings = (props) => {
                                   position={{
                                     lat: curr?.address_location?.coordinates[0],
                                     lng: curr?.address_location?.coordinates[1],
+                                  }}
+                                  icon={{
+                                    url: locationPin,
+                                    scaledSize: new window.google.maps.Size(30, 30), // Size of pin (Width, Height)
                                   }}
                                 />
                               </GoogleMap>

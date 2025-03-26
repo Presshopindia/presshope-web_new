@@ -152,6 +152,27 @@ const Contenttables = () => {
     HopperContribute();
   }, [contentOnlinePage]);
 
+  const [contentPurchasedFromTask, setContentPurchasedFromTask] = useState(null);
+
+  const ContentPurchasedFromTasks = async () => {
+    try {
+      console.log("page", page)
+      setLoading(true);
+      const resp = await Post("mediaHouse/content-purchased-from-task", {
+        limit: 4,
+        offset: (page - 1) * 4 
+      });
+      setContentPurchasedFromTask(resp?.data?.response);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    ContentPurchasedFromTasks();
+  }, [page]);
+
   return (
     <>
       {loading && <Loader />}
@@ -656,9 +677,10 @@ const Contenttables = () => {
                               <th className="tsk_dlts">Location</th>
                               {param.type === "content_purchased_online_today" && <th>Purchased by</th>}
                               <th>Published by</th>
-                              <th>{param.type === "fund_invested_today" ? "Nett price paid" : "Purchase price"}</th>
+                              <th>{param.type === "fund_invested_today" ? "Nett price paid" : "Published price"}</th>
                               {param.type === "fund_invested_today" && <th>VAT paid</th>}
-                              <th>{param.type === "fund_invested_today" ? "Total funds invested" : "Amount paid"}</th>
+                              {param.type === "content_purchased_online_today" && <th>Discounted price</th>}
+                              <th>{param.type === "fund_invested_today" ? "Total funds invested" : "Purchase price"}</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -840,11 +862,14 @@ const Contenttables = () => {
                                       </p>
                                     </div>
                                   </td>
-                                  <td>£{formatAmountInMillion(curr?.amount)}</td>
+                                  <td>£{formatAmountInMillion(param.type === "fund_invested_today" ? curr?.amount : curr?.published_price)}</td>
                                   {
                                     param.type === "fund_invested_today" && <td>£{formatAmountInMillion(curr?.Vat)}</td>
                                   }
-                                  <td>£{formatAmountInMillion(curr?.amount + curr?.Vat)}</td>
+                                  {
+                                    param?.type === "content_purchased_online_today" && <td>£{formatAmountInMillion(curr?.discounted_price)}</td>
+                                  }
+                                  <td>£{formatAmountInMillion(param.type === "fund_invested_today" ? curr?.amount + curr?.Vat : curr?.amount)}</td>
                                 </tr>
                               );
                             })}
@@ -1482,130 +1507,129 @@ const Contenttables = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            {content_count?.sourced_content_from_tasks?.task
-                              ?.map((curr) => {
-                                return (
-                                  <tr
-                                    className="clickable"
-                                    onClick={() =>
-                                      navigate(`/purchased-task-content-detail/${curr?._id}`)
-                                    }
-                                  >
-                                    <td className="content_img_td position-relative add-icons-box">
-                                      <div className="tbl_cont_wrp">
-                                        <img
-                                          src={
-                                            (curr?.purchasedContent?.[0]?.type === "image" || curr?.purchasedContent?.[0]?.type === "video") ? curr?.purchasedContent?.[0]?.videothubnail : audioic
-                                          }
-                                          className="content_img"
-                                        />
-                                      </div>
-                                      <div className="tableContentTypeIcons">
-                                        <div class="post_icns_cstm_wrp camera-ico">
-                                          <div class="post_itm_icns dtl_icns">
-                                            <span class="count">{curr?.purchasedContent?.length || 0}</span>
-                                          </div>
+                            {contentPurchasedFromTask?.data?.map((curr) => {
+                              return (
+                                <tr
+                                  className="clickable"
+                                  onClick={() =>
+                                    navigate(`/purchased-task-content-detail/${curr?._id}`)
+                                  }
+                                >
+                                  <td className="content_img_td position-relative add-icons-box">
+                                    <div className="tbl_cont_wrp">
+                                      <img
+                                        src={
+                                          (curr?.purchased_task_content?.[0]?.type === "image" || curr?.purchased_task_content?.[0]?.type === "video") ? curr?.purchased_task_content?.[0]?.videothubnail : audioic
+                                        }
+                                        className="content_img"
+                                      />
+                                    </div>
+                                    <div className="tableContentTypeIcons">
+                                      <div class="post_icns_cstm_wrp camera-ico">
+                                        <div class="post_itm_icns dtl_icns">
+                                          <span class="count">{curr?.purchased_task_content?.length || 0}</span>
                                         </div>
                                       </div>
-                                    </td>
-                                    <td className="timedate_wrap">
-                                      <p className="timedate">
-                                        <img
-                                          src={watchic}
-                                          className="icn_time"
-                                        />
-                                        {moment(curr?.createdAt).format(
-                                          "h:mm A"
-                                        )}
-                                      </p>
-                                      <p className="timedate">
-                                        <img
-                                          src={calendar}
-                                          className="icn_time"
-                                        />
-                                        {moment(curr?.createdAt).format(
-                                          "DD MMM, YYYY"
-                                        )}
-                                      </p>
-                                    </td>
-                                    <td className="description_td">
-                                      <p className="desc_ht mb-0">
-                                        {curr?.task_id?.heading}
-                                      </p>
-                                    </td>
-                                    <td className="text-center">
-                                      <Tooltip
-                                        title={
-                                          curr?.purchasedContent?.[0]?.type === "image"
-                                            ? "Photo"
-                                            : curr?.purchasedContent?.[0]?.type === "video"
-                                              ? "Video"
-                                              : "Interview"
-                                        }
-                                      >
-                                        <img
-                                          src={
-                                            curr?.purchasedContent?.[0]?.type === "image"
-                                              ? cameraic
-                                              : curr?.purchasedContent?.[0]?.type === "video"
-                                                ? videoic
-                                                : curr?.purchasedContent?.[0]?.type === "audio"
-                                                  ? interviewic
-                                                  : null
-                                          }
-                                          className="icn"
-                                        />
-                                      </Tooltip>
-                                    </td>
-                                    <td className="text-center">
-                                      <Tooltip
-                                        title={curr?.task_id?.category_id?.name}
-                                      >
-                                        <img
-                                          src={curr?.task_id?.category_id?.icon}
-                                          className="icn"
-                                        />
-                                      </Tooltip>
-                                    </td>
-                                    <td>{curr?.hopper_details?.address}</td>
-                                    <td>
-                                      <div className="hpr_dt">
-                                        <img
-                                          src={
-                                            curr?.hopper_details?.avatar_details
-                                              ?.avatar
-                                              ? process.env
-                                                .REACT_APP_AVATAR_IMAGE +
-                                              curr?.hopper_details
-                                                ?.avatar_details?.avatar
-                                              : null
-                                          }
-                                          className="big_img"
-                                        />
-                                        <p className="hpr_nme">
-                                          {curr?.hopper_details?.user_name}
-                                        </p>
-                                      </div>
-                                    </td>
-                                    {
-                                      param.type == "content_sourced_from_task_funds_invested" && <td>£{formatAmountInMillion(
-                                        +curr?.Vat
-                                      )}</td>
-                                    }
-                                    <td>
-                                      £{formatAmountInMillion(
-                                        +curr?.amount
+                                    </div>
+                                  </td>
+                                  <td className="timedate_wrap">
+                                    <p className="timedate">
+                                      <img
+                                        src={watchic}
+                                        className="icn_time"
+                                      />
+                                      {moment(curr?.createdAt).format(
+                                        "h:mm A"
                                       )}
-                                    </td>
-                                  </tr>
-                                );
-                              })}
+                                    </p>
+                                    <p className="timedate">
+                                      <img
+                                        src={calendar}
+                                        className="icn_time"
+                                      />
+                                      {moment(curr?.createdAt).format(
+                                        "DD MMM, YYYY"
+                                      )}
+                                    </p>
+                                  </td>
+                                  <td className="description_td">
+                                    <p className="desc_ht mb-0">
+                                      {curr?.taskDetails?.heading}
+                                    </p>
+                                  </td>
+                                  <td className="text-center">
+                                    <Tooltip
+                                      title={
+                                        curr?.purchased_task_content?.[0]?.type === "image"
+                                          ? "Photo"
+                                          : curr?.purchased_task_content?.[0]?.type === "video"
+                                            ? "Video"
+                                            : "Interview"
+                                      }
+                                    >
+                                      <img
+                                        src={
+                                          curr?.purchased_task_content?.[0]?.type === "image"
+                                            ? cameraic
+                                            : curr?.purchased_task_content?.[0]?.type === "video"
+                                              ? videoic
+                                              : curr?.purchased_task_content?.[0]?.type === "audio"
+                                                ? interviewic
+                                                : null
+                                        }
+                                        className="icn"
+                                      />
+                                    </Tooltip>
+                                  </td>
+                                  <td className="text-center">
+                                    <Tooltip
+                                      title={curr?.taskDetails?.categoryDetails?.name}
+                                    >
+                                      <img
+                                        src={curr?.taskDetails?.categoryDetails?.icon}
+                                        className="icn"
+                                      />
+                                    </Tooltip>
+                                  </td>
+                                  <td>{curr?.taskDetails?.location}</td>
+                                  <td>
+                                    <div className="hpr_dt">
+                                      <img
+                                        src={
+                                          curr?.hopperDetails?.avatarDetails
+                                            ?.avatar
+                                            ? process.env
+                                              .REACT_APP_AVATAR_IMAGE +
+                                            curr?.hopperDetails
+                                              ?.avatarDetails?.avatar
+                                            : null
+                                        }
+                                        className="big_img"
+                                      />
+                                      <p className="hpr_nme">
+                                        {curr?.hopperDetails?.user_name}
+                                      </p>
+                                    </div>
+                                  </td>
+                                  {
+                                    param.type == "content_sourced_from_task_funds_invested" && <td>£{formatAmountInMillion(
+                                      +curr?.Vat
+                                    )}</td>
+                                  }
+                                  <td>
+                                    £{formatAmountInMillion(
+                                      (curr?.amount + curr?.Vat) || 0
+                                    )}
+                                  </td>
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
-                        {content_count?.sourced_content_from_tasks?.task?.length > 0 && (
+                        {contentPurchasedFromTask?.totalCount > 0 && (
                           <PaginationComp
-                            totalPage={Math.ceil(content_count?.sourced_content_from_tasks?.count / 4)}
-                            path="content-tables/content_sourced_from_task"
+                            totalPage={Math.ceil(contentPurchasedFromTask?.totalCount / 4)}
+                            path={`content-tables/${param?.type}`}
                             setPage={setPage}
                             page={page}
                           />

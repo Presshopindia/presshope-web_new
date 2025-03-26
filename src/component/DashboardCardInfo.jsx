@@ -4,6 +4,7 @@ import CommonSort from "./Sortfilters/commonSort"
 import { Link } from "react-router-dom"
 import { Button } from "react-bootstrap"
 import { GoogleMap, Marker } from "@react-google-maps/api"
+import locationPin from "../assets/images/locationPin.png";
 
 export const DashboardCardInfo = ({
     path = "",
@@ -160,6 +161,10 @@ export const DashboardCardInfo = ({
                                                         position={{
                                                             lat: el?.coordinates[0],
                                                             lng: el?.coordinates[1],
+                                                        }}
+                                                        icon={{
+                                                            url: locationPin,
+                                                            scaledSize: new window.google.maps.Size(20, 20), // Size of pin (Width, Height)
                                                         }}
                                                     />
                                                 </GoogleMap>

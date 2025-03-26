@@ -119,7 +119,7 @@ const PurchasedContentDetail = () => {
     getTransactionDetails();
     ExclusiveContnetLists();
     // For dynamic scrolling
-    // window.scrollTo(0, 950)
+    window.scrollTo(0, 0)
   }, []);
 
   const [openRecentActivity, setOpenRecentActivity] = useState(false);

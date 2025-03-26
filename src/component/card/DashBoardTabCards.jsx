@@ -25,7 +25,7 @@ function DashBoardTabCards(props) {
                   {props.image_type === "audio" ? (
                     <div div className="cstm_icn_wrpr">
                       <img
-                        className="list-card-img me-0"
+                        className="w-80 me-0"
                         src={props.imgtab}
                         alt="1"
                       />

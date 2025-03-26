@@ -99,7 +99,7 @@ const ContentPage = () => {
     setLoading(true);
 
     try {
-      const resp = await Post("mediaHouse/view/published/content", {content: "latest"});
+      const resp = await Post("mediaHouse/view/published/content", { content: "latest" });
 
       setPubContent(resp.data.content);
       if (resp) {
@@ -218,6 +218,41 @@ const ContentPage = () => {
     setDashboardPayload(payload);
     setDashboardSort({ ...dashboardSort, type: "" });
   }
+
+  const [newUploadedContent, setNewUploadedContent] = useState(null);
+  const [contentPurchasedFromTask, setContentPurchasedFromTask] = useState(null);
+
+  const ContentPurchasedFromTasks = async () => {
+    try {
+      setLoading(true);
+      const resp = await Post("mediaHouse/content-purchased-from-task", {
+        limit: 2,
+      });
+      setContentPurchasedFromTask(resp?.data?.response);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    ContentPurchasedFromTasks();
+  }, []);
+
+  const NewUploadedContent = async () => {
+    setLoading(true);
+    try {
+      let resp = await Get(`mediaHouse/getuploadedContentbyHoppers?limit=2&offet=0`)
+      setNewUploadedContent(resp?.data?.uploadedContent);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    NewUploadedContent();
+  }, []);
 
   return (
     <>
@@ -438,50 +473,33 @@ const ContentPage = () => {
                       View all
                       <BsArrowRight className="text-danger" />{" "}
                     </Link>
-                    {dashboardData?.task?.contentPurchasedFromTask?.data
-                      ?.slice(0, 2)
-                      ?.map((curr) => {
-                        return (
-                          <Link to={`/sourced-content-detail/${curr._id}`} key={curr?._id}>
-                            <DashBoardTabCards
-                              imgcount={curr?.task_id?.content.length}
-                              imgtab={
-                                curr.type === "video"
-                                  ? process.env.REACT_APP_UPLOADED_CONTENT +
-                                  curr.videothubnail
-                                  : process.env.REACT_APP_UPLOADED_CONTENT +
-                                  curr.imageAndVideo
-                              }
-                              tabcarddata={curr?.taskDetails?.heading}
-                              tabcard2={moment(curr.createdAt).format(
-                                "hh:mm a, DD MMM YYYY"
-                              )}
-                              tabcard3={`£${formatAmountInMillion(
-                                +curr.amount_paid
-                              )}`}
-                              feedIcon={
-                                curr.type === "image"
-                                  ? typeCam
-                                  : curr.type === "video"
-                                    ? typeVideo
-                                    : typeInterview
-                              }
-                              feedType={
-                                curr.type === "image"
-                                  ? "Photo"
-                                  : curr.type === "Video"
-                                    ? "Video"
-                                    : "Interview"
-                              }
-                              tabcard5={curr?.hopperDetails?.user_name}
-                              imgtab1={
-                                process.env.REACT_APP_AVATAR_IMAGE +
-                                curr?.hopperDetails?.avatarDetails?.avatar
-                              }
-                            />
-                          </Link>
-                        );
-                      })}
+                    {contentPurchasedFromTask?.data?.map((curr) => {
+                      return (
+                        <Link to={`/purchased-task-content-detail/${curr._id}`} key={curr?._id}>
+                          <DashBoardTabCards
+                            imgtab={(curr?.purchased_task_content?.[0]?.type === "image" || curr?.purchased_task_content?.[0]?.type === "video") ? curr?.purchased_task_content?.[0]?.videothubnail : audioic}
+                            tabcarddata={curr?.taskDetails?.heading}
+                            tabcard2={moment(curr.createdAt).format(
+                              "hh:mm a, DD MMM YYYY"
+                            )}
+                            tabcard3={`£${formatAmountInMillion(curr?.amount + curr?.Vat)}`}
+                            image_type={curr?.purchased_task_content?.[0]?.type}
+                            feedType={
+                              curr.type === "image"
+                                ? "Photo"
+                                : curr.type === "Video"
+                                  ? "Video"
+                                  : "Interview"
+                            }
+                            tabcard5={curr?.hopperDetails?.user_name}
+                            imgtab1={
+                              process.env.REACT_APP_AVATAR_IMAGE +
+                              curr?.hopperDetails?.avatarDetails?.avatar
+                            }
+                          />
+                        </Link>
+                      );
+                    })}
                   </div>
                 </Col>
               </Row>
@@ -723,10 +741,10 @@ const ContentPage = () => {
                         </Tab>
 
                         <Tab eventKey="uploaded" title="Uploaded content">
-                          {uploadedContent?.slice(0, 2)?.map((item) => {
+                          {newUploadedContent?.map((item) => {
                             return (
                               <CardContent className="dash-c-body rev new_tbs_card" key={item?._id}>
-                                <Link to={`/content-details/${item._id}?task_content_id=${item?.content_id}`}>
+                                <Link to={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}>
                                   <div className="">
                                     <Card className="list-card mb-3 bg_grey">
                                       <CardContent className="dash-c-body">
@@ -735,29 +753,9 @@ const ContentPage = () => {
                                             <div className="commonContentIconsWrap crd_in_icons d-flex justify-content-between">
                                               <span className="rateView-type dflt cmr">
                                                 <span className="volCount">
-                                                  {item?.task_id?.content.length}
+                                                  {item?.content?.length}
                                                 </span>
-                                                {/* <img
-                                                  className=""
-                                                  src={
-                                                    item?.task_id?.content[0]
-                                                      ?.media_type == "image"
-                                                      ? contentCamera
-                                                      : item?.task_id
-                                                        ?.content[0]
-                                                        ?.media_type ==
-                                                        "video"
-                                                        ? contentVideo
-                                                        : null
-                                                  }
-                                                  alt={item?._id}
-                                                /> */}
                                               </span>
-                                              {/* <PostIconsWrapper 
-                                                    images={item?.image_count}
-                                                    video={item?.video_count}
-                                                    audio={item?.audio_count}
-                                                  /> */}
                                               <span className="rateView-type dflt">
                                                 <img
                                                   className=""
@@ -773,24 +771,17 @@ const ContentPage = () => {
                                             <img
                                               className="list-card-img"
                                               src={
-                                                item?.task_id?.content[0]
-                                                  ?.media_type == "image"
-                                                  ? item?.task_id?.content[0]
-                                                    ?.watermark
-                                                  : item?.task_id?.content[0]
-                                                    ?.media_type == "video"
-                                                    ? item?.task_id?.content[0]?.thumbnail.startsWith(
-                                                      "https"
-                                                    )
-                                                      ? item?.task_id
-                                                        ?.content[0]
-                                                        ?.thumbnail
-                                                      : process.env
-                                                        .REACT_APP_CONTENT_MEDIA +
-                                                      item?.task_id
-                                                        ?.content[0]
-                                                        ?.thumbnail
-                                                    : null
+                                                item?.content[0]?.type === "image"
+                                                  ? item?.content[0]?.videothubnail ||
+                                                  process.env.REACT_APP_UPLOADED_CONTENT +
+                                                  item?.content[0]?.imageAndVideo
+                                                  : item?.content[0]?.type === "video"
+                                                    ? item?.content[0]?.videothubnail ||
+                                                    process.env.REACT_APP_UPLOADED_CONTENT +
+                                                    item?.content[0]?.videothubnail
+                                                    : item?.content[0]?.type === "audio"
+                                                      ? audioic
+                                                      : null
                                               }
                                               alt="1"
                                             />
@@ -800,7 +791,7 @@ const ContentPage = () => {
                                               variant="body2"
                                               className="list-car-txt mb-2 txt_mdm"
                                             >
-                                              {item.task_id.task_description}
+                                              {item?.content[0]?.task_id?.heading}
                                               <br />
                                             </Typography>
                                             <div className="d-flex align-items-center justify-content-between">
@@ -811,11 +802,7 @@ const ContentPage = () => {
                                                 className="mb-0 txt_mdm"
                                               >
                                                 <MdOutlineWatchLater color="#000" />
-                                                {moment(
-                                                  item.task_id.createdAt
-                                                ).format(
-                                                  " hh:mm A, DD MMM YYYY"
-                                                )}
+                                                {moment(item?.content[0]?.updatedAt).format(" hh:mm A, DD MMM YYYY")}
                                               </Typography>
                                             </div>
                                           </div>
@@ -830,7 +817,7 @@ const ContentPage = () => {
                           <div className="view-all_link_wrap d-flex justify-content-end">
                             <Link
                               className="view-all"
-                              to={"/Uploaded-Content/uploaded"}
+                              to={"/hopper-task-content/all"}
                             >
                               {" "}
                               View all <BsArrowRight className="text-danger" />{" "}

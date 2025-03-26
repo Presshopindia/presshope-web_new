@@ -40,19 +40,13 @@ import contimg3 from "../assets/images/Contentdetail/content3.png";
 import watchic from "../assets/images/watch.svg";
 import cameraic from "../assets/images/camera.svg";
 import exclusiveic from "../assets/images/exclusive.svg";
-import crimeic from "../assets/images/sortIcons/crime.svg";
-import hprimg1 from "../assets/images/avatars/usrimg1.svg";
-import hprimg2 from "../assets/images/avatars/usrimg2.svg";
-import hprimg3 from "../assets/images/avatars/usrimg3.svg";
-import contentic from "../assets/images/content.svg";
-import taskic from "../assets/images/task.svg";
+import locationPin from "../assets/images/locationPin.png";
 import Fundsinvested from "./Sortfilters/Dashboard/Fundsinvested";
-import BroadcastedTask from "./Sortfilters/Dashboard/BroadcastedTask";
 import Purchasedcontent from "./Sortfilters/Dashboard/PurchasedCont";
 import audimgsm from "../assets/images/audimgsmall.svg";
 import docsic from "../assets/images/docsic.svg";
 import Loader from "./Loader";
-import { formatAmountInMillion, receiveLastTwoDigits } from "./commonFunction";
+import { formatAmountInMillion } from "./commonFunction";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { PaginationComp } from "./Pagination";
@@ -710,7 +704,7 @@ const DashboardTables = () => {
                                     <tr
                                       onClick={() =>
                                         navigate(
-                                          `/task?task_ids=${curr?._id}`
+                                          `/task?taskid=${curr?._id}`
                                         )
                                       }
                                       style={{ cursor: "pointer" }}
@@ -759,6 +753,10 @@ const DashboardTables = () => {
                                                       lng: curr
                                                         ?.address_location
                                                         ?.coordinates[1],
+                                                    }}
+                                                    icon={{
+                                                      url: locationPin,
+                                                      scaledSize: new window.google.maps.Size(30, 30), // Size of pin (Width, Height)
                                                     }}
                                                   />
                                                 </GoogleMap>
@@ -1064,14 +1062,13 @@ const DashboardTables = () => {
                             <th>Location</th>
                             <th>Purchased by</th>
                             <th>Published by</th>
+                            <th>Published price</th>
+                            <th>Discounted Price</th>
                             <th>Purchase price</th>
-                            <th>Amount paid</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {contentOnline?.task.map((curr, index) => {
-                            const media_house_id = curr?.media_house_id;
-
+                          {contentOnline?.task.map((curr) => {
                             const contentArray = curr?.contentDetails?.content;
                             const audio =
                               contentArray?.filter(
@@ -1243,10 +1240,13 @@ const DashboardTables = () => {
                                   </div>
                                 </td>
                                 <td>
-                                  £{formatAmountInMillion(curr?.amount)}
+                                  £{formatAmountInMillion(curr?.published_price || 0)}
                                 </td>
                                 <td>
-                                  £{formatAmountInMillion(curr?.amount + curr?.Vat)}
+                                  £{formatAmountInMillion(curr?.discounted_price || 0)}
+                                </td>
+                                <td>
+                                  £{formatAmountInMillion(curr?.amount)}
                                 </td>
                               </tr>
                             );

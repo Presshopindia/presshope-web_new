@@ -35,7 +35,12 @@ const HopperUploadedContent = () => {
   const TaskDetails = async (id) => {
     setLoading(true);
     try {
-      let resp = await Get(`mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit}&task_id=${param?.task_id}`)
+      let resp = "";
+      if (param?.task_id !== "all") {
+        resp = await Get(`mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit}&task_id=${param?.task_id}`)
+      } else {
+        resp = await Get(`mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit}`)
+      }
       setNewUploadedContent(resp?.data);
       setTotalPage(Math.ceil(resp.data?.totalUploadedContent / limit));
       setLoading(false);
@@ -170,7 +175,7 @@ const HopperUploadedContent = () => {
           {totalPage ? (
             <PaginationComp
               totalPage={totalPage}
-              path="task"
+              path={`hopper-task-content/${param?.task_id}`}
               type="fav"
               setPage={setPage}
               page={page}

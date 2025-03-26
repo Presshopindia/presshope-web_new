@@ -913,7 +913,7 @@ const TaskReports = ({
                             >
                               <img
                                 className="reportcontentImg img-fluid"
-                                src={(curr?.purchased_task_content?.type === "image" || curr?.purchased_task_content?.type === "video") ? curr?.purchased_task_content?.videothubnail : audioic}
+                                src={(curr?.purchased_task_content?.[0]?.type === "image" || curr?.purchased_task_content?.[0]?.type === "video") ? curr?.purchased_task_content?.[0]?.videothubnail : audioic}
                                 alt=""
                               />
                               <div className="contInfo d-flex">
