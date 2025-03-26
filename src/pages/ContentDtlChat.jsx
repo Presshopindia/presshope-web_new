@@ -485,7 +485,7 @@ const ContentDtlChat = (props) => {
                   <div className="chatting_header d-flex align-items-start justify-content-start">
                     <p className="mb-0">Content</p>
                   </div>
-                  <div className="chat_content_list">
+                  <div className="chat_content_list" style={{maxHeight: "423px"}}>
                     {props.contents &&
                       props.contents.map((curr) => {
                         return (
@@ -505,15 +505,10 @@ const ContentDtlChat = (props) => {
                             <CardContent className="dash-c-body p-0 clickable active">
                               <div className="list-in d-flex align-items-start">
                                 <div className="rateReview_content me-2">
-                                  <span className="rateView-type">
-                                    <img
-                                      className="cont_type_ic"
-                                      src={
-                                        curr?.content[0]?.media_type === "video"
-                                          ? videoic
-                                          : cameraic
-                                      }
-                                    />
+                                  <span className="content-size">
+                                    {
+                                      curr?.content?.length || 0
+                                    }
                                   </span>
                                   <img
                                     className="list-card-img"

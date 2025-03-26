@@ -2200,6 +2200,22 @@ button.MuiButton-secondary {
     justify-content: center;
     align-items: center;
   }
+
+  .content-size {
+    background: rgba(63, 78, 76, 0.696484) !important;
+    backdrop-filter: blur(1.35914px);
+    left: 3px;
+    top: 3px;
+    border-radius: 6px;
+    display: inline-flex;
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    color: white;
+  }
 }
 
 .dashCard-heading {

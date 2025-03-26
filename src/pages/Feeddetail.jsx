@@ -3364,6 +3364,7 @@ import Loader from "../component/Loader";
 import { useDarkMode } from "../context/DarkModeContext";
 import {
   blobImageUrl,
+  contentPurchasedInContentChat,
   formatAmountInMillion,
   successToasterFun,
 } from "../component/commonFunction";
@@ -3372,6 +3373,7 @@ import { SlMagnifierAdd } from "react-icons/sl";
 import ViewContent from "../component/ViewContent";
 import heart from "../assets/images/heart.svg";
 import { toast } from "react-toastify";
+import LottieAnimation from "../component/lottiAnimation";
 
 const Feeddetail = (props) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -5461,7 +5463,7 @@ const Feeddetail = (props) => {
                                         </span>
                                       </h6>
 
-                                      <div className="crd chatting_itm sngl_cht d-flex align-items-start">
+                                      <div className="crd chatting_itm d-flex align-items-start">
                                         <div className="img">
                                           <img
                                             src={presshopchatic}
@@ -5507,8 +5509,8 @@ const Feeddetail = (props) => {
                                         ?.map((curr) => {
                                           return curr?.message_type ===
                                             "offer_started" ? (
-                                            <div className="crd chatting_itm sngl_cht d-flex align-items-start">
-                                              <div className="img" style={{ width: '50px' }}>
+                                            <div className="crd chatting_itm d-flex align-items-start">
+                                              <div className="img">
                                                 <img
                                                   src={presshopchatic}
                                                   alt="User"
@@ -5677,7 +5679,7 @@ const Feeddetail = (props) => {
                                                     </div>
                                                   </>
                                                 ) : (
-                                                  <span class="loader"></span>
+                                                  <LottieAnimation />
                                                 )}
                                               </div>
 
@@ -5783,7 +5785,7 @@ const Feeddetail = (props) => {
                                                   </div>
                                                 </div>
                                               ) : (
-                                                <span class="loader"></span>
+                                                <LottieAnimation />
                                               )}
                                               {/* bondoury */}
 
@@ -5846,12 +5848,11 @@ const Feeddetail = (props) => {
                                                     </div>
                                                   </div>
                                                 ) : isShowBuyMessage ? (
-                                                  <span class="loader"></span>
+                                                  <LottieAnimation />
                                                 ) : (
                                                   ""
                                                 )}
                                               </div>
-
                                               <div className="crd chatting_itm sngl_cht">
                                                 <div className="d-flex align-items-center msg-worries">
                                                   <div className="img">
@@ -5945,7 +5946,7 @@ const Feeddetail = (props) => {
                                           ) : curr?.message_type ===
                                             "PaymentIntent" ? (
                                             <>
-                                              <div className="crd chatting_itm auto_msg rating sngl_cht d-flex align-items-start">
+                                              <div className="crd chatting_itm auto_msg rating d-flex align-items-start">
                                                 <div className="img">
                                                   <img
                                                     src={presshopchatic}
@@ -6263,10 +6264,10 @@ const Feeddetail = (props) => {
                                                   <p className="mb-0 msg auto_press_msg">
                                                     Congrats, you’ve
                                                     successfully purchased{" "}
-                                                    {data?.content?.length}{" "}
+                                                    {contentPurchasedInContentChat(data?.content)}{" "}
                                                     content for{" "}
                                                     <a className="link">
-                                                      £{formatAmountInMillion(Number(curr?.amount) || 0)}
+                                                      £{formatAmountInMillion(Number(curr?.amount) || 0)} (Inc VAT)
                                                     </a>
                                                     . Please download the
                                                     water-mark free, and high

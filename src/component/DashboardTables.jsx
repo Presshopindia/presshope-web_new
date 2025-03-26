@@ -468,17 +468,19 @@ const DashboardTables = () => {
                                   }
                                 >
                                   <td className="content_img_td position-relative add-icons-box">
-                                    <Link>
-                                      <div className="tbl_cont_wrp cnt_online_img noGrid">
-                                        <img
-                                          src={contentSource}
-                                          className="content_img"
-                                        />
+                                    <div className="tbl_cont_wrp">
+                                      <img
+                                        src={contentSource}
+                                        className="content_img"
+                                      />
+                                    </div>
+                                    <div className="tableContentTypeIcons">
+                                      <div class="post_icns_cstm_wrp camera-ico">
+                                        <div class="post_itm_icns dtl_icns">
+                                          <span class="count">{curr?.contentDetails?.content?.length || 0}</span>
+                                        </div>
                                       </div>
-                                      <div className="tableContentTypeIcons">
-                                        {/* 1 */}
-                                      </div>
-                                    </Link>
+                                    </div>
                                   </td>
 
                                   <td className="timedate_wrap">
@@ -1119,14 +1121,19 @@ const DashboardTables = () => {
                                 }
                               >
                                 <td className="content_img_td position-relative add-icons-box">
-                                  <Link>
-                                    <div className="tbl_cont_wrp cnt_online_img noGrid">
-                                      <img
-                                        src={contentSource}
-                                        className="content_img"
-                                      />
+                                  <div className="tbl_cont_wrp">
+                                    <img
+                                      src={contentSource}
+                                      className="content_img"
+                                    />
+                                  </div>
+                                  <div className="tableContentTypeIcons">
+                                    <div class="post_icns_cstm_wrp camera-ico">
+                                      <div class="post_itm_icns dtl_icns">
+                                        <span class="count">{curr?.contentDetails.content?.length || 0}</span>
+                                      </div>
                                     </div>
-                                  </Link>
+                                  </div>
                                 </td>
                                 <td className="timedate_wrap">
                                   <p className="timedate">

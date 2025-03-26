@@ -308,3 +308,34 @@ export const contentUploadedMsgInTaskChat = (data) => {
     return msg;
 };
 
+export const contentPurchasedInContentChat = (data) => {
+    const getImage = data?.filter((el) => el.media_type === "image")?.length || 0;
+    const getVideo = data?.filter((el) => el.media_type === "video")?.length || 0;
+    const getAudio = data?.filter((el) => el.media_type === "audio")?.length || 0;
+
+    let msg = "";
+    let isMultiImage = getImage > 1;
+    let isMultiVideo = getVideo > 1;
+    let isMultiAudio = getAudio > 1;
+
+    if (getImage && getVideo && getAudio) {
+        msg = `${getImage} photo${isMultiImage ? "s" : ""}, ${getVideo} video${isMultiVideo ? "s" : ""} and ${getAudio} audio${isMultiAudio ? "s" : ""}`;
+    } else if (getImage && getVideo) {
+        msg = `${getImage} photo${isMultiImage ? "s" : ""} and ${getVideo} video${isMultiVideo ? "s" : ""}`;
+    } else if (getImage && getAudio) {
+        msg = `${getImage} photo${isMultiImage ? "s" : ""} and ${getAudio} audio${isMultiAudio ? "s" : ""}`;
+    } else if (getVideo && getAudio) {
+        msg = `${getVideo} video${isMultiVideo ? "s" : ""} and ${getAudio} audio${isMultiAudio ? "s" : ""}`;
+    } else if (getImage) {
+        msg = `${getImage} photo${isMultiImage ? "s" : ""}`;
+    } else if (getVideo) {
+        msg = `${getVideo} video${isMultiVideo ? "s" : ""}`;
+    } else if (getAudio) {
+        msg = `${getAudio} audio${isMultiAudio ? "s" : ""}`;
+    } else {
+        msg = "No media uploaded";
+    }
+
+    return msg;
+};
+

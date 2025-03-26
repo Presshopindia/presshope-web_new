@@ -342,7 +342,7 @@ const PurchasedTaskContentDetail = () => {
                               </div>
                             </div>
 
-                            <div className="sub-content">
+                            {/* <div className="sub-content">
                               <div className="item d-flex justify-content-between align-items-center">
                                 <span className="fnt-bold">Location</span>
                                 <div className="item-in-right loc">
@@ -352,8 +352,9 @@ const PurchasedTaskContentDetail = () => {
                                   </span>
                                 </div>
                               </div>
-                            </div>
-                            <div className="sub-content">
+                            </div> */}
+
+                            {/* <div className="sub-content">
                               <div className="item d-flex justify-content-between align-items-center">
                                 <span className="fnt-bold">TimeStamp</span>
                                 <div className="item-in-right loc">
@@ -365,7 +366,36 @@ const PurchasedTaskContentDetail = () => {
                                   </span>
                                 </div>
                               </div>
+                            </div> */}
+
+                            <div className="sub-content">
+                              <div className="item d-flex justify-content-between align-items-center">
+                                <span className="fnt-bold">Location</span>
+                                <div className="item-in-right loc">
+                                  <span>
+                                    <SlLocationPin />{" "}
+                                    <div>
+                                      {transactionDetails?.task_details?.location}
+                                    </div>
+                                  </span>
+                                </div>
+                              </div>
                             </div>
+                            <div className="sub-content">
+                              <div className="item d-flex justify-content-between align-items-center">
+                                <span className="fnt-bold">TimeStamp</span>
+                                <div className="item-in-right loc">
+                                  <span>
+                                    <MdOutlineWatchLater />
+                                    {moment(
+                                      transactionDetails?.createdAt
+                                    ).format(`hh:mm A, DD MMM YYYY`)}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+
                             <div className="sub-content">
                               <div className="item d-flex justify-content-between align-items-center">
                                 <span className="fnt-bold">Category</span>
