@@ -346,7 +346,7 @@ const Header = () => {
                     to={"/dashboard/exclusive"}
                     // className="nav-link dashboard"
                     className={`nav-link ${
-                      navColor.startsWith("/dashboard/") ? "active" : ""
+                      navColor.startsWith("/dashboard/") ? "nav-active" : ""
                     }`}
                     onClick={() => {
                       // localStorage.removeItem("backBtnVisibility");
@@ -360,7 +360,7 @@ const Header = () => {
                     // className="nav-link"
                     // onClick={() => localStorage.removeItem("backBtnVisibility")}
                     className={`nav-link ${
-                      navColor == "/published-content" ? "active" : ""
+                      navColor == "/published-content" ? "nav-active" : ""
                     }`}
                     onClick={() => {
                       localStorage.removeItem("backBtnVisibility");
@@ -373,7 +373,7 @@ const Header = () => {
                     to={"/content/exclusive/published/favourited"}
                     // className="nav-link"
                     className={`nav-link ${
-                      navColor.startsWith("/content/") ? "active" : ""
+                      navColor.startsWith("/content/") ? "nav-active" : ""
                     }`}
                     onClick={() => {
                       localStorage.removeItem("backBtnVisibility");
@@ -387,7 +387,7 @@ const Header = () => {
                     to={`/task`}
                     //  className="nav-link"
                     className={`nav-link ${
-                      navColor == "/task" ? "active" : ""
+                      navColor == "/task" ? "nav-active" : ""
                     }`}
                     onClick={() => {
                       setNavColor("/task");
@@ -404,7 +404,7 @@ const Header = () => {
                     to={"/chat"}
                     // className="position-relative nav-link messages_countWrap"
                     className={`position-relative nav-link messages_countWrap ${
-                      navColor == "/chat" ? "active" : ""
+                      navColor == "/chat" ? "nav-active" : ""
                     }`}
                     onClick={() => {
                       setNavColor("/chat");
@@ -417,7 +417,7 @@ const Header = () => {
                     to={"/reports/content"}
                     //  className="nav-link"
                     className={`nav-link ${
-                      navColor.startsWith("/reports/") ? "active" : ""
+                      navColor.startsWith("/reports/") ? "nav-active" : ""
                     }`}
                     onClick={() => {
                       setNavColor("/reports/content");
@@ -428,7 +428,7 @@ const Header = () => {
                   <NavLink
                     to={"/accounts"}
                     className={`nav-link ${
-                      navColor == "/accounts" ? "active" : ""
+                      navColor == "/accounts" ? "nav-active" : ""
                     }`}
                     onClick={() => {
                       setNavColor("/accounts");

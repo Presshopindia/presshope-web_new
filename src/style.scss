@@ -142,7 +142,7 @@ nav {
     font-size: 15px;
     font-family: "AirbnbMedium";
 
-    &.active {
+    &.nav-active {
       color: $theme-color;
       font-family: "AirbnbBold";
     }
@@ -3966,7 +3966,8 @@ a.link {
 .currentPic.logo_inp img.uploaded {
   width: 100%;
   height: 100px;
-  object-fit: contain;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 .currentPic.adm_profile img.uploaded {
@@ -10978,6 +10979,11 @@ select.PhoneInputCountrySelect {
   left: 0;
 }
 
+.error-msg {
+  font-size: 13px;
+  color: red;
+}
+
 .minInput {
   padding-left: 15px !important;
 }
@@ -12935,4 +12941,8 @@ audio {
 
 .justify-between {
   justify-content: space-between;
+}
+
+.z-1000 {
+  z-index: 1000;
 }

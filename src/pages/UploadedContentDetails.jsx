@@ -1737,7 +1737,7 @@ const UploadedContentDetails = (props) => {
                                                               <label className="checkbox-label">
                                                                 <input
                                                                   type="checkbox"
-                                                                  className="media-checkbox"
+                                                                  className="media-checkbox z-1000"
                                                                   onChange={(e) => handleSelectionChange(item, e.target.checked)}
                                                                 />
                                                               </label>
@@ -2317,7 +2317,7 @@ const UploadedContentDetails = (props) => {
                                 <Col md={3}>
                                   <div className="tab_in_card">
                                     <div className="tab_in_card-heading d-flex justify-content-between align-items-center">
-                                      <h4>Participants hello</h4>
+                                      <h4>Participants</h4>
                                     </div>
 
                                     <div className="scrollHtPnts presshopChat">

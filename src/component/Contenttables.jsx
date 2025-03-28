@@ -154,13 +154,13 @@ const Contenttables = () => {
 
   const [contentPurchasedFromTask, setContentPurchasedFromTask] = useState(null);
 
-  const ContentPurchasedFromTasks = async () => {
+  const ContentPurchasedFromTasks = async (timePeriod = "") => {
     try {
-      console.log("page", page)
       setLoading(true);
       const resp = await Post("mediaHouse/content-purchased-from-task", {
         limit: 4,
-        offset: (page - 1) * 4 
+        offset: (page - 1) * 4,
+        timePeriod
       });
       setContentPurchasedFromTask(resp?.data?.response);
       setLoading(false);
@@ -170,7 +170,7 @@ const Contenttables = () => {
   };
 
   useEffect(() => {
-    ContentPurchasedFromTasks();
+    ContentPurchasedFromTasks(param?.type);
   }, [page]);
 
   return (
@@ -1613,6 +1613,194 @@ const Contenttables = () => {
                                   </td>
                                   {
                                     param.type == "content_sourced_from_task_funds_invested" && <td>£{formatAmountInMillion(
+                                      +curr?.Vat
+                                    )}</td>
+                                  }
+                                  <td>
+                                    £{formatAmountInMillion(
+                                      (curr?.amount + curr?.Vat) || 0
+                                    )}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                        {contentPurchasedFromTask?.totalCount > 0 && (
+                          <PaginationComp
+                            totalPage={Math.ceil(contentPurchasedFromTask?.totalCount / 4)}
+                            path={`content-tables/${param?.type}`}
+                            setPage={setPage}
+                            page={page}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                ) : (param.type == "content_sourced_from_task_today" || param.type == "content_sourced_from_task_funds_invested_today") ? (
+                  <Card className="tbl_crd">
+                    <div className="">
+                      <div
+                        className="d-flex justify-content-between align-items-center tbl_hdr"
+                        px="20px"
+                        mb="10px"
+                      >
+                        <Typography className="tbl_hdng">
+                          {
+                            param.type == "content_sourced_from_task_funds_invested_today" ? "Total funds invested today" : "Content purchased from tasks today"
+                          }
+                        </Typography>
+                        <div className="tbl_rt">
+                          <div className="fltrs_prnt">
+                            <Button
+                              className="sort_btn"
+                              onClick={() => {
+                                setOpenContentPuchased(true);
+                              }}
+                            >
+                              Sort
+                              <BsChevronDown />
+                            </Button>
+                            {openContentPuchased && (
+                              <NewContentPurchasedOnline
+                                closeContPurchased={handleCloseContentPurchased}
+                                contentPurchasedSortFilterValues={
+                                  newContentPurchasedValueHandler
+                                }
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="fix_ht_table">
+                        <table
+                          width="100%"
+                          mx="20px"
+                          variant="simple"
+                          className="common_table"
+                        >
+                          <thead>
+                            <tr>
+                              <th className="">Uploaded content</th>
+                              <th>Time & date</th>
+                              <th className="tsk_dlts">Task details</th>
+                              <th className="text-center">Type</th>
+                              <th className="text-center">Category</th>
+                              <th>Location</th>
+                              <th>Uploaded by</th>
+                              {
+                                param.type == "content_sourced_from_task_funds_invested_today" && <th>VAT</th>
+                              }
+                              <th>Funds invested</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {contentPurchasedFromTask?.data?.map((curr) => {
+                              return (
+                                <tr
+                                  className="clickable"
+                                  onClick={() =>
+                                    navigate(`/purchased-task-content-detail/${curr?._id}`)
+                                  }
+                                >
+                                  <td className="content_img_td position-relative add-icons-box">
+                                    <div className="tbl_cont_wrp">
+                                      <img
+                                        src={
+                                          (curr?.purchased_task_content?.[0]?.type === "image" || curr?.purchased_task_content?.[0]?.type === "video") ? curr?.purchased_task_content?.[0]?.videothubnail : audioic
+                                        }
+                                        className="content_img"
+                                      />
+                                    </div>
+                                    <div className="tableContentTypeIcons">
+                                      <div class="post_icns_cstm_wrp camera-ico">
+                                        <div class="post_itm_icns dtl_icns">
+                                          <span class="count">{curr?.purchased_task_content?.length || 0}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="timedate_wrap">
+                                    <p className="timedate">
+                                      <img
+                                        src={watchic}
+                                        className="icn_time"
+                                      />
+                                      {moment(curr?.createdAt).format(
+                                        "h:mm A"
+                                      )}
+                                    </p>
+                                    <p className="timedate">
+                                      <img
+                                        src={calendar}
+                                        className="icn_time"
+                                      />
+                                      {moment(curr?.createdAt).format(
+                                        "DD MMM, YYYY"
+                                      )}
+                                    </p>
+                                  </td>
+                                  <td className="description_td">
+                                    <p className="desc_ht mb-0">
+                                      {curr?.taskDetails?.heading}
+                                    </p>
+                                  </td>
+                                  <td className="text-center">
+                                    <Tooltip
+                                      title={
+                                        curr?.purchased_task_content?.[0]?.type === "image"
+                                          ? "Photo"
+                                          : curr?.purchased_task_content?.[0]?.type === "video"
+                                            ? "Video"
+                                            : "Interview"
+                                      }
+                                    >
+                                      <img
+                                        src={
+                                          curr?.purchased_task_content?.[0]?.type === "image"
+                                            ? cameraic
+                                            : curr?.purchased_task_content?.[0]?.type === "video"
+                                              ? videoic
+                                              : curr?.purchased_task_content?.[0]?.type === "audio"
+                                                ? interviewic
+                                                : null
+                                        }
+                                        className="icn"
+                                      />
+                                    </Tooltip>
+                                  </td>
+                                  <td className="text-center">
+                                    <Tooltip
+                                      title={curr?.taskDetails?.categoryDetails?.name}
+                                    >
+                                      <img
+                                        src={curr?.taskDetails?.categoryDetails?.icon}
+                                        className="icn"
+                                      />
+                                    </Tooltip>
+                                  </td>
+                                  <td>{curr?.taskDetails?.location}</td>
+                                  <td>
+                                    <div className="hpr_dt">
+                                      <img
+                                        src={
+                                          curr?.hopperDetails?.avatarDetails
+                                            ?.avatar
+                                            ? process.env
+                                              .REACT_APP_AVATAR_IMAGE +
+                                            curr?.hopperDetails
+                                              ?.avatarDetails?.avatar
+                                            : null
+                                        }
+                                        className="big_img"
+                                      />
+                                      <p className="hpr_nme">
+                                        {curr?.hopperDetails?.user_name}
+                                      </p>
+                                    </div>
+                                  </td>
+                                  {
+                                    param.type == "content_sourced_from_task_funds_invested_today" && <td>£{formatAmountInMillion(
                                       +curr?.Vat
                                     )}</td>
                                   }

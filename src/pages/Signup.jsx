@@ -1015,8 +1015,6 @@ const Signup = () => {
                                       Add company logo
                                     </span>
                                   )}
-                                {/* {!AdminDetails?.company_details */}
-                                {/* // ?.profile_image && ( */}
                                 <input
                                   type="file"
                                   onChange={(e) => {
@@ -1024,7 +1022,6 @@ const Signup = () => {
                                   }}
                                   style={{ padding: "0px" }}
                                 />
-                                {/* // )} */}
                               </div>
                             </Col>
                           </Row>
@@ -1382,7 +1379,7 @@ const Signup = () => {
                                 </Row>
                               </Col>
                               <Col md={3}>
-                                <div className="currentPic adm_profile position-relative text-center">
+                                <div className="currentPic logo_inp position-relative text-center p-0">
                                   {AdminDetails.administrator_details
                                     .admin_profile === "" && (
                                       <img src={addPic} alt="" />
