@@ -86,7 +86,12 @@ const BroadcastedTask = () => {
     TaskDetails();
   }, [page]);
 
-  const handleFavourite = (index, y) => {
+  const handleFavourite = (i) => {
+    setNewUploadedContent((prev) => {
+      const allContent = {...prev};
+      allContent.uploadedContent[i].content[0]["favourited"] = allContent.uploadedContent[i].content[0]["favourited"] === "true" ? "false" : "true";
+      return allContent;
+    });
   };
 
   // Dashboard Data -
@@ -345,11 +350,11 @@ const BroadcastedTask = () => {
                         lnkto={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
                         viewTransaction="View details"
                         viewDetail={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
-                        fvticns={
-                          item?.favourite_status === "true"
-                            ? favouritedic
-                            : favic
-                        }
+                        // fvticns={
+                        //   item?.content[0]?.favourited === "true"
+                        //     ? favouritedic
+                        //     : favic
+                        // }
                         type_tag={item?.content[0]?.category_details?.name}
                         allContent={item?.content[0]?.task_id?.content}
                         type_img={item?.content[0]?.category_details?.icon}
@@ -358,13 +363,13 @@ const BroadcastedTask = () => {
                           " hh:mm A, DD MMM YYYY"
                         )}
                         feedLocation={item?.content[0]?.task_id?.location}
-                        favourite={() => handleFavourite(index, "task")}
-                        bool_fav={
-                          item?.favourite_status === "true" ? "false" : "true"
-                        }
+                        // favourite={() => handleFavourite(index, "task")}
+                        // bool_fav={
+                        //   item?.content[0]?.favourited === "true" ? "false" : "true"
+                        // }
                         content_id={item?._id}
                         task_content_id={item?._id || item?.task_id?._id}
-                        taskContentId={item?._id}
+                        // taskContentId={item?.content?.map((el) => el._id)}
                         is_sale_status={true}
                         feedTypeImg1={filteredContent("image")?.length > 0 ? cameraic : null}
                         feedTypeImg2={filteredContent("video")?.length > 0 ? videoic : null}

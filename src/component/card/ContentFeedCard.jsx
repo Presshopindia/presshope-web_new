@@ -32,8 +32,8 @@ function ContentFeedCard(props) {
 
       if (props?.type == "task") {
         obj = {
-          type: "uploaded_content",
-          uploaded_content: props?.taskContentId || props?.content_id,
+          favourite_status: props.bool_fav === "true" ? "true" : "false",
+          uploaded_content: props?.taskContentId
         };
       } else {
         obj = {
@@ -41,6 +41,8 @@ function ContentFeedCard(props) {
           content_id: props.content_id,
         };
       }
+
+      console.log("Obj", obj, props)
 
       const resp = await Patch(`mediaHouse/add/to/favourites`, obj);
     } catch (error) {

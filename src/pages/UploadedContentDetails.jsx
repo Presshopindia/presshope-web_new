@@ -85,6 +85,7 @@ const UploadedContentDetails = (props) => {
 
   const username = profileData?.full_name;
 
+  const [taskContentIndex, setTaskContentIndex] = useState(0);
   const [imageSize, setImageSize] = useState({ height: 0, width: 0 });
   const [showContent, setShowContent] = useState({});
   const [openContent, setOpenContent] = useState(false);
@@ -419,17 +420,15 @@ const UploadedContentDetails = (props) => {
     }
   };
 
-  const Favourite = async () => {
+  const Favourite = async (favData) => {
     try {
       let obj = {
-        type: "uploaded_content",
-        uploaded_content: data ? data._id : fav?.content_id?._id,
+        uploaded_content: [favData?._id],
+        favourite_status: favData?.favourited === "true" ? "false" : "true"
       };
-
       setData((prev) => {
-        const updatedData = { ...prev };
-        updatedData.favourite_status =
-          updatedData.favourite_status === "true" ? "false" : "true";
+        const updatedData = [...prev];
+        updatedData[taskContentIndex].favourited = updatedData[taskContentIndex].favourited === "true" ? "false" : "true";
         return updatedData;
       });
       await Patch(`mediaHouse/add/to/favourites`, obj);
@@ -438,7 +437,7 @@ const UploadedContentDetails = (props) => {
     }
   };
 
-  console.log("all imp datat --->", data);
+  console.log("Data ------------->", data)
 
   const Payment = async (
     amount,
@@ -993,13 +992,13 @@ const UploadedContentDetails = (props) => {
                           <div
                             className="post_itm_icns right dtl_icns"
                             onClick={() => {
-                              Favourite();
+                              Favourite(data?.find((el) => el._id === showContent?._id));
                             }}
                           >
                             <img
                               className="feedMediaType iconBg"
                               src={
-                                data?.favourite_status === "true"
+                                data?.find((el) => el._id === showContent?._id)?.favourited === "true"
                                   ? favouritedic
                                   : favic
                               }
@@ -1022,7 +1021,6 @@ const UploadedContentDetails = (props) => {
                               showContent={showContent}
                               imageSize={imageSize}
                             />
-
                           <Swiper
                             spaceBetween={50}
                             slidesPerView={1}
@@ -1031,6 +1029,7 @@ const UploadedContentDetails = (props) => {
                             focusableElements="pagination"
                             pagination={{ clickable: true }}
                             onSlideChange={(e) => {
+                              setTaskContentIndex(e.activeIndex)
                               setShowContent(data[e.activeIndex]);
                               if (data[e.activeIndex]?.type == "image") {
                                 const img = new Image();

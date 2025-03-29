@@ -46,6 +46,7 @@ import {
   getDeepModifiedTaskContent,
   getModifiedContent,
   hasDecimal,
+  getFavContent
 } from "../component/commonFunction";
 import { DashboardCardInfo } from "../component/DashboardCardInfo";
 import RecentActivityCard from "../component/card/RecentActivityCard";
@@ -373,7 +374,7 @@ const Dashboard = () => {
                     title="Favourited content"
                     type="favourite"
                     total={dashboardData?.content?.favourite?.totalCount}
-                    data={getDeepModifiedContent(dashboardData?.content?.favourite?.data)}
+                    data={getFavContent(dashboardData?.content?.favourite?.data)}
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}
                     sort={dashboardPayload?.requestedFilter?.favourite}

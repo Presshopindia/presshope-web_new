@@ -35,7 +35,7 @@ import typeInterview from "../assets/images/interview.svg";
 import Loader from "../component/Loader";
 import { Get, Post } from "../services/user.services";
 import AddBroadcastTask from "./AddBroadcastTask";
-import { formatAmountInMillion, getDeepModifiedContent, getModifiedContent, getTaskContent } from "../component/commonFunction";
+import { formatAmountInMillion, getFavContent, getDeepModifiedContent, getModifiedContent, getTaskContent } from "../component/commonFunction";
 import PostIconsWrapper from "../component/PostIconComponents/PostIconsWrapper";
 import { DashboardCardInfo } from "../component/DashboardCardInfo";
 
@@ -306,7 +306,7 @@ const ContentPage = () => {
                     title="Favourited content"
                     type="favourite"
                     total={dashboardData?.content?.favourite?.totalCount}
-                    data={getDeepModifiedContent(dashboardData?.content?.favourite?.data)}
+                    data={getFavContent(dashboardData?.content?.favourite?.data)}
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}
                     sort={dashboardPayload?.requestedFilter?.favourite}
@@ -756,17 +756,17 @@ const ContentPage = () => {
                                                   {item?.content?.length}
                                                 </span>
                                               </span>
-                                              <span className="rateView-type dflt">
+                                              {/* <span className="rateView-type dflt">
                                                 <img
                                                   className=""
                                                   src={
-                                                    item.favourite_status ===
+                                                    item?.content[0]?.favourited ===
                                                       "true"
                                                       ? typestar
                                                       : favic
                                                   }
                                                 />
-                                              </span>
+                                              </span> */}
                                             </div>
                                             <img
                                               className="list-card-img"

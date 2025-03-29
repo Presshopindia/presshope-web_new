@@ -240,6 +240,34 @@ export const getDeepModifiedContent = (data) => {
     });
 };
 
+export const getFavContent = (data) => {
+    return data?.map((curr) => {
+        if(curr?.uploadedContentDetails) {
+            const media = curr?.uploadedContentDetails;
+
+            if (media?.type === "video") {
+                return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.thumbnail };
+            } else if (media?.type === "audio") {
+                return { mediaValue:audioicsm, media: audioicsm };
+            } else {
+                return { media: media?.videothubnail, mediaValue: media?.videothubnail };
+            }
+        } else {
+            const media = curr?.contentDetails?.content?.[0];
+
+            if (media?.media_type === "video") {
+                return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.thumbnail, mediaValue: media?.watermark || media?.thumbnail };
+            } else if (media?.media_type === "audio") {
+                return { media: audioicsm, mediaValue: audioicsm };
+            } else if (media?.media_type === "pdf") {
+                return { media: docsic, mediaValue: docsic };
+            } else {
+                return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.media, mediaValue: media?.watermark || media?.media };
+            }
+        }
+    });
+};
+
 export const getTaskContent = (data) => {
     return data?.map((curr) => {
         const media = curr;

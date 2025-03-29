@@ -53,6 +53,14 @@ const HopperUploadedContent = () => {
     TaskDetails();
   }, [page]);
 
+  const handleFavourite = (i) => {
+    setNewUploadedContent((prev) => {
+      const allContent = {...prev};
+      allContent.uploadedContent[i].content[0]["favourited"] = allContent.uploadedContent[i].content[0]["favourited"] === "true" ? "false" : "true";
+      return allContent;
+    });
+  };
+
   return (
     <>
       {loading && <Loader />}
@@ -133,11 +141,11 @@ const HopperUploadedContent = () => {
                             lnkto={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
                             viewTransaction="View details"
                             viewDetail={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
-                            fvticns={
-                              item?.favourite_status === "true"
-                                ? favouritedic
-                                : favic
-                            }
+                            // fvticns={
+                            //   item?.content[0]?.favourited === "true"
+                            //     ? favouritedic
+                            //     : favic
+                            // }
                             type_tag={item?.content[0]?.category_details?.name}
                             allContent={item?.content[0]?.task_id?.content}
                             type_img={item?.content[0]?.category_details?.icon}
@@ -155,13 +163,13 @@ const HopperUploadedContent = () => {
                                     ? item?.content[0]?.task_id?.hopper_videos_price || 0
                                     : null
                             )}`}
-                            favourite={() => handleFavourite(index, "task")}
-                            bool_fav={
-                              item?.favourite_status === "true" ? "false" : "true"
-                            }
+                            // favourite={() => handleFavourite(index, "task")}
+                            // bool_fav={
+                            //   item?.content[0]?.favourited === "true" ? "false" : "true"
+                            // }
                             content_id={item?._id}
                             task_content_id={item?._id || item?.task_id?._id}
-                            taskContentId={item?._id}
+                            taskContentId={item?.content?.map((el) => el._id)}
                             is_sale_status={true}
                           />
                         </Col>
