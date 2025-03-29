@@ -31,7 +31,7 @@ import "swiper/css";
 
 import { Pagination } from "swiper";
 import { formatAmountInMillion } from "../component/commonFunction";
-import ViewContent from "../component/ViewContent";
+import ViewUploadedContent from "../component/ViewUploadedContent";
 
 const PurchasedTaskContentDetail = () => {
   const [moreContent, setMoreContent] = useState([]);
@@ -51,7 +51,7 @@ const PurchasedTaskContentDetail = () => {
       const res = await Get(`mediahouse/getPurchasedTaskContentDetail?id=${id}`);
       if (res) {
         setTransactionDetails(res?.data?.resp);
-        setShowContent(res?.data?.resp?.content_id?.content?.[0]);
+        setShowContent(res?.data?.resp?.purchased_content?.[0]);
 
         const resp1 = await Post(`mediaHouse/MoreContentforTask`, {
           hopper_id: res?.data?.resp?.hopper_details?._id,
@@ -218,7 +218,7 @@ const PurchasedTaskContentDetail = () => {
                                 <SlMagnifierAdd />
                               </div>
                             </div>
-                            <ViewContent
+                            <ViewUploadedContent
                               openContent={openContent}
                               setOpenContent={setOpenContent}
                               showContent={showContent}

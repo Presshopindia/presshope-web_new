@@ -19,6 +19,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Tooltip from "react-bootstrap/Tooltip";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { SlMagnifierAdd } from "react-icons/sl";
 import {
   BsArrowLeft,
   BsArrowRight,
@@ -62,6 +63,7 @@ import { UserDetails } from "../component/Utils";
 import ContentFeedCard from "../component/card/ContentFeedCard";
 import TopSearchesTipsCard from "../component/card/TopSearchesTipsCard";
 import { Get, Patch, Post } from "../services/user.services";
+import ViewUploadedContent from "../component/ViewUploadedContent";
 
 import socketInternal from "../InternalSocket";
 import Loader from "../component/Loader";
@@ -83,6 +85,9 @@ const UploadedContentDetails = (props) => {
 
   const username = profileData?.full_name;
 
+  const [imageSize, setImageSize] = useState({ height: 0, width: 0 });
+  const [showContent, setShowContent] = useState({});
+  const [openContent, setOpenContent] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const param = useParams();
   const navigate = useNavigate();
@@ -351,6 +356,15 @@ const UploadedContentDetails = (props) => {
         `mediaHouse/getuploadedContentbyHoppers?_id=${param.id}&hopper_id=${taskHopperId}`
       );
       setData(resp.data.data);
+      setShowContent(resp?.data?.data?.[0]);
+
+      if (resp?.data?.data?.[0]?.type == "image") {
+        const img = new Image();
+        img.src = resp?.data?.data?.[0]?.videothubnail;
+        img.onload = function () {
+          setImageSize({ height: img.height, width: img.width });
+        };
+      }
 
       // const getHoppers = await Get(`mediaHouse/findacceptedtasks?task_id=${Livetask?.data?.tasks?.find?.((el) => el?._id == resp.data.data[0]?.task_id?._id)?._id}&receiver_id=${User && User._id || User.id}&type=task_content`);
       setRoomDetails(resp.data.data[0]);
@@ -992,6 +1006,22 @@ const UploadedContentDetails = (props) => {
                               alt=""
                             />
                           </div>
+                          <div
+                            className="post_itm_icns right dtl_icns uploaded-magnifier"
+                              onClick={() => {
+                                setOpenContent(!openContent);
+                              }}
+                            >
+                              <div className="feedMediaType iconBg">
+                                <SlMagnifierAdd />
+                              </div>
+                            </div>
+                            <ViewUploadedContent
+                              openContent={openContent}
+                              setOpenContent={setOpenContent}
+                              showContent={showContent}
+                              imageSize={imageSize}
+                            />
 
                           <Swiper
                             spaceBetween={50}
@@ -1000,6 +1030,19 @@ const UploadedContentDetails = (props) => {
                             slidesPerGroupSkip={1}
                             focusableElements="pagination"
                             pagination={{ clickable: true }}
+                            onSlideChange={(e) => {
+                              setShowContent(data[e.activeIndex]);
+                              if (data[e.activeIndex]?.type == "image") {
+                                const img = new Image();
+                                img.src = data[e.activeIndex]?.videothubnail;
+                                img.onload = function () {
+                                  setImageSize({
+                                    height: img.height,
+                                    width: img.width,
+                                  });
+                                };
+                              }
+                            }}
                           >
                             {data
                               ? data?.map((curr) => {

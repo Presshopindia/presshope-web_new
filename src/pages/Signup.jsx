@@ -1215,7 +1215,7 @@ const Signup = () => {
                                       className="f_1 cntry_code"
                                       international
                                       required
-                                      countryCallingCodeEditable={false}
+                                      // countryCallingCodeEditable={false}
                                       name="country_code"
                                       value={el?.country_code || ""}
                                       onChange={(e) => {
@@ -1507,7 +1507,7 @@ const Signup = () => {
                                   <PhoneInput
                                     className="f_1 cntry_code"
                                     international
-                                    countryCallingCodeEditable={false}
+                                    // countryCallingCodeEditable={false}
                                     required
                                     name="country_code"
                                     value={
