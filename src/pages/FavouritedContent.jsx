@@ -52,7 +52,6 @@ const FavouritedContent = () => {
   const [favContent, setFavContent] = useState(initStateOfFavouriteContent);
 
   const FavouriteContent = async () => {
-    console.log("kjhvfdgkjfgkjfhfgkjfhgkj");
 
     setLoading(true);
     try {
@@ -71,7 +70,6 @@ const FavouritedContent = () => {
 
       const resp = await Post("mediaHouse/favouritesListingNew", payload);
       const category = await Get("mediaHouse/getCategoryType?type=content");
-      console.log("categoryDatacategoryData  ------> categoryData  --->", resp);
       setTotalPage(Math.ceil(resp?.data?.response?.count / limit));
       setFavContent({
         ...favContent,
@@ -82,7 +80,6 @@ const FavouritedContent = () => {
         setLoading(false);
       }
     } catch (error) {
-      console.log("fav content error ----->  --->", error);
       setLoading(false);
     }
   };
@@ -97,19 +94,13 @@ const FavouritedContent = () => {
       const newData = allContent?.data?.data?.filter((el) => el._id != id);
       const updatedData = { ...allContent, data: {...allContent.data, data: newData} };
 
-      console.log("updatedData", updatedData)
       return updatedData;
     });
   };
   const handleBasket = (index) => {
-    console.log("allindex", index);
     setFavContent((prev) => {
       const updatedContent = { ...prev };
-      // console.log("favbasket12345", updatedContent?.data[index])
       const allbasket = updatedContent?.data.map((ele, inx) => {
-        // console.log("allindex",index)
-        // console.log("allindex123",inx)
-
         if (index == inx) {
           return {
             ...ele,
@@ -118,16 +109,12 @@ const FavouritedContent = () => {
         }
         return ele;
       });
-      console.log("favbasket12345", allbasket);
-
       const updatedDatafav = { ...updatedContent, data: allbasket };
       return updatedDatafav;
     });
   };
 
-  // console.log("all fav content -------->", favContent);
   useEffect(() => {
-    console.log("all file should run");
     FavouriteContent();
   }, []);
   return (
@@ -216,12 +203,9 @@ const FavouritedContent = () => {
                   <div className="feedContent_header">
                     <h1 className="rw_hdng">Favourited content</h1>
                   </div>
-                  {
-                    console.log("favContent", favContent)
-                  }
                   <Row className="">
                     {favContent?.data?.data?.length > 0 ? (
-                      favContent?.data?.data?.map((curr, index) => {
+                      favContent?.data?.data?.filter((el) => ("content_details" in el || "upload_content_details" in el) )?.map((curr, index) => {
                         if(curr?.upload_content_details) {
                           return (
                             <Col lg={3} md={4} sm={6}>
@@ -329,7 +313,6 @@ const FavouritedContent = () => {
                                 allContent={curr?.content_details?.content}
                                 basketValue={curr?.basket_status}
                                 basket={() => {
-                                  console.log("myData");
                                   handleBasket(index, curr?._id);
                                 }}
                                 feedTag={
