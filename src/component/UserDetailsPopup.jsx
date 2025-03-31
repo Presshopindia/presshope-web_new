@@ -339,7 +339,7 @@ const UserDetailsPopup = (props) => {
                               className="f_1 cntry_code"
                               international
                               required
-                              countryCallingCodeEditable={false}
+                              countryCallingCodeEditable={true}
                               name="country_code"
                               onChange={(e) => {
                                 setDetails({ ...details, country_code: e });

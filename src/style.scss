@@ -49,6 +49,9 @@ $dark-mode-bg: #dbdcdc;
   letter-spacing: 0 !important;
 }
 
+.input-border {
+  background-color: $input-border !important;
+}
 @font-face {
   font-family: "Airbnb";
   src: local("AirbnbCereal_W_Lt"),
@@ -2550,11 +2553,12 @@ button.MuiButton-secondary {
 }
 
 .listView_task {
-  background: #f3f5f4;
+  // background: #f3f5f4;
   border-radius: 16px;
   padding: 8px;
   margin-bottom: 12px;
   display: flex;
+  border: 1px solid $border-color;
 
   .listTask_action {
     display: flex;

@@ -16,6 +16,7 @@ import { Get } from "../services/user.services";
 import moment from "moment/moment";
 import audioic from "../assets/images/audio-icon.svg";
 
+import ListIcon from "../assets/images/list_icon.svg";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import Timer from "../component/Timer";
 import Loader from "../component/Loader";
@@ -35,9 +36,6 @@ const BroadcastedTrackings = (props) => {
   const [taskDetails, setTaskDetails] = useState({
     deadline_date: "",
   });
-  const [markers, setMarkers] = useState({
-    positions: [],
-  });
 
   useEffect(() => {
     setTaskDetails(props?.viewTask?.taskDetails);
@@ -47,20 +45,13 @@ const BroadcastedTrackings = (props) => {
     setLoading(true);
     try {
       const resp = await Get(`mediaHouse/getLiveTask`);
-      // if (resp) {
-      //   localStorage.setItem("live_taskId", resp?.data?.tasks[0]?._id);
-      // }
       setLiveTasks(resp.data.task);
-      // resp?.data?.tasks?.map((item) => {
-      //   markers.positions.push({
-      //     lat: item.address_location.coordinates[0],
-      //     lng: item.address_location.coordinates[1],
-      //     id: item._id,
-      //   });
-      // });
       if (props?.viewTask?.taskId) {
-        const liveTask = resp?.data?.tasks?.find((el) => el._id === props?.viewTask?.taskId);
+        const liveTask = resp?.data?.task?.find((el) => el._id === props?.viewTask?.taskId);
         props?.setViewTask({ open: true, taskDetails: liveTask, taskId: props?.viewTask?.taskId })
+      } else {
+        const liveTask = resp?.data?.task?.[0];
+        setTaskDetails(liveTask)
       }
       setLoading(false);
     } catch (error) {
@@ -130,7 +121,13 @@ const BroadcastedTrackings = (props) => {
                   <span className="text-pink">Live</span> tracking
                 </h2>
                 <div className="changeview_sort d-flex align-items-center gap-4">
-                  <img src={locationn} alt="view map" />
+                  {
+                    props?.viewTask?.open ? (
+                      <img src={ListIcon} onClick={() => props?.setViewTask({ ...props?.viewTask, open: false })} className="clickable" alt="view map" />
+                    ) : (
+                      <img src={locationn} onClick={() => props?.setViewTask({ open: true, taskDetails: taskDetails })} className="clickable" alt="view map" />
+                    )
+                  }
                   <div className="feedSorting">
                     <div className="fltrs_prnt top_fltr">
                       <button
@@ -200,9 +197,19 @@ const BroadcastedTrackings = (props) => {
                     </div>
                   ) : (
                     <div className="list_view_wrap">
-                      {liveTasks?.map((curr) => {
+                      {liveTasks?.map((curr, i) => {
                         return (
-                          <div className="listView_task" key={curr?._id}>
+                          <div
+                            className="listView_task clickable"
+                            key={curr?._id}
+                            style={{
+                              background: props?.viewTask?.taskDetails?._id == curr?._id ? "#f3f5f4" : ''
+                            }}
+                            onClick={() => {
+                              navigate(`/task?taskId=${curr?._id}`);
+                              props?.setViewTask({ open: true, taskDetails: curr })
+                            }}
+                          >
                             <div className="mapInput">
                               <GoogleMap
                                 googleMapsApiKey={
@@ -256,17 +263,13 @@ const BroadcastedTrackings = (props) => {
                                     </Typography>
                                   </span>
                                 </div>
-                                <Link
-                                  to={`/task?taskId=${curr?._id}`}
+                                <Button
+                                  variant="primary"
+                                  className="sm-btn"
+                                  onClick={() => props?.setViewTask({ open: true, taskDetails: curr })}
                                 >
-                                  <Button
-                                    variant="primary"
-                                    className="sm-btn"
-                                    onClick={() => props?.setViewTask({ open: true, taskDetails: curr })}
-                                  >
-                                    View
-                                  </Button>
-                                </Link>
+                                  View
+                                </Button>
                               </div>
                             </div>
                           </div>
@@ -275,7 +278,7 @@ const BroadcastedTrackings = (props) => {
                     </div>
                   )
                 }
-                <div className="listView_task_wrap">
+                {/* <div className="listView_task_wrap">
                   {liveTasks &&
                     liveTasks.map((curr) => {
                       return (
@@ -318,7 +321,7 @@ const BroadcastedTrackings = (props) => {
                         </div>
                       );
                     })}
-                </div>
+                </div> */}
               </div>
             </div>
           </Col>

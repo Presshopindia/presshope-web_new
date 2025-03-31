@@ -685,8 +685,7 @@ const DashboardTables = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            {data?.broad_casted_tasks_details &&
-                              data?.broad_casted_tasks_details?.task.map(
+                            {data?.broad_casted_tasks_details?.task?.map(
                                 (curr) => {
                                   let imageCount = 0;
                                   let audioCount = 0;
@@ -704,7 +703,7 @@ const DashboardTables = () => {
                                     <tr
                                       onClick={() =>
                                         navigate(
-                                          `/task?taskid=${curr?._id}`
+                                          `/task?task_ids=${curr?._id}`
                                         )
                                       }
                                       style={{ cursor: "pointer" }}
