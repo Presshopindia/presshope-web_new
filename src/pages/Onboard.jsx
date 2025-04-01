@@ -58,7 +58,7 @@ const Login = () => {
                     </p>
                   </div>
                   <Form>
-                    <div className="walkthr_wrap txt_wrap d-flex align-items-start position-relative">
+                    {/* <div className="walkthr_wrap txt_wrap d-flex align-items-start position-relative">
                       {submit && !isChecked && (
                         <span className="req_inp" style={{ color: "red" }}>
                           *
@@ -79,7 +79,7 @@ const Login = () => {
                           box to proceed ahead
                         </Typography>
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="walkthr_wrap txt_wrap d-flex align-items-start position-relative">
                       {submit && !isChecked && !isChecked1 && (
@@ -87,7 +87,7 @@ const Login = () => {
                           *
                         </span>
                       )}
-                      <FormControlLabel
+                      {/* <FormControlLabel
                         className="onbrd_chk"
                         control={<Checkbox />}
                         checked={isChecked1}
@@ -95,13 +95,26 @@ const Login = () => {
                           setIsChecked1(e.target.checked);
                           setIsChecked(false);
                         }}
+                      /> */}
+                      <FormControlLabel
+                        className="onbrd_chk"
+                        control={<Checkbox />}
+                        checked={isChecked}
+                        onChange={(e) => {
+                          setIsChecked(e.target.checked);
+                          setIsChecked1(false);
+                        }}
                       />
                       <div className="onboardText log_txt no_border">
-                        <Typography>
+                        {/* <Typography>
                           Are you a new user? If yes, please check the box to
                           proceed. You will need to request the adminstrator to
                           register you onto the PressHop platform, and assign
                           user rights to you
+                        </Typography> */}
+                        <Typography>
+                          Are you the administrator? If yes, please check the
+                          box to proceed ahead
                         </Typography>
                         <Typography variant="body2">
                           It is essential that this onboarding process is
@@ -152,7 +165,7 @@ const Login = () => {
                         setModalShow1(false);
                       }}
                     />
-                    <h6 className="text-center mt-3">1 of 3</h6>
+                    {/* <h6 className="text-center mt-3">1 of 3</h6> */}
                   </Form>
                 </div>
               </Col>

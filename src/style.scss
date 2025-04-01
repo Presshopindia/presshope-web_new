@@ -1359,6 +1359,23 @@ button.round {
   background: $bg-grey;
 }
 
+.invite-user-disable-field:disabled {
+  background-color: $bg-grey !important;
+  color: $bg-color-dark !important;
+  border-color: $input-border !important;
+}
+
+.invite-user-enable-field {
+  color: $bg-color-dark !important;
+  border-color: $input-border !important;
+}
+
+.invite-user-heading {
+  font-size: 16px;
+  font-family: "AirbnbMedium" !important;
+  margin-bottom: 0.5rem !important;
+}
+
 .theme-btn.danger {
   border: 1px solid $danger;
   background: unset;
@@ -12699,6 +12716,9 @@ audio {
   margin-right: 10px;
 }
 
+.mb-10 {
+  margin-bottom: 40px;
+}
 .feedTrendingSearchWrap>.topSearches_tipsCard>.row>.p-0.col-lg-12 {
   padding: calc(var(--bs-gutter-x) * .5) !important;
 }

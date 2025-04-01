@@ -58,12 +58,10 @@ const Tandc = () => {
         `mediaHouse/deletePreRegistrationData?email=${email}`
       );
       if (resp) {
-        console.log(resp);
         localStorage.removeItem("UserEmailId");
 
       }
     } catch (error) {
-      console.log("error -->", error);
     }
   }
 
@@ -73,8 +71,8 @@ const Tandc = () => {
     try {
       const obj = {
         phone: page1?.administrator_details?.phone,
-        email: page1?.administrator_details?.office_email,
-        user_name: page1?.administrator_details?.office_email,
+        email: page1?.office_email,
+        user_name: page1?.office_email,
         role: "MediaHouse",
         password: adminPopup?.password,
         verified: false,
@@ -88,33 +86,6 @@ const Tandc = () => {
         profile_image: CompanyDetails?.profile_image,
         user_type_id: CompanyDetails?.user_type,
         docs: JSON.parse(localStorage.getItem("docs")),
-        // office_details: [
-        //   {
-        //     name: officeDetails?.name,
-        //     office_type_id: officeDetails?.office_type_id,
-        //     address: {
-        //       pincode: page1?.office_details.pincode,
-        //       country: page1?.office_details.country,
-        //       city: page1?.office_details.city,
-        //       complete_address: page1?.office_details.address,
-        //       Pin_Location: {
-        //         lat: page1?.office_details.latitude,
-        //         long: page1?.office_details.longitude,
-        //       },
-        //       location: {
-        //         type: "Point",
-        //         coordinates: [
-        //           page1?.office_details.latitude,
-        //           page1?.office_details.longitude,
-        //         ],
-        //       },
-        //     },
-        //     country_code: page1?.office_details.country_code,
-        //     phone: page1?.office_details.phone,
-        //     website: page1?.office_details.website,
-        //     is_another_office_exist: false,
-        //   },
-        // ],
         office_details: officeDetails,
         admin_detail: {
           full_name: `${adminPopup?.first_name} ${adminPopup?.last_name}`,
@@ -126,7 +97,7 @@ const Tandc = () => {
           admin_profile: page1?.administrator_details?.admin_profile,
           country_code: page1?.administrator_details?.country_code,
           phone: page1?.administrator_details?.phone,
-          email: page1?.administrator_details?.office_email,
+          email: page1?.office_email,
         },
         admin_rignts: {
           allowed_to_onboard_users:
@@ -166,14 +137,17 @@ const Tandc = () => {
         },
       };
 
+      setLoading(true);
+      const resp = await Post("auth/registerMediaHouse", obj);
+
       const onboardDetails = {
         AdminName: `${adminPopup?.first_name} ${adminPopup?.last_name}`,
-        AdminEmail: page1?.administrator_details?.office_email,
+        AdminEmail: page1?.office_email,
+        UserId: resp?.data?.user?._id,
+        CompanyName: CompanyDetails?.company_name,
       };
 
-      setLoading(true);
       localStorage.setItem("OnboardDetails", JSON.stringify(onboardDetails));
-      const resp = await Post("auth/registerMediaHouse", obj);
       setLoading(false);
       if (resp) {
         localStorage.removeItem("OfficeDetails");
@@ -189,7 +163,6 @@ const Tandc = () => {
     } catch (error) {
       setLoading(false);
       successToasterFun(error.message)
-      console.log("Error in mediahouse", error)
       setLoading(false);
     }
   };
@@ -199,12 +172,10 @@ const Tandc = () => {
     try {
       setLoading(true);
       const cms = await Promise.all([Get("mediaHouse/getGenralMgmt?legal=legal"), Get("mediaHouse/getGenralMgmt?privacy_policy=privacy_policy")]);
-      // console.log('cms---', cms)
       setCmsData(cms);
       setLoading(false);
     }
     catch (error) {
-      // console.log(error);
       setLoading(false);
     }
   }
