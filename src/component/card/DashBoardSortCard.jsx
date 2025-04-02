@@ -17,15 +17,19 @@ function DashBoardSortCard(props) {
                         <div className="Card_Wrapper d-flex align-items-center flex-column">
                             <img className="list_card_img_top" src={props.imgtab} alt="1" />
                             <div className="commonContentIconsWrap review_content_wrap d-flex justify-content-between align-content-center">
-                                {/* <span className="rateView-type_icons">
-                                            <span className="volCount">1</span>
-                                            <img className="" src={props.reviewType} />
-                                            </span> */}
-                                <PostIconsWrapper
-                                    images={props?.contentDetails?.image_count}
-                                    video={props?.contentDetails?.video_count}
-                                    audio={props?.contentDetails?.audio_count}
-                                />
+                                {
+                                    props?.fav ? (
+                                        <PostIconsWrapper
+                                            images={props?.contentDetails}
+                                        />
+                                    ) : (
+                                        <PostIconsWrapper
+                                            images={props?.contentDetails?.content?.length || 0}
+                                        // video={props?.contentDetails?.video_count}
+                                        // audio={props?.contentDetails?.audio_count}
+                                        />
+                                    )
+                                }
                                 <span className="rateView-type dflt"><img className="" src={props.reviewTypetwo} /></span>
                             </div>
                             <div className=" d-flex align-items-start flex-column px-2">

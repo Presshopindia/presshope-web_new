@@ -529,6 +529,25 @@ const Accounts = () => {
     setDashboardSort({ ...dashboardSort, type: "" });
   }
 
+  const [pendingPayment, setPendingPayment] = useState(0);
+  const PendingPayment = async () => {
+    try {
+      const res = await Get(`mediahouse/paymenttobemade`);
+      const totalPrice = res?.data?.data?.reduce((acc, item) => {
+        const amount = res?.data?.chatdata?.find((el) => el?.image_id == item?._id)?.amount || 0;
+        return acc + Number(amount);
+      }, 0);
+
+      setPendingPayment(totalPrice);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    PendingPayment();
+  }, [])
+
   return (
     <>
       {loading && <Loader />}
@@ -681,7 +700,7 @@ const Accounts = () => {
                                     className="card-head-txt mb-2 mt-2"
                                   >
                                     £
-                                    {formatAmountInMillion(accountCount?.pending_payment || 0)}
+                                    {formatAmountInMillion(pendingPayment || 0)}
                                   </Typography>
                                 </div>
                                 <Typography

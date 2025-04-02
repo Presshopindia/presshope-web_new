@@ -1,4 +1,5 @@
 import React, { memo, useState } from "react";
+import ReactDOMServer from "react-dom/server";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Modal from "react-bootstrap/Modal";
@@ -36,22 +37,24 @@ const InviteUserModal = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
-      if(!emailIds) {
+    try {
+      if (!emailIds) {
         return;
       }
       setLoading(true);
-      await Post("auth/sendInvitationLink", {emailIds, _id: adminId});
+      await Post("auth/sendInvitationLink", { emailIds, _id: adminId });
       setEmailIds("");
       toast.success("Invitation link send.");
       setLoading(false);
       handleClose();
     }
-    catch(error) {
+    catch (error) {
       console.log(error);
       setLoading(false);
     }
   }
+
+  const jsxElement = <strong>Hello, JSX!</strong>;
 
   return (
     <>
@@ -162,7 +165,7 @@ const InviteUserModal = ({
                 </Row>
                 <Row className="rw_gp_sml mb-4">
                   <p className="invite-user-heading">Message</p>
-                  <Col lg={12} md={12} xs={12}>
+                  {/* <Col lg={12} md={12} xs={12}>
                     <Form.Group
                       controlId="exampleForm.ControlTextarea1"
                     >
@@ -171,8 +174,21 @@ const InviteUserModal = ({
                         as="textarea"
                         placeholder="Enter message"
                         rows={7}
-                        defaultValue={"Dear team-members, Please use this activation link to commence your onboarding process onto the PressHop platform. This activation link is valid for 5 days from now and will automatically expire. If you have any questions, you can always contact me by email. Thank you, Administrator"}
+                        value={ReactDOMServer.renderToString(jsxElement)}
+                        defaultValue={""}
                       />
+                    </Form.Group>
+                  </Col> */}
+                  <Col lg={12} md={12} xs={12}>
+                    <Form.Group className="form-message">
+                      <img src={mailImg} alt="" />
+                      <div className="font-14 invite-user-enable-message">
+                        <p>Dear team-members,</p>
+                        <p>Please use this activation link to commence your onboarding process onto the <span className="txt-success">PressHop</span> platform. This activation link is valid for 5 days from now and will automatically expire.</p>
+                        <p>If you have any questions, you can always contact me by email.</p>
+                        <p>Thank you,</p>
+                        <p><span className='txt-success'>Administrator.</span></p>
+                      </div>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -187,7 +203,7 @@ const InviteUserModal = ({
                 <div className="link_white">Send</div>
               </Button>
             </Modal.Footer>
-          </Form>     
+          </Form>
         </Modal>
       </div>
     </>

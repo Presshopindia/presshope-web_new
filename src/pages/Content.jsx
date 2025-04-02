@@ -649,9 +649,7 @@ const ContentPage = () => {
                                             <div className="rateReview_content">
                                               <div className="commonContentIconsWrap crd_in_icons d-flex justify-content-between">
                                                 <PostIconsWrapper
-                                                  images={curr?.image_count}
-                                                  video={curr?.video_count}
-                                                  audio={curr?.audio_count}
+                                                  images={curr?.content?.length || 0}
                                                 />
                                                 <span className="rateView-type dflt">
                                                   <img
@@ -757,17 +755,6 @@ const ContentPage = () => {
                                                   {item?.content?.length}
                                                 </span>
                                               </span>
-                                              {/* <span className="rateView-type dflt">
-                                                <img
-                                                  className=""
-                                                  src={
-                                                    item?.content[0]?.favourited ===
-                                                      "true"
-                                                      ? typestar
-                                                      : favic
-                                                  }
-                                                />
-                                              </span> */}
                                             </div>
                                             <img
                                               className="list-card-img"
@@ -887,7 +874,8 @@ const ContentPage = () => {
                                         curr?.upload_content_details?.type === "video" ? curr?.upload_content_details?.task_details?.hopper_videos_price : 
                                         curr?.upload_content_details?.type === "audio" ? curr?.upload_content_details?.task_details?.hopper_interview_price : ""
                                       )}`}
-                                      contentDetails={curr?.content_id}
+                                      fav={true}
+                                      contentDetails={1}
                                     />
                                   </Link>
                                 )
@@ -930,7 +918,8 @@ const ContentPage = () => {
                                       tabcard3={`${formatAmountInMillion(
                                         curr?.content_details?.ask_price
                                       )}`}
-                                      contentDetails={curr?.content_details}
+                                      fav={true}
+                                      contentDetails={curr?.content_details?.content?.length}
                                     />
                                   </Link>
                                 )

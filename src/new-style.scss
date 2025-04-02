@@ -359,6 +359,15 @@ body .page-wrap {
 
 // --onboard_successs_css--
 
+.txt-success {
+  color: $black;
+  font-weight: bold;
+}
+
+.font-14 {
+  font-size: 14px !important;
+}
+
 .onboar_success {
   .txt-success {
     color: $black;

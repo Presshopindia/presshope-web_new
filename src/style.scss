@@ -1370,6 +1370,12 @@ button.round {
   border-color: $input-border !important;
 }
 
+.invite-user-enable-message {
+  border: 1px solid $input-border !important;
+  padding: 12px 12px 12px 40px;
+  border-radius: 12px;
+}
+
 .invite-user-heading {
   font-size: 16px;
   font-family: "AirbnbMedium" !important;
@@ -3574,6 +3580,15 @@ button.MuiButton-secondary {
   margin-top: 32px;
 }
 
+.form-message {
+  position: relative;
+
+  img {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+  }
+}
 // onboarding update css
 .onboardStep {
   .form-group {
