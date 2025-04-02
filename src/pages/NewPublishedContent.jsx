@@ -299,7 +299,7 @@ const NewPublishedContent = (props) => {
                                   : ""
                               }
                               feedType={
-                                curr.content[0].media_type === "video"
+                                curr?.content[0]?.media_type === "video"
                                   ? contentVideo
                                   : contentCamera
                               }
