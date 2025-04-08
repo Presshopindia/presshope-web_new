@@ -198,6 +198,7 @@ const Feeddetail = (props) => {
         initial_offer_price: "",
         finaloffer_price: "",
       };
+      console.log(obj);
       socketServer.emit("initialoffer", obj);
       socketServer.on("initialoffer", (obj) => {
         const tempMsg = obj;

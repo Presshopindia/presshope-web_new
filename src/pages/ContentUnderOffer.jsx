@@ -255,20 +255,11 @@ const ContentUnderOffer = () => {
                         <Col lg={3} md={4} sm={6} key={i}>
                           <ContentFeedCard
                             feedImg={
-                              curr.content[0].media_type === "video"
-                                ? process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr.content[0].thumbnail ||
-                                  curr.content[0].watermark
-                                : curr.content[0].media_type === "image"
-                                ? curr.content[0].watermark ||
-                                  process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr.content[0].media
-                                : curr.content[0].media_type === "audio"
-                                ? audioic
-                                : curr?.content[0]?.media_type === "doc" ||
-                                  "pdf"
-                                ? pdfic
-                                : ""
+                              curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                  : curr?.content[0]?.media_type === "audio" ? audioic
+                                    : curr?.content[0]?.media_type === "doc" ? pdfic
+                                      : ""
                             }
                             feedType={
                               curr.content[0].media_type === "video"

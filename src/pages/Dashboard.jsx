@@ -631,17 +631,11 @@ const Dashboard = () => {
                           <Link to={`/auto-invoice/${curr?.id}`} key={curr?._id}>
                             <DashBoardPayment
                               imgtab={
-                                curr?.content[0]?.media_type === "video"
-                                  ? curr?.content[0]?.watermark ||
-                                  process.env.REACT_APP_CONTENT_MEDIA +
-                                  curr?.content[0]?.thumbnail
-                                  : curr?.content[0]?.media_type === "audio"
-                                    ? audioicsm
-                                    : curr?.content[0]?.media_type === "pdf"
-                                      ? docsic
-                                      : curr?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.media
+                                curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                  : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                    : curr.content[0]?.media_type === "audio" ? audioicsm
+                                      : curr?.content[0]?.media_type === "doc" ? pdfic
+                                        : ""
                               }
                               imgtab1={
                                 process.env.REACT_APP_AVATAR_IMAGE +
