@@ -295,20 +295,11 @@ const FavouritedContent = () => {
                             <Col lg={3} md={4} sm={6}>
                               <ContentFeedCard
                                 feedImg={
-                                  curr?.content_details?.content[0]?.media_type ===
-                                  "video"
-                                    ? curr?.content_details?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr?.content_details?.content[0]?.thumbnail
-                                    : curr?.content_details?.content[0]?.media_type ===
-                                      "image"
-                                    ? curr?.content_details?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr?.content_details?.content[0]?.media
-                                    : curr?.content_details?.content[0]?.media_type ===
-                                      "audio"
-                                    ? audioic
-                                    : ""
+                                  curr?.content_details?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content_details?.content[0]?.media
+                                    : curr?.content_details?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content_details?.content[0]?.media
+                                      : curr?.content_details?.content[0]?.media_type === "audio" ? audioic
+                                        : curr?.content_details?.content[0]?.media_type === "doc" ? pdfic
+                                          : ""
                                 }
                                 allContent={curr?.content_details?.content}
                                 basketValue={curr?.basket_status}

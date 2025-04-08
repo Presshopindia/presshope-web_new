@@ -262,20 +262,14 @@ const Invoice = () => {
                                                   ?.media_type === "image" ? (
                                                   <img
                                                     src={
-                                                      data?.content_id?.content[0]
-                                                        ?.watermark
+                                                      process.env.REACT_APP_CONTENT_MEDIA + data?.content_id?.content[0]?.media
                                                     }
                                                     className="cntnt-img"
                                                     alt="img"
                                                   />
-                                                ) : data?.content_id?.content[0]
-                                                  ?.media_type === "video" ? (
+                                                ) : data?.content_id?.content[0]?.media_type === "video" ? (
                                                   <img
-                                                    src={
-                                                      data.content[0].watermark ||
-                                                      process.env
-                                                        .REACT_APP_CONTENT_MEDIA +
-                                                      data.content[0].thumbnail
+                                                    src={process.env.REACT_APP_THUMBNAIL + data?.content_id?.content[0].media
                                                     }
                                                     className="cntnt-img"
                                                   />

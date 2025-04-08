@@ -200,15 +200,12 @@ const Feeddetail = (props) => {
       };
       socketServer.emit("initialoffer", obj);
       socketServer.on("initialoffer", (obj) => {
-        console.log("object --->socket io", obj);
         const tempMsg = obj;
         setMessages([...messages]);
         getMessages();
       });
       setLoading(false);
     } catch (error) {
-      console.log("socket error ----->", error);
-      // Handle errors
       setLoading(false);
     }
   };
@@ -428,7 +425,7 @@ const Feeddetail = (props) => {
 
       if (resp?.data?.content?.content[0]?.media_type == "image") {
         const img = new Image();
-        img.src = resp?.data?.content?.content[0]?.watermark;
+        img.src = process.env.REACT_APP_CONTENT_MEDIA + resp?.data?.content?.content[0]?.media;
         img.onload = function () {
           setImageSize({ height: img.height, width: img.width });
         };
@@ -450,13 +447,11 @@ const Feeddetail = (props) => {
         hopper_id: resp.data.content?.hopper_id?._id,
         content_id: param?.id,
       });
-      console.log("resp1.data.content", resp1.data.content);
       setMoreContent(resp1.data.content);
       const resp2 = await Post(`mediaHouse/relatedContent`, {
         content_id: resp.data.content._id,
         limit: 4
       });
-      console.log("resp2?.data?.content", resp2?.data?.content);
       setRelatedContent(resp2?.data?.content);
       localStorage.setItem(
         "tag_id",
@@ -520,9 +515,7 @@ const Feeddetail = (props) => {
 
   const GetUserList = async () => {
     const resp = await Post(`mediaHouse/getMediahouseUser`);
-    console.log("all user type --->12345");
     if (resp) {
-      console.log("all user type --->45645656");
       setUserList(resp.data.response);
     }
     const resp1 = await Get(`mediaHouse/adminlist`);
@@ -716,7 +709,6 @@ const Feeddetail = (props) => {
 
   const handleButtonClick = (e) => {
     e.preventDefault();
-    console.log("check ---> ---> ");
     let messages = {
       sender_id: chatContentIds?.sender_id,
       room_id: chatContentIds?.room_id,
@@ -896,25 +888,18 @@ const Feeddetail = (props) => {
     }
   }, [messages, tabSelect, isShowBuyMessage, isShowOffer]);
 
-  console.log("messages ----------->", messages);
-  // console.log("isShowBuyMessage ----------->", isShowBuyMessage, isShowOffer);
-
   async function getCountOfBasketItems() {
     try {
       const res = await Get(`mediaHouse/getBasketDataCount`);
 
-      console.log("count", res?.data?.data);
       setCartCount(res?.data?.data || 0);
     } catch (error) {
-      console.log("basketcountError", error);
     }
   }
 
   // Add to basket-
   const AddToBasket = async (element) => {
     try {
-      console.log("dataType", element);
-      // return
       let obj = {};
 
       if (data.type == "task") {
@@ -948,9 +933,6 @@ const Feeddetail = (props) => {
       }
     } catch (error) { }
   };
-
-  console.log("all internal messages ------>12345", message);
-  console.log("all internal profile data ------>12345", profileData);
 
   return (
     <>
@@ -1187,8 +1169,7 @@ const Feeddetail = (props) => {
                                   "image"
                                 ) {
                                   const img = new Image();
-                                  img.src =
-                                    data.content[e.activeIndex]?.watermark;
+                                  img.src = process.env.REACT_APP_CONTENT_MEDIA + data.content[e.activeIndex]?.media;
                                   img.onload = function () {
                                     setImageSize({
                                       height: img.height,
@@ -1211,7 +1192,7 @@ const Feeddetail = (props) => {
                                       {/* Media content based on type */}
                                       {curr?.media_type === "image" && (
                                         <img
-                                          src={curr?.watermark}
+                                          src={process.env.REACT_APP_CONTENT_MEDIA + curr?.media}
                                           alt={`Image ${curr._id}`}
                                         />
                                       )}
@@ -1225,12 +1206,7 @@ const Feeddetail = (props) => {
                                           />
                                           <audio
                                             controls
-                                            src={
-                                              curr?.watermark ||
-                                              process.env
-                                                .REACT_APP_CONTENT_MEDIA +
-                                              curr?.media
-                                            }
+                                            src={process.env.REACT_APP_CONTENT_MEDIA + curr?.media}
                                             type="audio/mpeg"
                                             className="slider-audio"
                                             ref={audioRef}
@@ -1241,7 +1217,7 @@ const Feeddetail = (props) => {
                                         <video
                                           controls
                                           className="slider-video"
-                                          src={curr?.watermark}
+                                          src={process.env.REACT_APP_CONTENT_MEDIA + curr?.media}
                                           style={{
                                             height: "380px",
                                             width: "100%",
@@ -1250,10 +1226,7 @@ const Feeddetail = (props) => {
                                       )}
                                       {curr?.media_type === "pdf" && (
                                         <embed
-                                          src={`${process.env
-                                            .REACT_APP_CONTENT_MEDIA +
-                                            curr?.media
-                                            }`}
+                                          src={process.env.REACT_APP_CONTENT_MEDIA + curr?.media}
                                           type="application/pdf"
                                           width="100%"
                                           height="500"
@@ -2039,10 +2012,6 @@ const Feeddetail = (props) => {
 
                                     <div className="scrollHtPnts">
                                       {userList?.map((curr) => {
-                                        console.log(
-                                          "all user list data ------->12345676jfhgjf",
-                                          curr
-                                        );
                                         return (
                                           <div className="tab_in_card_items">
                                             <div className="checkWrap">
@@ -3290,10 +3259,7 @@ const Feeddetail = (props) => {
                             allContent={curr?.content}
                             basketValue={curr?.basket_status}
                             basket={() => {
-                              console.log("myData");
-                              // handleBasket(index,curr?._id)
                               const allContent = [...content];
-                              console.log("allccccc", allContent);
                               const updatedCont = allContent.map(
                                 (ele, indx) => {
                                   if (index == indx) {
@@ -3329,7 +3295,6 @@ const Feeddetail = (props) => {
                               );
                               setMoreContent(updatedConts);
                               if (content_id == data._id) {
-                                console.log("rearrangeDatta", data);
                                 setData({
                                   ...data,
                                   basket_status:
@@ -3341,21 +3306,11 @@ const Feeddetail = (props) => {
                             }}
                             // postcount={curr?.content?.length}
                             feedImg={
-                              curr?.content[0]?.media_type === "video"
-                                ? curr?.content[0]?.thumbnail.startsWith(
-                                  "https"
-                                )
-                                  ? curr?.content[0]?.thumbnail
-                                  : process.env.REACT_APP_CONTENT_MEDIA +
-                                  curr?.content[0]?.thumbnail
-                                : // ? curr?.content[0]?.watermark ||
-                                //   process.env.REACT_APP_CONTENT_MEDIA +
-                                //     curr?.content[0]?.thumbnail
-                                curr?.content[0]?.media_type === "audio"
-                                  ? audioic
-                                  : curr?.content[0]?.watermark ||
-                                  process.env.REACT_APP_CONTENT_MEDIA +
-                                  curr?.content[0]?.media
+                              curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                  : curr.content[0]?.media_type === "audio" ? audioic
+                                    : curr?.content[0]?.media_type === "doc" ? pdfic
+                                      : ""
                             }
                             // feedType={contentVideo}
                             feedTag={
@@ -3481,18 +3436,11 @@ const Feeddetail = (props) => {
                             viewTransaction={"View details"}
                             viewDetail={`/Feeddetail/content/${curr._id}`}
                             feedImg={
-                              curr?.content[0]?.media_type === "video"
-                                ? curr?.content[0]?.thumbnail.startsWith(
-                                  "https"
-                                )
-                                  ? curr?.content[0]?.thumbnail
-                                  : process.env.REACT_APP_CONTENT_MEDIA +
-                                  curr?.content[0]?.thumbnail
-                                : curr?.content[0]?.media_type === "audio"
-                                  ? audioic
-                                  : curr?.content[0]?.watermark ||
-                                  process.env.REACT_APP_CONTENT_MEDIA +
-                                  curr?.content[0]?.media
+                              curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                  : curr.content[0]?.media_type === "audio" ? audioic
+                                    : curr?.content[0]?.media_type === "doc" ? pdfic
+                                      : ""
                             }
                             feedType={contentVideo}
                             feedTag={
@@ -3513,7 +3461,6 @@ const Feeddetail = (props) => {
                             allContent={curr?.content}
                             basketValue={curr?.basket_status}
                             basket={() => {
-                              console.log("myData");
                               // handleBasket(index,curr?._id)
                               const allContent = [...moreContent];
                               const updatedCont = allContent.map(
@@ -3534,7 +3481,6 @@ const Feeddetail = (props) => {
 
                               const content_id = curr?._id;
                               const allContents = [...content];
-                              console.log("allccccc", allContents);
                               const updatedConts = allContents.map(
                                 (ele, indx) => {
                                   if (content_id == ele._id) {

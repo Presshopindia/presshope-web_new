@@ -130,7 +130,7 @@ const ContentPage = () => {
     setLoading(true);
 
     try {
-      const resp = await Post("mediaHouse/favouritesListingNew", {limit: 6});
+      const resp = await Post("mediaHouse/favouritesListingNew", { limit: 6 });
       setFavouriteContent(resp.data.response.data);
       if (resp) {
         setLoading(false);
@@ -405,16 +405,11 @@ const ContentPage = () => {
                                   item?.hopperDetails?.avatarDetails?.avatar
                                 }
                                 imgtab={
-                                  item?.contentDetails?.content[0]?.media_type === "video"
-                                    ? item?.contentDetails?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                    item?.contentDetails?.content[0]?.thumbnail
-                                    : item?.contentDetails?.content[0]?.media_type ===
-                                      "audio"
-                                      ? audioic
-                                      : item?.contentDetails?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                      item?.contentDetails?.content[0]?.media
+                                  item?.contentDetails?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + item?.contentDetails?.content[0]?.media
+                                    : item?.contentDetails?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + item?.contentDetails?.content[0]?.media
+                                      : item.contentDetails?.content[0]?.media_type === "audio" ? audioic
+                                        : item?.contentDetails?.content[0]?.media_type === "doc" ? pdfic
+                                          : ""
                                 }
                                 tabcarddata={item?.contentDetails?.heading}
                                 tabcard2={moment(item?.createdAt).format(
@@ -440,16 +435,11 @@ const ContentPage = () => {
                                   item?.hopperDetails?.avatarDetails?.avatar
                                 }
                                 imgtab={
-                                  item?.contentDetails?.content[0]?.media_type === "video"
-                                    ? item?.contentDetails?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                    item?.contentDetails?.content[0]?.thumbnail
-                                    : item?.contentDetails?.content[0]?.media_type ===
-                                      "audio"
-                                      ? audioic
-                                      : item?.contentDetails?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                      item?.contentDetails?.content[0]?.media
+                                  item?.contentDetails?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + item?.contentDetails?.content[0]?.media
+                                    : item?.contentDetails?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + item?.contentDetails?.content[0]?.media
+                                      : item.contentDetails?.content[0]?.media_type === "audio" ? audioic
+                                        : item?.contentDetails?.content[0]?.media_type === "doc" ? pdfic
+                                          : ""
                                 }
                                 tabcarddata={item?.contentDetails?.heading}
                                 tabcard2={moment(item?.createdAt).format(
@@ -667,28 +657,11 @@ const ContentPage = () => {
                                               <img
                                                 className="list-card-img"
                                                 src={
-                                                  curr?.content[0]
-                                                    ?.media_type === "video"
-                                                    ? curr?.content[0]?.thumbnail.startsWith(
-                                                      "https"
-                                                    )
-                                                      ? curr?.content[0]
-                                                        ?.thumbnail
-                                                      : process.env
-                                                        .REACT_APP_CONTENT_MEDIA +
-                                                      curr?.content[0]
-                                                        ?.thumbnail
-                                                    : // ? process.env
-                                                    //     .REACT_APP_CONTENT_MEDIA +
-                                                    //   curr?.content[0]
-                                                    //     ?.thumbnail
-                                                    curr?.content[0]
-                                                      ?.media_type ===
-                                                      "audio"
-                                                      ? audioic
-                                                      : process.env
-                                                        .REACT_APP_CONTENT_MEDIA +
-                                                      curr?.content[0]?.media
+                                                  curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                                    : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                                      : curr.content[0]?.media_type === "audio" ? audioic
+                                                        : curr?.content[0]?.media_type === "doc" ? pdfic
+                                                          : ""
                                                 }
                                                 alt="1"
                                               />
@@ -839,8 +812,8 @@ const ContentPage = () => {
                             className="DashBoardsort_wrapper d-flex justify-content-start fvt_undr_ofr"
                             style={{ flexWrap: "wrap" }}
                           >
-                            {favouriteContent?.filter((el) => ("content_details" in el || "upload_content_details" in el) )?.map((curr, index) => {
-                              if(curr?.upload_content_details) {
+                            {favouriteContent?.filter((el) => ("content_details" in el || "upload_content_details" in el))?.map((curr, index) => {
+                              if (curr?.upload_content_details) {
                                 return (
                                   <Link
                                     to={`/content-details/${curr?.upload_content_details?.task_details?._id}?hopper_id=${curr?.upload_content_details?.hopper_details?._id}`}
@@ -853,16 +826,16 @@ const ContentPage = () => {
                                       reviewTypetwo={typestar}
                                       imgtab={
                                         curr?.upload_content_details?.type === "image"
-                                        ? curr?.upload_content_details?.videothubnail ||
-                                        process.env.REACT_APP_UPLOADED_CONTENT +
-                                        curr?.upload_content_details?.imageAndVideo
-                                        : curr?.upload_content_details?.type === "video"
                                           ? curr?.upload_content_details?.videothubnail ||
                                           process.env.REACT_APP_UPLOADED_CONTENT +
-                                          curr?.upload_content_details?.videothubnail
-                                          : curr?.upload_content_details?.type === "audio"
-                                            ? audioic
-                                            : null
+                                          curr?.upload_content_details?.imageAndVideo
+                                          : curr?.upload_content_details?.type === "video"
+                                            ? curr?.upload_content_details?.videothubnail ||
+                                            process.env.REACT_APP_UPLOADED_CONTENT +
+                                            curr?.upload_content_details?.videothubnail
+                                            : curr?.upload_content_details?.type === "audio"
+                                              ? audioic
+                                              : null
                                       }
                                       tabcarddata={
                                         curr?.upload_content_details?.task_details?.heading
@@ -871,8 +844,8 @@ const ContentPage = () => {
                                       feedType={"TASK"}
                                       tabcard3={`${formatAmountInMillion(
                                         curr?.upload_content_details?.type === "image" ? curr?.upload_content_details?.task_details?.hopper_photo_price :
-                                        curr?.upload_content_details?.type === "video" ? curr?.upload_content_details?.task_details?.hopper_videos_price : 
-                                        curr?.upload_content_details?.type === "audio" ? curr?.upload_content_details?.task_details?.hopper_interview_price : ""
+                                          curr?.upload_content_details?.type === "video" ? curr?.upload_content_details?.task_details?.hopper_videos_price :
+                                            curr?.upload_content_details?.type === "audio" ? curr?.upload_content_details?.task_details?.hopper_interview_price : ""
                                       )}`}
                                       fav={true}
                                       contentDetails={1}
@@ -891,20 +864,11 @@ const ContentPage = () => {
                                       reviewType={contentCamera}
                                       reviewTypetwo={typestar}
                                       imgtab={
-                                        curr?.content_details?.content[0]?.media_type ===
-                                        "video"
-                                          ? curr?.content_details?.content[0]?.watermark ||
-                                            process.env.REACT_APP_CONTENT_MEDIA +
-                                              curr?.content_details?.content[0]?.thumbnail
-                                          : curr?.content_details?.content[0]?.media_type ===
-                                            "image"
-                                          ? curr?.content_details?.content[0]?.watermark ||
-                                            process.env.REACT_APP_CONTENT_MEDIA +
-                                              curr?.content_details?.content[0]?.media
-                                          : curr?.content_details?.content[0]?.media_type ===
-                                            "audio"
-                                          ? audioic
-                                          : ""
+                                        curr?.content_details?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content_details?.content[0]?.media
+                                          : curr?.content_details?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content_details?.content[0]?.media
+                                            : curr?.content_details?.content[0]?.media_type === "audio" ? audioicsm
+                                              : curr?.content_details?.content[0]?.media_type === "doc" ? pdfic
+                                                : ""
                                       }
                                       tabcarddata={
                                         curr?.content_details?.description
@@ -965,16 +929,11 @@ const ContentPage = () => {
                                         : favic
                                     }
                                     imgtab={
-                                      curr?.content[0]?.media_type === "video"
-                                        ? process.env
-                                          .REACT_APP_CONTENT_MEDIA +
-                                        curr?.content[0]?.thumbnail
-                                        : curr?.content[0]?.media_type ===
-                                          "audio"
-                                          ? audioicsm
-                                          : process.env
-                                            .REACT_APP_CONTENT_MEDIA +
-                                          curr?.content[0]?.media
+                                      curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                        : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                          : curr?.content[0]?.media_type === "audio" ? audioicsm
+                                            : curr?.content[0]?.media_type === "doc" ? pdfic
+                                              : ""
                                     }
                                     tabcarddata={curr?.description}
                                     feedIcon={feedIcon}
@@ -1040,14 +999,11 @@ const ContentPage = () => {
                                         : favic
                                     }
                                     imgtab={
-                                      curr?.content[0] &&
-                                        curr?.content[0]?.media_type === "video"
-                                        ? process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr?.content[0]?.thumbnail
-                                        : curr?.content[0]?.media_type ===
-                                          "audio"
-                                          ? audioicsm
-                                          : curr?.content[0]?.watermark
+                                      curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                        : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                          : curr?.content[0]?.media_type === "audio" ? audioicsm
+                                            : curr?.content[0]?.media_type === "doc" ? pdfic
+                                              : ""
                                     }
                                     tabcarddata={curr?.description}
                                     feedIcon={

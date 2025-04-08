@@ -432,25 +432,11 @@ const DashboardTables = () => {
                                 ) || [];
 
                               const contentSource =
-                                curr?.contentDetails && curr.contentDetails.content[0]
-                                  ? curr.contentDetails.content[0].media_type ===
-                                    "video"
-                                    ? process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.contentDetails?.content?.[0]
-                                      ?.thumbnail
-                                    : curr.contentDetails.content[0]
-                                      .media_type === "audio"
-                                      ? audimgsm
-                                      : curr.contentDetails.content[0]
-                                        .media_type === "image"
-                                        ? curr.contentDetails.content[0].watermark ||
-                                        process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr.contentDetails.content[0].media
-                                        : curr.contentDetails.content[0]
-                                          .media_type === "doc"
-                                          ? docsic
-                                          : null
-                                  : null;
+                                curr?.contentDetails?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.contentDetails?.content[0]?.media
+                                  : curr?.contentDetails?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.contentDetails?.content[0]?.media
+                                    : curr?.contentDetails?.content[0]?.media_type === "audio" ? audioic
+                                      : curr?.contentDetails?.content[0]?.media_type === "doc" ? pdfic
+                                        : ""
 
                               return (
                                 <tr
@@ -686,113 +672,113 @@ const DashboardTables = () => {
                           </thead>
                           <tbody>
                             {data?.broad_casted_tasks_details?.task?.map(
-                                (curr) => {
-                                  let imageCount = 0;
-                                  let audioCount = 0;
-                                  let videoCount = 0;
-                                  curr?.content.forEach((ele, indx) => {
-                                    if (ele?.media_type == "image") {
-                                      imageCount++;
-                                    } else if (ele.media_type == "video") {
-                                      videoCount++;
-                                    } else if (ele.media_type == "audio") {
-                                      audioCount++;
+                              (curr) => {
+                                let imageCount = 0;
+                                let audioCount = 0;
+                                let videoCount = 0;
+                                curr?.content.forEach((ele, indx) => {
+                                  if (ele?.media_type == "image") {
+                                    imageCount++;
+                                  } else if (ele.media_type == "video") {
+                                    videoCount++;
+                                  } else if (ele.media_type == "audio") {
+                                    audioCount++;
+                                  }
+                                });
+                                return (
+                                  <tr
+                                    onClick={() =>
+                                      navigate(
+                                        `/task?task_ids=${curr?._id}`
+                                      )
                                     }
-                                  });
-                                  return (
-                                    <tr
-                                      onClick={() =>
-                                        navigate(
-                                          `/task?task_ids=${curr?._id}`
-                                        )
-                                      }
-                                      style={{ cursor: "pointer" }}
-                                    >
-                                      <td className="content_img_td position-relative add-icons-box">
-                                        <Link>
-                                          <div className="tbl_cont_wrp cnt_online_img noGrid">
-                                            {curr?.content.length === 0 ? (
-                                              <div className="mapInput1 td_mp1">
-                                                <style>
-                                                  {`
+                                    style={{ cursor: "pointer" }}
+                                  >
+                                    <td className="content_img_td position-relative add-icons-box">
+                                      <Link>
+                                        <div className="tbl_cont_wrp cnt_online_img noGrid">
+                                          {curr?.content.length === 0 ? (
+                                            <div className="mapInput1 td_mp1">
+                                              <style>
+                                                {`
                                                   .gm-style > div:first-child {
                                                   cursor: pointer !important;
                                                 }
                                               `}
-                                                </style>
-                                                <GoogleMap
-                                                  googleMapsApiKey={
-                                                    process.env
-                                                      .REACT_APP_GOOGLE_MAPS_API_KEY
-                                                  }
-                                                  center={{
-                                                    lat: curr?.address_location
+                                              </style>
+                                              <GoogleMap
+                                                googleMapsApiKey={
+                                                  process.env
+                                                    .REACT_APP_GOOGLE_MAPS_API_KEY
+                                                }
+                                                center={{
+                                                  lat: curr?.address_location
+                                                    ?.coordinates[0],
+                                                  lng: curr?.address_location
+                                                    ?.coordinates[1],
+                                                }}
+                                                zoom={7}
+                                                mapContainerStyle={{
+                                                  height: "58px",
+                                                  width: "58px",
+                                                  borderRadius: "12px",
+                                                }}
+                                                options={{
+                                                  disableDefaultUI: true,
+                                                  mapTypeControl: false,
+                                                  streetViewControl: false,
+                                                }}
+                                              >
+                                                <Marker
+                                                  key={curr._id}
+                                                  position={{
+                                                    lat: curr
+                                                      ?.address_location
                                                       ?.coordinates[0],
-                                                    lng: curr?.address_location
+                                                    lng: curr
+                                                      ?.address_location
                                                       ?.coordinates[1],
                                                   }}
-                                                  zoom={7}
-                                                  mapContainerStyle={{
-                                                    height: "58px",
-                                                    width: "58px",
-                                                    borderRadius: "12px",
+                                                  icon={{
+                                                    url: locationPin,
+                                                    scaledSize: new window.google.maps.Size(30, 30), // Size of pin (Width, Height)
                                                   }}
-                                                  options={{
-                                                    disableDefaultUI: true,
-                                                    mapTypeControl: false,
-                                                    streetViewControl: false,
-                                                  }}
-                                                >
-                                                  <Marker
-                                                    key={curr._id}
-                                                    position={{
-                                                      lat: curr
-                                                        ?.address_location
-                                                        ?.coordinates[0],
-                                                      lng: curr
-                                                        ?.address_location
-                                                        ?.coordinates[1],
-                                                    }}
-                                                    icon={{
-                                                      url: locationPin,
-                                                      scaledSize: new window.google.maps.Size(30, 30), // Size of pin (Width, Height)
-                                                    }}
-                                                  />
-                                                </GoogleMap>
-                                              </div>
-                                            ) : (
-                                              <div className="tbl_cont_wrp">
-                                                {curr?.content[0]
-                                                  ?.media_type === "image" ? (
-                                                  <img
-                                                    src={
-                                                      curr?.content?.[0]
-                                                        ?.watermark
-                                                    }
-                                                    className="content_img"
-                                                  />
-                                                ) : curr?.content?.[0]
-                                                  ?.media_type === "video" ? (
-                                                  <img
-                                                    src={
-                                                      curr?.content[0]
-                                                        ?.thumbnail
-                                                    }
-                                                    className="content_img"
-                                                  />
-                                                ) : curr?.content?.[0]
-                                                  ?.media_type === "audio" ? (
-                                                  audioic
-                                                ) : (
-                                                  ""
-                                                )}
-                                                {/* <span className="cont_count">
+                                                />
+                                              </GoogleMap>
+                                            </div>
+                                          ) : (
+                                            <div className="tbl_cont_wrp">
+                                              {curr?.content[0]
+                                                ?.media_type === "image" ? (
+                                                <img
+                                                  src={
+                                                    curr?.content?.[0]
+                                                      ?.watermark
+                                                  }
+                                                  className="content_img"
+                                                />
+                                              ) : curr?.content?.[0]
+                                                ?.media_type === "video" ? (
+                                                <img
+                                                  src={
+                                                    curr?.content[0]
+                                                      ?.thumbnail
+                                                  }
+                                                  className="content_img"
+                                                />
+                                              ) : curr?.content?.[0]
+                                                ?.media_type === "audio" ? (
+                                                audioic
+                                              ) : (
+                                                ""
+                                              )}
+                                              {/* <span className="cont_count">
                                                   {curr?.content.length}
                                                 </span> */}
-                                              </div>
-                                            )}
-                                          </div>
-                                          {/* <div className="tableContentTypeIcons">
+                                            </div>
+                                          )}
+                                        </div>
+                                        {/* <div className="tableContentTypeIcons">
                                             {imageCount > 0 && (
                                               <div class="post_icns_cstm_wrp camera-ico">
                                                 <div class="post_itm_icns dtl_icns">
@@ -834,165 +820,165 @@ const DashboardTables = () => {
                                                   </div>
                                                 </div> 
                                           </div> */}
-                                        </Link>
-                                      </td>
-                                      <td className="timedate_wrap">
-                                        <p className="timedate">
-                                          <img
-                                            src={watchic}
-                                            className="icn_time"
-                                          />
-                                          {moment(curr?.createdAt).format(
+                                      </Link>
+                                    </td>
+                                    <td className="timedate_wrap">
+                                      <p className="timedate">
+                                        <img
+                                          src={watchic}
+                                          className="icn_time"
+                                        />
+                                        {moment(curr?.createdAt).format(
+                                          `hh:mm A`
+                                        )}
+                                      </p>
+                                      <p className="timedate">
+                                        <img
+                                          src={calendar}
+                                          className="icn_time"
+                                        />
+                                        {moment(curr?.createdAt).format(
+                                          `DD MMM YYYY`
+                                        )}
+                                      </p>
+                                    </td>
+                                    <td className="timedate_wrap">
+                                      <p className="timedate">
+                                        <img
+                                          src={watchic}
+                                          className="icn_time"
+                                        />
+                                        {moment(curr?.deadline_date).format(
+                                          `hh:mm A`
+                                        )}
+                                      </p>
+                                      <p className="timedate">
+                                        <img
+                                          src={calendar}
+                                          className="icn_time"
+                                        />
+                                        {moment(curr?.deadline_date).format(
+                                          `DD MMM YYYY`
+                                        )}
+                                      </p>
+                                    </td>
+                                    <td className="timedate_wrap">
+                                      <p className="timedate">
+                                        <img
+                                          src={watchic}
+                                          className="icn_time"
+                                        />
+                                        {curr?.totalfund_invested?.length > 0
+                                          ? moment(curr?.updatedAt).format(
                                             `hh:mm A`
-                                          )}
-                                        </p>
-                                        <p className="timedate">
-                                          <img
-                                            src={calendar}
-                                            className="icn_time"
-                                          />
-                                          {moment(curr?.createdAt).format(
+                                          )
+                                          : ""}
+                                      </p>
+                                      <p className="timedate">
+                                        <img
+                                          src={calendar}
+                                          className="icn_time"
+                                        />
+                                        {curr?.totalfund_invested?.length > 0
+                                          ? moment(curr?.updatedAt).format(
                                             `DD MMM YYYY`
-                                          )}
-                                        </p>
-                                      </td>
-                                      <td className="timedate_wrap">
-                                        <p className="timedate">
-                                          <img
-                                            src={watchic}
-                                            className="icn_time"
-                                          />
-                                          {moment(curr?.deadline_date).format(
-                                            `hh:mm A`
-                                          )}
-                                        </p>
-                                        <p className="timedate">
-                                          <img
-                                            src={calendar}
-                                            className="icn_time"
-                                          />
-                                          {moment(curr?.deadline_date).format(
-                                            `DD MMM YYYY`
-                                          )}
-                                        </p>
-                                      </td>
-                                      <td className="timedate_wrap">
-                                        <p className="timedate">
-                                          <img
-                                            src={watchic}
-                                            className="icn_time"
-                                          />
-                                          {curr?.totalfund_invested?.length > 0
-                                            ? moment(curr?.updatedAt).format(
-                                              `hh:mm A`
-                                            )
-                                            : ""}
-                                        </p>
-                                        <p className="timedate">
-                                          <img
-                                            src={calendar}
-                                            className="icn_time"
-                                          />
-                                          {curr?.totalfund_invested?.length > 0
-                                            ? moment(curr?.updatedAt).format(
-                                              `DD MMM YYYY`
-                                            )
-                                            : ""}
-                                        </p>
-                                      </td>
-                                      <td>
-                                        <p className="desc_ht">
-                                          {curr?.location}
-                                        </p>
-                                      </td>
-                                      <td className="description_td">
-                                        <p className="desc_ht">
-                                          {curr?.task_description}
-                                        </p>
-                                      </td>
+                                          )
+                                          : ""}
+                                      </p>
+                                    </td>
+                                    <td>
+                                      <p className="desc_ht">
+                                        {curr?.location}
+                                      </p>
+                                    </td>
+                                    <td className="description_td">
+                                      <p className="desc_ht">
+                                        {curr?.task_description}
+                                      </p>
+                                    </td>
 
-                                      <td className="text-center">
-                                        {curr?.need_photos === true ? (
-                                          <Tooltip title="Photo">
-                                            <img
-                                              src={cameraic}
-                                              alt="Photo"
-                                              className="icn"
-                                            />{" "}
-                                          </Tooltip>
-                                        ) : (
-                                          ""
-                                        )}
-                                        <br />
-                                        {curr?.need_videos === true ? (
-                                          <Tooltip title="Video">
-                                            <img
-                                              src={videoic}
-                                              alt="Video"
-                                              className="icn"
-                                            />{" "}
-                                          </Tooltip>
-                                        ) : (
-                                          ""
-                                        )}
-                                        <br />
-                                        {curr?.need_interview === true ? (
-                                          <Tooltip title="Interview">
-                                            <img
-                                              src={interviewic}
-                                              alt="Interview"
-                                              className="icn"
-                                            />
-                                          </Tooltip>
-                                        ) : (
-                                          ""
-                                        )}
-                                      </td>
-                                      <td className="text-center">
-                                        <Tooltip
-                                          title={curr?.category_id?.name}
-                                        >
+                                    <td className="text-center">
+                                      {curr?.need_photos === true ? (
+                                        <Tooltip title="Photo">
                                           <img
+                                            src={cameraic}
+                                            alt="Photo"
                                             className="icn"
-                                            src={curr?.category_id?.icon}
+                                          />{" "}
+                                        </Tooltip>
+                                      ) : (
+                                        ""
+                                      )}
+                                      <br />
+                                      {curr?.need_videos === true ? (
+                                        <Tooltip title="Video">
+                                          <img
+                                            src={videoic}
+                                            alt="Video"
+                                            className="icn"
+                                          />{" "}
+                                        </Tooltip>
+                                      ) : (
+                                        ""
+                                      )}
+                                      <br />
+                                      {curr?.need_interview === true ? (
+                                        <Tooltip title="Interview">
+                                          <img
+                                            src={interviewic}
+                                            alt="Interview"
+                                            className="icn"
                                           />
                                         </Tooltip>
-                                      </td>
-                                      <td>
-                                        {curr?.content?.length > 0 && (
-                                          <div className="hpr_dt">
-                                            <img
-                                              src={
-                                                process.env
-                                                  .REACT_APP_AVATAR_IMAGE +
+                                      ) : (
+                                        ""
+                                      )}
+                                    </td>
+                                    <td className="text-center">
+                                      <Tooltip
+                                        title={curr?.category_id?.name}
+                                      >
+                                        <img
+                                          className="icn"
+                                          src={curr?.category_id?.icon}
+                                        />
+                                      </Tooltip>
+                                    </td>
+                                    <td>
+                                      {curr?.content?.length > 0 && (
+                                        <div className="hpr_dt">
+                                          <img
+                                            src={
+                                              process.env
+                                                .REACT_APP_AVATAR_IMAGE +
+                                              curr?.completed_by?.[0]
+                                                ?.avatar_id?.avatar
+                                            }
+                                            alt="Hopper"
+                                            className="big_img"
+                                          />
+                                          <p className="hpr_nme">
+                                            <span className="txt_light">
+                                              {
                                                 curr?.completed_by?.[0]
-                                                  ?.avatar_id?.avatar
+                                                  ?.user_name
                                               }
-                                              alt="Hopper"
-                                              className="big_img"
-                                            />
-                                            <p className="hpr_nme">
-                                              <span className="txt_light">
-                                                {
-                                                  curr?.completed_by?.[0]
-                                                    ?.user_name
-                                                }
-                                              </span>
-                                            </p>
-                                          </div>
-                                        )}
-                                      </td>
-                                      <td>
-                                        {curr?.totalfund_invested?.length > 0
-                                          ? formatAmountInMillion(
-                                            +curr?.totalfund_invested?.[0]
-                                          )
-                                          : "No fund invested "}
-                                      </td>
-                                    </tr>
-                                  );
-                                }
-                              )}
+                                            </span>
+                                          </p>
+                                        </div>
+                                      )}
+                                    </td>
+                                    <td>
+                                      {curr?.totalfund_invested?.length > 0
+                                        ? formatAmountInMillion(
+                                          +curr?.totalfund_invested?.[0]
+                                        )
+                                        : "No fund invested "}
+                                    </td>
+                                  </tr>
+                                );
+                              }
+                            )}
                           </tbody>
                         </table>
                         {data?.broad_casted_tasks_details?.task?.length > 0 && (
@@ -1087,25 +1073,11 @@ const DashboardTables = () => {
                               ) || [];
 
                             const contentSource =
-                              curr?.contentDetails && curr.contentDetails.content[0]
-                                ? curr.contentDetails.content[0].media_type ===
-                                  "video"
-                                  ? process.env.REACT_APP_CONTENT_MEDIA +
-                                  curr?.contentDetails?.content?.[0]
-                                    ?.thumbnail
-                                  : curr.contentDetails.content[0]
-                                    .media_type === "audio"
-                                    ? audimgsm
-                                    : curr.contentDetails.content[0]
-                                      .media_type === "image"
-                                      ? curr.contentDetails.content[0].watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr.contentDetails.content[0].media
-                                      : curr.contentDetails.content[0]
-                                        .media_type === "doc"
-                                        ? docsic
-                                        : null
-                                : null;
+                              curr?.contentDetails?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.contentDetails?.content[0]?.media
+                                : curr?.contentDetails?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.contentDetails?.content[0]?.media
+                                  : curr?.contentDetails?.content[0]?.media_type === "audio" ? audioic
+                                    : curr?.contentDetails?.content[0]?.media_type === "doc" ? pdfic
+                                      : ""
 
                             return (
                               <tr

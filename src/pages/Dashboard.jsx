@@ -468,15 +468,11 @@ const Dashboard = () => {
                               <DashBoardTabCards
                                 imgcount={curr.image_count}
                                 imgtab={
-                                  curr?.content[0]?.media_type === "video"
-                                    ? curr?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.thumbnail
-                                    : curr?.content[0]?.media_type === "audio"
-                                      ? audioicsm
-                                      : curr?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.media
+                                  curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                    : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                      : curr.content[0]?.media_type === "audio" ? audioicsm
+                                        : curr?.content[0]?.media_type === "doc" ? pdfic
+                                          : ""
                                 }
                                 lnkto={`/Feeddetail/content/${curr._id}`}
                                 tabcarddata={curr.heading}
@@ -521,15 +517,11 @@ const Dashboard = () => {
                               <DashBoardTabCards
                                 imgcount={curr.image_count}
                                 imgtab={
-                                  curr?.content[0]?.media_type === "video"
-                                    ? curr?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.thumbnail
-                                    : curr?.content[0]?.media_type === "audio"
-                                      ? audioicsm
-                                      : curr?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.media
+                                  curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                    : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                      : curr.content[0]?.media_type === "audio" ? audioicsm
+                                        : curr?.content[0]?.media_type === "doc" ? pdfic
+                                          : ""
                                 }
                                 feedIcon={
                                   curr?.content[0]?.media_type === "image"
@@ -572,15 +564,11 @@ const Dashboard = () => {
                               <DashBoardTabCards
                                 imgcount={curr.image_count}
                                 imgtab={
-                                  curr?.content[0]?.media_type === "video"
-                                    ? curr?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.thumbnail
-                                    : curr?.content[0]?.media_type === "audio"
-                                      ? audioicsm
-                                      : curr?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.media
+                                  curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                    : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                      : curr.content[0]?.media_type === "audio" ? audioicsm
+                                        : curr?.content[0]?.media_type === "doc" ? pdfic
+                                          : ""
                                 }
                                 feedIcon={
                                   curr?.content[0]?.media_type === "image"
@@ -849,12 +837,12 @@ const Dashboard = () => {
                                       ? curr?.content_id?.content[0]
                                         ?.media_type === "video"
                                         ? process.env
-                                          .REACT_APP_CONTENT_MEDIA +
+                                          .REACT_APP_THUMBNAIL +
                                         curr?.content_id?.content[0]
-                                          ?.thumbnail
+                                          ?.media
                                         : curr?.content_id?.content[0]
                                           ?.media_type === "audio"
-                                          ? audioic
+                                          ? audioicsm
                                           : curr?.content_id?.content[0]
                                             ?.media_type === "pdf"
                                             ? docsic
@@ -867,16 +855,7 @@ const Dashboard = () => {
                                       : curr?.task_id?.content[0]?.media
                                   }
                                   imageCount={
-                                    curr?.content_id?.image_count || 0
-                                  }
-                                  videoCount={
-                                    curr?.content_id?.video_count || 0
-                                  }
-                                  audioCount={
-                                    curr?.content_id?.audio_count || 0
-                                  }
-                                  otherCount={
-                                    curr?.content_id?.other_count || 0
+                                    curr?.content_id?.content?.length || 0
                                   }
                                   colorWhite={false}
                                 />

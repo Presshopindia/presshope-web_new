@@ -806,16 +806,9 @@ const Accounts = () => {
                                                               src={
                                                                 item?.media_type ===
                                                                   "video"
-                                                                  ? process.env
-                                                                    .REACT_APP_CONTENT_MEDIA +
-                                                                  item?.thumbnail
-                                                                  : item?.media_type ===
-                                                                    "audio"
-                                                                    ? audiosm
-                                                                    : item?.thumbnail ||
-                                                                    process.env
-                                                                      .REACT_APP_CONTENT_MEDIA +
-                                                                    item?.media
+                                                                  ? process.env.REACT_APP_THUMBNAIL + item?.media
+                                                                  : item?.media_type === "audio" ? audiosm
+                                                                    : process.env.REACT_APP_CONTENT_MEDIA + item?.media
                                                               }
                                                               className="content_img"
                                                             />
@@ -1094,20 +1087,13 @@ const Accounts = () => {
                                                       .map((item) => {
                                                         return (
                                                           <img
-                                                            src={
-                                                              item?.media_type ===
-                                                                "video"
-                                                                ? process.env
-                                                                  .REACT_APP_CONTENT_MEDIA +
-                                                                item?.thumbnail
-                                                                : item?.media_type ===
-                                                                  "audio"
-                                                                  ? audiosm
-                                                                  : item?.thumbnail ||
-                                                                  process.env
-                                                                    .REACT_APP_CONTENT_MEDIA +
-                                                                  item?.media
-                                                            }
+                                                          src={
+                                                            item?.media_type ===
+                                                              "video"
+                                                              ? process.env.REACT_APP_THUMBNAIL + item?.media
+                                                              : item?.media_type === "audio" ? audiosm
+                                                                : process.env.REACT_APP_CONTENT_MEDIA + item?.media
+                                                          }
                                                             className="content_img"
                                                           />
                                                         );

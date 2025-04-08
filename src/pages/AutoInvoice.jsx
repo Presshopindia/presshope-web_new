@@ -366,9 +366,9 @@ const AutoInvoice = () => {
                                               {data?.content?.content[0]
                                                 ?.media_type === "image" ? (
                                                 <img
-                                                  src={
+                                                  src={process.env.REACT_APP_CONTENT_MEDIA + 
                                                     data?.content?.content[0]
-                                                      ?.watermark
+                                                      ?.media
                                                   }
                                                   className="cntnt-img"
                                                   alt="img"
@@ -378,9 +378,9 @@ const AutoInvoice = () => {
                                                 <img
                                                   src={
                                                     process.env
-                                                      .REACT_APP_CONTENT_MEDIA +
+                                                      .REACT_APP_THUMBNAIL +
                                                     data?.content?.content?.[0]
-                                                      ?.thumbnail
+                                                      ?.media
                                                   }
                                                   className="cntnt-img"
                                                 />

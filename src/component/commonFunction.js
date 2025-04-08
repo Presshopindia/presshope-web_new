@@ -229,13 +229,13 @@ export const getDeepModifiedContent = (data) => {
         const media = curr?.contentDetails?.content?.[0];
 
         if (media?.media_type === "video") {
-            return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.thumbnail, mediaValue: media?.watermark || media?.thumbnail };
+            return { media: process.env.REACT_APP_THUMBNAIL + media?.media, mediaValue: process.env.REACT_APP_THUMBNAIL + media?.media };
         } else if (media?.media_type === "audio") {
             return { media: audioicsm, mediaValue: audioicsm };
         } else if (media?.media_type === "pdf") {
             return { media: docsic, mediaValue: docsic };
         } else {
-            return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.media, mediaValue: media?.watermark || media?.media };
+            return { media: process.env.REACT_APP_CONTENT_MEDIA + media?.media, mediaValue: process.env.REACT_APP_CONTENT_MEDIA + media?.media };
         }
     });
 };
@@ -256,13 +256,13 @@ export const getFavContent = (data) => {
             const media = curr?.contentDetails?.content?.[0];
 
             if (media?.media_type === "video") {
-                return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.thumbnail, mediaValue: media?.watermark || media?.thumbnail };
+                return { media: process.env.REACT_APP_THUMBNAIL + media?.media, mediaValue: media?.media };
             } else if (media?.media_type === "audio") {
                 return { media: audioicsm, mediaValue: audioicsm };
             } else if (media?.media_type === "pdf") {
                 return { media: docsic, mediaValue: docsic };
             } else {
-                return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.media, mediaValue: media?.watermark || media?.media };
+                return { media: process.env.REACT_APP_CONTENT_MEDIA + media?.media, mediaValue: process.env.REACT_APP_CONTENT_MEDIA + media?.media };
             }
         }
     });

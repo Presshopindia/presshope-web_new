@@ -67,33 +67,33 @@ const NewPublishedContent = (props) => {
         ...publishedContent?.filter?.category,
       ]?.filter((el) => el && el != "false");
 
-      console.log("newArray123",newArray)
+      console.log("newArray123", newArray)
       const multiPromise = newArray?.map((el) => {
         return Post("mediaHouse/view/published/content", {
           [el == "latest"
             ? "content"
             : el == "true" || el == "false"
-            ? "favContent"
-            : el == "shared" || el == "exclusive"
-            ? "type"
-            : el === true || el === false
-            ? "isDiscount"
-            : el?.length > 20
-            ? "category_id"
-            : ""]:
+              ? "favContent"
+              : el == "shared" || el == "exclusive"
+                ? "type"
+                : el === true || el === false
+                  ? "isDiscount"
+                  : el?.length > 20
+                    ? "category_id"
+                    : ""]:
             el == "latest" ||
-            el == "true" ||
-            el == "false" ||
-            el === true ||
-            el === false
+              el == "true" ||
+              el == "false" ||
+              el === true ||
+              el === false
               ? el
               : [el],
           sortValuesName:
             publishedContent?.sort?.field == "high_price_content"
               ? "highPrice"
               : publishedContent?.sort?.field == "low_price_content"
-              ? "lowPrice"
-              : publishedContent?.sort?.field,
+                ? "lowPrice"
+                : publishedContent?.sort?.field,
         });
       });
 
@@ -163,7 +163,7 @@ const NewPublishedContent = (props) => {
   const [showContent, setShowContent] = useState([]);
 
 
-  console.log("publishedContent123",publishedContent);
+  console.log("publishedContent123", publishedContent);
 
   return (
     <>
@@ -258,7 +258,7 @@ const NewPublishedContent = (props) => {
               <div className="feedsMain_wrap">
                 {publishedContent?.data?.map((el, index) => {
 
-                  console.log("allPublishedData",el);
+                  console.log("allPublishedData", el);
                   const header = feedTitle(
                     publishedContent?.title[index],
                     publishedContent?.categoryData
@@ -283,20 +283,11 @@ const NewPublishedContent = (props) => {
                           <Col lg={3} md={4} sm={6} key={i}>
                             <ContentFeedCard
                               feedImg={
-                                curr?.content[0]?.media_type === "video"?
-                                  // ? process?.env?.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.thumbnail ||
-                                    curr?.content[0]?.watermark
-                                  : curr?.content[0]?.media_type === "image"
-                                  ? curr?.content[0]?.watermark ||
-                                    process?.env?.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.media
-                                  : curr.content[0]?.media_type === "audio"
-                                  ? audioic
-                                  : curr?.content[0]?.media_type === "doc" ||
-                                    "pdf"
-                                  ? pdfic
-                                  : ""
+                                curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                  : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                    : curr?.content[0]?.media_type === "audio" ? audioic
+                                      : curr?.content[0]?.media_type === "doc" ? pdfic
+                                        : ""
                               }
                               feedType={
                                 curr?.content[0]?.media_type === "video"
@@ -307,10 +298,10 @@ const NewPublishedContent = (props) => {
                                 curr?.sales_prefix
                                   ? `${curr?.sales_prefix} ${curr?.discount_percent}% Off`
                                   : curr?.content_view_type == "mostpopular"
-                                  ? "Most Popular"
-                                  : curr?.content_view_type == "mostviewed"
-                                  ? "Most viewed"
-                                  : null
+                                    ? "Most Popular"
+                                    : curr?.content_view_type == "mostviewed"
+                                      ? "Most viewed"
+                                      : null
                               }
                               userAvatar={imgs}
                               authorName={"pseudonymous"}

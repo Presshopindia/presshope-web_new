@@ -23,6 +23,8 @@ function ViewContent(props) {
         }
     };
 
+    console.log("props?.imageSize?.height < props?.imageSize?.width", props?.imageSize?.height, props?.imageSize?.width)
+
     return (
         <>
         {
@@ -34,7 +36,7 @@ function ViewContent(props) {
                     <div>
                         {(props?.imageSize?.height < props?.imageSize?.width && props?.showContent?.media_type === "image") && (
                             <img
-                                src={props?.showContent?.watermark}
+                                src={process.env.REACT_APP_CONTENT_MEDIA + props?.showContent?.media}
                                 alt={`Image ${props?.showContent._id}`}
                                 width="100%"
                             />
@@ -50,7 +52,7 @@ function ViewContent(props) {
                                 />
                                 <audio
                                     controls
-                                    src={props?.showContent?.watermark || process.env.REACT_APP_CONTENT_MEDIA + props?.showContent?.media}
+                                    src={process.env.REACT_APP_CONTENT_MEDIA + props?.showContent?.media}
                                     type="audio/mpeg"
                                     className="view-slider-audio"
                                     ref={audioRef}
@@ -60,13 +62,13 @@ function ViewContent(props) {
                         {props?.showContent?.media_type === "video" && (
                             <video
                                 controls
-                                src={props?.showContent?.media}
+                                src={process.env.REACT_APP_CONTENT_MEDIA + props?.showContent?.media}
                                 style={{ height: "100%", width: "100%" }}
                             />
                         )}
                         {props?.showContent?.media_type === "pdf" && (
                             <embed
-                                src={`${process.env.REACT_APP_CONTENT_MEDIA + props?.showContent?.media}`}
+                                src={process.env.REACT_APP_CONTENT_MEDIA + props?.showContent?.media}
                                 type="application/pdf"
                                 width="100%"
                                 height="500"
@@ -84,7 +86,7 @@ function ViewContent(props) {
                         {/* Mobile size */}
                         {(props?.imageSize?.height > props?.imageSize?.width && props?.showContent?.media_type === "image") && (
                             <img
-                                src={props?.showContent?.watermark}
+                                src={process.env.REACT_APP_CONTENT_MEDIA + props?.showContent?.media}
                                 alt={`Image ${props?.showContent._id}`}
                                 width="100%"
                             />
@@ -93,7 +95,7 @@ function ViewContent(props) {
                         {/* Computer size */}
                         {(props?.imageSize?.height < props?.imageSize?.width && props?.showContent?.media_type === "image") && (
                             <img
-                                src={props?.showContent?.watermark}
+                                src={process.env.REACT_APP_CONTENT_MEDIA + props?.showContent?.media}
                                 alt={`Image ${props?.showContent._id}`}
                                 width="100%"
                             />
@@ -109,7 +111,7 @@ function ViewContent(props) {
                                 />
                                 <audio
                                     controls
-                                    src={props?.showContent?.watermark || process.env.REACT_APP_CONTENT_MEDIA + props?.showContent?.media}
+                                    src={process.env.REACT_APP_CONTENT_MEDIA + props?.showContent?.media}
                                     type="audio/mpeg"
                                     className="view-slider-audio"
                                     ref={audioRef}
@@ -119,13 +121,13 @@ function ViewContent(props) {
                         {props?.showContent?.media_type === "video" && (
                             <video
                                 controls
-                                src={props?.showContent?.media}
+                                src={process.env.REACT_APP_CONTENT_MEDIA + props?.showContent?.media}
                                 style={{ height: "100%", width: "100%" }}
                             />
                         )}
                         {props?.showContent?.media_type === "pdf" && (
                             <embed
-                                src={`${process.env.REACT_APP_CONTENT_MEDIA + props?.showContent?.media}`}
+                                src={process.env.REACT_APP_CONTENT_MEDIA + props?.showContent?.media}
                                 type="application/pdf"
                                 width="100%"
                                 height="500"

@@ -704,25 +704,11 @@ const Contenttables = () => {
                                 ) || [];
 
                               const contentSource =
-                                curr?.contentDetails && curr.contentDetails.content[0]
-                                  ? curr.contentDetails.content[0].media_type ===
-                                    "video"
-                                    ? process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.contentDetails?.content?.[0]
-                                      ?.thumbnail
-                                    : curr.contentDetails.content[0]
-                                      .media_type === "audio"
-                                      ? audimgsm
-                                      : curr.contentDetails.content[0]
-                                        .media_type === "image"
-                                        ? curr.contentDetails.content[0].watermark ||
-                                        process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr.contentDetails.content[0].media
-                                        : curr.contentDetails.content[0]
-                                          .media_type === "doc"
-                                          ? docsic
-                                          : null
-                                  : null;
+                                curr?.contentDetails?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.contentDetails?.content[0]?.media
+                                  : curr?.contentDetails?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.contentDetails?.content[0]?.media
+                                    : curr?.contentDetails?.content[0]?.media_type === "audio" ? audioic
+                                      : curr?.contentDetails?.content[0]?.media_type === "doc" ? pdfic
+                                        : ""
 
                               return (
                                 <tr

@@ -217,17 +217,11 @@ const Purchasedcontent = () => {
                           <Col md={3} key={item?._id}>
                             <ContentFeedCard
                               feedImg={
-                                item?.contentDetails?.content[0]?.media_type === "video"
-                                  ? item?.contentDetails?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                      item?.contentDetails?.content[0].thumbnail
-                                  : item?.contentDetails?.content[0]?.media_type === "image"
-                                  ? item?.contentDetails?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                      item?.contentDetails?.content[0].media
-                                  : item?.contentDetails?.content[0]?.media_type === "audio"
-                                  ? audioic
-                                  : ""
+                                item?.contentDetails?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + item?.contentDetails?.content[0]?.media
+                                  : item?.contentDetails?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + item?.contentDetails?.content[0]?.media
+                                    : item.contentDetails?.content[0]?.media_type === "audio" ? audioic
+                                      : item?.contentDetails?.content[0]?.media_type === "doc" ? pdfic
+                                        : ""
                               }
                               feedTag={
                                 item?.contentDetails?.content_view_type == "mostpopular"
