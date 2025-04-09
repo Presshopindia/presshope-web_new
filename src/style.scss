@@ -12998,3 +12998,16 @@ audio {
 .z-1000 {
   z-index: 1000;
 }
+
+.admin_badge {
+  background-color: #ec4e54 !important;
+  font-size: 12px;
+  color: #ffff !important;
+  text-align: center;
+  border-radius: 4px;
+  padding: 4px 14px;
+  line-height: 12px;
+  position: absolute;
+  margin-left: 10px;
+  display: inline-block;
+}

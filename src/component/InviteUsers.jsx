@@ -200,7 +200,7 @@ const InviteUserModal = ({
                 variant="primary"
                 type="submit"
               >
-                <div className="link_white">Send</div>
+                <div className="link_white">Send Invite</div>
               </Button>
             </Modal.Footer>
           </Form>

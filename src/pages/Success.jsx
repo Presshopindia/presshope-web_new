@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Badge, Col, Container, Row } from "react-bootstrap";
+import { Badge, Button, Col, Container, Row } from "react-bootstrap";
 import { BsArrowRight } from 'react-icons/bs';
 import { Link } from "react-router-dom";
 import obSuccess from "../assets/images/obsuccess.jpg";
@@ -90,19 +90,14 @@ const Success = () => {
                     </Col>
                     <Col lg="12">
                       <div className='dashCard-heading'>
-                        <FormControlLabel
-                          className="onbrd_chk"
-                          control={<Checkbox />}
-                          checked={checked}
-                          onChange={(e) => {
-                            setChecked(e.target.checked)
-                          }}
-                          label={checked ? (
-                            <p>Brilliant, here is your activation link - <span className='txt-success-link'><Link>{AdminDetails?.UserId}</Link>.</span> Please <span className='txt-success-link'><Link onClick={() => setShowInviteUserModal(true)}>email</Link></span> this link to all users within your organisation to start their onboarding process. Thanks! </p>
-                          ) : (
-                            <p><span className='txt-success'>You're in control!</span> New users need your invite to join <span className='txt-success'>PressHop. </span>Send an activitation link now and build your team!</p>
-                          )}
-                        />
+                        <p><span className='txt-success'>You're in control!</span> New users need your invite to join <span className='txt-success'>PressHop. </span>Send an activitation link now and build your team!</p>
+                        <Button
+                          variant=""
+                          className="theme-btn custom-ab mb-4 w-100 sm_btn"
+                          onClick={() => setShowInviteUserModal(true)}
+                        >
+                          <span>Invite New Users</span>
+                        </Button>
                       </div>
                     </Col>
                   </div>
