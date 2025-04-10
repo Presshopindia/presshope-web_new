@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import DbFooter from "../component/DbFooter";
 import Header from "../component/Header";
 
+import { RxCross1 } from "react-icons/rx";
 import { Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 import Accordion from "react-bootstrap/Accordion";
 import contactic from "../assets/images/chat-icons/contactus.svg";
@@ -343,8 +344,7 @@ const Chat = () => {
 
                         <Tab eventKey="task" title="Task">
                           <div className="chat_list">
-                            {liveTasks &&
-                              liveTasks.map((curr) => {
+                            {liveTasks?.filter((el) => el?.content?.length > 0)?.map((curr) => {
                                 return (
                                   <div
                                     className={`chat_usr_itm d-flex align-items-center ${
@@ -450,7 +450,7 @@ const Chat = () => {
                         ?.map((curr, index) => {
                           return (
                             <div
-                              className={`chat_usr_itm d-flex align-items-center ${
+                              className={`relative chat_usr_itm d-flex align-items-center ${
                                 groupIds?.contentId === curr?.content_id &&
                                 groupIds?.room_id === curr?.room_id
                                   ? "active"
@@ -538,6 +538,14 @@ const Chat = () => {
                                       ).format("h:mm A, D MMM YYYY z")}
                                     </span>
                                   </div>
+                                  {
+                                    curr?.content_id === groupIds?.contentId && (
+                                      <RxCross1 className="close-chat" onClick={(e) => {
+                                        e.stopPropagation();
+                                        setShow({...show, internal: false})
+                                      }} />
+                                    )
+                                  }
                                 </div>
                               </div>
                             </div>

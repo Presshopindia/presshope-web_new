@@ -198,7 +198,6 @@ const Feeddetail = (props) => {
         initial_offer_price: "",
         finaloffer_price: "",
       };
-      console.log(obj);
       socketServer.emit("initialoffer", obj);
       socketServer.on("initialoffer", (obj) => {
         const tempMsg = obj;
@@ -724,7 +723,7 @@ const Feeddetail = (props) => {
       },
     };
 
-    // console.log("Send message", messages)
+    console.log("Send message", messages)
     socketServer.emit("internal group chat", messages);
     setMsg1("");
     setMediaFile({
@@ -1688,8 +1687,7 @@ const Feeddetail = (props) => {
                                         // chatBoxInternalRef
                                         key={curr?._id}
                                       >
-                                        {curr?.type === "add" &&
-                                          curr.user_id !== profileData._id ? (
+                                        {curr?.type === "add" && curr.user_id !== profileData._id ? (
                                           <p className="usrAddedTxt mb-4">
                                             <span>
                                               {

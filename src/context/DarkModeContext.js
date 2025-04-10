@@ -11,10 +11,8 @@ export const DarkModeProvider = ({ children }) => {
     localStorage.getItem("darkMode") === "enabled"
   );
 
-  console.log("Look here", param);
   const [profileData, setProfileData] = useState({});
   const [navColor, setNavColor] = useState("");
-  console.log("navColor", navColor)
   const [profileChange, setProfileChange] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [adminPreRegistrationEmail, setAdminPreRegistrationEmail] = useState("")

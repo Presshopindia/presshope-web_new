@@ -73,7 +73,8 @@ import {
   formatAmountInMillion,
   successToasterFun,
 } from "../component/commonFunction";
-const socket = io.connect("https://uat.presshop.live:3005");
+import socketServer from "../socket.config";
+const socket = socketServer;
 
 const UploadedContentDetails = (props) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -103,7 +104,7 @@ const UploadedContentDetails = (props) => {
   const [userList, setUserList] = useState([]);
   const [senderId, setSenderId] = useState("");
   const [review, setReview] = useState("");
-  const [relatedContent, setRelatedContent] = useState([]);
+  const [relatedContent, setRelatedContent] = useState(null);
   const [moreContent, setMoreContent] = useState([]);
   const [openRecentActivity, setOpenRecentActivity] = useState(false);
   const [chatContentIds, setChatContentIds] = useState({
@@ -179,8 +180,6 @@ const UploadedContentDetails = (props) => {
   async function getCountOfBasketItems() {
     try {
       const res = await Get(`mediaHouse/getBasketDataCount`);
-
-      console.log("count", res?.data?.data);
       setCartCount(res?.data?.data || 0);
     } catch (error) {
       console.log("basketcountError", error);
@@ -189,7 +188,6 @@ const UploadedContentDetails = (props) => {
   // Add to basket-
   const AddToBasket = async (element, type) => {
     try {
-      console.log("dataType", element._id);
       // return
       let obj = {};
 
@@ -292,7 +290,7 @@ const UploadedContentDetails = (props) => {
   };
 
   const RatingNReview = (curr) => {
-    if(!roomDetails.room_id) {
+    if (!roomDetails.room_id) {
       alert("Room id is important")
     }
     const obj = {
@@ -399,12 +397,8 @@ const UploadedContentDetails = (props) => {
         task_id: resp.data.data[0]?.task_id?._id,
       });
       setMoreContent(resp1.data.content);
-      const resp2 = await Post(`mediaHouse/relatedContentforTask`, {
-        hopper_id: resp.data.data[0]?.hopper_id?._id,
-        task_id: resp.data.data[0]?.task_id?._id,
-      });
-      setRelatedContent(resp2.data.content);
-      // localStorage.setItem('tag_id', resp.data.content.tag_ids[0]?._id, 'hopper_id', resp.data.data[0]?.hopper_id?._id)
+      const resp2 = await Get(`mediaHouse/getuploadedContentbyHoppers?limit=${4}&offet=${0}&task_id=${resp.data.data[0]?.task_id?._id}`);
+      setRelatedContent(resp2?.data);
       setHopperid(resp.data.data[0]?.hopper_id?._id);
       localStorage.setItem("hopperid", resp.data.data[0]?.hopper_id?._id);
       if (resp) {
@@ -437,8 +431,6 @@ const UploadedContentDetails = (props) => {
     }
   };
 
-  console.log("Data ------------->", data)
-
   const Payment = async (
     amount,
     image_id,
@@ -447,8 +439,6 @@ const UploadedContentDetails = (props) => {
     room_id
   ) => {
     try {
-      // setLoading(true);
-      console.log("hello chala mere api ---> --->111");
       const obj1 = {
         customer_id: UserDetails.stripe_customer_id,
         type: "content",
@@ -461,7 +451,6 @@ const UploadedContentDetails = (props) => {
         is_charity: data?.is_charity,
         description: data?.heading,
       };
-      console.log("hello chala mere api ---> --->121");
 
       const obj2 = {
         type: "content",
@@ -470,10 +459,8 @@ const UploadedContentDetails = (props) => {
         commission: 0,
       };
       const resp1 = await Post("mediahouse/applicationfee", obj2);
-      console.log("hello chala mere api ---> --->131", resp1);
 
       obj1.application_fee = resp1?.data?.data;
-      // obj1.stripe_account_id = resp1?.data?.stripe_account_id;
       obj1.stripe_account_id = data?.is_charity
         ? data?.stripe_account_id
         : resp1?.data?.stripe_account_id;
@@ -485,7 +472,6 @@ const UploadedContentDetails = (props) => {
       }
     } catch (error) {
       setLoading(false);
-      // successToasterFun(error?.response?.data?.errors?.msg);
     }
   };
 
@@ -494,7 +480,6 @@ const UploadedContentDetails = (props) => {
     GetUserList();
   }, [param?.id, taskHopperId]);
 
-  console.log("Data ----->", data);
   const [selectedItems, setSelectedItems] = useState([]);
 
   const handleSelectionChange = (item, isChecked) => {
@@ -775,7 +760,6 @@ const UploadedContentDetails = (props) => {
     if (audio.paused) {
       audio.play().catch((error) => {
         // Handle play error, if any
-        console.error("Error playing audio:", error);
       });
     } else {
       audio.pause();
@@ -808,8 +792,6 @@ const UploadedContentDetails = (props) => {
 
   const stripePayment = async (curr) => {
     setLoading(true);
-    console.log("all paid data ---->money", UserDetails);
-    console.log("all paid data ---->money cuuuuuuu", curr);
     let totalAmount = 0;
     selectedItems.forEach((ele) => {
       totalAmount += Number(ele.amount);
@@ -1007,20 +989,20 @@ const UploadedContentDetails = (props) => {
                           </div>
                           <div
                             className="post_itm_icns right dtl_icns uploaded-magnifier"
-                              onClick={() => {
-                                setOpenContent(!openContent);
-                              }}
-                            >
-                              <div className="feedMediaType iconBg">
-                                <SlMagnifierAdd />
-                              </div>
+                            onClick={() => {
+                              setOpenContent(!openContent);
+                            }}
+                          >
+                            <div className="feedMediaType iconBg">
+                              <SlMagnifierAdd />
                             </div>
-                            <ViewUploadedContent
-                              openContent={openContent}
-                              setOpenContent={setOpenContent}
-                              showContent={showContent}
-                              imageSize={imageSize}
-                            />
+                          </div>
+                          <ViewUploadedContent
+                            openContent={openContent}
+                            setOpenContent={setOpenContent}
+                            showContent={showContent}
+                            imageSize={imageSize}
+                          />
                           <Swiper
                             spaceBetween={50}
                             slidesPerView={1}
@@ -2525,7 +2507,7 @@ const UploadedContentDetails = (props) => {
                         )}
                       </div>
                       <Link
-                        to={`/related-content-task/:tag_id/${data?.[0]?.hopper_id?._id}/${data?.[0]?.category_details[0]?._id}`}
+                        to={`/hopper-task-content/${data?.[0]?.task_id?._id}`}
                         className="next_link"
                       >
                         View all
@@ -2534,147 +2516,75 @@ const UploadedContentDetails = (props) => {
                     </div>
                   </div>
                   <Row className="">
-                    {relatedContent?.map((item, index) => {
+                    {relatedContent?.uploadedContent?.map((item, index) => {
+                      const filteredContent = (mediaType) => {
+                        const content = item?.content?.filter((el) => el.type === mediaType);
+                        return content;
+                      };
+
                       return (
                         <Col md={3}>
-                          {/* <ContentFeedCard
-                            feedImg={
-                              item?.type === "image"
-                                ? item.videothubnail ||
-                                  process.env.REACT_APP_UPLOADED_CONTENT +
-                                    item.imageAndVideo
-                                : item?.type === "video"
-                                ? item.videothubnail ||
-                                  process.env.REACT_APP_UPLOADED_CONTENT +
-                                    item.videothubnail
-                                : item?.type === "audio"
-                                ? audioic
-                                : null
-                            }
-                            type={"task"}
-                            postcount={1}
-                            feedTypeImg1={
-                              item?.type === "image"
-                                ? cameraic
-                                : item?.type === "audio"
-                                ? interviewic
-                                : item?.type === "video"
-                                ? videoic
-                                : null
-                            }
-                            user_avatar={
-                              process.env.REACT_APP_AVATAR_IMAGE +
-                              item?.avatar_detals[0]?.avatar
-                            }
-                            author_Name={item?.hopper_id?.user_name}
-                            lnkto={`/content-details/${item._id}`}
-                            viewTransaction="View details"
-                            viewDetail={`/content-details/${item._id}`}
-                            fvticns={
-                              item.favourite_status === "true"
-                                ? favouritedic
-                                : favic
-                            }
-                            type_tag={item?.category_details[0]?.name}
-                            type_img={item?.category_details[0]?.icon}
-                            feedHead={item.task_id.task_description}
-                            feedTime={moment(item.createdAt).format(
-                              " hh:mm A, DD MMM YYYY"
-                            )}
-                            feedLocation={item.task_id.location}
-                            contentPrice={`${formatAmountInMillion(
-                              item?.type === "image"
-                                ? item?.task_id?.photo_price
-                                : item?.type === "audio"
-                                ? item?.task_id?.interview_price || 0
-                                : item?.type === "video"
-                                ? item?.task_id?.videos_price || 0
-                                : null
-                            )}`}
-                            favourite={() => handleFavourite(index, "related")}
-                            bool_fav={
-                              item.favourite_status === "true"
-                                ? "false"
-                                : "true"
-                            }
-                            content_id={item._id}
-                           
-                            task_content_id={item?._id || item?.task_id?._id}
-                            taskHopperId={item?._id}
-                          /> */}
                           <ContentFeedCard
                             feedImg={
-                              item?.type === "image"
-                                ? item?.videothubnail ||
+                              item?.content[0]?.type === "image"
+                                ? item?.content[0]?.videothubnail ||
                                 process.env.REACT_APP_UPLOADED_CONTENT +
-                                item?.imageAndVideo
-                                : item?.type === "video"
-                                  ? item?.videothubnail ||
+                                item?.content[0]?.imageAndVideo
+                                : item?.content[0]?.type === "video"
+                                  ? item?.content[0]?.videothubnail ||
                                   process.env.REACT_APP_UPLOADED_CONTENT +
-                                  item?.videothubnail
-                                  : item?.type === "audio"
+                                  item?.content[0]?.videothubnail
+                                  : item?.content[0]?.type === "audio"
                                     ? audioic
                                     : null
                             }
                             type={"task"}
-                            postcount={1}
+                            postcount={filteredContent("image")?.length}
+                            postcount2={filteredContent("video")?.length}
+                            postcount3={filteredContent("interview")?.length}
                             feedTypeImg1={
-                              item?.type === "image"
+                              item?.content[0]?.type === "image"
                                 ? cameraic
-                                : item?.type === "audio"
+                                : item?.content[0]?.type === "audio"
                                   ? interviewic
-                                  : item?.type === "video"
+                                  : item?.content[0]?.type === "video"
                                     ? videoic
                                     : null
                             }
                             user_avatar={
-                              item?.avatar_details?.[0]?.avatar
+                              item?.content[0]?.avatar_details?.avatar
                                 ? process.env.REACT_APP_AVATAR_IMAGE +
-                                item?.avatar_details?.[0]?.avatar
-                                : item?.avatar_detals?.[0]?.avatar
+                                item?.content[0]?.avatar_details?.avatar
+                                : item?.content[0]?.avatar_detals?.[0]?.avatar
                                   ? process.env.REACT_APP_AVATAR_IMAGE +
-                                  item?.avatar_detals?.[0]?.avatar
+                                  item?.content[0]?.avatar_detals?.avatar
                                   : ""
                             }
-                            author_Name={item?.hopper_id?.user_name}
-                            // lnkto={`/content-details/${item?._id}`}
-                            lnkto={`/content-details/${item?._id}?task_content_id=${item?.content_id}`}
+                            author_Name={item?.uploaded_by?.user_name}
+                            lnkto={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
                             viewTransaction="View details"
-                            viewDetail={`/content-details/${item?._id}?task_content_id=${item?.content_id}`}
-                            fvticns={
-                              item?.favourite_status === "true"
-                                ? favouritedic
-                                : favic
-                            }
-                            type_tag={item?.category_details[0]?.name}
-                            basket={() => handleBasket(index, "related")}
-                            basketValue={item?.basket_status}
-                            allContent={item?.task_id?.content}
-                            type_img={item?.category_details[0]?.icon}
-                            feedHead={item?.task_id?.task_description}
-                            feedTime={moment(item?.createdAt).format(
+                            viewDetail={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
+                            type_tag={item?.content[0]?.category_details?.name}
+                            allContent={item?.content[0]?.task_id?.content}
+                            type_img={item?.content[0]?.category_details?.icon}
+                            feedHead={item?.content[0]?.task_id?.task_description}
+                            feedTime={moment(item?.content[0]?.createdAt).format(
                               " hh:mm A, DD MMM YYYY"
                             )}
-                            feedLocation={item?.task_id?.location}
+                            feedLocation={item?.content[0]?.task_id?.location}
                             contentPrice={`${formatAmountInMillion(
-                              item?.type === "image"
-                                ? item?.task_id?.hopper_photo_price || 0
-                                : item?.type === "audio"
-                                  ? item?.task_id?.hopper_interview_price || 0
-                                  : item?.type === "video"
-                                    ? item?.task_id?.hopper_videos_price || 0
+                              item?.content[0]?.type === "image"
+                                ? item?.content[0]?.task_id?.hopper_photo_price || 0
+                                : item?.content[0]?.type === "audio"
+                                  ? item?.content[0]?.task_id?.hopper_interview_price || 0
+                                  : item?.content[0]?.type === "video"
+                                    ? item?.content[0]?.task_id?.hopper_videos_price || 0
                                     : null
                             )}`}
-                            favourite={() => handleFavourite(index, "related")}
-                            bool_fav={
-                              item?.favourite_status === "true"
-                                ? "false"
-                                : "true"
-                            }
-                            // content_id={item?.content_id}
                             content_id={item?._id}
                             task_content_id={item?._id || item?.task_id?._id}
-                            taskHopperId={item?._id}
+                            taskContentId={item?.content?.map((el) => el._id)}
+                            is_sale_status={true}
                           />
                         </Col>
                       );

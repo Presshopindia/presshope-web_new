@@ -23,8 +23,6 @@ function ViewContent(props) {
         }
     };
 
-    console.log("props?.imageSize?.height < props?.imageSize?.width", props?.imageSize?.height, props?.imageSize?.width)
-
     return (
         <>
         {

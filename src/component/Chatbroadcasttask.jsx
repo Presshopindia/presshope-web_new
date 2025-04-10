@@ -310,14 +310,14 @@ const Chatbroadcasttask = (props) => {
                     </Col>
                     <Col md={6} className="d-flex justify-content-end">
                       <div
-                        className="taskUploads_media"
+                        className="taskUploads_media clickable"
                         onClick={() =>
-                          navigate(`/Uploaded-Content/${taskDetails?._id}`)
+                          navigate(`/hopper-task-content/${taskDetails?._id}`)
                         }
                       >
                         <div className="mediaWrap uploaded_mda">
                           {taskDetails?.content?.map((el) => (
-                            <img src={el?.media} alt="" />
+                            <img src={el?.watermark} alt="" />
                           ))}
                         </div>
                         <Link

@@ -51,14 +51,11 @@ function ChatCard(props) {
     localStorage.getItem("contact_us_message") || ""
   );
   const [messages, setMessages] = useState([]);
-  console.log("🚀 ~ ChatCard ~ messages:", messages)
-
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState();
   const [profileImage, setProfileImage] = useState();
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [roomDetails, setRoomDetails] = useState();
-  console.log("🚀 ~ ChatCard ~ roomDetails:", roomDetails)
   const [file, setFile] = useState(null);
   const [type, setType] = useState("");
   const [previewImage, setPreviewImage] = useState("");
@@ -106,7 +103,6 @@ function ChatCard(props) {
       formData.append("media", recordedBlob?.blob);
       setLoading(true);
       const filePath = await Post("mediaHouse/uploadUserMedia", formData);
-      console.log("onstop recording -------> ------. >", filePath);
       if (filePath) {
         setPreview((prev) => ({
           ...prev,
@@ -120,8 +116,6 @@ function ChatCard(props) {
       setLoading(false);
     }
   };
-
-  console.log("setPreview", preview);
 
   // Contact us message sent on page load -
   useEffect(() => {
@@ -236,8 +230,6 @@ function ChatCard(props) {
       chat_with: "presshop and admin",
       // uid,
     };
-
-    console.log("newDoc", newDoc);
 
     setMsg("");
     setPreview({});
@@ -411,7 +403,6 @@ function ChatCard(props) {
   };
   const handleDeleteMessage = async (messageId) => {
     try {
-      console.log("message id --->", messageId);
       const messageRef = doc(
         getFirestore(),
         "Chat",
@@ -430,20 +421,14 @@ function ChatCard(props) {
 
   const userId = React.useMemo(() => {
     const user = localStorage.getItem('user')
-    console.log("🚀 ~ userId ~ user:", user)
-
     return user ? JSON.parse(user)?._id : null
   }, [])
-  console.log("🚀 ~ userId ~ userId:", userId)
-
   const handleDeleteMessageFromMe = async (messageId) => {
 
     if (!userId) {
-      console.log("user id not found")
       return;
     }
     try {
-      console.log("message id --->", messageId);
       const messageRef = doc(
         getFirestore(),
         "Chat",
@@ -454,15 +439,12 @@ function ChatCard(props) {
 
       // Get the message document
       const messageSnap = await getDoc(messageRef);
-      console.log("🚀 ~ handleDeleteMessageFromMe ~ messageSnap:", messageSnap)
-
       if (!messageSnap.exists()) {
         console.log("Message does not exist");
         return;
       }
 
       const messageData = messageSnap.data();
-      console.log("🚀 ~ handleDeleteMessageFromMe ~ messageData:", messageData)
 
       // Check if 'deletedBy' field exists
       if (messageData.deletedBy && messageData.deletedBy !== userId) {
@@ -555,10 +537,6 @@ function ChatCard(props) {
   useEffect(() => {
     handleSendClickandStop();
   }, [preview]);
-
-  console.log("message --->  --->", messages);
-
-  //for image preview
 
   const [showImage, setShowImage] = useState(false);
 

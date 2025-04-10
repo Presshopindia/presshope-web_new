@@ -198,7 +198,7 @@ const ContentDtlChat = (props) => {
                         <img
                           src={
                             process.env.REACT_APP_CONTENT_MEDIA +
-                            data?.content[0]?.thumbnail
+                            data?.content[0]?.media
                           }
                           alt={null}
                         />
@@ -210,7 +210,7 @@ const ContentDtlChat = (props) => {
                             data.paid_status === "paid"
                               ? process.env.REACT_APP_CONTENT_MEDIA +
                                 data?.content[0]?.media
-                              : data?.content[0]?.watermark
+                              : data?.content[0]?.media
                           }
                           alt={null}
                         />
@@ -238,7 +238,7 @@ const ContentDtlChat = (props) => {
                                   <img
                                     src={
                                       process.env.REACT_APP_CONTENT_MEDIA +
-                                      item.thumbnail
+                                      item.media
                                     }
                                     alt={null}
                                   />
@@ -254,11 +254,8 @@ const ContentDtlChat = (props) => {
                                   />
                                 ) : (
                                   <img
-                                    src={
-                                      data.paid_status === "paid"
-                                        ? process.env.REACT_APP_CONTENT_MEDIA +
-                                          item.media
-                                        : item.watermark
+                                    src={process.env.REACT_APP_CONTENT_MEDIA +
+                                      item.media
                                     }
                                     alt={null}
                                   />
@@ -514,14 +511,15 @@ const ContentDtlChat = (props) => {
                                     className="list-card-img"
                                     src={
                                       curr?.content[0]?.media_type === "video"
-                                        ? process.env.REACT_APP_CONTENT_MEDIA +
-                                          curr?.content[0]?.thumbnail
+                                        ? process.env.REACT_APP_THUMBNAIL +
+                                          curr?.content[0]?.media
                                         : curr?.content[0]?.media_type ===
                                           "audio"
                                         ? audioic
                                         : curr?.content[0]?.media_type === "pdf"
                                         ? docsic
-                                        : curr?.content?.[0]?.watermark
+                                        : process.env
+                                        .REACT_APP_CONTENT_MEDIA + curr?.content?.[0]?.media
                                     }
                                     alt="1"
                                   />

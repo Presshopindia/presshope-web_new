@@ -54,6 +54,7 @@ import { AiFillCaretDown } from "react-icons/ai";
 import BroadCastedFilter from "./Sortfilters/Dashboard/BroadcastedFilters";
 import BroadCastedSort from "./Sortfilters/Dashboard/BroadcastedSort";
 import FundsinvestedFilter from "./Sortfilters/Dashboard/FundsinvestedFilter";
+import { toast } from "react-toastify";
 
 const DashboardTables = () => {
   const navigate = useNavigate();
@@ -687,11 +688,15 @@ const DashboardTables = () => {
                                 });
                                 return (
                                   <tr
-                                    onClick={() =>
-                                      navigate(
-                                        `/task?task_ids=${curr?._id}`
-                                      )
-                                    }
+                                    onClick={() =>  {
+                                      if ( curr?.content?.length === 0 ) {
+                                        toast.success("No content found")
+                                      } else if ( curr?.content?.length > 0 && new Date(curr?.deadline_date) < new Date() ) {
+                                        navigate(`/hopper-task-content/${curr?._id}`)
+                                      } else {
+                                        navigate(`/task?task_ids=${curr?._id}`)
+                                      }
+                                    }}
                                     style={{ cursor: "pointer" }}
                                   >
                                     <td className="content_img_td position-relative add-icons-box">

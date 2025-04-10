@@ -13011,3 +13011,12 @@ audio {
   margin-left: 10px;
   display: inline-block;
 }
+
+.relative {
+  position: relative;
+}
+.close-chat{
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
