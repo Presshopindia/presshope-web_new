@@ -67,14 +67,14 @@ const Uploaddocs = () => {
       setUpload_docs((prev) => ({
         ...prev,
         [type]:
-          "https://uat-presshope.s3.eu-west-2.amazonaws.com/public/docToBecomePro/" +
+          `${process.env.REACT_APP_CDN_URL}docToBecomePro/` +
           filepath.data.image,
       }));
       setDocs((prev) => [
         ...docs,
         {
           url:
-            "https://uat-presshope.s3.eu-west-2.amazonaws.com/public/docToBecomePro/" +
+            `${process.env.REACT_APP_CDN_URL}docToBecomePro/` +
             filepath.data.image,
           type: file.type,
           name: extraData,

@@ -1654,7 +1654,6 @@ const Feeddetail = (props) => {
                             <div className="tab-data active">
                               <Row>
                                 <Col md={9}>
-                                  {/* <span class="loader"></span> */}
                                   <div
                                     className="feed_dtl_msgs pp"
                                     id="message-container-1"
@@ -1948,71 +1947,10 @@ const Feeddetail = (props) => {
                                         <h4>Participants</h4>
                                       </div>
                                     </Link>
-                                    {/* 
                                     <div className="scrollHtPnts">
                                       {userList?.map((curr) => {
                                         return (
-                                          <div className="tab_in_card_items">
-                                            <div className="checkWrap">
-                                              <FormControlLabel
-                                                className={`me-0 ${
-                                                  !selectedIds.includes(
-                                                    curr._id
-                                                  ) && "afterCheck"
-                                                }`}
-                                                checked={
-                                                  selectedIds.includes(
-                                                    curr._id
-                                                  ) ||
-                                                  message?.some(
-                                                    (item) =>
-                                                      `${curr?.first_name} ${curr?.last_name}` ==
-                                                      item?.addedMsg
-                                                  )
-                                                }
-                                                onChange={() =>
-                                                  handleCheckboxChange(curr._id)
-                                                }
-                                                control={
-                                                  <Checkbox defaultChecked />
-                                                }
-                                                disabled={message?.some(
-                                                  (item) =>
-                                                    `${curr?.first_name} ${curr?.last_name}` ==
-                                                    item?.addedMsg
-                                                )}
-                                              />
-                                            </div>
-                                            <div
-                                              className="img"
-                                              onClick={() => {
-                                                setSenderId(curr._id);
-                                                setShow({
-                                                  content: false,
-                                                  task: false,
-                                                  presshop: false,
-                                                  internal: true,
-                                                });
-                                              }}
-                                            >
-                                              <img src={usric} alt="user" />
-                                              <span>
-                                                {" "}
-                                                {curr.first_name +
-                                                  " " +
-                                                  curr.last_name}
-                                              </span>
-                                            </div>
-                                       
-                                          </div>
-                                        );
-                                      })}
-                                    </div> */}
-
-                                    <div className="scrollHtPnts">
-                                      {userList?.map((curr) => {
-                                        return (
-                                          <div className="tab_in_card_items">
+                                          <div className="tab_in_card_items" key={curr?._id}>
                                             <div className="checkWrap">
                                               <FormControlLabel
                                                 className={`me-0 ${!selectedIds.includes(

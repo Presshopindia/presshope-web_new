@@ -44,7 +44,7 @@ const InviteUserModal = ({
       setLoading(true);
       await Post("auth/sendInvitationLink", { emailIds, _id: adminId });
       setEmailIds("");
-      toast.success("Invitation link send.");
+      toast.success("Invitation link sent.");
       setLoading(false);
       handleClose();
     }

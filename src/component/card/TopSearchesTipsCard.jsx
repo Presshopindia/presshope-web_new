@@ -35,10 +35,9 @@ function TopSearchesTipsCard(props) {
                     Trending searches
                   </h2>
                   <div className="trendSearch_wrap mt-3">
-                    {content_count.length &&
-                      content_count
-                        .filter((el) => el._id !== "")
-                        .slice(0, 7)
+                    {content_count
+                        ?.filter((el) => el._id !== "")
+                        ?.slice(0, 7)
                         .map((curr) => {
                           return (
                             <span key={curr._id}>

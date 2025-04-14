@@ -321,9 +321,7 @@ const Dashboard = () => {
                       <CardActions className="dash-c-foot">
                         <div className="card-imgs-wrap">
                           {current_chat_detais.slice(0, 3)?.map((curr) => {
-                            let avtartimage =
-                              "https://uat-presshope.s3.eu-west-2.amazonaws.com/public/avatarImages/" +
-                              curr?.sender_id?.avatar_id?.avatar;
+                            let avtartimage = process.env.REACT_APP_AVATAR_IMAGE + curr?.sender_id?.avatar_id?.avatar;
 
                             const Content = profileData?.hasOwnProperty(
                               "admin_detail"

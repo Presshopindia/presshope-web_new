@@ -40,6 +40,8 @@ function ContentFeedCard(props) {
         };
       }
 
+      await Patch(`mediaHouse/add/to/favourites`, obj);
+
     } catch (error) {
       console.log("addfav", error);
     }

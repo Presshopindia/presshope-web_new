@@ -97,6 +97,9 @@ const ContentDtlChat = (props) => {
   };
 
   const getMessages = async (room_id = localStorage.getItem("roomId2")) => {
+    if(!room_id) {
+      return;
+    }
     const resp = await Post(`mediaHouse/getAllchat`, { room_id });
     if (resp) {
       console.log("This message", resp.data.response);

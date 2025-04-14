@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
-// import HeaderN from "../component/HeaderN"
 import {
   Button,
   Card,
@@ -32,27 +31,16 @@ import { MdAdd, MdOutlineWatchLater } from "react-icons/md";
 import { SlLocationPin } from "react-icons/sl";
 import { ReactMic } from "react-mic-recorder";
 import { Rating } from "react-simple-star-rating";
-import io from "socket.io-client";
 import { Pagination } from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
-import usric from "../assets/images/menu-icons/user.svg";
 import tickic from "../assets/images/chat-icons/tick.svg";
 import audioic from "../assets/images/audimg.svg";
 import heart from "../assets/images/heart.svg";
-import photoic from "../assets/images/camera.svg";
-import NoProfile from "../assets/images/blank-profile-picture.png";
 import cameraic from "../assets/images/camera.svg";
-// import presshopchatic from "../assets/images/chat-icons/presshoplogo.svg";
 import presshopchatic from "../assets/images/chat_logo.png";
-import contentVideo from "../assets/images/contentVideo.svg";
-import docsic from "../assets/images/docsic.svg";
-import exclusive from "../assets/images/exclusive.png";
 import favouritedic from "../assets/images/favouritestar.svg";
 import interviewic from "../assets/images/interview.svg";
-import pdfic from "../assets/images/pdfic.svg";
-import authorimg from "../assets/images/profile.webp";
-import shared from "../assets/images/share.png";
 import favic from "../assets/images/star.svg";
 import videoic from "../assets/images/video.svg";
 import ChatCard from "../component/ChatCard";
@@ -65,7 +53,6 @@ import TopSearchesTipsCard from "../component/card/TopSearchesTipsCard";
 import { Get, Patch, Post } from "../services/user.services";
 import ViewUploadedContent from "../component/ViewUploadedContent";
 
-import socketInternal from "../InternalSocket";
 import Loader from "../component/Loader";
 import { useDarkMode } from "../context/DarkModeContext";
 import {
@@ -74,7 +61,7 @@ import {
   successToasterFun,
 } from "../component/commonFunction";
 import socketServer from "../socket.config";
-const socket = socketServer;
+import { toast } from "react-toastify";
 
 const UploadedContentDetails = (props) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -306,15 +293,15 @@ const UploadedContentDetails = (props) => {
       message_type: "rating_by_mediahouse",
       paid_status: curr?.paid_status,
     };
-    socket.emit("rating", obj);
-    socket.on("rating", (data) => {
+    socketServer.emit("rating", obj);
+    socketServer.on("rating", (data) => {
       getMessages();
     });
   };
 
   useEffect(() => {
-    socket.emit("getallchat", { room_id: roomDetails?.room_id });
-  }, [socket]);
+    socketServer.emit("getallchat", { room_id: roomDetails?.room_id });
+  }, [socketServer]);
 
   const hopperFinalOffer = messages?.find(
     (item) => item.message_type === "Mediahouse_final_offer"
@@ -528,7 +515,7 @@ const UploadedContentDetails = (props) => {
   const GetUserList = async () => {
     const resp = await Post(`mediaHouse/getMediahouseUser`);
     if (resp) {
-      setUserList(resp.data.response.filter((el) => el?.role == "Adduser"));
+      setUserList(resp.data.response);
     }
     const resp1 = await Get(`mediaHouse/adminlist`);
     const newData = resp1?.data?.data?.map((el) => {
@@ -539,6 +526,7 @@ const UploadedContentDetails = (props) => {
     });
     setAdminList(newData);
   };
+
 
   const handleChecked = (el) => {
     setAdminList((prev) => {
@@ -580,7 +568,7 @@ const UploadedContentDetails = (props) => {
 
   useEffect(() => {
     ChatList();
-  }, [chatContentIds, socketInternal]);
+  }, [chatContentIds, socketServer]);
 
   // useEffect(() => {
   //   const messageContainer = document.getElementById("message-container-1"); // Replace "message-container" with the actual ID or class of your message container element
@@ -588,8 +576,8 @@ const UploadedContentDetails = (props) => {
   //     messageContainer.scrollTop = messageContainer.scrollHeight;
   //   }
 
-  //   socketInternal.emit('room join', { room_id: chatContentIds?.room_id });
-  //   socketInternal.on("internal group chat", (data) => {
+  //   socketServer.emit('room join', { room_id: chatContentIds?.room_id });
+  //   socketServer.on("internal group chat", (data) => {
   //     const newMessage = data;
   //     setMessage((prevMessages) => [...prevMessages, newMessage,]);
 
@@ -598,10 +586,10 @@ const UploadedContentDetails = (props) => {
   //     }
   //   });
   //   return () => {
-  //     socketInternal.emit('room leave', { room_id: chatContentIds?.room_id });
-  //     socketInternal.off("internal group chat");
+  //     socketServer.emit('room leave', { room_id: chatContentIds?.room_id });
+  //     socketServer.off("internal group chat");
   //   };
-  // }, [socketInternal, chatContentIds?.room_id]);
+  // }, [socketServer, chatContentIds?.room_id]);
 
   useEffect(() => {
     // Internal Chat and External Chat-
@@ -610,8 +598,8 @@ const UploadedContentDetails = (props) => {
       if (messageContainer) {
         messageContainer.scrollTop = messageContainer.scrollHeight;
       }
-      socket.emit("room join", { room_id: chatContentIds?.room_id });
-      socket.on("internal group chat", (data) => {
+      socketServer.emit("room join", { room_id: chatContentIds?.room_id });
+      socketServer.on("internal group chat", (data) => {
         const newMessage = data;
         if (!newMessage?.createdAt) {
           setMessage((prevMessages) => [...prevMessages, newMessage]);
@@ -622,21 +610,21 @@ const UploadedContentDetails = (props) => {
         }
       });
       return () => {
-        socket.emit("room leave", { room_id: chatContentIds?.room_id });
-        socket.off("internal group chat");
+        socketServer.emit("room leave", { room_id: chatContentIds?.room_id });
+        socketServer.off("internal group chat");
       };
     } else if (tabSelect == "external") {
-      socket.emit("room join", { room_id: room_idForContent });
-      socket?.on("getAdmins", (data) => {
+      socketServer.emit("room join", { room_id: room_idForContent });
+      socketServer?.on("getAdmins", (data) => {
         setAdmins(data);
       });
-      socket.on("initialoffer", (data) => {
+      socketServer.on("initialoffer", (data) => {
         const newMessage = data;
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       });
       return () => {
-        socket.emit("room leave", { room_id: room_idForContent });
-        socket.off("initialoffer");
+        socketServer.emit("room leave", { room_id: room_idForContent });
+        socketServer.off("initialoffer");
       };
     }
   }, [tabSelect]);
@@ -655,9 +643,10 @@ const UploadedContentDetails = (props) => {
         type: "add",
         users: selectedIds,
         content_id: param.id,
+        sender_id: user._id,
         room_id: chatContentIds ? chatContentIds?.room_id : "",
       };
-
+      // console.log("Obj ----->", obj)
       const resp = await Post("mediaHouse/internalGroupChatMH", obj);
       if (resp) {
         setSelectedIds([]);
@@ -666,13 +655,13 @@ const UploadedContentDetails = (props) => {
           ...pre,
           room_id: resp?.data?.data?.data?.room_id,
         }));
-        // toast.success('Group chat initiated');
-        socketInternal.emit("room join", {
+        socketServer.emit("room join", {
           room_id: resp?.data?.data?.data?.room_id,
         });
       }
     } catch (error) {
-      // console.log(error, `<<<<<socket error`);
+      toast.error(error?.response?.data?.message);
+      console.log(error, `<<<<<socketServer error`);
       // Handle errors
     }
   };
@@ -716,7 +705,7 @@ const UploadedContentDetails = (props) => {
       },
     };
 
-    socketInternal.emit("internal group chat", messages);
+    socketServer.emit("internal group chat", messages);
     setMsg1("");
     setMediaFile({
       path: "",
@@ -769,7 +758,7 @@ const UploadedContentDetails = (props) => {
   // External chat-------------------------------------------------------------
 
   const JoinRoom = () => {
-    socket.emit("room join", { room_id: roomDetails?.roomsdetails?.room_id });
+    socketServer.emit("room join", { room_id: roomDetails?.roomsdetails?.room_id });
   };
 
   useEffect(() => {
@@ -828,8 +817,8 @@ const UploadedContentDetails = (props) => {
         message_type: "request_more_content",
       };
 
-      socket.emit("offer message", obj);
-      socket.on("offer message", (obj) => {
+      socketServer.emit("offer message", obj);
+      socketServer.on("offer message", (obj) => {
         getMessages(
           JSON.parse(localStorage.getItem("external_chat_room_detail"))
         );
@@ -1324,91 +1313,113 @@ const UploadedContentDetails = (props) => {
                                     </div>
 
                                     {message?.map((curr) => (
-                                      <div className="baat_cheet">
-                                        {curr?.type === "add" ? (
+                                      <div
+                                        className="baat_cheet"
+                                        // ref={chatBoxRef}
+                                        ref={chatBoxInternalRef}
+                                        // chatBoxInternalRef
+                                        key={curr?._id}
+                                      >
+                                        {curr?.type === "add" && curr.user_id !== profileData._id ? (
                                           <p className="usrAddedTxt mb-4">
                                             <span>
-                                              You added {curr?.addedMsg}
+                                              {
+                                                user?._id === curr?.sender_id?._id ? `You added ${curr?.addedMsg}` : `You have been added by ${curr?.sender_id?.full_name}`
+                                              }
+                                            </span>
+                                          </p>
+                                        ) : curr?.type == "remove" ? (
+                                          <p className="usrAddedTxt mb-4">
+                                            <span>
+                                              {
+                                                user?._id === curr?.sender_id?._id ? `You removed ${curr?.addedMsg}` : `You have been removed by ${curr?.sender_id?.full_name}`
+                                              }
                                             </span>
                                           </p>
                                         ) : (
-                                          <div className="crd" key={curr.id}>
-                                            <div className="img">
-                                              <img
-                                                src={
-                                                  curr.user_info
-                                                    ? curr?.user_info
-                                                      ?.profile_image
-                                                    : curr?.sender_id
-                                                      ?.profile_image
-                                                }
-                                                alt="user"
-                                              />
-                                            </div>
-                                            <div className="postedcmnt_info">
-                                              <h5>
-                                                {`${curr.user_info
-                                                  ? curr?.user_info
-                                                    ?.first_name
-                                                  : curr?.sender_id
-                                                    ?.first_name
-                                                  } 
-                                                ${curr.user_info
-                                                    ? curr?.user_info?.last_name
-                                                    : curr?.sender_id?.last_name
-                                                  }`}
-                                                <span className="text-secondary time">
-                                                  {moment(
-                                                    curr?.createdAt
-                                                  ).format(`DD MMM YYYY`)}{" "}
-                                                  -{" "}
-                                                  {moment(
-                                                    curr.createdAt
-                                                  ).format(`hh:mm A`)}
-                                                </span>
-                                              </h5>
-                                              <Typography className="comment_text">
-                                                {curr.type === "text" &&
-                                                  curr.message}
-                                              </Typography>
-
-                                              <div
-                                                onClick={() => handleShow(curr)}
-                                                className="exp"
-                                              >
-                                                {curr.type === "image" && (
+                                          curr?.user_info && (
+                                            <div className="crd" key={curr.id}>
+                                              {curr?.user_info && (
+                                                <div className="img">
                                                   <img
-                                                    src={curr.message}
-                                                    className="msgContent"
-                                                    alt="content"
+                                                    src={
+                                                      curr.user_info
+                                                        ?.profile_image
+                                                    }
+                                                    alt="user"
                                                   />
+                                                </div>
+                                              )}
+                                              <div className="postedcmnt_info">
+                                                {curr?.user_info && (
+                                                  <h5>
+                                                    {`${curr?.user_info?.first_name} ${curr?.user_info?.last_name}`}
+                                                    <span className="text-secondary time">
+                                                      {moment(
+                                                        curr?.createdAt
+                                                      ).format(
+                                                        "hh:mm A, DD MMM YYYY"
+                                                      )}
+                                                    </span>
+                                                  </h5>
                                                 )}
-                                              </div>
+                                                <Typography className="comment_text">
+                                                  {curr.type === "text" &&
+                                                    curr.message}
+                                                </Typography>
 
-                                              <div>
-                                                {curr.type === "video" && (
-                                                  <video
-                                                    src={curr.message}
-                                                    className="msgContent"
-                                                    controls
-                                                    alt="video content"
-                                                    controlsList="nodownload"
-                                                  ></video>
-                                                )}
-                                              </div>
+                                                <div
+                                                  onClick={() =>
+                                                    handleShow(curr)
+                                                  }
+                                                  className="exp"
+                                                >
+                                                  {curr.type === "image" && (
+                                                    <img
+                                                      src={curr.message}
+                                                      className="msgContent"
+                                                      alt="content"
+                                                    />
+                                                  )}
+                                                </div>
 
-                                              <div>
-                                                {curr.type === "audio" && (
-                                                  <audio
-                                                    src={curr.message}
-                                                    controls
-                                                    alt="audio content"
-                                                    controlsList="nodownload"
-                                                  ></audio>
-                                                )}
+                                                <div>
+                                                  {curr.type === "video" && (
+                                                    <video
+                                                      src={curr.message}
+                                                      className="msgContent"
+                                                      controls
+                                                      alt="video content"
+                                                      controlsList="nodownload"
+                                                    ></video>
+                                                  )}
+                                                </div>
+
+                                                <div>
+                                                  {curr.type === "audio" ? (
+                                                    <audio
+                                                      src={curr.message}
+                                                      controls
+                                                      alt="audio content"
+                                                      controlsList="nodownload"
+                                                    ></audio>
+                                                  ) : curr.type ===
+                                                    "recording" ? (
+                                                    <>
+                                                      <audio
+                                                        src={curr.message}
+                                                        controls
+                                                        alt="audio content"
+                                                        controlsList="nodownload"
+                                                      ></audio>
+                                                    </>
+                                                  ) : (
+                                                    ""
+                                                  )}
+                                                </div>
                                               </div>
                                             </div>
-                                          </div>
+                                          )
                                         )}
                                       </div>
                                     ))}
@@ -1534,64 +1545,92 @@ const UploadedContentDetails = (props) => {
                                     </Link>
 
                                     <div className="scrollHtPnts">
-                                      {userList &&
-                                        userList.map((curr) => {
-                                          return (
-                                            <div className="tab_in_card_items">
-                                              <div className="checkWrap">
-                                                <FormControlLabel
-                                                  className={`me-0 ${!selectedIds.includes(
+                                      {userList?.map((curr) => {
+                                        return (
+                                          <div className="tab_in_card_items" key={curr?._id}>
+                                            <div className="checkWrap">
+                                              <FormControlLabel
+                                                className={`me-0 ${!selectedIds.includes(
+                                                  curr._id
+                                                ) && "afterCheck"
+                                                  }`}
+                                                checked={
+                                                  selectedIds.includes(
                                                     curr._id
-                                                  ) && "afterCheck"
-                                                    }`}
-                                                  checked={
-                                                    selectedIds.includes(
-                                                      curr._id
-                                                    ) ||
-                                                    message?.some(
-                                                      (item) =>
-                                                        `${curr?.first_name} ${curr?.last_name}` ==
-                                                        item?.addedMsg
-                                                    )
-                                                  }
-                                                  onChange={() =>
-                                                    handleCheckboxChange(
-                                                      curr._id
-                                                    )
-                                                  }
-                                                  control={
-                                                    <Checkbox defaultChecked />
-                                                  }
-                                                  disabled={message?.some(
+                                                  ) ||
+                                                  message?.some(
                                                     (item) =>
                                                       `${curr?.first_name} ${curr?.last_name}` ==
-                                                      item?.addedMsg
-                                                  )}
-                                                />
-                                              </div>
-                                              <div
-                                                className="img"
-                                                onClick={() => {
-                                                  setSenderId(curr._id);
-                                                  setShow({
-                                                    content: false,
-                                                    task: false,
-                                                    presshop: false,
-                                                    internal: true,
-                                                  });
-                                                }}
-                                              >
-                                                <img src={usric} alt="user" />
-                                                <span>
-                                                  {" "}
-                                                  {curr?.first_name +
-                                                    " " +
-                                                    curr?.last_name}
-                                                </span>
-                                              </div>
+                                                      item?.addedMsg &&
+                                                      item?.type == "add"
+                                                  )
+                                                }
+                                                onChange={
+                                                  (e) => {
+                                                    if (e.target.checked) {
+                                                      handleCheckboxChange(
+                                                        curr._id
+                                                      ); // Call add function when checked
+                                                    } else {
+                                                      RemoveChatUser(curr?._id);
+                                                      // setRemoveUserId(curr?._id);
+                                                    }
+                                                  }
+                                                  // handleCheckboxChange(curr._id)
+                                                }
+                                                control={
+                                                  <Checkbox defaultChecked />
+                                                }
+                                              // disabled={message?.some(
+                                              //   (item) =>
+                                              //     `${curr?.first_name} ${curr?.last_name}` ==
+                                              //     item?.addedMsg
+                                              // )}
+                                              />
                                             </div>
-                                          );
-                                        })}
+                                            <div
+                                              className="img"
+                                              onClick={() => {
+                                                setSenderId(curr._id);
+                                                setShow({
+                                                  content: false,
+                                                  task: false,
+                                                  presshop: false,
+                                                  internal: true,
+                                                });
+                                              }}
+                                            >
+                                              <img
+                                                src={curr?.profile_image}
+                                                alt="user"
+                                              />
+                                              <span> {curr?.full_name}</span>
+                                            </div>
+                                            {/* <div className="dots">
+                                                                                    <Link className="view_chat">View</Link>
+                                                                                  </div> */}
+                                            {message?.some(
+                                              (item) =>
+                                                `${curr?.first_name} ${curr?.last_name}` ==
+                                                item?.addedMsg &&
+                                                item?.type == "add"
+                                              // ) ? (
+                                              //   <button
+                                              //     className="bg-secondary text-white rounded"
+                                              //     onClick={() => {
+                                              //       RemoveChatUser(curr?._id);
+                                              //       console.log(
+                                              //         "all data should print ---> "
+                                              //       );
+                                              //     }}
+                                              //   >
+                                              //     remove
+                                              //   </button>
+                                              // ) : (
+                                            )}
+                                          </div>
+                                        );
+                                      })}
                                     </div>
 
                                     <button

@@ -427,6 +427,12 @@ const Signup = () => {
     setShowPopup(true);
   };
 
+  const searchBoxRefPostalCode = useRef(null);
+  const [showPostalCodePopUp, setPostalCodePopUp] = useState(false);
+  const handlePostalCodePopUp = () => {
+    setPostalCodePopUp(true);
+  };
+
   // Google map address-
   const onMapLoadStreet = (index) => {
     const searchBox = new window.google.maps.places.SearchBox(
@@ -470,7 +476,7 @@ const Signup = () => {
 
           newOffice[index] = {
             ...newOffice[index],
-            post_code: name,
+            // post_code: name,
             address: {
               ...newOffice[index].address,
               complete_address: address,
@@ -485,6 +491,40 @@ const Signup = () => {
                 coordinates: [latitude, longitude],
               },
             },
+          };
+
+          return newOffice;
+        });
+      }
+    });
+  };
+
+  // Google map address-
+  const onMapLoadPostalCode = (index) => {
+    const searchBox = new window.google.maps.places.SearchBox(
+      searchBoxRefPostalCode.current
+    );
+    searchBox.addListener("places_changed", () => {
+      const places = searchBox.getPlaces();
+      if (places.length === 0) {
+        return;
+      }
+
+      const htmlString = places[0].adr_address;
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlString, "text/html");
+
+      const countryNameElement = doc.querySelector(".country-name");
+
+      if (countryNameElement) {
+        const name = places[0]?.name;
+
+        setMultiOffice((prev) => {
+          const newOffice = [...prev];
+
+          newOffice[index] = {
+            ...newOffice[index],
+            post_code: name,
           };
 
           return newOffice;
@@ -919,6 +959,8 @@ const Signup = () => {
                           <p className="onbrdheading sign_hdng">
                             Office details
                           </p>
+
+
                           {/* New work for multi offices adding */}
                           {multiOffice.map((el, index) => (
                             <>
@@ -1015,8 +1057,25 @@ const Signup = () => {
                                       className="addr_custom_inp w-100"
                                       type="textarea"
                                       name="post_code"
-                                      value={el.post_code || ""}
+                                      onFocus={handlePostalCodePopUp}
+                                      onClick={handlePostalCodePopUp}
+                                      ref={searchBoxRefPostalCode}
+                                      value={el.post_code}
+                                      onChange={(e) =>
+                                        handleMultiAddOffice(
+                                          index,
+                                          e.target.name,
+                                          e.target.value
+                                        )
+                                      }
                                     />
+                                    {showPostalCodePopUp && (
+                                      <div className="map-popup">
+                                        <GoogleMap
+                                          onLoad={() => onMapLoadPostalCode(index)}
+                                        />
+                                      </div>
+                                    )}
                                   </Form.Group>
                                 </Col>
                                 <Col md={4}>

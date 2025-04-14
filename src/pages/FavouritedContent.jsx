@@ -302,7 +302,7 @@ const FavouritedContent = () => {
                                           : ""
                                 }
                                 allContent={curr?.content_details?.content}
-                                basketValue={curr?.basket_status}
+                                basketValue={"false"}
                                 basket={() => {
                                   handleBasket(index, curr?._id);
                                 }}
@@ -353,6 +353,7 @@ const FavouritedContent = () => {
                                 postcount4={pdfCount > 0 ? pdfCount : null}
                                 feedTypeImg5={docCount > 0 ? docsic : null}
                                 postcount5={docCount > 0 ? docCount : null}
+                                is_sale_status={false}
                               />
                             </Col>
                           );
