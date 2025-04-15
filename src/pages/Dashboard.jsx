@@ -211,7 +211,7 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [dashboardSort, setDashboardSort] = useState({ type: "" });
   const [dashboardPayload, setDashboardPayload] = useState({
-    requestedItems: ["content_purchased_online", "total_fund_invested", "content_under_offer", "favourite", "broadcasted_task"],
+    requestedItems: ["content_purchased_online", "total_fund_invested", "content_under_offer", "favourite", "broadcasted_task", "chat_count"],
     requestedFilter: {
       favourite: "",
       broadcasted_task: "",

@@ -568,115 +568,61 @@ const Chat = () => {
                   </Accordion.Header>
                   <Accordion.Body>
                     <div className="chat_list">
-                      {adminList
-                        ?.filter((obj1) =>
-                          admins.some((obj2) => obj1._id == obj2.userId?.id)
-                        )
-                        .map((curr) => {
-                          return (
-                            <div
-                              className={`d-flex align-items-center relative ${curr._id == senderId ? "activeChat" : ""
-                                }`}
-                              onClick={() => {
-                                setSenderId(curr._id);
-                                setShow({
-                                  content: false,
-                                  task: false,
-                                  presshop: true,
-                                });
-                              }}
-                            >
-                              <div className="cht_inn w-100 d-flex align-items-center">
-                                <div className="usr_img_wrp position-relative">
-                                  <img
-                                    src={
-                                      process.env.REACT_APP_ADMIN_IMAGE +
-                                      curr?.profile_image
-                                    }
-                                    alt="user image"
-                                  />
-                                  <div className="status">
-                                    <span className="active"></span>
-                                  </div>
+                      {adminList?.filter((obj1) => obj1.role === "admin")?.map((curr) => {
+                        return (
+                          <div
+                            className={`chat_usr_itm d-flex align-items-center clickable relative ${curr?._id === senderId
+                              ? "active activeChat"
+                              : ""
+                              }`}
+                            onClick={() => {
+                              setSenderId(curr._id);
+                              setShow({
+                                content: false,
+                                task: false,
+                                presshop: true,
+                              });
+                            }}
+                          >
+                            <div className="cht_inn w-100 d-flex align-items-center">
+                              <div className="usr_img_wrp position-relative">
+                                <img
+                                  src={
+                                    process.env.REACT_APP_ADMIN_IMAGE +
+                                    curr?.profile_image
+                                  }
+                                  alt="user image"
+                                />
+                                <div className="status">
+                                  <span className="active"></span>
                                 </div>
-                                <div className="cht_dtl d-flex justify-content-between w-100">
-                                  <div className="cht_txt d-flex flex-column">
-                                    <p className="usr_nme mb-0">
-                                      <a>{curr?.name}</a>
-                                      <a>
-                                        {curr.role === "admin" && (
-                                          <img
-                                            src={presshopchatic}
-                                            alt="PressHop logo"
-                                            className="ms-1"
-                                          />
-                                        )}
-                                      </a>
-                                    </p>
-                                  </div>
+                              </div>
+                              <div className="cht_dtl d-flex justify-content-between w-100">
+                                <div className="cht_txt d-flex flex-column">
+                                  <p className="usr_nme mb-0">
+                                    <a>{curr?.name}</a>
+                                  </p>
                                 </div>
+                                <div className="cht_time d-flex flex-column align-items-end">
+                                  <span className="msg_time">
+                                    {moment(curr?.updatedAt).format(
+                                      "h:mm A, D MMM YYYY"
+                                    )}
+                                  </span>
+                                </div>
+                                {
+                                  (show.presshop && curr?._id === senderId) && (
+                                    <RxCross1 className="close-chat" onClick={(e) => {
+                                      e.stopPropagation();
+                                      setShow({ ...show, presshop: false })
+                                    }} />
+                                  )
+                                }
                               </div>
                             </div>
-                          );
-                        })}
-                      {admins.length === 0 &&
-                        adminList
-                          .filter((obj1) => obj1.role === "admin")
-                          .map((curr) => {
-                            return (
-                              <div
-                                className={`chat_usr_itm d-flex align-items-center clickable relative ${curr?._id === senderId
-                                  ? "active activeChat"
-                                  : ""
-                                  }`}
-                                onClick={() => {
-                                  setSenderId(curr._id);
-                                  setShow({
-                                    content: false,
-                                    task: false,
-                                    presshop: true,
-                                  });
-                                }}
-                              >
-                                <div className="cht_inn w-100 d-flex align-items-center">
-                                  <div className="usr_img_wrp position-relative">
-                                    <img
-                                      src={
-                                        process.env.REACT_APP_ADMIN_IMAGE +
-                                        curr?.profile_image
-                                      }
-                                      alt="user image"
-                                    />
-                                    <div className="status">
-                                      <span className="active"></span>
-                                    </div>
-                                  </div>
-                                  <div className="cht_dtl d-flex justify-content-between w-100">
-                                    <div className="cht_txt d-flex flex-column">
-                                      <p className="usr_nme mb-0">
-                                        <a>{curr?.name}</a>
-                                      </p>
-                                    </div>
-                                    <div className="cht_time d-flex flex-column align-items-end">
-                                      <span className="msg_time">
-                                        {moment(curr?.updatedAt).format(
-                                          "h:mm A, D MMM YYYY"
-                                        )}
-                                      </span>
-                                    </div>
-                                    {
-                                      (show.presshop && curr?._id === senderId) && (
-                                        <RxCross1 className="close-chat" onClick={(e) => {
-                                          e.stopPropagation();
-                                          setShow({ ...show, presshop: false })
-                                        }} />
-                                      )
-                                    }
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
+                          </div>
+                        );
+                      })}
                     </div>
                   </Accordion.Body>
                 </Accordion.Item>

@@ -656,7 +656,7 @@ function ChatCardSocket(props) {
                 hoppers.map((curr) => {
                   return (
                     <div
-                      className={`chatting_itm d-flex align-items-center justify-content-space-between clickable ${curr?._id === roomDetails?._id ? "bg-light-gray" : ""}`}
+                      className={`chatting_itm chat-hopper-listing d-flex align-items-center justify-content-space-between clickable ${curr?._id === roomDetails?._id ? "light-gray-bg" : "bg-light-gray"}`}
                       onClick={() => setRoomDetails(curr)}
                     >
                       <img
