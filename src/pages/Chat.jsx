@@ -27,10 +27,12 @@ import ContentDtlChat from "./ContentDtlChat";
 import lastmsgImage from "../assets/images/image-svgrepo-com.svg";
 import GroupContentDtlChat from "./GroupContentDtlChat";
 
-import io from "socket.io-client";
 import { useDarkMode } from "../context/DarkModeContext";
 import Loader from "../component/Loader";
-const socket = io.connect("https://uat.presshop.live:3005");
+import socketServer from "../socket.config";
+import presshopLogo from "../assets/images/chat_logo.png";
+
+
 const Chat = () => {
   const [liveTasks, setLiveTasks] = useState();
   const [loading, setLoading] = useState(false);
@@ -102,10 +104,10 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    socket?.on("getAdmins", (data) => {
+    socketServer?.on("getAdmins", (data) => {
       setAdmins(data);
     });
-  }, [socket]);
+  }, [socketServer]);
 
   const GetUserList = async () => {
     const resp = await Get(
@@ -128,11 +130,9 @@ const Chat = () => {
             el?.user_details?.map((e) => e?._id)?.includes(profileData?._id)
           );
         }
-        // console.log("HELLO", updatedResp, profileData?.role);
         setGroup(updatedResp);
       }
     } catch (error) {
-      console.log("all error data ----->", error);
     }
   };
   useEffect(() => {
@@ -237,9 +237,6 @@ const Chat = () => {
 
     window.scrollTo(0, 0);
   }, []);
-
-  console.log("all group data ", group);
-  console.log("all group data  groupIds ", groupIds);
 
   return (
     <>
@@ -568,61 +565,53 @@ const Chat = () => {
                   </Accordion.Header>
                   <Accordion.Body>
                     <div className="chat_list">
-                      {adminList?.filter((obj1) => obj1.role === "admin")?.map((curr) => {
-                        return (
-                          <div
-                            className={`chat_usr_itm d-flex align-items-center clickable relative ${curr?._id === senderId
-                              ? "active activeChat"
-                              : ""
-                              }`}
-                            onClick={() => {
-                              setSenderId(curr._id);
-                              setShow({
-                                content: false,
-                                task: false,
-                                presshop: true,
-                              });
-                            }}
-                          >
-                            <div className="cht_inn w-100 d-flex align-items-center">
-                              <div className="usr_img_wrp position-relative">
-                                <img
-                                  src={
-                                    process.env.REACT_APP_ADMIN_IMAGE +
-                                    curr?.profile_image
-                                  }
-                                  alt="user image"
-                                />
-                                <div className="status">
-                                  <span className="active"></span>
-                                </div>
-                              </div>
-                              <div className="cht_dtl d-flex justify-content-between w-100">
-                                <div className="cht_txt d-flex flex-column">
-                                  <p className="usr_nme mb-0">
-                                    <a>{curr?.name}</a>
-                                  </p>
-                                </div>
-                                <div className="cht_time d-flex flex-column align-items-end">
-                                  <span className="msg_time">
-                                    {moment(curr?.updatedAt).format(
-                                      "h:mm A, D MMM YYYY"
-                                    )}
-                                  </span>
-                                </div>
-                                {
-                                  (show.presshop && curr?._id === senderId) && (
-                                    <RxCross1 className="close-chat" onClick={(e) => {
-                                      e.stopPropagation();
-                                      setShow({ ...show, presshop: false })
-                                    }} />
-                                  )
-                                }
-                              </div>
+                      <div
+                        className={`chat_usr_itm d-flex align-items-center clickable relative ${show.presshop
+                          ? "active activeChat"
+                          : ""
+                          }`}
+                        onClick={() => {
+                          setShow({
+                            content: false,
+                            task: false,
+                            presshop: true,
+                          });
+                        }}
+                      >
+                        <div className="cht_inn w-100 d-flex align-items-center">
+                          <div className="usr_img_wrp position-relative">
+                            <img
+                              src={presshopLogo}
+                              alt="Emily"
+                            />
+                            <div className="status">
+                              <span className="active"></span>
                             </div>
                           </div>
-                        );
-                      })}
+                          <div className="cht_dtl d-flex justify-content-between w-100">
+                            <div className="cht_txt d-flex flex-column">
+                              <p className="usr_nme mb-0">
+                                <a>Emily</a>
+                              </p>
+                            </div>
+                            {/* <div className="cht_time d-flex flex-column align-items-end">
+                              <span className="msg_time">
+                                {moment(curr?.updatedAt).format(
+                                  "h:mm A, D MMM YYYY"
+                                )}
+                              </span>
+                            </div> */}
+                            {
+                              show.presshop && (
+                                <RxCross1 className="close-chat" onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShow({ ...show, presshop: false })
+                                }} />
+                              )
+                            }
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </Accordion.Body>
                 </Accordion.Item>

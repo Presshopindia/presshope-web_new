@@ -39,8 +39,8 @@ import Chatinternal from "../component/Chatinternal";
 import NoProfile from "../assets/images/blank-profile-picture.png";
 import usric from "../assets/images/menu-icons/user.svg";
 import audioic from "../assets/images/audimg.svg";
-import socketInternal from "../InternalSocket";
 import { toast } from "react-toastify";
+import socketServer from "../socket.config";
 
 const GroupContentDtlChat = (props) => {
   const [data, setData] = useState();
@@ -137,10 +137,10 @@ const GroupContentDtlChat = (props) => {
       };
       const resp = await Post("mediaHouse/internalGroupChatMH", obj);
       if (resp) {
-        if (!socketInternal || !socketInternal.connected) {
+        if (!socketServer || !socketServer.connected) {
           return;
         }
-        socketInternal.emit("room join", {
+        socketServer.emit("room join", {
           room_id: localStorage.getItem("roomId")?.replace(/^"+|"+$/g, ""),
         });
         setaddChatuser(selectedIds);
@@ -202,7 +202,7 @@ const GroupContentDtlChat = (props) => {
         //   room_id: JSON.parse(localStorage.getItem("roomId")),
         // }));
         // toast.success('Group chat initiated');
-        socketInternal.emit("leave room", {
+        socketServer.emit("leave room", {
           room_id: JSON.parse(localStorage.getItem("roomId")),
         });
       }

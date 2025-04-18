@@ -2583,13 +2583,7 @@ const FeeddetailCopy = (props) => {
                                         </span>
                                       </h6>
                                       <h6 className="txt_light">
-                                        Please select the PressHop team member
-                                        you wish to speak to from the
-                                        participants box on the right.{" "}
-                                      </h6>
-                                      <h6 className="txt_light">
-                                        Once selected, please use the text box
-                                        below to start chatting.{" "}
+                                      Welcome to PressHop support
                                       </h6>
                                     </div>
                                     {showChat.presshop ? (

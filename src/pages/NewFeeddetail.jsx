@@ -30,7 +30,6 @@ import { MdAdd, MdOutlineWatchLater } from "react-icons/md";
 import { SlLocationPin } from "react-icons/sl";
 import { ReactMic } from "react-mic";
 import { Rating } from "react-simple-star-rating";
-import io from "socket.io-client";
 import { Pagination } from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -58,10 +57,9 @@ import ContentFeedCard from "../component/card/ContentFeedCard";
 import TopSearchesTipsCard from "../component/card/TopSearchesTipsCard";
 import { Get, Patch, Post } from "../services/user.services";
 
-import socketInternal from "../InternalSocket";
 import Loader from "../component/Loader";
 import { useDarkMode } from "../context/DarkModeContext";
-const socket = io.connect("https://uat.presshop.live:3005");
+import socketServer from "../socket.config";
 
 const NewFeeddetail = (props) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -137,20 +135,20 @@ const NewFeeddetail = (props) => {
 
   // External Chat
   useEffect(() => {
-    socket.emit("room join", { room_id: room_idForContent });
-    socket?.on("getAdmins", (data) => {
+    socketServer.emit("room join", { room_id: room_idForContent });
+    socketServer?.on("getAdmins", (data) => {
       setAdmins(data);
     });
-    socket.on("initialoffer", (data) => {
+    socketServer.on("initialoffer", (data) => {
       // console.log("initialoffer1231231231", data)
       const newMessage = data;
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
     return () => {
-      socket.emit("room leave", { room_id: room_idForContent });
-      socket.off("initialoffer");
+      socketServer.emit("room leave", { room_id: room_idForContent });
+      socketServer.off("initialoffer");
     };
-  }, [socket, room_idForContent]);
+  }, [socketServer, room_idForContent]);
 
   const getMessages = async () => {
     const resp1 = await Post(`mediaHouse/getAllchat`, {
@@ -202,8 +200,8 @@ const NewFeeddetail = (props) => {
         initial_offer_price: "",
         finaloffer_price: "",
       };
-      socket.emit("initialoffer", obj);
-      socket.on("initialoffer", (obj) => {
+      socketServer.emit("initialoffer", obj);
+      socketServer.on("initialoffer", (obj) => {
         const tempMsg = obj;
         setMessages([...messages]);
         getMessages();
@@ -235,7 +233,7 @@ const NewFeeddetail = (props) => {
       }
 
       // console.log('obj1231231231', obj)
-      socket.emit("initialoffer", obj);
+      socketServer.emit("initialoffer", obj);
       setOffer_value("");
       getMessages();
     } catch (error) {
@@ -254,8 +252,8 @@ const NewFeeddetail = (props) => {
       initial_offer_price: "",
       finaloffer_price: "",
     };
-    socket.emit("initialoffer", obj);
-    socket.on("initialoffer", (obj) => {
+    socketServer.emit("initialoffer", obj);
+    socketServer.on("initialoffer", (obj) => {
       // Handle initialoffer event if needed
     });
     Payment(curr);
@@ -319,7 +317,7 @@ const NewFeeddetail = (props) => {
         initial_offer_price: "",
         finaloffer_price: "",
       };
-      socket.emit("initialoffer", obj);
+      socketServer.emit("initialoffer", obj);
       getMessages();
     } catch (error) {
       // console.log(error, "<-----errors for Start_Offer");
@@ -338,7 +336,7 @@ const NewFeeddetail = (props) => {
         initial_offer_price: "",
         finaloffer_price: "",
       };
-      socket.emit("initialoffer", obj);
+      socketServer.emit("initialoffer", obj);
       getMessages();
     } catch (error) {
       // Handle errors
@@ -364,8 +362,8 @@ const NewFeeddetail = (props) => {
       type: "content",
       image_id: image_id,
     };
-    socket.emit("rating", obj);
-    socket.on("rating", (obj) => {
+    socketServer.emit("rating", obj);
+    socketServer.on("rating", (obj) => {
       // Handle rating event if needed
     });
 
@@ -373,8 +371,8 @@ const NewFeeddetail = (props) => {
   };
 
   useEffect(() => {
-    socket.emit("getallchat", { room_id: roomDetails?.room_id });
-  }, [socket]);
+    socketServer.emit("getallchat", { room_id: roomDetails?.room_id });
+  }, [socketServer]);
 
   const hopperFinalOffer = messages?.find(
     (item) => item.message_type === "Mediahouse_final_offer"
@@ -665,8 +663,8 @@ const NewFeeddetail = (props) => {
       messageContainer.scrollTop = messageContainer.scrollHeight;
     }
 
-    socketInternal.emit("room join", { room_id: chatContentIds?.room_id });
-    socketInternal.on("internal group chat", (data) => {
+    socketServer.emit("room join", { room_id: chatContentIds?.room_id });
+    socketServer.on("internal group chat", (data) => {
       const newMessage = data;
       setMessage((prevMessages) => [...prevMessages, newMessage]);
 
@@ -675,13 +673,13 @@ const NewFeeddetail = (props) => {
       }
     });
     return () => {
-      socketInternal.emit("room leave", { room_id: chatContentIds?.room_id });
-      socketInternal.off("internal group chat");
+      socketServer.emit("room leave", { room_id: chatContentIds?.room_id });
+      socketServer.off("internal group chat");
     };
-  }, [socketInternal, chatContentIds?.room_id]);
+  }, [socketServer, chatContentIds?.room_id]);
 
   console.log("message ------>", message);
-  console.log("socketInternal ------>", socketInternal);
+  console.log("socketServer ------>", socketServer);
   console.log("chatContentIds?.room_id ------>", chatContentIds?.room_id);
 
   const handleCheckboxChange = (itemId) => {
@@ -709,12 +707,12 @@ const NewFeeddetail = (props) => {
           room_id: resp?.data?.data?.data?.room_id,
         }));
         // toast.success('Group chat initiated');
-        socketInternal.emit("room join", {
+        socketServer.emit("room join", {
           room_id: resp?.data?.data?.data?.room_id,
         });
       }
     } catch (error) {
-      // console.log(error, `<<<<<socket error`);
+      // console.log(error, `<<<<<socketServer error`);
       // Handle errors
     }
   };
@@ -755,7 +753,7 @@ const NewFeeddetail = (props) => {
         last_name: profileData?.last_name,
       },
     };
-    socketInternal.emit("internal group chat", messages);
+    socketServer.emit("internal group chat", messages);
     setMsg1("");
     setMediaFile({
       path: "",
@@ -2415,13 +2413,7 @@ const NewFeeddetail = (props) => {
                                         </span>
                                       </h6>
                                       <h6 className="txt_light">
-                                        Please select the PressHop team member
-                                        you wish to speak to from the
-                                        participants box on the right.{" "}
-                                      </h6>
-                                      <h6 className="txt_light">
-                                        Once selected, please use the text box
-                                        below to start chatting.{" "}
+                                      Welcome to PressHop support
                                       </h6>
                                     </div>
                                     {showChat.presshop ? (
