@@ -420,7 +420,7 @@ const Myprofilemdl = (props) => {
               <Row>
                 <Col xs={12} md={6} sm={6} className="rw_inn_flex">
                   <label>Mobile number</label>
-                  <div className={`mb-4 number_inp_wrap ${props.profileType == "My" ? "dsblBgClr" : ""}`}>
+                  <div className="mb-4 number_inp_wrap">
                     {/* Phone start */}
                     <input
                       className="input_nmbr"
@@ -463,10 +463,11 @@ const Myprofilemdl = (props) => {
                     <img className="privacy icn" src={emailic} alt="" />
                     <Form.Control
                       type="text"
-                      disabled={props.profileType === "My"}
                       name="email"
+                      disabled
                       value={profile?.email}
                       onChange={handleChange}
+                      className={props.profileType == "My"? "" : "invite-user-disable-field"}
                     />
                   </Form.Group>
                 </Col>

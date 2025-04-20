@@ -52,7 +52,6 @@ $dark-mode-bg: #dbdcdc;
 .input-border {
   background-color: $input-border !important;
 }
-
 @font-face {
   font-family: "Airbnb";
   src: local("AirbnbCereal_W_Lt"),
@@ -3594,7 +3593,6 @@ button.MuiButton-secondary {
     left: 10px;
   }
 }
-
 // onboarding update css
 .onboardStep {
   .form-group {
@@ -12751,7 +12749,6 @@ audio {
 .mb-10 {
   margin-bottom: 40px;
 }
-
 .feedTrendingSearchWrap>.topSearches_tipsCard>.row>.p-0.col-lg-12 {
   padding: calc(var(--bs-gutter-x) * .5) !important;
 }

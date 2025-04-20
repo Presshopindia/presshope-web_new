@@ -4,8 +4,8 @@ import Form from "react-bootstrap/Form";
 import { BsArrowRight, BsMic, BsPause, BsPlay } from "react-icons/bs";
 import { MdAdd } from "react-icons/md";
 import { FaEllipsisV } from "react-icons/fa";
-import inpimg from "../assets/images/profile.webp";
-// import Button from 'react-bootstrap/Button';
+import presshopLogo from "../assets/images/chat_logo.png";
+
 import {
   addDoc,
   collection,
@@ -112,7 +112,6 @@ function ChatCard(props) {
       }
       setLoading(false);
     } catch (error) {
-      console.error("Error uploading audio:", error);
       setLoading(false);
     }
   };
@@ -139,28 +138,36 @@ function ChatCard(props) {
   const CreateRoom = async () => {
     setLoading(true);
     try {
-      if (localStorage.getItem("internal")) {
-        setShow(false);
-        const obj = {
-          receiver_id: props.senderId,
-          room_type: "MediahousetoAdmin",
-          type: "external_content_for_admin", // Old type was - (external_content) <-- This is for content wise room, but now there will be one chat for a user.
-          content_id: localStorage.getItem("internal"),
-        };
+      // if (localStorage.getItem("internal")) {
+      //   setShow(false);
+      //   const obj = {
+      //     receiver_id: props.senderId,
+      //     room_type: "MediahousetoAdmin",
+      //     type: "external_content_for_admin", // Old type was - (external_content) <-- This is for content wise room, but now there will be one chat for a user.
+      //     content_id: localStorage.getItem("internal"),
+      //   };
 
-        const resp = await Post(`mediaHouse/createRoom`, obj);
-        setRoomDetails(resp.data.details);
-        setLoading(false);
-      } else {
-        setShow(false);
-        const obj = {
-          receiver_id: props.senderId,
-          room_type: "MediahousetoAdmin",
-        };
-        const resp = await Post(`mediaHouse/createRoom`, obj);
-        setRoomDetails(resp.data.details);
-        setLoading(false);
-      }
+      //   const resp = await Post(`mediaHouse/createRoom`, obj);
+      //   setRoomDetails(resp.data.details);
+      //   setLoading(false);
+      // } else {
+      //   setShow(false);
+      //   const obj = {
+      //     receiver_id: "64bfa693bc47606588a6c807",
+      //     room_type: "MediahousetoAdmin",
+      //   };
+      //   const resp = await Post(`mediaHouse/createRoom`, obj);
+      //   setRoomDetails(resp.data.details);
+      //   setLoading(false);
+      // }
+      const obj = {
+        receiver_id: process.env.REACT_APP_HOPPER_ID,
+        room_type: "MediahousetoAdmin",
+      };
+      const resp = await Post(`mediaHouse/createRoom`, obj);
+      setRoomDetails(resp.data.details);
+      setLoading(false);
+
     } catch (error) {
       setLoading(false);
     }
@@ -258,8 +265,6 @@ function ChatCard(props) {
       // uid,
     };
 
-    console.log(":payload", payload)
-
     setMsg("");
     setPreview({});
     try {
@@ -306,7 +311,7 @@ function ChatCard(props) {
           const allMessages = [...prevMessages, ...newMessages];
           return allMessages.sort((a, b) => new Date(a.date) - new Date(b.date));
         });
-        // scrollToBottom();
+        scrollToBottom();
       });
 
       return unsubscribe;
@@ -325,7 +330,7 @@ function ChatCard(props) {
           ...doc.data(),
         }));
         setMessages(newMessages);
-        // scrollToBottom();
+        scrollToBottom();
       });
 
       return unsubscribe;
@@ -574,7 +579,7 @@ function ChatCard(props) {
                 return;
               }
               return (
-                <div className="chatting_itm d-flex align-items-start">
+                <div className="chatting_itm d-flex align-items-start" key={curr?._id}>
                   <div
                     className="chat-dlt"
                   // onClick={() => handleDeleteMessage(curr?.id)}
@@ -612,10 +617,10 @@ function ChatCard(props) {
                     </Dropdown>
                   </div>
 
-                  <img src={curr.senderImage} alt="User" className="usr_img" />
+                  <img src={process.env.REACT_APP_HOPPER_ID === curr?.senderId ? presshopLogo : curr.senderImage} alt="User" className="usr_img" />
                   <div className="postedcmnt_info">
                     <h5>
-                      {curr.senderName}
+                      {process.env.REACT_APP_HOPPER_ID === curr?.senderId ? "Emily" : curr.senderName}
                       <span className="text-secondary time">
                         {moment(curr.date).format("h:mm A, D MMM YYYY")}
                       </span>
@@ -655,7 +660,6 @@ function ChatCard(props) {
                           className="msgContent"
                           style={{ width: "100%", height: "500px" }}
                           title="PDF Viewer"
-                         
                         ></iframe>
                       )}
                     </div>
@@ -803,23 +807,27 @@ function ChatCard(props) {
       >
         <Modal.Header className="modal-header profile_mdl_hdr_wrap" closeButton>
           <Modal.Title className="modal-title profile_modal_ttl">
-            <p className="mb-0">Image Preview</p>
+            <p className="mb-0">Preview</p>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="show-grid modal-body border-0">
           <Container>
-            <div>
+            <div
+              style={{ width: "auto", height: "auto" }}
+              className="border rounded"
+            >
               {preview?.type === "image" ? (
-                <img className="mdlPrevImg" src={preview?.path} />
-              ) : preview?.type === "video" ? (
-                <video
+                <img
+                  style={{ width: "100%", heigth: "100%" }}
                   src={preview?.path}
-                  className="msgContent"
-                  controls
-                ></video>
-              ) : (
-                ""
-              )}
+                  className="rounded"
+                />
+              ) : <video
+                src={preview?.path}
+                className="msgContent"
+                controls
+                style={{ width: "100%", heigth: "100%" }}
+              />}
             </div>
           </Container>
         </Modal.Body>
@@ -827,7 +835,7 @@ function ChatCard(props) {
           <Button
             className="w-50 m-auto d-inline-block py-2 text-lowercase mdl_btn"
             variant="primary"
-            type="submit"
+            // type="submit"
             onClick={(e) => {
               handleSendClick(e);
               setPreview({
@@ -841,41 +849,39 @@ function ChatCard(props) {
           </Button>
         </Modal.Footer>
       </Modal>
-      <>
-        <Modal show={showImage} onHide={handleCloseImage}>
-          <Modal.Header closeButton>
-            <Modal.Title>Preview</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div
-              style={{ width: "auto", height: "auto" }}
-              className="border rounded"
-            >
-              {previewImage?.messageType === "image" ? (
-                <img
-                  style={{ width: "100%", heigth: "100%" }}
-                  src={previewImage?.message}
-                  className="rounded"
-                />
-              ) : previewImage?.messageType === "video" ? (
-                <video
-                  src={previewImage?.message}
-                  className="msgContent"
-                  controls
-                  style={{ width: "100%", heigth: "100%" }}
-                ></video>
-              ) : (
-                ""
-              )}
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseImage}>
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </>
+      <Modal show={showImage} onHide={handleCloseImage}>
+        <Modal.Header closeButton>
+          <Modal.Title>Preview</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div
+            style={{ width: "auto", height: "auto" }}
+            className="border rounded"
+          >
+            {previewImage?.messageType === "image" ? (
+              <img
+                style={{ width: "100%", heigth: "100%" }}
+                src={previewImage?.message}
+                className="rounded"
+              />
+            ) : previewImage?.messageType === "video" ? (
+              <video
+                src={previewImage?.message}
+                className="msgContent"
+                controls
+                style={{ width: "100%", heigth: "100%" }}
+              ></video>
+            ) : (
+              ""
+            )}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseImage}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

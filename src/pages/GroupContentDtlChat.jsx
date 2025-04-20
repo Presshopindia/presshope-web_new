@@ -39,8 +39,8 @@ import Chatinternal from "../component/Chatinternal";
 import NoProfile from "../assets/images/blank-profile-picture.png";
 import usric from "../assets/images/menu-icons/user.svg";
 import audioic from "../assets/images/audimg.svg";
-import socketInternal from "../InternalSocket";
 import { toast } from "react-toastify";
+import socketServer from "../socket.config";
 
 const GroupContentDtlChat = (props) => {
   const [data, setData] = useState();
@@ -63,7 +63,7 @@ const GroupContentDtlChat = (props) => {
         // console.log(res, '<<< Why the profile is here');
         setUserProfile(res?.data?.profile?._id);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const GetUserList = async () => {
@@ -78,17 +78,21 @@ const GroupContentDtlChat = (props) => {
       let resp;
       if (props?.params?.type === "task") {
         resp = await Get(
-          `mediaHouse/getuploadedContentbyHoppers?_id=${props?.params?.contentId}`
+          `mediaHouse/getuploadedContentbyHoppers?task_id=${props?.params?.contentId}`
         );
-        setDetailContent(resp?.data?.data?.[0]);
+        setDetailContent(resp?.data?.uploadedContent);
       } else {
         resp = await Get(
           `mediaHouse/openContentMH?content_id=${props?.params?.contentId}`
         );
         setDetailContent(resp?.data?.response[0]);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   };
+
+  console.log("detailContent", detailContent, props?.params);
 
   const ChatList = async () => {
     try {
@@ -108,7 +112,7 @@ const GroupContentDtlChat = (props) => {
     getUserProfile();
     GetUserList();
     ChatList();
-  }, [props?.params?.contentId]);
+  }, [props?.params?.contentId, props?.params?.type, props?.params?.room_id]);
 
   //   Participants-
   const handleCheckboxChange = (itemId) => {
@@ -137,10 +141,10 @@ const GroupContentDtlChat = (props) => {
       };
       const resp = await Post("mediaHouse/internalGroupChatMH", obj);
       if (resp) {
-        if (!socketInternal || !socketInternal.connected) {
+        if (!socketServer || !socketServer.connected) {
           return;
         }
-        socketInternal.emit("room join", {
+        socketServer.emit("room join", {
           room_id: localStorage.getItem("roomId")?.replace(/^"+|"+$/g, ""),
         });
         setaddChatuser(selectedIds);
@@ -202,7 +206,7 @@ const GroupContentDtlChat = (props) => {
         //   room_id: JSON.parse(localStorage.getItem("roomId")),
         // }));
         // toast.success('Group chat initiated');
-        socketInternal.emit("leave room", {
+        socketServer.emit("leave room", {
           room_id: JSON.parse(localStorage.getItem("roomId")),
         });
       }
@@ -211,138 +215,109 @@ const GroupContentDtlChat = (props) => {
     }
   };
 
-  // console.log("all user list ----->chatapis", userList);
-
   return (
     <>
       {loading && <Loader />}
       <div className="trackingList_wrap cht_tsk_trck feed-detail mb-0 internalChatCont">
-        {/* start */}
-
         <div className="feedsMain_wrap">
           <div className="feedsContainer mb-0">
             <div className="cht_tsk_rw d-flex">
               <div className="ps-0 pe-01 chat_loc_wp">
                 <Card className="feeddetail-card left-card h-100 ">
                   <CardContent className="card-content ">
-                    {/* {detailContent?.content?.length === 1 &&
-                      data?.content[0]?.media_type === "audio" && (
-                        <div className="content_audio_img cont_swipe_aud">
-                          <AudioPlayer
-                            // autoPlay
-                            src={
-                              process.env.REACT_APP_CONTENT_MEDIA +
-                              detailContent?.content[0]?.media
-                            }
-                          // onPlay={e => console.log("onPlay")}
-                          // other props here
-                          />
-                        </div>
-                      )}
-                    {detailContent?.content?.length === 1 &&
-                      detailContent?.content[0]?.media_type === "video" && (
-                        <img
-                          src={
-                            process.env.REACT_APP_CONTENT_MEDIA +
-                            detailContent?.content[0]?.thumbnail
-                          }
-                          alt={null}
-                        />
-                      )}
-                    {detailContent?.content?.length === 1 &&
-                      detailContent?.content[0]?.media_type === "image" && (
-                        <img
-                          src={
-                            detailContent?.paid_status === "paid"
-                              ? process.env.REACT_APP_CONTENT_MEDIA +
-                              detailContent?.content[0]?.media
-                              : detailContent?.content[0]?.watermark
-                          }
-                          alt={null}
-                        />
-                      )} */}
                     <Swiper
                       spaceBetween={50}
                       slidesPerView={1}
                       pagination={{ clickable: true }}
-                      // onSwiper={(swiper) => console.log(swiper)}
                     >
                       {props?.params?.type == "content"
                         ? detailContent?.content?.map((item) => {
-                            return (
-                              <SwiperSlide>
-                                {item.media_type === "audio" ? (
-                                  <div>
-                                    <img
-                                      src={audioic}
-                                      alt={`Audio ${item._id}`}
-                                      className="slider-img"
-                                      onClick={toggleAudio}
-                                    />
-                                    <audio
-                                      controls
-                                      src={process.env.REACT_APP_CONTENT_MEDIA + item?.media}
-                                      type="audio/mpeg"
-                                      className="slider-audio"
-                                      ref={audioRef}
-                                    />
-                                  </div>
-                                ) : item.media_type === "video" ? (
-                                  <video
-                                    controls
-                                    className="slider-vddo"
-                                    src={process.env.REACT_APP_CONTENT_MEDIA + item?.media}
-                                  />
-                                ) : item.media_type === "image" ? (
+                          return (
+                            <SwiperSlide>
+                              {item.media_type === "audio" ? (
+                                <div>
                                   <img
+                                    src={audioic}
+                                    alt={`Audio ${item._id}`}
+                                    className="slider-img"
+                                    onClick={toggleAudio}
+                                  />
+                                  <audio
+                                    controls
                                     src={process.env.REACT_APP_CONTENT_MEDIA + item?.media}
-                                    alt={null}
+                                    type="audio/mpeg"
+                                    className="slider-audio"
+                                    ref={audioRef}
                                   />
-                                ) : item.media_type === "pdf" ? (
-                                  <embed
-                                    src={process.env.REACT_APP_CONTENT_MEDIA + item?.media}
-                                    type="application/pdf"
-                                    width="100%"
-                                    height="500"
+                                </div>
+                              ) : item.media_type === "video" ? (
+                                <video
+                                  controls
+                                  className="slider-vddo"
+                                  src={process.env.REACT_APP_CONTENT_MEDIA + item?.media}
+                                />
+                              ) : item.media_type === "image" ? (
+                                <img
+                                  src={process.env.REACT_APP_CONTENT_MEDIA + item?.media}
+                                  alt={null}
+                                />
+                              ) : item.media_type === "pdf" ? (
+                                <embed
+                                  src={process.env.REACT_APP_CONTENT_MEDIA + item?.media}
+                                  type="application/pdf"
+                                  width="100%"
+                                  height="500"
+                                />
+                              ) : null}
+                            </SwiperSlide>
+                          );
+                        })
+                        : props?.params?.type === "task" && Array.isArray(detailContent) ? detailContent?.map((item) => {
+                          return (
+                            <SwiperSlide key={item?._id}>
+                              {item?.content?.[0]?.type === "audio" ? (
+                                <div>
+                                  <img
+                                    src={audioic}
+                                    alt={`Audio ${item?.content?.[0]?._id}`}
+                                    className="slider-img"
+                                    onClick={toggleAudio}
                                   />
-                                ) : null}
-                              </SwiperSlide>
-                            );
-                          })
-                        : detailContent?.task_id?.content?.map((item) => {
-                            return (
-                              <SwiperSlide>
-                                {item.media_type === "audio" ? (
-                                  <div className="content_audio_img cont_swipe_aud">
-                                    <AudioPlayer src={item.media} />
-                                  </div>
-                                ) : item.media_type === "video" ? (
-                                  <img src={item.thumbnail} alt={null} />
-                                ) : item.media_type === "image" ? (
-                                  <img src={item.media} alt={null} />
-                                ) : item.media_type === "pdf" ? (
-                                  <embed
-                                    src={`${item.media}`}
-                                    type="application/pdf"
-                                    width="100%"
-                                    height="500"
+                                  <audio
+                                    controls
+                                    src={item?.content?.[0]?.videothubnail}
+                                    type="audio/mpeg"
+                                    className="slider-audio"
+                                    ref={audioRef}
                                   />
-                                ) : null}
-                              </SwiperSlide>
-                            );
-                          })}
+                                </div>
+                              ) : item?.content?.[0]?.type === "video" ? (
+                                <video
+                                  controls
+                                  className="slider-vddo"
+                                  src={item?.content?.[0]?.videothubnail}
+                                />
+                              ) : item?.content?.[0]?.type === "image" ? (
+                                <img
+                                  src={item?.content?.[0]?.videothubnail}
+                                  alt={null}
+                                />
+                              ) : null}
+                            </SwiperSlide>
+                          );
+                        }) : null}
                     </Swiper>
 
                     <div className="feedTitle_content">
                       <h1 className="feedTitle">
                         {props?.params?.type == "content"
                           ? detailContent?.heading
-                          : detailContent?.task_id?.heading}
+                          : detailContent?.[0]?.content?.[0]?.task_id?.heading}
                       </h1>
                       <p className="feed_descrptn">
                         {props?.params?.type == "content"
                           ? detailContent?.description
-                          : detailContent?.task_id?.task_description}
+                          : detailContent?.[0]?.content?.[0]?.task_id?.task_description}
                       </p>
                     </div>
                   </CardContent>
@@ -371,17 +346,17 @@ const GroupContentDtlChat = (props) => {
                               src={
                                 props?.params?.type === "content"
                                   ? process.env.REACT_APP_AVATAR_IMAGE +
-                                    detailContent?.hopper_details?.[0]
-                                      ?.avatar_details[0]?.avatar
+                                  detailContent?.hopper_details?.[0]
+                                    ?.avatar_details[0]?.avatar
                                   : process.env.REACT_APP_AVATAR_IMAGE +
-                                    detailContent?.avatar_detals[0]?.avatar
+                                  detailContent?.[0]?.content?.[0]?.avatar_details?.avatar
                               }
                               alt=""
                             />
                             <span>
                               {props?.params?.type === "content"
-                                ? detailContent?.hopper_details[0]?.user_name
-                                : detailContent?.hopper_id?.user_name}
+                                ? detailContent?.hopper_details?.[0]?.user_name
+                                : detailContent?.[0]?.content?.[0]?.uploaded_by?.user_name}
                             </span>
                           </div>
                         </div>
@@ -395,7 +370,7 @@ const GroupContentDtlChat = (props) => {
                               <div>
                                 {props?.params?.type === "content"
                                   ? detailContent?.location
-                                  : detailContent?.task_id?.location}
+                                  : detailContent?.[0]?.content?.[0]?.task_id?.location}
                               </div>
                             </span>
                           </div>
@@ -409,11 +384,11 @@ const GroupContentDtlChat = (props) => {
                               <MdOutlineWatchLater />
                               {props?.params?.type === "content"
                                 ? moment(
-                                    detailContent?.published_time_date
-                                  ).format("h:mm A, D MMM YYYY")
+                                  detailContent?.published_time_date
+                                ).format("h:mm A, D MMM YYYY")
                                 : moment(
-                                    detailContent?.task_id?.createdAt
-                                  ).format("h:mm A, D MMM YYYY")}
+                                  detailContent?.[0]?.content?.[0]?.task_id?.createdAt
+                                ).format("h:mm A, D MMM YYYY")}
                             </span>
                           </div>
                         </div>
@@ -443,7 +418,7 @@ const GroupContentDtlChat = (props) => {
                               src={
                                 props?.params?.type === "content"
                                   ? detailContent?.category_id?.[0]?.icon
-                                  : detailContent?.category_details[0]?.icon
+                                  : detailContent?.[0]?.content?.[0]?.category_details?.icon
                               }
                               className="exclusive-img"
                               alt=""
@@ -452,7 +427,7 @@ const GroupContentDtlChat = (props) => {
                               {capitalizeFirstLetter(
                                 props?.params?.type === "content"
                                   ? detailContent?.category_id?.[0]?.name
-                                  : detailContent?.category_details[0]?.name
+                                  : detailContent?.[0]?.content?.[0]?.category_details?.name
                               )}
                             </span>
                           </div>
@@ -481,7 +456,7 @@ const GroupContentDtlChat = (props) => {
                         </div>
                       )}
 
-                      {props?.params?.type === "content" &&
+                      {props?.params?.type === "content" ?
                         detailContent?.ask_price && (
                           <div
                             className="foot"
@@ -500,13 +475,36 @@ const GroupContentDtlChat = (props) => {
                               )}
                             </Button>
                           </div>
+                        ) : (
+                          <div className="button-group d-flex justify-content-between chat-content-price">
+                            <div className="btn-1">
+                              <p>Photo</p>
+                              <button className="btn-price">
+                                £ {detailContent?.[0]?.content?.[0]?.task_id?.hopper_photo_price || 0}
+                              </button>
+                            </div>
+                            <div className="btn-1">
+                              <p>Interview</p>
+                              <button className="btn-price">
+                                £{" "}
+                                {detailContent?.[0]?.content?.[0]?.task_id?.hopper_interview_price ||
+                                  0}
+                              </button>
+                            </div>
+                            <div className="btn-1">
+                              <p>Video</p>
+                              <button className="btn-price">
+                                £{" "}
+                                {detailContent?.[0]?.content?.[0]?.task_id?.hopper_videos_price || 0}
+                              </button>
+                            </div>
+                          </div>
                         )}
                     </div>
                   </CardContent>
                 </Card>
               </div>
             </div>
-            {/* experiment Start */}
             <div className="d-flex gap_20 mt_20 justify-content-start">
               <Chatinternal
                 room_id={props?.params?.room_id}
@@ -526,16 +524,15 @@ const GroupContentDtlChat = (props) => {
                           <div className="tab_in_card_items">
                             <div className="checkWrap">
                               <FormControlLabel
-                                className={`me-0 ${
-                                  !selectedIds.includes(curr._id) &&
+                                className={`me-0 ${!selectedIds.includes(curr._id) &&
                                   "afterCheck"
-                                }`}
+                                  }`}
                                 checked={
                                   selectedIds.includes(curr._id) ||
                                   message?.some(
                                     (item) =>
                                       `${curr?.first_name} ${curr?.last_name}` ==
-                                        item?.addedMsg && item.type == "add"
+                                      item?.addedMsg && item.type == "add"
                                   )
                                 }
                                 onChange={(e) => {
@@ -548,11 +545,11 @@ const GroupContentDtlChat = (props) => {
                                   // handleCheckboxChange(curr._id)
                                 }}
                                 control={<Checkbox defaultChecked />}
-                                // disabled={message?.some(
-                                //   (item) =>
-                                //     `${curr?.first_name} ${curr?.last_name}` ==
-                                //     item?.addedMsg
-                                // )}
+                              // disabled={message?.some(
+                              //   (item) =>
+                              //     `${curr?.first_name} ${curr?.last_name}` ==
+                              //     item?.addedMsg
+                              // )}
                               />
                             </div>
                             <div
@@ -579,7 +576,7 @@ const GroupContentDtlChat = (props) => {
                                 {message?.some(
                                   (item) =>
                                     `${curr?.first_name} ${curr?.last_name}` ===
-                                      item?.addedMsg && item.type == "add"
+                                    item?.addedMsg && item.type == "add"
                                   // ) && (
                                   //   <button
                                   //     // className="remove-btn"

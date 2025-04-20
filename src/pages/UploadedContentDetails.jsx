@@ -373,9 +373,10 @@ const UploadedContentDetails = (props) => {
 
       setChatContentIds((pre) => ({
         ...pre,
-        room_id: resp.data.data[0]?.roomsdetails?.room_id,
+        room_id: resp?.data?.room_id?.room_id,
+        sender_id: User && ( User?._id || User?.id )
       }));
-      setChatContentIds((pre) => ({ ...pre, sender_id: profileData?._id }));
+
       localStorage.setItem("internal", resp?.data?.data?.[0]?.task_id?._id);
       setHopper(resp.data.data[0]?.hopper_id);
       setHopperid(resp.data.data[0]?.hopper_id?._id);
@@ -645,6 +646,7 @@ const UploadedContentDetails = (props) => {
         content_id: param.id,
         sender_id: user._id,
         room_id: chatContentIds ? chatContentIds?.room_id : "",
+        room_type: "task",
       };
       // console.log("Obj ----->", obj)
       const resp = await Post("mediaHouse/internalGroupChatMH", obj);
@@ -665,6 +667,8 @@ const UploadedContentDetails = (props) => {
       // Handle errors
     }
   };
+
+  console.log("chatContentIds", chatContentIds);
 
   const handleChange = async (event) => {
     const file = event.target.files[0];
@@ -723,9 +727,7 @@ const UploadedContentDetails = (props) => {
         localStorage.setItem("contentId", JSON.stringify(param.id));
         localStorage.setItem("type", "task");
         localStorage.setItem(
-          "roomId",
-          JSON.stringify(chatContentIds?.room_id) || ""
-        );
+          "roomId", chatContentIds?.room_id || "");
         localStorage.removeItem("receiverId");
         localStorage.setItem("tabName", JSON.stringify("internal"));
         const newData = resp?.data?.response?.data?.filter((el) => el?.type);
@@ -1316,7 +1318,7 @@ const UploadedContentDetails = (props) => {
                                       <div
                                         className="baat_cheet"
                                         // ref={chatBoxRef}
-                                        ref={chatBoxInternalRef}
+                                        // ref={chatBoxInternalRef}
                                         // chatBoxInternalRef
                                         key={curr?._id}
                                       >
@@ -1356,7 +1358,7 @@ const UploadedContentDetails = (props) => {
                                                     {`${curr?.user_info?.first_name} ${curr?.user_info?.last_name}`}
                                                     <span className="text-secondary time">
                                                       {moment(
-                                                        curr?.createdAt
+                                                        curr?.createdAt || curr?.chatDate
                                                       ).format(
                                                         "hh:mm A, DD MMM YYYY"
                                                       )}
@@ -2349,23 +2351,11 @@ const UploadedContentDetails = (props) => {
                           <Tab eventKey="presshop" title="PressHop Chat">
                             <div className="tab-data active">
                               <Row>
-                                <Col md={9}>
+                                <Col md={12}>
                                   <div className="feed_dtl_msgs presshopChatDetail dp">
                                     <div className="externalText">
                                       <h6 className="txt_light">
-                                        Welcome{" "}
-                                        <span className="txt_bld">
-                                          {fullName}
-                                        </span>
-                                      </h6>
-                                      <h6 className="txt_light">
-                                        Please select the PressHop team member
-                                        you wish to speak to from the
-                                        participants box on the right.{" "}
-                                      </h6>
-                                      <h6 className="txt_light">
-                                        Once selected, please use the text box
-                                        below to start chatting.{" "}
+                                        Welcome{" "}<span className="txt_bld">{fullName}</span>{" to "}<span className="txt_bold">PressHop</span> support
                                       </h6>
                                     </div>
                                     {showChat.presshop ? (
@@ -2377,145 +2367,23 @@ const UploadedContentDetails = (props) => {
                                     )}
                                   </div>
                                 </Col>
-                                <Col md={3}>
+                                {/* <Col md={3}>
                                   <div className="tab_in_card">
-                                    <div className="tab_in_card-heading d-flex justify-content-between align-items-center">
-                                      <h4>Participants</h4>
-                                    </div>
-
                                     <div className="scrollHtPnts presshopChat">
-                                      {adminList &&
-                                        adminList
-                                          .filter((obj1) =>
-                                            admins.some(
-                                              (obj2) =>
-                                                obj1._id == obj2.userId?.id
-                                            )
-                                          )
-                                          .map((curr) => {
-                                            return (
-                                              <div
-                                                className="tab_in_card_items"
-                                                onClick={() => {
-                                                  localStorage.setItem(
-                                                    "receiverId",
-                                                    JSON.stringify(curr._id)
-                                                  ) || "";
-                                                  localStorage.removeItem(
-                                                    "contentId"
-                                                  );
-                                                  localStorage.removeItem(
-                                                    "roomId"
-                                                  );
-                                                  if (
-                                                    admins?.some(
-                                                      (el) =>
-                                                        el?.userId?.id ===
-                                                        curr._id
-                                                    )
-                                                  ) {
-                                                    setSenderId(curr._id);
-                                                    setShowChat({
-                                                      content: false,
-                                                      task: false,
-                                                      presshop: true,
-                                                    });
-                                                  }
-                                                }}
-                                              >
-                                                <div className="checkWrap">
-                                                  <FormControlLabel
-                                                    className="afterCheck"
-                                                    control={<Checkbox />}
-                                                    checked={curr.checked}
-                                                    onChange={() =>
-                                                      handleChecked(curr)
-                                                    }
-                                                  />
-                                                </div>
-                                                <div className="img">
-                                                  <img
-                                                    src={
-                                                      process.env
-                                                        .REACT_APP_ADMIN_IMAGE +
-                                                      curr?.profile_image
-                                                    }
-                                                    alt="user"
-                                                  />
-                                                  <span
-                                                    className={
-                                                      admins?.some(
-                                                        (el) =>
-                                                          el?.userId?.id ===
-                                                          curr._id
-                                                      )
-                                                        ? "activeUsr"
-                                                        : "InactiveUsr"
-                                                    }
-                                                  >
-                                                    {curr?.name}
-                                                  </span>
-                                                </div>
-                                              </div>
-                                            );
-                                          })}
-                                      {admins.length === 0 &&
-                                        adminList
-                                          .filter(
-                                            (obj1) => obj1.role === "admin"
-                                          )
-                                          .map((curr) => {
-                                            return (
-                                              <div
-                                                className="tab_in_card_items"
-                                                onClick={() => {
-                                                  localStorage.setItem(
-                                                    "receiverId",
-                                                    JSON.stringify(curr._id)
-                                                  ) || "";
-                                                  localStorage.removeItem(
-                                                    "contentId"
-                                                  );
-                                                  localStorage.removeItem(
-                                                    "roomId"
-                                                  );
-                                                  setSenderId(curr._id);
-                                                  setShowChat({
-                                                    content: false,
-                                                    task: false,
-                                                    presshop: true,
-                                                  });
-                                                }}
-                                              >
-                                                <div className="checkWrap">
-                                                  <FormControlLabel
-                                                    className="afterCheck"
-                                                    control={<Checkbox />}
-                                                    checked={curr.checked}
-                                                    onChange={() =>
-                                                      handleChecked(curr)
-                                                    }
-                                                  />
-                                                </div>
-                                                <div className="img">
-                                                  <img
-                                                    src={
-                                                      process.env
-                                                        .REACT_APP_ADMIN_IMAGE +
-                                                      curr?.profile_image
-                                                    }
-                                                    alt="user"
-                                                  />
-                                                  <span className={"activeUsr"}>
-                                                    {curr?.name}
-                                                  </span>
-                                                </div>
-                                              </div>
-                                            );
-                                          })}
+                                      <div className="tab_in_card_items">
+                                        <div className="img">
+                                          <img
+                                            src={presshopchatic}
+                                            alt="emily"
+                                          />
+                                          <span className="activeUsr">
+                                            Emily
+                                          </span>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
-                                </Col>
+                                </Col> */}
                               </Row>
                             </div>
                           </Tab>
