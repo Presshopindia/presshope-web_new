@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Badge } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { Link, useNavigate,useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import loginimg from "../assets/images/login-img.png";
 import { Post } from "../services/user.services";
@@ -19,11 +19,11 @@ import LoginHeader from "../component/LoginHeader";
 const Login = () => {
   const [deviceId, setDeviceId] = useState("");
   const navigate = useNavigate();
-  const location=useLocation();
-  const queryParams = new URLSearchParams(location.search); 
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
   const email = queryParams.get("email") || "";
+  const fullName = queryParams.get("fullName") || "";
 
-  console.log(queryParams, "queryParams")
   const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState({
     email,
@@ -59,9 +59,6 @@ const Login = () => {
       };
 
       const resp = await Post("auth/loginMediaHouse", obj);
-
-
-      console.log("response bakend ----->", resp)
       // return
       if (resp) {
         setLoading(false);
@@ -82,7 +79,6 @@ const Login = () => {
           .then((userCredential) => {
             // Signed in successfully
             const user = userCredential.user;
-            // console.log(user, "<------------userCredential.user");
           })
 
           .catch((error) => {
@@ -90,18 +86,17 @@ const Login = () => {
           });
       }
     } catch (error) {
-      console.log("error?.response?.data?.errors?.msg",error?.response)
-      if(error?.response?.data?.msg){
+      if (error?.response?.data?.msg) {
         toast.error(error?.response?.data?.msg);
-      }else{
-      toast.error(error?.response?.data?.errors?.msg.split("_").join(" "));
+      } else {
+        toast.error(error?.response?.data?.errors?.msg.split("_").join(" "));
       }
       setLoading(false);
     }
   };
 
   // console.log(localStorage.getItem("DeviceToken"), "token")
-  
+
   const AddFirebaseMessaging = async () => {
     const formdata = new FormData();
     formdata.append("device_token", localStorage.getItem("DeviceToken"));
@@ -130,103 +125,111 @@ const Login = () => {
       {/* <HeaderN scrollToDiv={scrollToDiv}/> */}
       <LoginHeader />
       {loading && <Loader />}
-      <div className="login-page">
+      <div className="page-wrap login-page p-0">
         <Container fluid className="pdng">
-          <div className="log-wrap">
-            <Row className="row-w-m m-0 position-relative">
-              <Col lg={6} md={6} sm={12} xs={12} className="p-0 lft_colm">
-                <img src={loginimg} alt="" className="resp_bg" />
-                <div className="left-side bg-white cstm_ht">
-                  <div className="pg_heading">
-                    <h1>Welcome</h1>
-                  </div>
-                  <div className="log_txt">
-                    <Typography variant="body2">
-                      Congratulations, your onboarding process is now fully
-                      complete. You are now part of our growing publications
-                      community around the UK, and soon the rest of the World.
-                    </Typography>
-                    <Typography variant="body2">
-                      Please enter your email and password below to gain
-                      access onto our marketplace platform. If you have
-                      forgotten your password, please{" "}
-                      <Link to="/User-Forget-Password" className="link">
-                        click here
-                      </Link>{" "}
-                      and we will help create a new password for you. This
-                      happens to most of us, and is absolutely fine.
-                    </Typography>
-                    <Typography variant="body2" className="mb-0">
-                      If you face any trouble logging in, please{" "}
-                      <Link to="/contact-us" className="link">
-                        contact
-                      </Link>{" "}
-                      our helpful team members who will be happy to assist. See
-                      you on the other side. Cheers!
-                    </Typography>
-                  </div>
+          <div className="log-wrap onboar_success">
+            <Row className="row-w-m m-0">
+              <Col lg="6" className="bg-white p-0">
+                <div className="login_stepsWrap left-pdng">
+                  <div className='onboardMain'>
 
-                  <Form>
-                    <div className="inputs_wrap d-flex justify-content-between log_inputs">
-                      <Form.Group
-                        className="position-relative"
-                        controlId="formBasicEmail"
-                      >
-                        <img className="frnt_ic" src={user} alt="user icon" />
+                    <div className="onboardIntro sign_section border-bottom-0">
+                      <h1 className="mb-0 position-relative">Welcome{fullName ? `, ${fullName}` : null}
+                        {
+                          fullName ? (<Badge className='admin_badge' text="dark">
+                            Admin
+                          </Badge>
+                        ) : null
+                      }
+                      </h1>
 
-                        <Form.Control
-                          type="email"
-                          required
-                          autoComplete="off"
-                          className="rnd grey"
-                          placeholder="Enter registered email id *"
-                          value={credentials.email}
-                          name="email"
-                          onChange={Credentials}
-                        />
-                      </Form.Group>
-                      <Form.Group
-                        className="position-relative"
-                        controlId="formBasicPassword"
-                      >
-                        <img src={lock} className="frnt_ic" alt="" />
-                        <Form.Control
-                          type={!visibility ? "password" : "text"}
-                          required
-                          className="rnd grey"
-                          autoComplete="off"
-                          placeholder="Enter password *"
-                          value={credentials.password}
-                          name="password"
-                          onChange={Credentials}
-                        />
-                        {!visibility && (
-                          <div
-                            color="#000"
-                            className="pass_ic_wrap"
-                            onClick={() => {
-                              setVisibility(true);
-                            }}
+                      <div className="onboardStep b_border top_txt">
+                        <p>Congratulations, your onboarding process is now fully
+                          complete. You are now part of our growing publications
+                          community around the UK, and soon the rest of the World.
+                        </p>
+                        <p>
+                          Please enter your email and password below to gain
+                          access onto our marketplace platform. If you have
+                          forgotten your password, please{" "}
+                          <Link to="/User-Forget-Password" className="link">
+                            click here
+                          </Link>{" "}
+                          and we will help create a new password for you. This
+                          happens to most of us, and is absolutely fine.
+                        </p>
+                        <p>
+                          If you face any trouble logging in, please{" "}
+                          <Link to="/contact-us" className="link">
+                            contact
+                          </Link>{" "}
+                          our helpful team members who will be happy to assist. See
+                          you on the other side. Cheers!
+                        </p>
+                      </div>
+                    </div>
+                    <Col lg="12">
+                      <Form>
+                        <div className="inputs_wrap d-flex justify-content-between log_inputs">
+                          <Form.Group
+                            className="position-relative"
+                            controlId="formBasicEmail"
                           >
-                            <BsEyeSlash />
-                          </div>
-                        )}
-                        {visibility && (
-                          <div
-                            color="#000"
-                            className="pass_ic_wrap"
-                            onClick={() => {
-                              setVisibility(false);
-                            }}
+                            <img className="frnt_ic" src={user} alt="user icon" />
+
+                            <Form.Control
+                              type="email"
+                              required
+                              autoComplete="off"
+                              className="rnd grey"
+                              placeholder="Enter registered email id *"
+                              value={credentials.email}
+                              name="email"
+                              onChange={Credentials}
+                            />
+                          </Form.Group>
+                          <Form.Group
+                            className="position-relative"
+                            controlId="formBasicPassword"
                           >
-                            <BsEye />
-                          </div>
-                        )}
-                      </Form.Group>
+                            <img src={lock} className="frnt_ic" alt="" />
+                            <Form.Control
+                              type={!visibility ? "password" : "text"}
+                              required
+                              className="rnd grey"
+                              autoComplete="off"
+                              placeholder="Enter password *"
+                              value={credentials.password}
+                              name="password"
+                              onChange={Credentials}
+                            />
+                            {!visibility && (
+                              <div
+                                color="#000"
+                                className="pass_ic_wrap"
+                                onClick={() => {
+                                  setVisibility(true);
+                                }}
+                              >
+                                <BsEyeSlash />
+                              </div>
+                            )}
+                            {visibility && (
+                              <div
+                                color="#000"
+                                className="pass_ic_wrap"
+                                onClick={() => {
+                                  setVisibility(false);
+                                }}
+                              >
+                                <BsEye />
+                              </div>
+                            )}
+                          </Form.Group>
 
-                      {/* <Form.Control type="password" required className="rnd grey" placeholder="Password" value={credentials.password} name='password' onChange={Credentials} /> */}
+                          {/* <Form.Control type="password" required className="rnd grey" placeholder="Password" value={credentials.password} name='password' onChange={Credentials} /> */}
 
-                      {/* <Form>
+                          {/* <Form>
                                                     <div className="inputs_wrap d-flex justify-content-between log_inputs">
                                                         <Form.Group className="position-relative" controlId="formBasicEmail">
                                                             <img className="frnt_ic" src={user} alt="user icon" />
@@ -237,41 +240,39 @@ const Login = () => {
                                                             <Form.Control type="password" className="rnd grey" placeholder="Password" />
                                                             <img className='view_pass' src={eye} alt="" />
                                             </Form.Group> */}
-                    </div>
-                    <Form.Group
-                      className="mb-4 mt-1 d-flex justify-content-end"
-                      controlId="formBasicCheckbox"
-                    >
-                      <a className="frgt-ps link">
-                        <Link to={"/User-Forget-Password"}>
-                          {" "}
-                          Forgot Password?
-                        </Link>
-                      </a>
-                    </Form.Group>
-                    <Button
-                      variant=""
-                      className="theme-btn custom-ab mb-4 w-100 sm_btn"
-                      onClick={async (e) => {
-                        await Submit(e);
-                        await AddFirebaseMessaging();
-                      }}
-                    >
-                      <span>Log In</span>
-                    </Button>
-                    <Form.Group
-                      className="mb-4 mt-0 d-flex justify-content-end sign_link_wrp"
-                      controlId="formBasicCheckbox"
-                    >
-                      <a className="frgt-ps link">
-                        <Link to={"/onboard"}> New User?</Link>
-                      </a>
-                    </Form.Group>
-                  </Form>
+                        </div>
+                        <Form.Group
+                          className="mb-4 mt-1 d-flex justify-content-end"
+                          controlId="formBasicCheckbox"
+                        >
+                          <Link to={"/User-Forget-Password"} className="link">
+                            {" "}
+                            Forgot Password?
+                          </Link>
+                        </Form.Group>
+                        <Button
+                          variant=""
+                          className="theme-btn custom-ab mb-4 w-100 sm_btn"
+                          onClick={async (e) => {
+                            await Submit(e);
+                            await AddFirebaseMessaging();
+                          }}
+                        >
+                          <span>Log In</span>
+                        </Button>
+                        <Form.Group
+                          className="mb-4 mt-0 d-flex justify-content-end sign_link_wrp"
+                          controlId="formBasicCheckbox"
+                        >
+                          <Link to={"/onboard"} className="link"> New User?</Link>
+                        </Form.Group>
+                      </Form>
+                    </Col>
+                  </div>
                 </div>
               </Col>
-              <Col lg={6} md={6} sm={12} xs={12} className="pos_stick rt_col">
-                <div className="right-side position-relative">
+              <Col lg="6" className="">
+                <div className="left-side">
                   <div className="tri"></div>
                   <div className="circle"></div>
                   <div className="big_circle"></div>
@@ -288,8 +289,8 @@ const Login = () => {
               </Col>
             </Row>
           </div>
-        </Container>
-      </div>
+        </Container >
+      </div >
       <Footerlandingpage />
     </>
   );

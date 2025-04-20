@@ -24,16 +24,14 @@ function ContentFeedCard(props) {
   const navigate = useNavigate();
   const { profileData, cartCount, setCartCount } = useDarkMode();
 
-  console.log("allProps", props);
-
   const Favourite = async () => {
     try {
       let obj = {};
 
       if (props?.type == "task") {
         obj = {
-          type: "uploaded_content",
-          uploaded_content: props?.taskContentId || props?.content_id,
+          favourite_status: props.bool_fav === "true" ? "true" : "false",
+          uploaded_content: props?.taskContentId
         };
       } else {
         obj = {
@@ -42,7 +40,8 @@ function ContentFeedCard(props) {
         };
       }
 
-      const resp = await Patch(`mediaHouse/add/to/favourites`, obj);
+      await Patch(`mediaHouse/add/to/favourites`, obj);
+
     } catch (error) {
       console.log("addfav", error);
     }
@@ -63,7 +62,6 @@ function ContentFeedCard(props) {
     try {
       const res = await Get(`mediaHouse/getBasketDataCount`);
 
-      console.log("count", res?.data?.data);
       setCartCount(res?.data?.data || 0);
     } catch (error) {
       console.log("basketcountError", error);
@@ -106,14 +104,10 @@ function ContentFeedCard(props) {
   // };
 
   const AddToBasket = async () => {
-    console.log("props ----->", props);
     try {
       let obj = {};
 
       if (props?.type == "task") {
-        console.log("props?.taskContentId -->", props?.task_content_id);
-        console.log("props?.taskContentId -454->", props?.content_id);
-
         obj = {
           type: "uploaded_content",
           uploaded_content: props?.task_content_id,

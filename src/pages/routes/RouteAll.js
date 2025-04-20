@@ -92,209 +92,214 @@ import BroadcastedTasksSoon from "../BroadcastedTasksSoon";
 import UploadDocPost from "../UploadDocPost";
 import TandcPre from "../TandcPre";
 import PurchasedTaskContentDetail from "../PurchasedTaskContentDetail";
+import UserOnboadingRequest from "../UserOnboardingRequest";
 function RouteAll() {
   const token = localStorage.getItem("token");
 
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="*" element={<Navigate to="/login" />} />
-          <Route exact path="/login" element={token ? <Navigate to="/dashboard/exclusive" /> : <Login />} />
+    <BrowserRouter>
+      <Routes>
+        <Route path="*" element={<Navigate to="/login" />} />
+        <Route exact path="/login" element={token ? <Navigate to="/dashboard/exclusive" /> : <Login />} />
 
-          <Route path="/landing-page" element={<LandingPage />} />
-          <Route path="/onboard" element={<Onboard />} />
-          <Route path="/onboard-user-n" element={<OnboardUserN />} />
-          <Route path="/Signup" element={<Signup />} />
-          <Route path="/upload-docs" element={<Uploaddocs />} />
-          <Route path="/upload-doc-post" element={<UploadDocPost />} />
-          <Route path="/add-payment-details" element={<Addpaymentdetails />} />
-          <Route path="/terms-and-conditions" element={<Tandc />} />
-          <Route path="/pre-privacy-policy" element={<PrePrivacyPolicy />} />
-          <Route path="/test-google-pay" element={<GooglePay />} />
+        <Route path="/landing-page" element={<LandingPage />} />
+        <Route path="/onboard" element={<Onboard />} />
+        <Route path="/onboard-user-n" element={<OnboardUserN />} />
+        <Route path="/Signup" element={<Signup />} />
+        <Route path="/upload-docs" element={<Uploaddocs />} />
+        <Route path="/upload-doc-post" element={<UploadDocPost />} />
+        <Route path="/add-payment-details" element={<Addpaymentdetails />} />
+        <Route path="/terms-and-conditions" element={<Tandc />} />
+        <Route path="/pre-privacy-policy" element={<PrePrivacyPolicy />} />
+        <Route path="/test-google-pay" element={<GooglePay />} />
 
-          <Route
-            path="/User-Forget-Password"
-            element={<UserForgetPassword />}
-          />
-          <Route path="/SignupSuccess" element={<SignupSuccess />} />
-          <Route path="/User-Reset-Password" element={<ResetPassword />} />
-          <Route
-            exact
-            path="/"
-            element={
-              !token ? (
-                <Navigate to="/landing-page" />
-              ) : (
-                <Navigate to="/dashboard/exclusive" />
-              )
-            }
-          />
-          <Route path="/contact-us" element={<ContactusPre />} />
-          <Route path="/Success" element={<Success />} />
-          {/* <Route path="/Success" element={<PrivateRoute Component={Success} />} /> */}
+        <Route
+          path="/User-Forget-Password"
+          element={<UserForgetPassword />}
+        />
+        <Route path="/SignupSuccess" element={<SignupSuccess />} />
+        <Route path="/User-Reset-Password" element={<ResetPassword />} />
+        <Route
+          exact
+          path="/"
+          element={
+            !token ? (
+              <Navigate to="/landing-page" />
+            ) : (
+              <Navigate to="/dashboard/exclusive" />
+            )
+          }
+        />
+        <Route path="/contact-us" element={<ContactusPre />} />
+        <Route path="/Success" element={<Success />} />
+        {/* <Route path="/Success" element={<PrivateRoute Component={Success} />} /> */}
 
-          <Route exact path="/dashboard/:type" element={<PrivateRoute Component={Dashboard} />} />
-          <Route path="/all-contents" element={<PrivateRoute Component={AllContents} />} />
-          <Route path="/broadcasted-taks" element={<PrivateRoute Component={BroadcastedTasks} />} />
-          <Route path="/task" element={<PrivateRoute Component={Task} />} />
-          <Route path="/broadcastList" element={<PrivateRoute Component={BroadcastedList} />} />
-          <Route path="/" element={<PrivateRoute Component={Task} />} />
-          {/* <Route path="/broadcasted-taks" element={<PrivateRoute Component={BroadcastedTasksSoon} />} /> */}
-          {/* <Route path="/broadcasted-taks-soon" element={<PrivateRoute Component={BroadcastedTasksSoon} />} /> */}
-          <Route path="/content/:tab1/:tab2/:tab3" element={<PrivateRoute Component={Content} />} />
-          {/* <Route path="/feed" element={<PrivateRoute Component={Feed} />} /> */}
-          {/* <Route path="/Forgotpassword" element={<PrivateRoute Component={<Forgotpassword />} /> */}
-          {/* <Route path="/Resetpassword" element={<PrivateRoute Component={<Resetpassword />} /> */}
+        <Route exact path="/dashboard/:type" element={<PrivateRoute Component={Dashboard} />} />
+        <Route path="/all-contents" element={<PrivateRoute Component={AllContents} />} />
+        <Route path="/broadcasted-taks" element={<PrivateRoute Component={BroadcastedTasks} />} />
+        <Route path="/task" element={<PrivateRoute Component={Task} />} />
+        <Route path="/broadcastList" element={<PrivateRoute Component={BroadcastedList} />} />
+        <Route path="/" element={<PrivateRoute Component={Task} />} />
+        {/* <Route path="/broadcasted-taks" element={<PrivateRoute Component={BroadcastedTasksSoon} />} /> */}
+        {/* <Route path="/broadcasted-taks-soon" element={<PrivateRoute Component={BroadcastedTasksSoon} />} /> */}
+        <Route path="/content/:tab1/:tab2/:tab3" element={<PrivateRoute Component={Content} />} />
+        {/* <Route path="/feed" element={<PrivateRoute Component={Feed} />} /> */}
+        {/* <Route path="/Forgotpassword" element={<PrivateRoute Component={<Forgotpassword />} /> */}
+        {/* <Route path="/Resetpassword" element={<PrivateRoute Component={<Resetpassword />} /> */}
 
-          <Route
-            path="/Feeddetail/:type/:id"
-            element={<PrivateRoute Component={Feeddetail} />}
-          />
-          <Route
-            path="/FeeddetailCopy/:type/:id"
-            element={<PrivateRoute Component={FeeddetailCopy} />}
-          />
+        <Route
+          path="/Feeddetail/:type/:id"
+          element={<PrivateRoute Component={Feeddetail} />}
+        />
+        <Route
+          path="/FeeddetailCopy/:type/:id"
+          element={<PrivateRoute Component={FeeddetailCopy} />}
+        />
 
-          <Route
-            path="/transactionDetail/:id"
-            element={<PrivateRoute Component={TransactionDetail} />}
-          />
-          {/* <Route path="/Other" element={<PrivateRoute Component={Other} />} /> */}
-          <Route
-            path="/reports/:type"
-            element={<PrivateRoute Component={Reports} />}
-          />
-          {/* <Route path="/Myprofile" element={<PrivateRoute Component={Myprofile} />} /> */}
-          <Route
-            path="/purchased-content/:type"
-            element={<PrivateRoute Component={Purchasedcontent} />}
-          />
-          {/* <Route path="/purchased-content-shared" element={<PrivateRoute Component={PurchasedcontentShared} />} /> */}
-          <Route
-            path="/Favourited-Content"
-            element={<PrivateRoute Component={FavouritedContent} />}
-          />
-          <Route
-            path="/Content-Under-Offer"
-            element={<PrivateRoute Component={ContentUnderOffer} />}
-          />
-          <Route
-            path="/Uploaded-Content/:type"
-            element={<PrivateRoute Component={UploadedContent} />}
-          />
-          <Route
-            path="/hopper-task-content/:task_id"
-            element={<PrivateRoute Component={HopperUploadedContent} />}
-          />
-          <Route
-            path="/Sourced-Content"
-            element={<PrivateRoute Component={SourcedContent} />}
-          />
-          {/* <Route
-            path="/Content-Detail-Chat"
-            element={<PrivateRoute Component={ContentDetailChat} />}
-          /> */}
+        <Route
+          path="/transactionDetail/:id"
+          element={<PrivateRoute Component={TransactionDetail} />}
+        />
 
-          {/* <Route path="/Success" element={<PrivateRoute Component={PostTandc} />} /> */}
+        <Route
+          path="/user-onboard-request/:id"
+          element={<UserOnboadingRequest />}
+        />
 
-          {/* <Route
-            path="/published-content"
-            element={<PrivateRoute Component={PublishedContent} />}
-          /> */}
-          <Route
-            path="/published-content"
-            element={<PrivateRoute Component={NewPublishedContent} />}
-          />
-          <Route
-            path="/post-login-tandc"
-            element={<PrivateRoute Component={PostTandc} />}
-          />
-          <Route
-            path="/pre-login-tandc"
-            element={<TandcPre />}
-          />
-          <Route
-            path="/my-profile"
-            element={<PrivateRoute Component={Myprofilemdl} />}
-          />
-          <Route
-            path="/privacy-policy"
-            element={
-              <PrivateRoute
-                Component={PostPrivacyPolicy}
+        {/* <Route path="/Other" element={<PrivateRoute Component={Other} />} /> */}
+        <Route
+          path="/reports/:type"
+          element={<PrivateRoute Component={Reports} />}
+        />
+        {/* <Route path="/Myprofile" element={<PrivateRoute Component={Myprofile} />} /> */}
+        <Route
+          path="/purchased-content/:type"
+          element={<PrivateRoute Component={Purchasedcontent} />}
+        />
+        {/* <Route path="/purchased-content-shared" element={<PrivateRoute Component={PurchasedcontentShared} />} /> */}
+        <Route
+          path="/Favourited-Content"
+          element={<PrivateRoute Component={FavouritedContent} />}
+        />
+        <Route
+          path="/Content-Under-Offer"
+          element={<PrivateRoute Component={ContentUnderOffer} />}
+        />
+        <Route
+          path="/Uploaded-Content/:type"
+          element={<PrivateRoute Component={UploadedContent} />}
+        />
+        <Route
+          path="/hopper-task-content/:task_id"
+          element={<PrivateRoute Component={HopperUploadedContent} />}
+        />
+        <Route
+          path="/Sourced-Content"
+          element={<PrivateRoute Component={SourcedContent} />}
+        />
+        {/* <Route
+        path="/Content-Detail-Chat"
+        element={<PrivateRoute Component={ContentDetailChat} />}
+      /> */}
 
-              />
-            }
-          />
+        {/* <Route path="/Success" element={<PrivateRoute Component={PostTandc} />} /> */}
 
-          <Route path="/chat" element={<PrivateRoute Component={Chat} />} />
-          <Route
-            path="/contact-us-post"
-            element={<PrivateRoute Component={ContactusPost} />}
-          />
-          <Route
-            path="/content-details/:id"
-            element={<PrivateRoute Component={UploadedContentDetails} />}
-          />
-          <Route path="/task-tables/:type" element={<Tasktables />} />
-          <Route path="/content-tables/:type" element={<Contenttables />} />
-          <Route path="/manage-users" element={<ManageUsers />} />
+        {/* <Route
+        path="/published-content"
+        element={<PrivateRoute Component={PublishedContent} />}
+      /> */}
+        <Route
+          path="/published-content"
+          element={<PrivateRoute Component={NewPublishedContent} />}
+        />
+        <Route
+          path="/post-login-tandc"
+          element={<PrivateRoute Component={PostTandc} />}
+        />
+        <Route
+          path="/pre-login-tandc"
+          element={<TandcPre />}
+        />
+        <Route
+          path="/my-profile"
+          element={<PrivateRoute Component={Myprofilemdl} />}
+        />
+        <Route
+          path="/privacy-policy"
+          element={
+            <PrivateRoute
+              Component={PostPrivacyPolicy}
 
-          <Route path="/rating-and-review" element={<RatingReview />} />
+            />
+          }
+        />
 
-          <Route path="/accounts" element={<Accounts />} />
-          <Route path="/all-tutorials" element={<AllTutorials />} />
-          {/* new routes */}
-          <Route path="/signup-user-n/:name/:number/:vat/:email/:first_name/:last_name/:user_id" element={<SignupUserN />} />
-          {/* <Route path="/login-user-n" element={<LoginUserN />} /> */}
-          <Route path="/auto-invoice/:id" element={<AutoInvoice />} />
-          <Route path="/task-invoice/:id" element={<TaskInvoice />} />
-          <Route path="/basket" element={<Basket />} />
-          <Route path="/invoice/:id" element={<Invoice />} />
-          <Route path="/faq-post" element={<FAQPostLogin />} />
-          <Route
-            path="/manage-payment-login"
-            element={<ManagePaymentslogin />}
-          />
-          <Route
-            path="/manage-payment-method"
-            element={<ManagePaymentMethod />}
-          />
-          <Route path="/docs-stripe" element={<CheckoutForm />} />
-          {/* Tables routes */}
-          <Route
-            path="/reports-tables-content/:type"
-            element={<ReportsTablesContent />}
-          />
-          <Route path="/dashboard-tables/:type" element={<DashboardTables />} />
-          <Route
-            path="/reports-tables-task/:type"
-            element={<ReportsTablesTask />}
-          />
-          <Route path="/accounts-tables/:type" element={<AccountsTables />} />
-          <Route path="/broadcasted-taks/:id" element={<PrivateRoute Component={BroadcastedTasks} />} />
+        <Route path="/chat" element={<PrivateRoute Component={Chat} />} />
+        <Route
+          path="/contact-us-post"
+          element={<PrivateRoute Component={ContactusPost} />}
+        />
+        <Route
+          path="/content-details/:id"
+          element={<PrivateRoute Component={UploadedContentDetails} />}
+        />
+        <Route path="/task-tables/:type" element={<Tasktables />} />
+        <Route path="/content-tables/:type" element={<Contenttables />} />
+        <Route path="/manage-users" element={<ManageUsers />} />
 
-          <Route path="/related-content/:content_id" element={<RelatedContent />} />
-          <Route path="/related-content-task/:tag_id/:hopper_id/:category_id" element={<RelatedContentTask />} />
-          <Route path="/more-content/:hopper_id" element={<MoreContentFromUser />} />
-          <Route path="/more-content-task/:hopper_id/:task_id" element={<MoreContentFromUserForTask />} />
-          <Route
-            path="/content-under-offer-detail/:id"
-            element={<ContentunderofferdetailNew />}
-          />
-          <Route path="/content-search/:type" element={<ContentSearch />} />
-          <Route path="/hopper-content/:hopper_id" element={<HopperContent />} />
-          <Route path="/sourced-content-detail/:id" element={<SourcedContentDetail />} />
-          <Route path="/purchased-content-detail/:id" element={<PurchasedContentDetail />} />
-          <Route path="/purchased-task-content-detail/:id" element={<PurchasedTaskContentDetail />} />
-          <Route path="/archieve-dates" element={<ArchieveDates />} />
-          <Route path="/archieve-items/:startDate/:endDate" element={<ArchieveItems />} />
+        <Route path="/rating-and-review" element={<RatingReview />} />
 
-          {/* New routes End */}
-        </Routes>
-      </BrowserRouter>
-    </>
+        <Route path="/accounts" element={<Accounts />} />
+        <Route path="/all-tutorials" element={<AllTutorials />} />
+        {/* new routes */}
+        <Route path="/signup-user-n/:name/:number/:vat/:email/:first_name/:last_name/:user_id" element={<SignupUserN />} />
+        {/* <Route path="/login-user-n" element={<LoginUserN />} /> */}
+        <Route path="/auto-invoice/:id" element={<AutoInvoice />} />
+        <Route path="/task-invoice/:id" element={<TaskInvoice />} />
+        <Route path="/basket" element={<Basket />} />
+        <Route path="/invoice/:id" element={<Invoice />} />
+        <Route path="/faq-post" element={<FAQPostLogin />} />
+        <Route
+          path="/manage-payment-login"
+          element={<ManagePaymentslogin />}
+        />
+        <Route
+          path="/manage-payment-method"
+          element={<ManagePaymentMethod />}
+        />
+        <Route path="/docs-stripe" element={<CheckoutForm />} />
+        {/* Tables routes */}
+        <Route
+          path="/reports-tables-content/:type"
+          element={<ReportsTablesContent />}
+        />
+        <Route path="/dashboard-tables/:type" element={<DashboardTables />} />
+        <Route
+          path="/reports-tables-task/:type"
+          element={<ReportsTablesTask />}
+        />
+        <Route path="/accounts-tables/:type" element={<AccountsTables />} />
+        <Route path="/broadcasted-taks/:id" element={<PrivateRoute Component={BroadcastedTasks} />} />
+
+        <Route path="/related-content/:content_id" element={<RelatedContent />} />
+        <Route path="/related-content-task/:tag_id/:hopper_id/:category_id" element={<RelatedContentTask />} />
+        <Route path="/more-content/:hopper_id" element={<MoreContentFromUser />} />
+        <Route path="/more-content-task/:hopper_id/:task_id" element={<MoreContentFromUserForTask />} />
+        <Route
+          path="/content-under-offer-detail/:id"
+          element={<ContentunderofferdetailNew />}
+        />
+        <Route path="/content-search/:type" element={<ContentSearch />} />
+        <Route path="/hopper-content/:hopper_id" element={<HopperContent />} />
+        <Route path="/sourced-content-detail/:id" element={<SourcedContentDetail />} />
+        <Route path="/purchased-content-detail/:id" element={<PurchasedContentDetail />} />
+        <Route path="/purchased-task-content-detail/:id" element={<PurchasedTaskContentDetail />} />
+        <Route path="/archieve-dates" element={<ArchieveDates />} />
+        <Route path="/archieve-items/:startDate/:endDate" element={<ArchieveItems />} />
+
+        {/* New routes End */}
+      </Routes>
+    </BrowserRouter>
   );
 }
 

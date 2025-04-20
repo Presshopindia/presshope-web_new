@@ -31,7 +31,7 @@ import "swiper/css";
 
 import { Pagination } from "swiper";
 import { formatAmountInMillion } from "../component/commonFunction";
-import ViewContent from "../component/ViewContent";
+import ViewUploadedContent from "../component/ViewUploadedContent";
 
 const PurchasedTaskContentDetail = () => {
   const [moreContent, setMoreContent] = useState([]);
@@ -51,7 +51,7 @@ const PurchasedTaskContentDetail = () => {
       const res = await Get(`mediahouse/getPurchasedTaskContentDetail?id=${id}`);
       if (res) {
         setTransactionDetails(res?.data?.resp);
-        setShowContent(res?.data?.resp?.content_id?.content?.[0]);
+        setShowContent(res?.data?.resp?.purchased_content?.[0]);
 
         const resp1 = await Post(`mediaHouse/MoreContentforTask`, {
           hopper_id: res?.data?.resp?.hopper_details?._id,
@@ -72,6 +72,7 @@ const PurchasedTaskContentDetail = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     getTransactionDetails();
   }, []);
 
@@ -217,7 +218,7 @@ const PurchasedTaskContentDetail = () => {
                                 <SlMagnifierAdd />
                               </div>
                             </div>
-                            <ViewContent
+                            <ViewUploadedContent
                               openContent={openContent}
                               setOpenContent={setOpenContent}
                               showContent={showContent}
@@ -342,7 +343,7 @@ const PurchasedTaskContentDetail = () => {
                               </div>
                             </div>
 
-                            <div className="sub-content">
+                            {/* <div className="sub-content">
                               <div className="item d-flex justify-content-between align-items-center">
                                 <span className="fnt-bold">Location</span>
                                 <div className="item-in-right loc">
@@ -352,8 +353,9 @@ const PurchasedTaskContentDetail = () => {
                                   </span>
                                 </div>
                               </div>
-                            </div>
-                            <div className="sub-content">
+                            </div> */}
+
+                            {/* <div className="sub-content">
                               <div className="item d-flex justify-content-between align-items-center">
                                 <span className="fnt-bold">TimeStamp</span>
                                 <div className="item-in-right loc">
@@ -365,7 +367,36 @@ const PurchasedTaskContentDetail = () => {
                                   </span>
                                 </div>
                               </div>
+                            </div> */}
+
+                            <div className="sub-content">
+                              <div className="item d-flex justify-content-between align-items-center">
+                                <span className="fnt-bold">Location</span>
+                                <div className="item-in-right loc">
+                                  <span>
+                                    <SlLocationPin />{" "}
+                                    <div>
+                                      {transactionDetails?.task_details?.location}
+                                    </div>
+                                  </span>
+                                </div>
+                              </div>
                             </div>
+                            <div className="sub-content">
+                              <div className="item d-flex justify-content-between align-items-center">
+                                <span className="fnt-bold">TimeStamp</span>
+                                <div className="item-in-right loc">
+                                  <span>
+                                    <MdOutlineWatchLater />
+                                    {moment(
+                                      transactionDetails?.createdAt
+                                    ).format(`hh:mm A, DD MMM YYYY`)}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+
                             <div className="sub-content">
                               <div className="item d-flex justify-content-between align-items-center">
                                 <span className="fnt-bold">Category</span>
@@ -469,12 +500,7 @@ const PurchasedTaskContentDetail = () => {
                             <h6>Amount</h6>
                             <h6>
                               £
-                              {formatAmountInMillion(
-                                transactionDetails?.amount -
-                                (transactionDetails?.Vat != 0
-                                  ? transactionDetails?.Vat
-                                  : transactionDetails?.original_Vatamount)
-                              )}
+                              {formatAmountInMillion(transactionDetails?.amount || 0)}
                             </h6>
                           </div>
                         </div>
@@ -483,11 +509,7 @@ const PurchasedTaskContentDetail = () => {
                             <h6>VAT 20%</h6>
                             <h6>
                               £
-                              {formatAmountInMillion(
-                                transactionDetails?.Vat != 0
-                                  ? transactionDetails?.Vat
-                                  : transactionDetails?.original_Vatamount
-                              )}
+                              {formatAmountInMillion(transactionDetails?.Vat || 0)}
                             </h6>
                           </div>
                         </div>
@@ -496,9 +518,7 @@ const PurchasedTaskContentDetail = () => {
                             <h6>Total amount paid</h6>
                             <h6>
                               £
-                              {formatAmountInMillion(
-                                transactionDetails?.amount || 0
-                              )}
+                              {formatAmountInMillion((transactionDetails?.amount + transactionDetails?.Vat) || 0)}
                             </h6>
                           </div>
                         </div>

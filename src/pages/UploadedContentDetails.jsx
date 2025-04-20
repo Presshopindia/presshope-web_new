@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
-// import HeaderN from "../component/HeaderN"
 import {
   Button,
   Card,
@@ -19,6 +18,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Tooltip from "react-bootstrap/Tooltip";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { SlMagnifierAdd } from "react-icons/sl";
 import {
   BsArrowLeft,
   BsArrowRight,
@@ -31,27 +31,16 @@ import { MdAdd, MdOutlineWatchLater } from "react-icons/md";
 import { SlLocationPin } from "react-icons/sl";
 import { ReactMic } from "react-mic-recorder";
 import { Rating } from "react-simple-star-rating";
-import io from "socket.io-client";
 import { Pagination } from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
-import usric from "../assets/images/menu-icons/user.svg";
 import tickic from "../assets/images/chat-icons/tick.svg";
 import audioic from "../assets/images/audimg.svg";
 import heart from "../assets/images/heart.svg";
-import photoic from "../assets/images/camera.svg";
-import NoProfile from "../assets/images/blank-profile-picture.png";
 import cameraic from "../assets/images/camera.svg";
-// import presshopchatic from "../assets/images/chat-icons/presshoplogo.svg";
 import presshopchatic from "../assets/images/chat_logo.png";
-import contentVideo from "../assets/images/contentVideo.svg";
-import docsic from "../assets/images/docsic.svg";
-import exclusive from "../assets/images/exclusive.png";
 import favouritedic from "../assets/images/favouritestar.svg";
 import interviewic from "../assets/images/interview.svg";
-import pdfic from "../assets/images/pdfic.svg";
-import authorimg from "../assets/images/profile.webp";
-import shared from "../assets/images/share.png";
 import favic from "../assets/images/star.svg";
 import videoic from "../assets/images/video.svg";
 import ChatCard from "../component/ChatCard";
@@ -62,8 +51,8 @@ import { UserDetails } from "../component/Utils";
 import ContentFeedCard from "../component/card/ContentFeedCard";
 import TopSearchesTipsCard from "../component/card/TopSearchesTipsCard";
 import { Get, Patch, Post } from "../services/user.services";
+import ViewUploadedContent from "../component/ViewUploadedContent";
 
-import socketInternal from "../InternalSocket";
 import Loader from "../component/Loader";
 import { useDarkMode } from "../context/DarkModeContext";
 import {
@@ -71,7 +60,8 @@ import {
   formatAmountInMillion,
   successToasterFun,
 } from "../component/commonFunction";
-const socket = io.connect("https://uat.presshop.live:3005");
+import socketServer from "../socket.config";
+import { toast } from "react-toastify";
 
 const UploadedContentDetails = (props) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -83,6 +73,10 @@ const UploadedContentDetails = (props) => {
 
   const username = profileData?.full_name;
 
+  const [taskContentIndex, setTaskContentIndex] = useState(0);
+  const [imageSize, setImageSize] = useState({ height: 0, width: 0 });
+  const [showContent, setShowContent] = useState({});
+  const [openContent, setOpenContent] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const param = useParams();
   const navigate = useNavigate();
@@ -97,7 +91,7 @@ const UploadedContentDetails = (props) => {
   const [userList, setUserList] = useState([]);
   const [senderId, setSenderId] = useState("");
   const [review, setReview] = useState("");
-  const [relatedContent, setRelatedContent] = useState([]);
+  const [relatedContent, setRelatedContent] = useState(null);
   const [moreContent, setMoreContent] = useState([]);
   const [openRecentActivity, setOpenRecentActivity] = useState(false);
   const [chatContentIds, setChatContentIds] = useState({
@@ -173,8 +167,6 @@ const UploadedContentDetails = (props) => {
   async function getCountOfBasketItems() {
     try {
       const res = await Get(`mediaHouse/getBasketDataCount`);
-
-      console.log("count", res?.data?.data);
       setCartCount(res?.data?.data || 0);
     } catch (error) {
       console.log("basketcountError", error);
@@ -183,7 +175,6 @@ const UploadedContentDetails = (props) => {
   // Add to basket-
   const AddToBasket = async (element, type) => {
     try {
-      console.log("dataType", element._id);
       // return
       let obj = {};
 
@@ -286,7 +277,7 @@ const UploadedContentDetails = (props) => {
   };
 
   const RatingNReview = (curr) => {
-    if(!roomDetails.room_id) {
+    if (!roomDetails.room_id) {
       alert("Room id is important")
     }
     const obj = {
@@ -302,15 +293,15 @@ const UploadedContentDetails = (props) => {
       message_type: "rating_by_mediahouse",
       paid_status: curr?.paid_status,
     };
-    socket.emit("rating", obj);
-    socket.on("rating", (data) => {
+    socketServer.emit("rating", obj);
+    socketServer.on("rating", (data) => {
       getMessages();
     });
   };
 
   useEffect(() => {
-    socket.emit("getallchat", { room_id: roomDetails?.room_id });
-  }, [socket]);
+    socketServer.emit("getallchat", { room_id: roomDetails?.room_id });
+  }, [socketServer]);
 
   const hopperFinalOffer = messages?.find(
     (item) => item.message_type === "Mediahouse_final_offer"
@@ -351,6 +342,15 @@ const UploadedContentDetails = (props) => {
         `mediaHouse/getuploadedContentbyHoppers?_id=${param.id}&hopper_id=${taskHopperId}`
       );
       setData(resp.data.data);
+      setShowContent(resp?.data?.data?.[0]);
+
+      if (resp?.data?.data?.[0]?.type == "image") {
+        const img = new Image();
+        img.src = resp?.data?.data?.[0]?.videothubnail;
+        img.onload = function () {
+          setImageSize({ height: img.height, width: img.width });
+        };
+      }
 
       // const getHoppers = await Get(`mediaHouse/findacceptedtasks?task_id=${Livetask?.data?.tasks?.find?.((el) => el?._id == resp.data.data[0]?.task_id?._id)?._id}&receiver_id=${User && User._id || User.id}&type=task_content`);
       setRoomDetails(resp.data.data[0]);
@@ -384,12 +384,8 @@ const UploadedContentDetails = (props) => {
         task_id: resp.data.data[0]?.task_id?._id,
       });
       setMoreContent(resp1.data.content);
-      const resp2 = await Post(`mediaHouse/relatedContentforTask`, {
-        hopper_id: resp.data.data[0]?.hopper_id?._id,
-        task_id: resp.data.data[0]?.task_id?._id,
-      });
-      setRelatedContent(resp2.data.content);
-      // localStorage.setItem('tag_id', resp.data.content.tag_ids[0]?._id, 'hopper_id', resp.data.data[0]?.hopper_id?._id)
+      const resp2 = await Get(`mediaHouse/getuploadedContentbyHoppers?limit=${4}&offet=${0}&task_id=${resp.data.data[0]?.task_id?._id}`);
+      setRelatedContent(resp2?.data);
       setHopperid(resp.data.data[0]?.hopper_id?._id);
       localStorage.setItem("hopperid", resp.data.data[0]?.hopper_id?._id);
       if (resp) {
@@ -405,17 +401,15 @@ const UploadedContentDetails = (props) => {
     }
   };
 
-  const Favourite = async () => {
+  const Favourite = async (favData) => {
     try {
       let obj = {
-        type: "uploaded_content",
-        uploaded_content: data ? data._id : fav?.content_id?._id,
+        uploaded_content: [favData?._id],
+        favourite_status: favData?.favourited === "true" ? "false" : "true"
       };
-
       setData((prev) => {
-        const updatedData = { ...prev };
-        updatedData.favourite_status =
-          updatedData.favourite_status === "true" ? "false" : "true";
+        const updatedData = [...prev];
+        updatedData[taskContentIndex].favourited = updatedData[taskContentIndex].favourited === "true" ? "false" : "true";
         return updatedData;
       });
       await Patch(`mediaHouse/add/to/favourites`, obj);
@@ -423,8 +417,6 @@ const UploadedContentDetails = (props) => {
       // Handle error here
     }
   };
-
-  console.log("all imp datat --->", data);
 
   const Payment = async (
     amount,
@@ -434,8 +426,6 @@ const UploadedContentDetails = (props) => {
     room_id
   ) => {
     try {
-      // setLoading(true);
-      console.log("hello chala mere api ---> --->111");
       const obj1 = {
         customer_id: UserDetails.stripe_customer_id,
         type: "content",
@@ -448,7 +438,6 @@ const UploadedContentDetails = (props) => {
         is_charity: data?.is_charity,
         description: data?.heading,
       };
-      console.log("hello chala mere api ---> --->121");
 
       const obj2 = {
         type: "content",
@@ -457,10 +446,8 @@ const UploadedContentDetails = (props) => {
         commission: 0,
       };
       const resp1 = await Post("mediahouse/applicationfee", obj2);
-      console.log("hello chala mere api ---> --->131", resp1);
 
       obj1.application_fee = resp1?.data?.data;
-      // obj1.stripe_account_id = resp1?.data?.stripe_account_id;
       obj1.stripe_account_id = data?.is_charity
         ? data?.stripe_account_id
         : resp1?.data?.stripe_account_id;
@@ -472,7 +459,6 @@ const UploadedContentDetails = (props) => {
       }
     } catch (error) {
       setLoading(false);
-      // successToasterFun(error?.response?.data?.errors?.msg);
     }
   };
 
@@ -481,7 +467,6 @@ const UploadedContentDetails = (props) => {
     GetUserList();
   }, [param?.id, taskHopperId]);
 
-  console.log("Data ----->", data);
   const [selectedItems, setSelectedItems] = useState([]);
 
   const handleSelectionChange = (item, isChecked) => {
@@ -530,7 +515,7 @@ const UploadedContentDetails = (props) => {
   const GetUserList = async () => {
     const resp = await Post(`mediaHouse/getMediahouseUser`);
     if (resp) {
-      setUserList(resp.data.response.filter((el) => el?.role == "Adduser"));
+      setUserList(resp.data.response);
     }
     const resp1 = await Get(`mediaHouse/adminlist`);
     const newData = resp1?.data?.data?.map((el) => {
@@ -541,6 +526,7 @@ const UploadedContentDetails = (props) => {
     });
     setAdminList(newData);
   };
+
 
   const handleChecked = (el) => {
     setAdminList((prev) => {
@@ -582,7 +568,7 @@ const UploadedContentDetails = (props) => {
 
   useEffect(() => {
     ChatList();
-  }, [chatContentIds, socketInternal]);
+  }, [chatContentIds, socketServer]);
 
   // useEffect(() => {
   //   const messageContainer = document.getElementById("message-container-1"); // Replace "message-container" with the actual ID or class of your message container element
@@ -590,8 +576,8 @@ const UploadedContentDetails = (props) => {
   //     messageContainer.scrollTop = messageContainer.scrollHeight;
   //   }
 
-  //   socketInternal.emit('room join', { room_id: chatContentIds?.room_id });
-  //   socketInternal.on("internal group chat", (data) => {
+  //   socketServer.emit('room join', { room_id: chatContentIds?.room_id });
+  //   socketServer.on("internal group chat", (data) => {
   //     const newMessage = data;
   //     setMessage((prevMessages) => [...prevMessages, newMessage,]);
 
@@ -600,10 +586,10 @@ const UploadedContentDetails = (props) => {
   //     }
   //   });
   //   return () => {
-  //     socketInternal.emit('room leave', { room_id: chatContentIds?.room_id });
-  //     socketInternal.off("internal group chat");
+  //     socketServer.emit('room leave', { room_id: chatContentIds?.room_id });
+  //     socketServer.off("internal group chat");
   //   };
-  // }, [socketInternal, chatContentIds?.room_id]);
+  // }, [socketServer, chatContentIds?.room_id]);
 
   useEffect(() => {
     // Internal Chat and External Chat-
@@ -612,8 +598,8 @@ const UploadedContentDetails = (props) => {
       if (messageContainer) {
         messageContainer.scrollTop = messageContainer.scrollHeight;
       }
-      socket.emit("room join", { room_id: chatContentIds?.room_id });
-      socket.on("internal group chat", (data) => {
+      socketServer.emit("room join", { room_id: chatContentIds?.room_id });
+      socketServer.on("internal group chat", (data) => {
         const newMessage = data;
         if (!newMessage?.createdAt) {
           setMessage((prevMessages) => [...prevMessages, newMessage]);
@@ -624,21 +610,21 @@ const UploadedContentDetails = (props) => {
         }
       });
       return () => {
-        socket.emit("room leave", { room_id: chatContentIds?.room_id });
-        socket.off("internal group chat");
+        socketServer.emit("room leave", { room_id: chatContentIds?.room_id });
+        socketServer.off("internal group chat");
       };
     } else if (tabSelect == "external") {
-      socket.emit("room join", { room_id: room_idForContent });
-      socket?.on("getAdmins", (data) => {
+      socketServer.emit("room join", { room_id: room_idForContent });
+      socketServer?.on("getAdmins", (data) => {
         setAdmins(data);
       });
-      socket.on("initialoffer", (data) => {
+      socketServer.on("initialoffer", (data) => {
         const newMessage = data;
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       });
       return () => {
-        socket.emit("room leave", { room_id: room_idForContent });
-        socket.off("initialoffer");
+        socketServer.emit("room leave", { room_id: room_idForContent });
+        socketServer.off("initialoffer");
       };
     }
   }, [tabSelect]);
@@ -657,9 +643,10 @@ const UploadedContentDetails = (props) => {
         type: "add",
         users: selectedIds,
         content_id: param.id,
+        sender_id: user._id,
         room_id: chatContentIds ? chatContentIds?.room_id : "",
       };
-
+      // console.log("Obj ----->", obj)
       const resp = await Post("mediaHouse/internalGroupChatMH", obj);
       if (resp) {
         setSelectedIds([]);
@@ -668,13 +655,13 @@ const UploadedContentDetails = (props) => {
           ...pre,
           room_id: resp?.data?.data?.data?.room_id,
         }));
-        // toast.success('Group chat initiated');
-        socketInternal.emit("room join", {
+        socketServer.emit("room join", {
           room_id: resp?.data?.data?.data?.room_id,
         });
       }
     } catch (error) {
-      // console.log(error, `<<<<<socket error`);
+      toast.error(error?.response?.data?.message);
+      console.log(error, `<<<<<socketServer error`);
       // Handle errors
     }
   };
@@ -718,7 +705,7 @@ const UploadedContentDetails = (props) => {
       },
     };
 
-    socketInternal.emit("internal group chat", messages);
+    socketServer.emit("internal group chat", messages);
     setMsg1("");
     setMediaFile({
       path: "",
@@ -762,7 +749,6 @@ const UploadedContentDetails = (props) => {
     if (audio.paused) {
       audio.play().catch((error) => {
         // Handle play error, if any
-        console.error("Error playing audio:", error);
       });
     } else {
       audio.pause();
@@ -772,7 +758,7 @@ const UploadedContentDetails = (props) => {
   // External chat-------------------------------------------------------------
 
   const JoinRoom = () => {
-    socket.emit("room join", { room_id: roomDetails?.roomsdetails?.room_id });
+    socketServer.emit("room join", { room_id: roomDetails?.roomsdetails?.room_id });
   };
 
   useEffect(() => {
@@ -795,8 +781,6 @@ const UploadedContentDetails = (props) => {
 
   const stripePayment = async (curr) => {
     setLoading(true);
-    console.log("all paid data ---->money", UserDetails);
-    console.log("all paid data ---->money cuuuuuuu", curr);
     let totalAmount = 0;
     selectedItems.forEach((ele) => {
       totalAmount += Number(ele.amount);
@@ -833,8 +817,8 @@ const UploadedContentDetails = (props) => {
         message_type: "request_more_content",
       };
 
-      socket.emit("offer message", obj);
-      socket.on("offer message", (obj) => {
+      socketServer.emit("offer message", obj);
+      socketServer.on("offer message", (obj) => {
         getMessages(
           JSON.parse(localStorage.getItem("external_chat_room_detail"))
         );
@@ -979,20 +963,35 @@ const UploadedContentDetails = (props) => {
                           <div
                             className="post_itm_icns right dtl_icns"
                             onClick={() => {
-                              Favourite();
+                              Favourite(data?.find((el) => el._id === showContent?._id));
                             }}
                           >
                             <img
                               className="feedMediaType iconBg"
                               src={
-                                data?.favourite_status === "true"
+                                data?.find((el) => el._id === showContent?._id)?.favourited === "true"
                                   ? favouritedic
                                   : favic
                               }
                               alt=""
                             />
                           </div>
-
+                          <div
+                            className="post_itm_icns right dtl_icns uploaded-magnifier"
+                            onClick={() => {
+                              setOpenContent(!openContent);
+                            }}
+                          >
+                            <div className="feedMediaType iconBg">
+                              <SlMagnifierAdd />
+                            </div>
+                          </div>
+                          <ViewUploadedContent
+                            openContent={openContent}
+                            setOpenContent={setOpenContent}
+                            showContent={showContent}
+                            imageSize={imageSize}
+                          />
                           <Swiper
                             spaceBetween={50}
                             slidesPerView={1}
@@ -1000,6 +999,20 @@ const UploadedContentDetails = (props) => {
                             slidesPerGroupSkip={1}
                             focusableElements="pagination"
                             pagination={{ clickable: true }}
+                            onSlideChange={(e) => {
+                              setTaskContentIndex(e.activeIndex)
+                              setShowContent(data[e.activeIndex]);
+                              if (data[e.activeIndex]?.type == "image") {
+                                const img = new Image();
+                                img.src = data[e.activeIndex]?.videothubnail;
+                                img.onload = function () {
+                                  setImageSize({
+                                    height: img.height,
+                                    width: img.width,
+                                  });
+                                };
+                              }
+                            }}
                           >
                             {data
                               ? data?.map((curr) => {
@@ -1300,91 +1313,113 @@ const UploadedContentDetails = (props) => {
                                     </div>
 
                                     {message?.map((curr) => (
-                                      <div className="baat_cheet">
-                                        {curr?.type === "add" ? (
+                                      <div
+                                        className="baat_cheet"
+                                        // ref={chatBoxRef}
+                                        ref={chatBoxInternalRef}
+                                        // chatBoxInternalRef
+                                        key={curr?._id}
+                                      >
+                                        {curr?.type === "add" && curr.user_id !== profileData._id ? (
                                           <p className="usrAddedTxt mb-4">
                                             <span>
-                                              You added {curr?.addedMsg}
+                                              {
+                                                user?._id === curr?.sender_id?._id ? `You added ${curr?.addedMsg}` : `You have been added by ${curr?.sender_id?.full_name}`
+                                              }
+                                            </span>
+                                          </p>
+                                        ) : curr?.type == "remove" ? (
+                                          <p className="usrAddedTxt mb-4">
+                                            <span>
+                                              {
+                                                user?._id === curr?.sender_id?._id ? `You removed ${curr?.addedMsg}` : `You have been removed by ${curr?.sender_id?.full_name}`
+                                              }
                                             </span>
                                           </p>
                                         ) : (
-                                          <div className="crd" key={curr.id}>
-                                            <div className="img">
-                                              <img
-                                                src={
-                                                  curr.user_info
-                                                    ? curr?.user_info
-                                                      ?.profile_image
-                                                    : curr?.sender_id
-                                                      ?.profile_image
-                                                }
-                                                alt="user"
-                                              />
-                                            </div>
-                                            <div className="postedcmnt_info">
-                                              <h5>
-                                                {`${curr.user_info
-                                                  ? curr?.user_info
-                                                    ?.first_name
-                                                  : curr?.sender_id
-                                                    ?.first_name
-                                                  } 
-                                                ${curr.user_info
-                                                    ? curr?.user_info?.last_name
-                                                    : curr?.sender_id?.last_name
-                                                  }`}
-                                                <span className="text-secondary time">
-                                                  {moment(
-                                                    curr?.createdAt
-                                                  ).format(`DD MMM YYYY`)}{" "}
-                                                  -{" "}
-                                                  {moment(
-                                                    curr.createdAt
-                                                  ).format(`hh:mm A`)}
-                                                </span>
-                                              </h5>
-                                              <Typography className="comment_text">
-                                                {curr.type === "text" &&
-                                                  curr.message}
-                                              </Typography>
-
-                                              <div
-                                                onClick={() => handleShow(curr)}
-                                                className="exp"
-                                              >
-                                                {curr.type === "image" && (
+                                          curr?.user_info && (
+                                            <div className="crd" key={curr.id}>
+                                              {curr?.user_info && (
+                                                <div className="img">
                                                   <img
-                                                    src={curr.message}
-                                                    className="msgContent"
-                                                    alt="content"
+                                                    src={
+                                                      curr.user_info
+                                                        ?.profile_image
+                                                    }
+                                                    alt="user"
                                                   />
+                                                </div>
+                                              )}
+                                              <div className="postedcmnt_info">
+                                                {curr?.user_info && (
+                                                  <h5>
+                                                    {`${curr?.user_info?.first_name} ${curr?.user_info?.last_name}`}
+                                                    <span className="text-secondary time">
+                                                      {moment(
+                                                        curr?.createdAt
+                                                      ).format(
+                                                        "hh:mm A, DD MMM YYYY"
+                                                      )}
+                                                    </span>
+                                                  </h5>
                                                 )}
-                                              </div>
+                                                <Typography className="comment_text">
+                                                  {curr.type === "text" &&
+                                                    curr.message}
+                                                </Typography>
 
-                                              <div>
-                                                {curr.type === "video" && (
-                                                  <video
-                                                    src={curr.message}
-                                                    className="msgContent"
-                                                    controls
-                                                    alt="video content"
-                                                    controlsList="nodownload"
-                                                  ></video>
-                                                )}
-                                              </div>
+                                                <div
+                                                  onClick={() =>
+                                                    handleShow(curr)
+                                                  }
+                                                  className="exp"
+                                                >
+                                                  {curr.type === "image" && (
+                                                    <img
+                                                      src={curr.message}
+                                                      className="msgContent"
+                                                      alt="content"
+                                                    />
+                                                  )}
+                                                </div>
 
-                                              <div>
-                                                {curr.type === "audio" && (
-                                                  <audio
-                                                    src={curr.message}
-                                                    controls
-                                                    alt="audio content"
-                                                    controlsList="nodownload"
-                                                  ></audio>
-                                                )}
+                                                <div>
+                                                  {curr.type === "video" && (
+                                                    <video
+                                                      src={curr.message}
+                                                      className="msgContent"
+                                                      controls
+                                                      alt="video content"
+                                                      controlsList="nodownload"
+                                                    ></video>
+                                                  )}
+                                                </div>
+
+                                                <div>
+                                                  {curr.type === "audio" ? (
+                                                    <audio
+                                                      src={curr.message}
+                                                      controls
+                                                      alt="audio content"
+                                                      controlsList="nodownload"
+                                                    ></audio>
+                                                  ) : curr.type ===
+                                                    "recording" ? (
+                                                    <>
+                                                      <audio
+                                                        src={curr.message}
+                                                        controls
+                                                        alt="audio content"
+                                                        controlsList="nodownload"
+                                                      ></audio>
+                                                    </>
+                                                  ) : (
+                                                    ""
+                                                  )}
+                                                </div>
                                               </div>
                                             </div>
-                                          </div>
+                                          )
                                         )}
                                       </div>
                                     ))}
@@ -1510,64 +1545,92 @@ const UploadedContentDetails = (props) => {
                                     </Link>
 
                                     <div className="scrollHtPnts">
-                                      {userList &&
-                                        userList.map((curr) => {
-                                          return (
-                                            <div className="tab_in_card_items">
-                                              <div className="checkWrap">
-                                                <FormControlLabel
-                                                  className={`me-0 ${!selectedIds.includes(
+                                      {userList?.map((curr) => {
+                                        return (
+                                          <div className="tab_in_card_items" key={curr?._id}>
+                                            <div className="checkWrap">
+                                              <FormControlLabel
+                                                className={`me-0 ${!selectedIds.includes(
+                                                  curr._id
+                                                ) && "afterCheck"
+                                                  }`}
+                                                checked={
+                                                  selectedIds.includes(
                                                     curr._id
-                                                  ) && "afterCheck"
-                                                    }`}
-                                                  checked={
-                                                    selectedIds.includes(
-                                                      curr._id
-                                                    ) ||
-                                                    message?.some(
-                                                      (item) =>
-                                                        `${curr?.first_name} ${curr?.last_name}` ==
-                                                        item?.addedMsg
-                                                    )
-                                                  }
-                                                  onChange={() =>
-                                                    handleCheckboxChange(
-                                                      curr._id
-                                                    )
-                                                  }
-                                                  control={
-                                                    <Checkbox defaultChecked />
-                                                  }
-                                                  disabled={message?.some(
+                                                  ) ||
+                                                  message?.some(
                                                     (item) =>
                                                       `${curr?.first_name} ${curr?.last_name}` ==
-                                                      item?.addedMsg
-                                                  )}
-                                                />
-                                              </div>
-                                              <div
-                                                className="img"
-                                                onClick={() => {
-                                                  setSenderId(curr._id);
-                                                  setShow({
-                                                    content: false,
-                                                    task: false,
-                                                    presshop: false,
-                                                    internal: true,
-                                                  });
-                                                }}
-                                              >
-                                                <img src={usric} alt="user" />
-                                                <span>
-                                                  {" "}
-                                                  {curr?.first_name +
-                                                    " " +
-                                                    curr?.last_name}
-                                                </span>
-                                              </div>
+                                                      item?.addedMsg &&
+                                                      item?.type == "add"
+                                                  )
+                                                }
+                                                onChange={
+                                                  (e) => {
+                                                    if (e.target.checked) {
+                                                      handleCheckboxChange(
+                                                        curr._id
+                                                      ); // Call add function when checked
+                                                    } else {
+                                                      RemoveChatUser(curr?._id);
+                                                      // setRemoveUserId(curr?._id);
+                                                    }
+                                                  }
+                                                  // handleCheckboxChange(curr._id)
+                                                }
+                                                control={
+                                                  <Checkbox defaultChecked />
+                                                }
+                                              // disabled={message?.some(
+                                              //   (item) =>
+                                              //     `${curr?.first_name} ${curr?.last_name}` ==
+                                              //     item?.addedMsg
+                                              // )}
+                                              />
                                             </div>
-                                          );
-                                        })}
+                                            <div
+                                              className="img"
+                                              onClick={() => {
+                                                setSenderId(curr._id);
+                                                setShow({
+                                                  content: false,
+                                                  task: false,
+                                                  presshop: false,
+                                                  internal: true,
+                                                });
+                                              }}
+                                            >
+                                              <img
+                                                src={curr?.profile_image}
+                                                alt="user"
+                                              />
+                                              <span> {curr?.full_name}</span>
+                                            </div>
+                                            {/* <div className="dots">
+                                                                                    <Link className="view_chat">View</Link>
+                                                                                  </div> */}
+                                            {message?.some(
+                                              (item) =>
+                                                `${curr?.first_name} ${curr?.last_name}` ==
+                                                item?.addedMsg &&
+                                                item?.type == "add"
+                                              // ) ? (
+                                              //   <button
+                                              //     className="bg-secondary text-white rounded"
+                                              //     onClick={() => {
+                                              //       RemoveChatUser(curr?._id);
+                                              //       console.log(
+                                              //         "all data should print ---> "
+                                              //       );
+                                              //     }}
+                                              //   >
+                                              //     remove
+                                              //   </button>
+                                              // ) : (
+                                            )}
+                                          </div>
+                                        );
+                                      })}
                                     </div>
 
                                     <button
@@ -1737,7 +1800,7 @@ const UploadedContentDetails = (props) => {
                                                               <label className="checkbox-label">
                                                                 <input
                                                                   type="checkbox"
-                                                                  className="media-checkbox"
+                                                                  className="media-checkbox z-1000"
                                                                   onChange={(e) => handleSelectionChange(item, e.target.checked)}
                                                                 />
                                                               </label>
@@ -2317,7 +2380,7 @@ const UploadedContentDetails = (props) => {
                                 <Col md={3}>
                                   <div className="tab_in_card">
                                     <div className="tab_in_card-heading d-flex justify-content-between align-items-center">
-                                      <h4>Participants hello</h4>
+                                      <h4>Participants</h4>
                                     </div>
 
                                     <div className="scrollHtPnts presshopChat">
@@ -2483,7 +2546,7 @@ const UploadedContentDetails = (props) => {
                         )}
                       </div>
                       <Link
-                        to={`/related-content-task/:tag_id/${data?.[0]?.hopper_id?._id}/${data?.[0]?.category_details[0]?._id}`}
+                        to={`/hopper-task-content/${data?.[0]?.task_id?._id}`}
                         className="next_link"
                       >
                         View all
@@ -2492,147 +2555,75 @@ const UploadedContentDetails = (props) => {
                     </div>
                   </div>
                   <Row className="">
-                    {relatedContent?.map((item, index) => {
+                    {relatedContent?.uploadedContent?.map((item, index) => {
+                      const filteredContent = (mediaType) => {
+                        const content = item?.content?.filter((el) => el.type === mediaType);
+                        return content;
+                      };
+
                       return (
                         <Col md={3}>
-                          {/* <ContentFeedCard
-                            feedImg={
-                              item?.type === "image"
-                                ? item.videothubnail ||
-                                  process.env.REACT_APP_UPLOADED_CONTENT +
-                                    item.imageAndVideo
-                                : item?.type === "video"
-                                ? item.videothubnail ||
-                                  process.env.REACT_APP_UPLOADED_CONTENT +
-                                    item.videothubnail
-                                : item?.type === "audio"
-                                ? audioic
-                                : null
-                            }
-                            type={"task"}
-                            postcount={1}
-                            feedTypeImg1={
-                              item?.type === "image"
-                                ? cameraic
-                                : item?.type === "audio"
-                                ? interviewic
-                                : item?.type === "video"
-                                ? videoic
-                                : null
-                            }
-                            user_avatar={
-                              process.env.REACT_APP_AVATAR_IMAGE +
-                              item?.avatar_detals[0]?.avatar
-                            }
-                            author_Name={item?.hopper_id?.user_name}
-                            lnkto={`/content-details/${item._id}`}
-                            viewTransaction="View details"
-                            viewDetail={`/content-details/${item._id}`}
-                            fvticns={
-                              item.favourite_status === "true"
-                                ? favouritedic
-                                : favic
-                            }
-                            type_tag={item?.category_details[0]?.name}
-                            type_img={item?.category_details[0]?.icon}
-                            feedHead={item.task_id.task_description}
-                            feedTime={moment(item.createdAt).format(
-                              " hh:mm A, DD MMM YYYY"
-                            )}
-                            feedLocation={item.task_id.location}
-                            contentPrice={`${formatAmountInMillion(
-                              item?.type === "image"
-                                ? item?.task_id?.photo_price
-                                : item?.type === "audio"
-                                ? item?.task_id?.interview_price || 0
-                                : item?.type === "video"
-                                ? item?.task_id?.videos_price || 0
-                                : null
-                            )}`}
-                            favourite={() => handleFavourite(index, "related")}
-                            bool_fav={
-                              item.favourite_status === "true"
-                                ? "false"
-                                : "true"
-                            }
-                            content_id={item._id}
-                           
-                            task_content_id={item?._id || item?.task_id?._id}
-                            taskHopperId={item?._id}
-                          /> */}
                           <ContentFeedCard
                             feedImg={
-                              item?.type === "image"
-                                ? item?.videothubnail ||
+                              item?.content[0]?.type === "image"
+                                ? item?.content[0]?.videothubnail ||
                                 process.env.REACT_APP_UPLOADED_CONTENT +
-                                item?.imageAndVideo
-                                : item?.type === "video"
-                                  ? item?.videothubnail ||
+                                item?.content[0]?.imageAndVideo
+                                : item?.content[0]?.type === "video"
+                                  ? item?.content[0]?.videothubnail ||
                                   process.env.REACT_APP_UPLOADED_CONTENT +
-                                  item?.videothubnail
-                                  : item?.type === "audio"
+                                  item?.content[0]?.videothubnail
+                                  : item?.content[0]?.type === "audio"
                                     ? audioic
                                     : null
                             }
                             type={"task"}
-                            postcount={1}
+                            postcount={filteredContent("image")?.length}
+                            postcount2={filteredContent("video")?.length}
+                            postcount3={filteredContent("interview")?.length}
                             feedTypeImg1={
-                              item?.type === "image"
+                              item?.content[0]?.type === "image"
                                 ? cameraic
-                                : item?.type === "audio"
+                                : item?.content[0]?.type === "audio"
                                   ? interviewic
-                                  : item?.type === "video"
+                                  : item?.content[0]?.type === "video"
                                     ? videoic
                                     : null
                             }
                             user_avatar={
-                              item?.avatar_details?.[0]?.avatar
+                              item?.content[0]?.avatar_details?.avatar
                                 ? process.env.REACT_APP_AVATAR_IMAGE +
-                                item?.avatar_details?.[0]?.avatar
-                                : item?.avatar_detals?.[0]?.avatar
+                                item?.content[0]?.avatar_details?.avatar
+                                : item?.content[0]?.avatar_detals?.[0]?.avatar
                                   ? process.env.REACT_APP_AVATAR_IMAGE +
-                                  item?.avatar_detals?.[0]?.avatar
+                                  item?.content[0]?.avatar_detals?.avatar
                                   : ""
                             }
-                            author_Name={item?.hopper_id?.user_name}
-                            // lnkto={`/content-details/${item?._id}`}
-                            lnkto={`/content-details/${item?._id}?task_content_id=${item?.content_id}`}
+                            author_Name={item?.uploaded_by?.user_name}
+                            lnkto={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
                             viewTransaction="View details"
-                            viewDetail={`/content-details/${item?._id}?task_content_id=${item?.content_id}`}
-                            fvticns={
-                              item?.favourite_status === "true"
-                                ? favouritedic
-                                : favic
-                            }
-                            type_tag={item?.category_details[0]?.name}
-                            basket={() => handleBasket(index, "related")}
-                            basketValue={item?.basket_status}
-                            allContent={item?.task_id?.content}
-                            type_img={item?.category_details[0]?.icon}
-                            feedHead={item?.task_id?.task_description}
-                            feedTime={moment(item?.createdAt).format(
+                            viewDetail={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
+                            type_tag={item?.content[0]?.category_details?.name}
+                            allContent={item?.content[0]?.task_id?.content}
+                            type_img={item?.content[0]?.category_details?.icon}
+                            feedHead={item?.content[0]?.task_id?.task_description}
+                            feedTime={moment(item?.content[0]?.createdAt).format(
                               " hh:mm A, DD MMM YYYY"
                             )}
-                            feedLocation={item?.task_id?.location}
+                            feedLocation={item?.content[0]?.task_id?.location}
                             contentPrice={`${formatAmountInMillion(
-                              item?.type === "image"
-                                ? item?.task_id?.hopper_photo_price || 0
-                                : item?.type === "audio"
-                                  ? item?.task_id?.hopper_interview_price || 0
-                                  : item?.type === "video"
-                                    ? item?.task_id?.hopper_videos_price || 0
+                              item?.content[0]?.type === "image"
+                                ? item?.content[0]?.task_id?.hopper_photo_price || 0
+                                : item?.content[0]?.type === "audio"
+                                  ? item?.content[0]?.task_id?.hopper_interview_price || 0
+                                  : item?.content[0]?.type === "video"
+                                    ? item?.content[0]?.task_id?.hopper_videos_price || 0
                                     : null
                             )}`}
-                            favourite={() => handleFavourite(index, "related")}
-                            bool_fav={
-                              item?.favourite_status === "true"
-                                ? "false"
-                                : "true"
-                            }
-                            // content_id={item?.content_id}
                             content_id={item?._id}
                             task_content_id={item?._id || item?.task_id?._id}
-                            taskHopperId={item?._id}
+                            taskContentId={item?.content?.map((el) => el._id)}
+                            is_sale_status={true}
                           />
                         </Col>
                       );

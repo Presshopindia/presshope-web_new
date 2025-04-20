@@ -56,7 +56,6 @@ const GroupContentDtlChat = (props) => {
   const [removeUserId, setRemoveUserId] = useState(null);
   const [addchatuser, setaddChatuser] = useState(null);
   // setRemoveUserId
-  console.log("all passed data to group ids --->", props);
   const getUserProfile = async () => {
     try {
       const res = await Get("mediaHouse/getProfile");
@@ -122,23 +121,12 @@ const GroupContentDtlChat = (props) => {
 
   const AddParticipents = async () => {
     try {
-      console.log(
-        "room id exist in internal chats----->roomid",
-        localStorage.getItem("roomId")
-      );
-      console.log(
-        "content exist in internal chats ----->contentId",
-        localStorage.getItem("contentId")
-      );
-
       if (
         !localStorage.getItem("roomId") &&
         !localStorage.getItem("contentId")
       ) {
-        console.log("all content view ----->contentId return");
         return;
       }
-      console.log("all content viewcheck 123");
       let obj = {
         type: "add",
         users: selectedIds,
@@ -147,25 +135,14 @@ const GroupContentDtlChat = (props) => {
         content_id: props?.params?.contentId,
         room_id: props?.params?.room_id,
       };
-      console.log("all content viewcheck 1234");
-
       const resp = await Post("mediaHouse/internalGroupChatMH", obj);
-      // window.location.reload();
-      console.log("all espodfiioe", resp);
       if (resp) {
-        console.log("all content resp viewcheck 1235");
         if (!socketInternal || !socketInternal.connected) {
-          console.error("Socket is not connected.");
           return;
         }
-        console.log(
-          "roomidhjdsgfhhsdj -->",
-          localStorage.getItem("roomId")?.replace(/^"+|"+$/g, "")
-        );
         socketInternal.emit("room join", {
           room_id: localStorage.getItem("roomId")?.replace(/^"+|"+$/g, ""),
         });
-        console.log("all content viewcheck 12356");
         setaddChatuser(selectedIds);
         setSelectedIds([]);
         GetUserList();
@@ -180,7 +157,6 @@ const GroupContentDtlChat = (props) => {
       }
     } catch (error) {
       toast.error(error?.response?.data?.message);
-      console.log(error, `<<<<<socket error`);
       // Handle errors
     }
   };
@@ -199,23 +175,12 @@ const GroupContentDtlChat = (props) => {
 
   const handleRemovechatuser = async (id) => {
     try {
-      console.log(
-        "all content view ----->roomid",
-        localStorage.getItem("roomId")
-      );
-      console.log(
-        "all content view ----->contentId",
-        localStorage.getItem("contentId")
-      );
-
       if (
         !localStorage.getItem("roomId") &&
         !localStorage.getItem("contentId")
       ) {
-        // console.log("all content view ----->contentId return");
         return;
       }
-      // console.log("all content viewcheck 123");
       let obj = {
         type: "remove",
         users: [id],
@@ -224,12 +189,9 @@ const GroupContentDtlChat = (props) => {
         content_id: props?.params?.contentId,
         room_id: props?.params?.room_id,
       };
-      // console.log("all content viewcheck 1234");
-      // console.log("for demo");
       const resp = await Post("mediaHouse/deleteinternalGroupChatMH", obj);
       // window.location.reload();
       if (resp) {
-        console.log("all content viewcheck 1235");
         ChatList();
         getDetailContent();
 
@@ -319,13 +281,7 @@ const GroupContentDtlChat = (props) => {
                                     />
                                     <audio
                                       controls
-                                      src={
-                                        item.hasOwnProperty("watermark")
-                                          ? item.watermark
-                                          : process.env
-                                              .REACT_APP_CONTENT_MEDIA +
-                                            item?.media
-                                      }
+                                      src={process.env.REACT_APP_CONTENT_MEDIA + item?.media}
                                       type="audio/mpeg"
                                       className="slider-audio"
                                       ref={audioRef}
@@ -335,24 +291,16 @@ const GroupContentDtlChat = (props) => {
                                   <video
                                     controls
                                     className="slider-vddo"
-                                    src={item?.media}
+                                    src={process.env.REACT_APP_CONTENT_MEDIA + item?.media}
                                   />
                                 ) : item.media_type === "image" ? (
                                   <img
-                                    src={
-                                      detailContent?.paid_status === "paid"
-                                        ? process.env.REACT_APP_CONTENT_MEDIA +
-                                          item.media
-                                        : item.watermark
-                                    }
+                                    src={process.env.REACT_APP_CONTENT_MEDIA + item?.media}
                                     alt={null}
                                   />
                                 ) : item.media_type === "pdf" ? (
                                   <embed
-                                    src={`${
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                      item.media
-                                    }`}
+                                    src={process.env.REACT_APP_CONTENT_MEDIA + item?.media}
                                     type="application/pdf"
                                     width="100%"
                                     height="500"
@@ -655,8 +603,6 @@ const GroupContentDtlChat = (props) => {
                     className="addPrtBtn btn w-100"
                     onClick={() => {
                       AddParticipents();
-
-                      console.log("all items added iuiyu===>");
                     }}
                   >
                     Add

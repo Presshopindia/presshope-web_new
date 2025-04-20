@@ -21,6 +21,7 @@ import Header from "../component/Header";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import contentCamera from "../assets/images/contentCamera.svg";
+import interviewic from "../assets/images/interview.svg";
 // import {formatAmountInMillion} from "../component/commonFunction"
 const moment = require("moment");
 
@@ -129,8 +130,8 @@ const AutoInvoice = () => {
       if (promoCode.code) {
         obj1.coupon = promoCode.code;
         obj1.promocodePercentOff = promoCode.off,
-        obj1.promocodeValue = promoCode.off,
-        obj1.amount = appliedPromoodeValue(+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price), promoCode.off)
+          obj1.promocodeValue = promoCode.off,
+          obj1.amount = appliedPromoodeValue(+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price), promoCode.off)
       }
 
       const resp = await Post("mediahouse/createPayment", obj1);
@@ -194,6 +195,7 @@ const AutoInvoice = () => {
       )
     ) {
       navigate("/");
+      window.location.reload();
     }
   }, [data, navigate]);
 
@@ -206,9 +208,14 @@ const AutoInvoice = () => {
         ContentByID();
       });
   }, []);
-
-  console.log("all autoinvoice data --> --->data", data);
-  console.log("promocodeeee", promoCode);
+  
+  const getMediaType = (type) => {
+    const mediaType = data?.content?.content?.filter(
+      (item) =>
+        item.media_type === type
+    );
+    return mediaType?.length || 0;
+  }
 
   return (
     <>
@@ -298,7 +305,7 @@ const AutoInvoice = () => {
                             </span>
                           </div>
                           <p>
-                            { user?.office_details?.[0]?.address?.complete_address || user?.media_house_id?.office_details?.[0]?.address?.complete_address}
+                            {user?.office_details?.[0]?.address?.complete_address || user?.media_house_id?.office_details?.[0]?.address?.complete_address}
                             {" "}
                             <br />
                             {user?.office_details?.[0]?.address?.pincode || user?.media_house_id?.office_details?.[0]?.address?.pincode}
@@ -349,66 +356,54 @@ const AutoInvoice = () => {
                                   <tbody>
                                     {
                                       <tr>
-                                        <td
-                                          className="content_img_td"
-                                          onClick={() => {
-                                            navigate(
-                                              `/Feeddetail/content/${data?.content?._id}`
-                                            );
-                                          }}
-                                        >
-                                          <div className="tbl_cont_wrp">
-                                            {data?.content?.content[0]
-                                              ?.media_type === "image" ? (
-                                              <>
-                                                {/* <img
-                                                  className=""
-                                                  src={contentCamera}
-                                                  alt="review type"
-                                                /> */}
+                                        <td className="content_img_td position-relative add-icons-box" onClick={() => {
+                                          navigate(
+                                            `/Feeddetail/content/${data?.content?._id}`
+                                          );
+                                        }}>
+                                          <div className="tbl_cont_wrp cnt_online_img noGrid">
+                                            <div className="paymentToBeMadeImgContent">
+                                              {data?.content?.content[0]
+                                                ?.media_type === "image" ? (
                                                 <img
-                                                  src={
+                                                  src={process.env.REACT_APP_CONTENT_MEDIA + 
                                                     data?.content?.content[0]
-                                                      ?.watermark
+                                                      ?.media
                                                   }
                                                   className="cntnt-img"
                                                   alt="img"
                                                 />
-                                              </>
-                                            ) : data?.content?.content[0]
+                                              ) : data?.content?.content[0]
                                                 ?.media_type === "video" ? (
-                                              <img
-                                                src={
-                                                  process.env
-                                                    .REACT_APP_CONTENT_MEDIA +
-                                                  data?.content?.content?.[0]
-                                                    ?.thumbnail
-                                                }
-                                                className="cntnt-img"
-                                              />
-                                            ) : data?.content?.content[0]
+                                                <img
+                                                  src={
+                                                    process.env
+                                                      .REACT_APP_THUMBNAIL +
+                                                    data?.content?.content?.[0]
+                                                      ?.media
+                                                  }
+                                                  className="cntnt-img"
+                                                />
+                                              ) : data?.content?.content[0]
                                                 ?.media_type === "audio" ? (
-                                              <img
-                                                src={audioic}
-                                                className="cntnt-img"
-                                              />
-                                            ) : data?.content?.content[0]
+                                                <img
+                                                  src={audioic}
+                                                  className="content_img"
+                                                />
+                                              ) : data?.content?.content[0]
                                                 ?.media_type === "pdf" ? (
-                                              <img
-                                                src={docsic}
-                                                className="cntnt-img"
-                                              />
-                                            ) : null}
-                                            <div className="myCameraDiv">
-                                              <span className="">
-                                                {data?.content?.content
-                                                  ?.length || 0}
-                                              </span>
-                                              <img
-                                                className=""
-                                                src={contentCamera}
-                                                alt="review type"
-                                              />
+                                                <img
+                                                  src={docsic}
+                                                  className="cntnt-img"
+                                                />
+                                              ) : null}
+                                            </div>
+                                          </div>
+                                          <div className="tableContentTypeIcons">
+                                            <div className="post_icns_cstm_wrp camera-ico">
+                                              <div className="post_itm_icns dtl_icns">
+                                                <span className="count">{data?.content?.content?.length || 0}</span>
+                                              </div>
                                             </div>
                                           </div>
                                         </td>
@@ -438,22 +433,22 @@ const AutoInvoice = () => {
                                           </p>
                                         </td>
 
-                                        <td className="text-center">
+                                        {/* <td className="text-center">
                                           <Tooltip
                                             title={
                                               data?.content?.content[0]
                                                 ?.media_type == "image"
                                                 ? "Photo"
                                                 : data?.content?.content[0]
-                                                    ?.media_type == "audio"
-                                                ? "Audio"
-                                                : data?.content?.content[0]
+                                                  ?.media_type == "audio"
+                                                  ? "Audio"
+                                                  : data?.content?.content[0]
                                                     ?.media_type == "video"
-                                                ? "Video"
-                                                : data?.content?.content[0]
-                                                    ?.media_type == "pdf"
-                                                ? "Pdf"
-                                                : "Scan"
+                                                    ? "Video"
+                                                    : data?.content?.content[0]
+                                                      ?.media_type == "pdf"
+                                                      ? "Pdf"
+                                                      : "Scan"
                                             }
                                           >
                                             <img
@@ -462,20 +457,63 @@ const AutoInvoice = () => {
                                                   ?.media_type == "image"
                                                   ? cameraic
                                                   : data?.content?.content[0]
-                                                      ?.media_type == "audio"
-                                                  ? audioicon
-                                                  : data?.content?.content[0]
+                                                    ?.media_type == "audio"
+                                                    ? audioicon
+                                                    : data?.content?.content[0]
                                                       ?.media_type == "pdf"
-                                                  ? docsic
-                                                  : data?.content?.content[0]
-                                                      ?.media_type == "video"
-                                                  ? videoic
-                                                  : null
+                                                      ? docsic
+                                                      : data?.content?.content[0]
+                                                        ?.media_type == "video"
+                                                        ? videoic
+                                                        : null
                                               }
                                               className="tbl_ic"
                                               alt="camera"
                                             />
                                           </Tooltip>
+                                        </td> */}
+                                        <td className="text-center">
+                                          <div className="">
+                                            {getMediaType("image") ? (
+                                              <Tooltip title="Photo">
+                                                <img
+                                                  src={cameraic}
+                                                  alt="Photo"
+                                                  className="icn"
+                                                />{" "}
+                                                <br />
+                                              </Tooltip>
+                                            ) : null}
+                                            {getMediaType("video") ? (
+                                              <Tooltip title="Video">
+                                                {" "}
+                                                <img
+                                                  src={videoic}
+                                                  alt="Video"
+                                                  className="icn"
+                                                />
+                                                <br />
+                                              </Tooltip>
+                                            ) : null}
+                                            {getMediaType("audio") ? (
+                                              <Tooltip title="Audio">
+                                                <img
+                                                  src={interviewic}
+                                                  alt="Audio"
+                                                  className="icn"
+                                                />
+                                              </Tooltip>
+                                            ) : null}
+                                            {getMediaType("pdf") ? (
+                                              <Tooltip title="Pdf">
+                                                <img
+                                                  src={docsic}
+                                                  alt="Pdf"
+                                                  className="icn"
+                                                />
+                                              </Tooltip>
+                                            ) : null}
+                                          </div>
                                         </td>
 
                                         <td className="text-center">
@@ -678,18 +716,18 @@ const AutoInvoice = () => {
                                         £
                                         {!promoCode?.off
                                           ? formatAmountInMillion(
+                                            +(data?.chatdata?.amount
+                                              ? data?.chatdata?.amount
+                                              : data?.content?.ask_price)
+                                          )
+                                          : formatAmountInMillion(
+                                            appliedPromoodeValue(
                                               +(data?.chatdata?.amount
                                                 ? data?.chatdata?.amount
-                                                : data?.content?.ask_price)
+                                                : data?.content?.ask_price),
+                                              promoCode.off
                                             )
-                                          : formatAmountInMillion(
-                                              appliedPromoodeValue(
-                                                +(data?.chatdata?.amount
-                                                  ? data?.chatdata?.amount
-                                                  : data?.content?.ask_price),
-                                                promoCode.off
-                                              )
-                                            )}
+                                          )}
                                       </span>
                                     </div>
 
@@ -702,18 +740,18 @@ const AutoInvoice = () => {
                                         £
                                         {!promoCode?.off
                                           ? formatAmountInMillion(
+                                            +(data?.chatdata?.amount
+                                              ? data?.chatdata?.amount
+                                              : data?.content?.ask_price) / 5
+                                          )
+                                          : formatAmountInMillion(
+                                            appliedPromoodeValue(
                                               +(data?.chatdata?.amount
                                                 ? data?.chatdata?.amount
-                                                : data?.content?.ask_price) / 5
-                                            )
-                                          : formatAmountInMillion(
-                                              appliedPromoodeValue(
-                                                +(data?.chatdata?.amount
-                                                  ? data?.chatdata?.amount
-                                                  : data?.content?.ask_price),
-                                                promoCode.off
-                                              ) / 5
-                                            )}
+                                                : data?.content?.ask_price),
+                                              promoCode.off
+                                            ) / 5
+                                          )}
                                       </span>
                                     </div>
 
@@ -754,29 +792,29 @@ const AutoInvoice = () => {
                                         £
                                         {!promoCode?.off
                                           ? formatAmountInMillion(
+                                            +(data?.chatdata?.amount
+                                              ? data?.chatdata?.amount
+                                              : data?.content?.ask_price) +
+                                            +(data?.chatdata?.amount
+                                              ? data?.chatdata?.amount
+                                              : data?.content?.ask_price) /
+                                            5
+                                          )
+                                          : formatAmountInMillion(
+                                            appliedPromoodeValue(
                                               +(data?.chatdata?.amount
                                                 ? data?.chatdata?.amount
-                                                : data?.content?.ask_price) +
-                                                +(data?.chatdata?.amount
-                                                  ? data?.chatdata?.amount
-                                                  : data?.content?.ask_price) /
-                                                  5
-                                            )
-                                          : formatAmountInMillion(
-                                              appliedPromoodeValue(
-                                                +(data?.chatdata?.amount
-                                                  ? data?.chatdata?.amount
-                                                  : data?.content?.ask_price),
-                                                promoCode.off
-                                              ) +
-                                                appliedPromoodeValue(
-                                                  +(data?.chatdata?.amount
-                                                    ? data?.chatdata?.amount
-                                                    : data?.content?.ask_price),
-                                                  promoCode.off
-                                                ) /
-                                                  5
-                                            )}
+                                                : data?.content?.ask_price),
+                                              promoCode.off
+                                            ) +
+                                            appliedPromoodeValue(
+                                              +(data?.chatdata?.amount
+                                                ? data?.chatdata?.amount
+                                                : data?.content?.ask_price),
+                                              promoCode.off
+                                            ) /
+                                            5
+                                          )}
                                       </span>
                                     </div>
 
@@ -798,29 +836,29 @@ const AutoInvoice = () => {
                                         £
                                         {!promoCode?.off
                                           ? formatAmountInMillion(
+                                            +(data?.chatdata?.amount
+                                              ? data?.chatdata?.amount
+                                              : data?.content?.ask_price) +
+                                            +(data?.chatdata?.amount
+                                              ? data?.chatdata?.amount
+                                              : data?.content?.ask_price) /
+                                            5
+                                          )
+                                          : formatAmountInMillion(
+                                            appliedPromoodeValue(
                                               +(data?.chatdata?.amount
                                                 ? data?.chatdata?.amount
-                                                : data?.content?.ask_price) +
-                                                +(data?.chatdata?.amount
-                                                  ? data?.chatdata?.amount
-                                                  : data?.content?.ask_price) /
-                                                  5
-                                            )
-                                          : formatAmountInMillion(
-                                              appliedPromoodeValue(
-                                                +(data?.chatdata?.amount
-                                                  ? data?.chatdata?.amount
-                                                  : data?.content?.ask_price),
-                                                promoCode.off
-                                              ) +
-                                                appliedPromoodeValue(
-                                                  +(data?.chatdata?.amount
-                                                    ? data?.chatdata?.amount
-                                                    : data?.content?.ask_price),
-                                                  promoCode.off
-                                                ) /
-                                                  5
-                                            )}
+                                                : data?.content?.ask_price),
+                                              promoCode.off
+                                            ) +
+                                            appliedPromoodeValue(
+                                              +(data?.chatdata?.amount
+                                                ? data?.chatdata?.amount
+                                                : data?.content?.ask_price),
+                                              promoCode.off
+                                            ) /
+                                            5
+                                          )}
                                       </span>
                                       {/* <span>£0</span> */}
                                     </div>
@@ -847,29 +885,29 @@ const AutoInvoice = () => {
                     £
                     {!promoCode?.off
                       ? formatAmountInMillion(
+                        +(data?.chatdata?.amount
+                          ? data?.chatdata?.amount
+                          : data?.content?.ask_price) +
+                        +(data?.chatdata?.amount
+                          ? data?.chatdata?.amount
+                          : data?.content?.ask_price) /
+                        5
+                      )
+                      : formatAmountInMillion(
+                        appliedPromoodeValue(
                           +(data?.chatdata?.amount
                             ? data?.chatdata?.amount
-                            : data?.content?.ask_price) +
-                            +(data?.chatdata?.amount
-                              ? data?.chatdata?.amount
-                              : data?.content?.ask_price) /
-                              5
-                        )
-                      : formatAmountInMillion(
-                          appliedPromoodeValue(
-                            +(data?.chatdata?.amount
-                              ? data?.chatdata?.amount
-                              : data?.content?.ask_price),
-                            promoCode.off
-                          ) +
-                            appliedPromoodeValue(
-                              +(data?.chatdata?.amount
-                                ? data?.chatdata?.amount
-                                : data?.content?.ask_price),
-                              promoCode.off
-                            ) /
-                              5
-                        )}{" "}
+                            : data?.content?.ask_price),
+                          promoCode.off
+                        ) +
+                        appliedPromoodeValue(
+                          +(data?.chatdata?.amount
+                            ? data?.chatdata?.amount
+                            : data?.content?.ask_price),
+                          promoCode.off
+                        ) /
+                        5
+                      )}{" "}
                     (inc VAT){" "}
                   </b>{" "}
                   to Presshop Media UK Limited towards purchase of content
@@ -888,29 +926,29 @@ const AutoInvoice = () => {
                     Pay £
                     {!promoCode?.off
                       ? formatAmountInMillion(
+                        +(data?.chatdata?.amount
+                          ? data?.chatdata?.amount
+                          : data?.content?.ask_price) +
+                        +(data?.chatdata?.amount
+                          ? data?.chatdata?.amount
+                          : data?.content?.ask_price) /
+                        5
+                      )
+                      : formatAmountInMillion(
+                        appliedPromoodeValue(
                           +(data?.chatdata?.amount
                             ? data?.chatdata?.amount
-                            : data?.content?.ask_price) +
-                            +(data?.chatdata?.amount
-                              ? data?.chatdata?.amount
-                              : data?.content?.ask_price) /
-                              5
-                        )
-                      : formatAmountInMillion(
-                          appliedPromoodeValue(
-                            +(data?.chatdata?.amount
-                              ? data?.chatdata?.amount
-                              : data?.content?.ask_price),
-                            promoCode.off
-                          ) +
-                            appliedPromoodeValue(
-                              +(data?.chatdata?.amount
-                                ? data?.chatdata?.amount
-                                : data?.content?.ask_price),
-                              promoCode.off
-                            ) /
-                              5
-                        )}
+                            : data?.content?.ask_price),
+                          promoCode.off
+                        ) +
+                        appliedPromoodeValue(
+                          +(data?.chatdata?.amount
+                            ? data?.chatdata?.amount
+                            : data?.content?.ask_price),
+                          promoCode.off
+                        ) /
+                        5
+                      )}
                   </span>
                 </Button>
               </Col>

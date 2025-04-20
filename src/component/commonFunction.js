@@ -213,13 +213,13 @@ export const getModifiedContent = (data) => {
         const media = curr?.content?.[0];
 
         if (media?.media_type === "video") {
-            return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.thumbnail, mediaValue: media?.watermark || media?.thumbnail };
+            return { media: process.env.REACT_APP_THUMBNAIL + media?.media, mediaValue: process.env.REACT_APP_THUMBNAIL + media?.media };
         } else if (media?.media_type === "audio") {
             return { media: audioicsm, mediaValue: audioicsm };
         } else if (media?.media_type === "pdf") {
             return { media: docsic, mediaValue: docsic };
         } else {
-            return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.media, mediaValue: media?.watermark || media?.media };
+            return { media: process.env.REACT_APP_CONTENT_MEDIA + media?.media, mediaValue: process.env.REACT_APP_CONTENT_MEDIA + media?.media };
         }
     });
 };
@@ -229,13 +229,41 @@ export const getDeepModifiedContent = (data) => {
         const media = curr?.contentDetails?.content?.[0];
 
         if (media?.media_type === "video") {
-            return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.thumbnail, mediaValue: media?.watermark || media?.thumbnail };
+            return { media: process.env.REACT_APP_THUMBNAIL + media?.media, mediaValue: process.env.REACT_APP_THUMBNAIL + media?.media };
         } else if (media?.media_type === "audio") {
             return { media: audioicsm, mediaValue: audioicsm };
         } else if (media?.media_type === "pdf") {
             return { media: docsic, mediaValue: docsic };
         } else {
-            return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.media, mediaValue: media?.watermark || media?.media };
+            return { media: process.env.REACT_APP_CONTENT_MEDIA + media?.media, mediaValue: process.env.REACT_APP_CONTENT_MEDIA + media?.media };
+        }
+    });
+};
+
+export const getFavContent = (data) => {
+    return data?.map((curr) => {
+        if(curr?.uploadedContentDetails) {
+            const media = curr?.uploadedContentDetails;
+
+            if (media?.type === "video") {
+                return { media: media?.watermark || process.env.REACT_APP_CONTENT_MEDIA + media?.thumbnail };
+            } else if (media?.type === "audio") {
+                return { mediaValue:audioicsm, media: audioicsm };
+            } else {
+                return { media: media?.videothubnail, mediaValue: media?.videothubnail };
+            }
+        } else {
+            const media = curr?.contentDetails?.content?.[0];
+
+            if (media?.media_type === "video") {
+                return { media: process.env.REACT_APP_THUMBNAIL + media?.media, mediaValue: media?.media };
+            } else if (media?.media_type === "audio") {
+                return { media: audioicsm, mediaValue: audioicsm };
+            } else if (media?.media_type === "pdf") {
+                return { media: docsic, mediaValue: docsic };
+            } else {
+                return { media: process.env.REACT_APP_CONTENT_MEDIA + media?.media, mediaValue: process.env.REACT_APP_CONTENT_MEDIA + media?.media };
+            }
         }
     });
 };
@@ -301,6 +329,37 @@ export const contentUploadedMsgInTaskChat = (data) => {
         msg = `Has uploaded ${getVideo} video`;
     } else if (getAudio) {
         msg = `Has uploaded ${getAudio} audio`;
+    } else {
+        msg = "No media uploaded";
+    }
+
+    return msg;
+};
+
+export const contentPurchasedInContentChat = (data) => {
+    const getImage = data?.filter((el) => el.media_type === "image")?.length || 0;
+    const getVideo = data?.filter((el) => el.media_type === "video")?.length || 0;
+    const getAudio = data?.filter((el) => el.media_type === "audio")?.length || 0;
+
+    let msg = "";
+    let isMultiImage = getImage > 1;
+    let isMultiVideo = getVideo > 1;
+    let isMultiAudio = getAudio > 1;
+
+    if (getImage && getVideo && getAudio) {
+        msg = `${getImage} photo${isMultiImage ? "s" : ""}, ${getVideo} video${isMultiVideo ? "s" : ""} and ${getAudio} audio${isMultiAudio ? "s" : ""}`;
+    } else if (getImage && getVideo) {
+        msg = `${getImage} photo${isMultiImage ? "s" : ""} and ${getVideo} video${isMultiVideo ? "s" : ""}`;
+    } else if (getImage && getAudio) {
+        msg = `${getImage} photo${isMultiImage ? "s" : ""} and ${getAudio} audio${isMultiAudio ? "s" : ""}`;
+    } else if (getVideo && getAudio) {
+        msg = `${getVideo} video${isMultiVideo ? "s" : ""} and ${getAudio} audio${isMultiAudio ? "s" : ""}`;
+    } else if (getImage) {
+        msg = `${getImage} photo${isMultiImage ? "s" : ""}`;
+    } else if (getVideo) {
+        msg = `${getVideo} video${isMultiVideo ? "s" : ""}`;
+    } else if (getAudio) {
+        msg = `${getAudio} audio${isMultiAudio ? "s" : ""}`;
     } else {
         msg = "No media uploaded";
     }

@@ -50,14 +50,14 @@ function RecentActivityCard(props) {
             {props.imgtype === "audio" ? (
               <div className="cstm_icn_wrpr">
                 <img
-                  className="list-card-img me-0"
+                  className="list-card-img me-0 light-gray-bg"
                   src={props.imgl}
                   alt="audio icon"
                 />
               </div>
             ) : (
               <img
-                className="list-card-img"
+                className="list-card-img light-gray-bg"
                 src={props.imgl}
                 alt="content image"
               />

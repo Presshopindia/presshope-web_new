@@ -6,6 +6,7 @@ import exclusive from "../assets/images/exclusive.png";
 import typeShare from "../assets/images/share.png";
 import typeCam from "../assets/images/typeCam.svg";
 import typeVideo from "../assets/images/typeVideo.svg";
+import taskIcon from "../assets/images/task.svg";
 import Header from "../component/Header";
 import DashBoardSortCard from "../component/card/DashBoardSortCard";
 import DashBoardTabCards from "../component/card/DashBoardTabCards";
@@ -35,7 +36,7 @@ import typeInterview from "../assets/images/interview.svg";
 import Loader from "../component/Loader";
 import { Get, Post } from "../services/user.services";
 import AddBroadcastTask from "./AddBroadcastTask";
-import { formatAmountInMillion, getDeepModifiedContent, getModifiedContent, getTaskContent } from "../component/commonFunction";
+import { formatAmountInMillion, getFavContent, getDeepModifiedContent, getModifiedContent, getTaskContent } from "../component/commonFunction";
 import PostIconsWrapper from "../component/PostIconComponents/PostIconsWrapper";
 import { DashboardCardInfo } from "../component/DashboardCardInfo";
 
@@ -99,7 +100,7 @@ const ContentPage = () => {
     setLoading(true);
 
     try {
-      const resp = await Post("mediaHouse/view/published/content");
+      const resp = await Post("mediaHouse/view/published/content", { content: "latest" });
 
       setPubContent(resp.data.content);
       if (resp) {
@@ -129,8 +130,8 @@ const ContentPage = () => {
     setLoading(true);
 
     try {
-      const resp = await Post("mediaHouse/favourites");
-      setFavouriteContent(resp.data.response.response);
+      const resp = await Post("mediaHouse/favouritesListingNew", { limit: 6 });
+      setFavouriteContent(resp.data.response.data);
       if (resp) {
         setLoading(false);
       }
@@ -219,6 +220,41 @@ const ContentPage = () => {
     setDashboardSort({ ...dashboardSort, type: "" });
   }
 
+  const [newUploadedContent, setNewUploadedContent] = useState(null);
+  const [contentPurchasedFromTask, setContentPurchasedFromTask] = useState(null);
+
+  const ContentPurchasedFromTasks = async () => {
+    try {
+      setLoading(true);
+      const resp = await Post("mediaHouse/content-purchased-from-task", {
+        limit: 2,
+      });
+      setContentPurchasedFromTask(resp?.data?.response);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    ContentPurchasedFromTasks();
+  }, []);
+
+  const NewUploadedContent = async () => {
+    setLoading(true);
+    try {
+      let resp = await Get(`mediaHouse/getuploadedContentbyHoppers?limit=2&offet=0`)
+      setNewUploadedContent(resp?.data?.uploadedContent);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    NewUploadedContent();
+  }, []);
+
   return (
     <>
       {loading && <Loader />}
@@ -271,7 +307,7 @@ const ContentPage = () => {
                     title="Favourited content"
                     type="favourite"
                     total={dashboardData?.content?.favourite?.totalCount}
-                    data={getDeepModifiedContent(dashboardData?.content?.favourite?.data)}
+                    data={getFavContent(dashboardData?.content?.favourite?.data)}
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}
                     sort={dashboardPayload?.requestedFilter?.favourite}
@@ -369,16 +405,11 @@ const ContentPage = () => {
                                   item?.hopperDetails?.avatarDetails?.avatar
                                 }
                                 imgtab={
-                                  item?.contentDetails?.content[0]?.media_type === "video"
-                                    ? item?.contentDetails?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                    item?.contentDetails?.content[0]?.thumbnail
-                                    : item?.contentDetails?.content[0]?.media_type ===
-                                      "audio"
-                                      ? audioic
-                                      : item?.contentDetails?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                      item?.contentDetails?.content[0]?.media
+                                  item?.contentDetails?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + item?.contentDetails?.content[0]?.media
+                                    : item?.contentDetails?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + item?.contentDetails?.content[0]?.media
+                                      : item.contentDetails?.content[0]?.media_type === "audio" ? audioic
+                                        : item?.contentDetails?.content[0]?.media_type === "doc" ? pdfic
+                                          : ""
                                 }
                                 tabcarddata={item?.contentDetails?.heading}
                                 tabcard2={moment(item?.createdAt).format(
@@ -404,16 +435,11 @@ const ContentPage = () => {
                                   item?.hopperDetails?.avatarDetails?.avatar
                                 }
                                 imgtab={
-                                  item?.contentDetails?.content[0]?.media_type === "video"
-                                    ? item?.contentDetails?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                    item?.contentDetails?.content[0]?.thumbnail
-                                    : item?.contentDetails?.content[0]?.media_type ===
-                                      "audio"
-                                      ? audioic
-                                      : item?.contentDetails?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                      item?.contentDetails?.content[0]?.media
+                                  item?.contentDetails?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + item?.contentDetails?.content[0]?.media
+                                    : item?.contentDetails?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + item?.contentDetails?.content[0]?.media
+                                      : item.contentDetails?.content[0]?.media_type === "audio" ? audioic
+                                        : item?.contentDetails?.content[0]?.media_type === "doc" ? pdfic
+                                          : ""
                                 }
                                 tabcarddata={item?.contentDetails?.heading}
                                 tabcard2={moment(item?.createdAt).format(
@@ -438,50 +464,33 @@ const ContentPage = () => {
                       View all
                       <BsArrowRight className="text-danger" />{" "}
                     </Link>
-                    {dashboardData?.task?.contentPurchasedFromTask?.data
-                      ?.slice(0, 2)
-                      ?.map((curr) => {
-                        return (
-                          <Link to={`/sourced-content-detail/${curr._id}`} key={curr?._id}>
-                            <DashBoardTabCards
-                              imgcount={curr?.task_id?.content.length}
-                              imgtab={
-                                curr.type === "video"
-                                  ? process.env.REACT_APP_UPLOADED_CONTENT +
-                                  curr.videothubnail
-                                  : process.env.REACT_APP_UPLOADED_CONTENT +
-                                  curr.imageAndVideo
-                              }
-                              tabcarddata={curr?.taskDetails?.heading}
-                              tabcard2={moment(curr.createdAt).format(
-                                "hh:mm a, DD MMM YYYY"
-                              )}
-                              tabcard3={`£${formatAmountInMillion(
-                                +curr.amount_paid
-                              )}`}
-                              feedIcon={
-                                curr.type === "image"
-                                  ? typeCam
-                                  : curr.type === "video"
-                                    ? typeVideo
-                                    : typeInterview
-                              }
-                              feedType={
-                                curr.type === "image"
-                                  ? "Photo"
-                                  : curr.type === "Video"
-                                    ? "Video"
-                                    : "Interview"
-                              }
-                              tabcard5={curr?.hopperDetails?.user_name}
-                              imgtab1={
-                                process.env.REACT_APP_AVATAR_IMAGE +
-                                curr?.hopperDetails?.avatarDetails?.avatar
-                              }
-                            />
-                          </Link>
-                        );
-                      })}
+                    {contentPurchasedFromTask?.data?.map((curr) => {
+                      return (
+                        <Link to={`/purchased-task-content-detail/${curr._id}`} key={curr?._id}>
+                          <DashBoardTabCards
+                            imgtab={(curr?.purchased_task_content?.[0]?.type === "image" || curr?.purchased_task_content?.[0]?.type === "video") ? curr?.purchased_task_content?.[0]?.videothubnail : audioic}
+                            tabcarddata={curr?.taskDetails?.heading}
+                            tabcard2={moment(curr.createdAt).format(
+                              "hh:mm a, DD MMM YYYY"
+                            )}
+                            tabcard3={`£${formatAmountInMillion(curr?.amount + curr?.Vat)}`}
+                            image_type={curr?.purchased_task_content?.[0]?.type}
+                            feedType={
+                              curr.type === "image"
+                                ? "Photo"
+                                : curr.type === "Video"
+                                  ? "Video"
+                                  : "Interview"
+                            }
+                            tabcard5={curr?.hopperDetails?.user_name}
+                            imgtab1={
+                              process.env.REACT_APP_AVATAR_IMAGE +
+                              curr?.hopperDetails?.avatarDetails?.avatar
+                            }
+                          />
+                        </Link>
+                      );
+                    })}
                   </div>
                 </Col>
               </Row>
@@ -630,9 +639,7 @@ const ContentPage = () => {
                                             <div className="rateReview_content">
                                               <div className="commonContentIconsWrap crd_in_icons d-flex justify-content-between">
                                                 <PostIconsWrapper
-                                                  images={curr?.image_count}
-                                                  video={curr?.video_count}
-                                                  audio={curr?.audio_count}
+                                                  images={curr?.content?.length || 0}
                                                 />
                                                 <span className="rateView-type dflt">
                                                   <img
@@ -650,28 +657,11 @@ const ContentPage = () => {
                                               <img
                                                 className="list-card-img"
                                                 src={
-                                                  curr?.content[0]
-                                                    ?.media_type === "video"
-                                                    ? curr?.content[0]?.thumbnail.startsWith(
-                                                      "https"
-                                                    )
-                                                      ? curr?.content[0]
-                                                        ?.thumbnail
-                                                      : process.env
-                                                        .REACT_APP_CONTENT_MEDIA +
-                                                      curr?.content[0]
-                                                        ?.thumbnail
-                                                    : // ? process.env
-                                                    //     .REACT_APP_CONTENT_MEDIA +
-                                                    //   curr?.content[0]
-                                                    //     ?.thumbnail
-                                                    curr?.content[0]
-                                                      ?.media_type ===
-                                                      "audio"
-                                                      ? audioic
-                                                      : process.env
-                                                        .REACT_APP_CONTENT_MEDIA +
-                                                      curr?.content[0]?.media
+                                                  curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                                    : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                                      : curr.content[0]?.media_type === "audio" ? audioic
+                                                        : curr?.content[0]?.media_type === "doc" ? pdfic
+                                                          : ""
                                                 }
                                                 alt="1"
                                               />
@@ -723,10 +713,10 @@ const ContentPage = () => {
                         </Tab>
 
                         <Tab eventKey="uploaded" title="Uploaded content">
-                          {uploadedContent?.slice(0, 2)?.map((item) => {
+                          {newUploadedContent?.map((item) => {
                             return (
                               <CardContent className="dash-c-body rev new_tbs_card" key={item?._id}>
-                                <Link to={`/content-details/${item._id}?task_content_id=${item?.content_id}`}>
+                                <Link to={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}>
                                   <div className="">
                                     <Card className="list-card mb-3 bg_grey">
                                       <CardContent className="dash-c-body">
@@ -735,62 +725,24 @@ const ContentPage = () => {
                                             <div className="commonContentIconsWrap crd_in_icons d-flex justify-content-between">
                                               <span className="rateView-type dflt cmr">
                                                 <span className="volCount">
-                                                  {item?.task_id?.content.length}
+                                                  {item?.content?.length}
                                                 </span>
-                                                {/* <img
-                                                  className=""
-                                                  src={
-                                                    item?.task_id?.content[0]
-                                                      ?.media_type == "image"
-                                                      ? contentCamera
-                                                      : item?.task_id
-                                                        ?.content[0]
-                                                        ?.media_type ==
-                                                        "video"
-                                                        ? contentVideo
-                                                        : null
-                                                  }
-                                                  alt={item?._id}
-                                                /> */}
-                                              </span>
-                                              {/* <PostIconsWrapper 
-                                                    images={item?.image_count}
-                                                    video={item?.video_count}
-                                                    audio={item?.audio_count}
-                                                  /> */}
-                                              <span className="rateView-type dflt">
-                                                <img
-                                                  className=""
-                                                  src={
-                                                    item.favourite_status ===
-                                                      "true"
-                                                      ? typestar
-                                                      : favic
-                                                  }
-                                                />
                                               </span>
                                             </div>
                                             <img
                                               className="list-card-img"
                                               src={
-                                                item?.task_id?.content[0]
-                                                  ?.media_type == "image"
-                                                  ? item?.task_id?.content[0]
-                                                    ?.watermark
-                                                  : item?.task_id?.content[0]
-                                                    ?.media_type == "video"
-                                                    ? item?.task_id?.content[0]?.thumbnail.startsWith(
-                                                      "https"
-                                                    )
-                                                      ? item?.task_id
-                                                        ?.content[0]
-                                                        ?.thumbnail
-                                                      : process.env
-                                                        .REACT_APP_CONTENT_MEDIA +
-                                                      item?.task_id
-                                                        ?.content[0]
-                                                        ?.thumbnail
-                                                    : null
+                                                item?.content[0]?.type === "image"
+                                                  ? item?.content[0]?.videothubnail ||
+                                                  process.env.REACT_APP_UPLOADED_CONTENT +
+                                                  item?.content[0]?.imageAndVideo
+                                                  : item?.content[0]?.type === "video"
+                                                    ? item?.content[0]?.videothubnail ||
+                                                    process.env.REACT_APP_UPLOADED_CONTENT +
+                                                    item?.content[0]?.videothubnail
+                                                    : item?.content[0]?.type === "audio"
+                                                      ? audioic
+                                                      : null
                                               }
                                               alt="1"
                                             />
@@ -800,7 +752,7 @@ const ContentPage = () => {
                                               variant="body2"
                                               className="list-car-txt mb-2 txt_mdm"
                                             >
-                                              {item.task_id.task_description}
+                                              {item?.content[0]?.task_id?.heading}
                                               <br />
                                             </Typography>
                                             <div className="d-flex align-items-center justify-content-between">
@@ -811,11 +763,7 @@ const ContentPage = () => {
                                                 className="mb-0 txt_mdm"
                                               >
                                                 <MdOutlineWatchLater color="#000" />
-                                                {moment(
-                                                  item.task_id.createdAt
-                                                ).format(
-                                                  " hh:mm A, DD MMM YYYY"
-                                                )}
+                                                {moment(item?.content[0]?.updatedAt).format(" hh:mm A, DD MMM YYYY")}
                                               </Typography>
                                             </div>
                                           </div>
@@ -830,7 +778,7 @@ const ContentPage = () => {
                           <div className="view-all_link_wrap d-flex justify-content-end">
                             <Link
                               className="view-all"
-                              to={"/Uploaded-Content/uploaded"}
+                              to={"/hopper-task-content/all"}
                             >
                               {" "}
                               View all <BsArrowRight className="text-danger" />{" "}
@@ -856,52 +804,90 @@ const ContentPage = () => {
                         }
                         activeKey={params?.tab3}
                       >
+                        {
+                          console.log("favouriteContent", favouriteContent)
+                        }
                         <Tab eventKey="favourited" title="Favourited">
                           <div
                             className="DashBoardsort_wrapper d-flex justify-content-start fvt_undr_ofr"
                             style={{ flexWrap: "wrap" }}
                           >
-                            {favouriteContent?.slice(0, 6)?.map((curr, index) => {
-                              return (
-                                <Link
-                                  to={`/Feeddetail/content/${curr?.content_id?._id}`}
-                                  className="favourited_card_design"
-                                  key={curr?._id}
-                                >
-                                  <DashBoardSortCard
-                                    className="fvrt_itm"
-                                    reviewType={contentCamera}
-                                    reviewTypetwo={typestar}
-                                    imgtab={
-                                      curr?.content_id?.content[0] &&
-                                        curr?.content_id?.content[0]
-                                          ?.media_type === "video"
-                                        ? process.env
-                                          .REACT_APP_CONTENT_MEDIA +
-                                        curr?.content_id?.content[0]
-                                          ?.thumbnail
-                                        : curr?.content_id?.content[0]
-                                          ?.media_type === "audio"
-                                          ? audioicsm
-                                          : curr?.content_id?.content[0]
-                                            ?.watermark
-                                    }
-                                    tabcarddata={
-                                      curr?.content_id?.description
-                                    }
-                                    feedIcon={
-                                      curr?.content_id?.type === "shared"
-                                        ? typeShare
-                                        : exclusive
-                                    }
-                                    feedType={curr?.content_id?.type?.toUpperCase()}
-                                    tabcard3={`${formatAmountInMillion(
-                                      curr?.content_id?.ask_price
-                                    )}`}
-                                    contentDetails={curr?.content_id}
-                                  />
-                                </Link>
-                              );
+                            {favouriteContent?.filter((el) => ("content_details" in el || "upload_content_details" in el))?.map((curr, index) => {
+                              if (curr?.upload_content_details) {
+                                return (
+                                  <Link
+                                    to={`/content-details/${curr?.upload_content_details?.task_details?._id}?hopper_id=${curr?.upload_content_details?.hopper_details?._id}`}
+                                    className="favourited_card_design"
+                                    key={curr?._id}
+                                  >
+                                    <DashBoardSortCard
+                                      className="fvrt_itm"
+                                      reviewType={contentCamera}
+                                      reviewTypetwo={typestar}
+                                      imgtab={
+                                        curr?.upload_content_details?.type === "image"
+                                          ? curr?.upload_content_details?.videothubnail ||
+                                          process.env.REACT_APP_UPLOADED_CONTENT +
+                                          curr?.upload_content_details?.imageAndVideo
+                                          : curr?.upload_content_details?.type === "video"
+                                            ? curr?.upload_content_details?.videothubnail ||
+                                            process.env.REACT_APP_UPLOADED_CONTENT +
+                                            curr?.upload_content_details?.videothubnail
+                                            : curr?.upload_content_details?.type === "audio"
+                                              ? audioic
+                                              : null
+                                      }
+                                      tabcarddata={
+                                        curr?.upload_content_details?.task_details?.heading
+                                      }
+                                      feedIcon={taskIcon}
+                                      feedType={"TASK"}
+                                      tabcard3={`${formatAmountInMillion(
+                                        curr?.upload_content_details?.type === "image" ? curr?.upload_content_details?.task_details?.hopper_photo_price :
+                                          curr?.upload_content_details?.type === "video" ? curr?.upload_content_details?.task_details?.hopper_videos_price :
+                                            curr?.upload_content_details?.type === "audio" ? curr?.upload_content_details?.task_details?.hopper_interview_price : ""
+                                      )}`}
+                                      fav={true}
+                                      contentDetails={1}
+                                    />
+                                  </Link>
+                                )
+                              } else {
+                                return (
+                                  <Link
+                                    to={`/Feeddetail/content/${curr?.content_details?._id}`}
+                                    className="favourited_card_design"
+                                    key={curr?._id}
+                                  >
+                                    <DashBoardSortCard
+                                      className="fvrt_itm"
+                                      reviewType={contentCamera}
+                                      reviewTypetwo={typestar}
+                                      imgtab={
+                                        curr?.content_details?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content_details?.content[0]?.media
+                                          : curr?.content_details?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content_details?.content[0]?.media
+                                            : curr?.content_details?.content[0]?.media_type === "audio" ? audioicsm
+                                              : curr?.content_details?.content[0]?.media_type === "doc" ? pdfic
+                                                : ""
+                                      }
+                                      tabcarddata={
+                                        curr?.content_details?.description
+                                      }
+                                      feedIcon={
+                                        curr?.content_details?.type === "shared"
+                                          ? typeShare
+                                          : exclusive
+                                      }
+                                      feedType={curr?.content_details?.type?.toUpperCase()}
+                                      tabcard3={`${formatAmountInMillion(
+                                        curr?.content_details?.ask_price
+                                      )}`}
+                                      fav={true}
+                                      contentDetails={curr?.content_details?.content?.length}
+                                    />
+                                  </Link>
+                                )
+                              }
                             })}
                           </div>
                           <div className="dashCard-heading d-flex justify-content-end">
@@ -916,7 +902,7 @@ const ContentPage = () => {
                         </Tab>
                         <Tab eventKey="underoffer" title="Under offer">
                           <div
-                            className="DashBoardsort_wrapper_tab d-flex justify-content-between fvt_undr_ofr"
+                            className="DashBoardsort_wrapper_tab d-flex fvt_undr_ofr"
                             style={{ flexWrap: "wrap" }}
                           >
                             {underOfferContent?.slice(0, 6).map((curr) => {
@@ -943,16 +929,11 @@ const ContentPage = () => {
                                         : favic
                                     }
                                     imgtab={
-                                      curr?.content[0]?.media_type === "video"
-                                        ? process.env
-                                          .REACT_APP_CONTENT_MEDIA +
-                                        curr?.content[0]?.thumbnail
-                                        : curr?.content[0]?.media_type ===
-                                          "audio"
-                                          ? audioicsm
-                                          : process.env
-                                            .REACT_APP_CONTENT_MEDIA +
-                                          curr?.content[0]?.media
+                                      curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                        : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                          : curr?.content[0]?.media_type === "audio" ? audioicsm
+                                            : curr?.content[0]?.media_type === "doc" ? pdfic
+                                              : ""
                                     }
                                     tabcarddata={curr?.description}
                                     feedIcon={feedIcon}
@@ -1018,14 +999,11 @@ const ContentPage = () => {
                                         : favic
                                     }
                                     imgtab={
-                                      curr?.content[0] &&
-                                        curr?.content[0]?.media_type === "video"
-                                        ? process.env.REACT_APP_CONTENT_MEDIA +
-                                        curr?.content[0]?.thumbnail
-                                        : curr?.content[0]?.media_type ===
-                                          "audio"
-                                          ? audioicsm
-                                          : curr?.content[0]?.watermark
+                                      curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                        : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                          : curr?.content[0]?.media_type === "audio" ? audioicsm
+                                            : curr?.content[0]?.media_type === "doc" ? pdfic
+                                              : ""
                                     }
                                     tabcarddata={curr?.description}
                                     feedIcon={

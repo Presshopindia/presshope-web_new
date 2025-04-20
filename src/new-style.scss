@@ -359,6 +359,15 @@ body .page-wrap {
 
 // --onboard_successs_css--
 
+.txt-success {
+  color: $black;
+  font-weight: bold;
+}
+
+.font-14 {
+  font-size: 14px !important;
+}
+
 .onboar_success {
   .txt-success {
     color: $black;
@@ -422,6 +431,18 @@ body .page-wrap {
   }
 }
 
+.admin_badge {
+  background-color: #ec4e54 !important;
+  font-size: 12px;
+  color: #ffff !important;
+  text-align: center;
+  border-radius: 4px;
+  padding: 4px 14px;
+  line-height: 12px;
+  position: absolute;
+  margin-left: 10px;
+  display: inline-block;
+}
 // -Forget_password_--
 
 .login_stepsWrap.left-pdng.forget_pass_wrap {

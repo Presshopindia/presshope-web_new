@@ -57,7 +57,7 @@ const Signup = () => {
     (multiOfficeInitState.length > 1 && true) || false
   );
   // const [show, setShow] = useState(true);
-  const [AdminDetails, setAdminDetails] = useState(adminDetailInitState);
+  const [AdminDetails, setAdminDetails] = useState({ ...adminDetailInitState, office_email: localAdmin?.user_email });
   const [isWindowShowMessage, setIsWindowShowMessage] = useState(false);
   const [renderForRegistrationData, setRenderForRegistrationData] = useState(0);
   const [errorData, setErrorData] = useState({
@@ -71,6 +71,11 @@ const Signup = () => {
     useDarkMode();
 
   const [phoneErrors, setPhoneErrors] = useState([]);
+
+  // Filtered designation-
+  const filteredDesignation = designations.filter(
+    (item) => item._id === localAdmin?.designation_id
+  );
 
   // Check email debounce-
   const checkEmail = debounce(async (email) => {
@@ -93,7 +98,6 @@ const Signup = () => {
         setErrorData({ ...errorData, number: "Company number already exists" });
       }
     } catch (error) {
-      console.log(error.message);
     }
   };
 
@@ -146,7 +150,6 @@ const Signup = () => {
   const handleCompanyChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-    console.log({ name, value });
     setAdminDetails((prev) => ({
       ...prev,
       company_details: { ...prev.company_details, [name]: value },
@@ -214,12 +217,8 @@ const Signup = () => {
       successToasterFun("Please select the country code");
     } else {
       localStorage.setItem("Page1", JSON.stringify(AdminDetails));
+      localStorage.setItem("designation", JSON.stringify(filteredDesignation[0]));
       const userEmailId = localStorage.getItem("UserEmailId");
-      console.log(
-        "adminPreRegistrationEmail ----->  ------->",
-        adminPreRegistrationEmail
-      );
-      console.log("userEmailId -----> hello ------->", userEmailId);
       // data preboarding saving
       const step2Data = {
         email: userEmailId ?? adminPreRegistrationEmail,
@@ -235,71 +234,11 @@ const Signup = () => {
         step2Data
       );
 
-      console.log("respPreRegistrationData ------>", respPreRegistrationData);
-      console.log("respPreRegistrationData  admin------>", AdminDetails);
       if (localStorage.getItem("Page1")) {
         navigate("/upload-docs");
       }
     }
   };
-
-  // Add company logo-
-  // const AddCompanyLogo = async (file) => {
-  //   const imageUrl = URL.createObjectURL(file);
-  //  console.log("createobjecturl in react js example",imageUrl);
-  //  console.log("create file object --------> -------->",file);
-  //   // Create an Image object to get the image's dimensions
-  //   const img = new Image();
-  //   console.log("image11", img);
-
-  //   // Set the src of the image to the object URL
-  //   img.src = imageUrl;
-
-  //   // Wait for the image to load and then retrieve its dimensions
-  //   img.onload = async() => {
-  //     // Once the image is loaded, log the dimensions to check if it's working
-  //     console.log("Width of image:", img.width);
-  //     console.log("Height of image:", img.height);
-
-  //     if(img.width != img.height){
-  //       toast.error(`width of image should equal to height, your image width(${img.width}) and height(${img.height})`)
-  //       return;
-  //     }
-
-  //     try{
-  //       const Formdata = new FormData();
-  //       Formdata.append("path", "user");
-  //       Formdata.append("media", file);
-  //       const filepath = await Post("mediaHouse/uploadUserMedia", Formdata);
-  //       setAdminDetails((prev) => ({
-  //         ...prev,
-  //         company_details: {
-  //           ...prev.company_details,
-  //           profile_image: filepath.data.path,
-  //         },
-  //       }));
-  //     }catch(error){
-  //       console.log(error)
-  //     }
-  //   };
-
-  //   // Optionally, handle errors in loading the image
-  //   img.onerror = () => {
-  //     console.error("Failed to load image.");
-  //   };
-
-  //   // const Formdata = new FormData();
-  //   // Formdata.append("path", "user");
-  //   // Formdata.append("media", file);
-  //   // const filepath = await Post("mediaHouse/uploadUserMedia", Formdata);
-  //   // setAdminDetails((prev) => ({
-  //   //   ...prev,
-  //   //   company_details: {
-  //   //     ...prev.company_details,
-  //   //     profile_image: filepath.data.path,
-  //   //   },
-  //   // }));
-  // };
 
   const AddCompanyLogo = async (file) => {
     // Create a Promise to handle the image processing
@@ -379,7 +318,6 @@ const Signup = () => {
         },
       }));
     } catch (error) {
-      console.error("Error processing image:", error);
       toast.error("Failed to process image");
     }
   };
@@ -409,11 +347,6 @@ const Signup = () => {
     setMediahouseType(list2?.data?.data);
   };
 
-  // Filtered designation-
-  const filteredDesignation = designations.filter(
-    (item) => item._id === localAdmin?.designation_id
-  );
-
   // Use effect-
   useEffect(() => {
     getOfficeType();
@@ -427,7 +360,6 @@ const Signup = () => {
 
   // Handle change for multi office-
   const handleMultiAddOffice = (index, name, value) => {
-    // console.log("index, name, value", index, name, value);
     const newOffice = [...multiOffice];
     if (name === "country" || name === "city" || name === "pincode") {
       newOffice[index] = {
@@ -495,7 +427,11 @@ const Signup = () => {
     setShowPopup(true);
   };
 
-  console.log("AdminDetails ------> ----->", AdminDetails);
+  const searchBoxRefPostalCode = useRef(null);
+  const [showPostalCodePopUp, setPostalCodePopUp] = useState(false);
+  const handlePostalCodePopUp = () => {
+    setPostalCodePopUp(true);
+  };
 
   // Google map address-
   const onMapLoadStreet = (index) => {
@@ -516,6 +452,7 @@ const Signup = () => {
       const cityElement = doc.querySelector(".locality");
 
       if (countryNameElement) {
+        const name = places[0]?.name;
         const address = places[0].formatted_address;
         const country = countryNameElement?.textContent;
         const city = cityElement?.textContent;
@@ -534,30 +471,12 @@ const Signup = () => {
           },
         }));
 
-        // const newOffice = [...multiOffice];
-        // newOffice[index] = {
-        //   ...newOffice[index],
-        //   address: {
-        //     ...newOffice[index].address,
-        //     complete_address: address,
-        //     city,
-        //     country,
-        //     Pin_Location: {
-        //       lat: latitude,
-        //       long: longitude,
-        //     },
-        //     location: {
-        //       type: "Point",
-        //       coordinates: [latitude, longitude],
-        //     },
-        //   },
-        // };
-        // setMultiOffice(newOffice);
         setMultiOffice((prev) => {
           const newOffice = [...prev];
 
           newOffice[index] = {
             ...newOffice[index],
+            // post_code: name,
             address: {
               ...newOffice[index].address,
               complete_address: address,
@@ -580,16 +499,47 @@ const Signup = () => {
     });
   };
 
+  // Google map address-
+  const onMapLoadPostalCode = (index) => {
+    const searchBox = new window.google.maps.places.SearchBox(
+      searchBoxRefPostalCode.current
+    );
+    searchBox.addListener("places_changed", () => {
+      const places = searchBox.getPlaces();
+      if (places.length === 0) {
+        return;
+      }
+
+      const htmlString = places[0].adr_address;
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlString, "text/html");
+
+      const countryNameElement = doc.querySelector(".country-name");
+
+      if (countryNameElement) {
+        const name = places[0]?.name;
+
+        setMultiOffice((prev) => {
+          const newOffice = [...prev];
+
+          newOffice[index] = {
+            ...newOffice[index],
+            post_code: name,
+          };
+
+          return newOffice;
+        });
+      }
+    });
+  };
+
   const handleGetAllinformationAndAddAnotherOffice = async () => {
     try {
       const userEmailId = localStorage.getItem("UserEmailId");
-      console.log("userEmail ------> ----->", userEmailId);
       const list = await Get(
         `mediaHouse/getPreRegistrationData?email=${userEmailId}`
       );
 
-      console.log("all list 2------>", list);
-      console.log("all list step2------>", list.data.data.step2);
       if (
         list?.data?.data?.step2 &&
         list?.data?.data?.step2?.office_details.length >= 1
@@ -614,7 +564,6 @@ const Signup = () => {
             admin_rights: list?.data?.data?.step2?.admin_rights,
           }),
         });
-        console.log(AdminDetails, "admin Details");
         //  setAdminDetails({...AdminDetails,company_details,office_details})
         setMultiOffice(office_details);
       }
@@ -624,20 +573,11 @@ const Signup = () => {
   // Add office-
   const AddOffice = async (e) => {
     e.preventDefault();
-    console.log(
-      "AdminDetails.company_details.profile_image  ------->  ----->",
-      AdminDetails.company_details.profile_image
-    );
-    console.log("hello pls find bugs");
     if (!AdminDetails?.company_details?.profile_image) {
       toast.error("Company logo is empty");
       return;
     }
     try {
-      console.log(
-        "AdminDetails.company_details.profile_image  ------->  ----->",
-        AdminDetails.company_details.profile_image
-      );
       let payload = multiOffice[multiOffice.length - 1];
       payload = {
         ...payload,
@@ -646,8 +586,6 @@ const Signup = () => {
         company_number: AdminDetails.company_details.company_number,
         profile_image: AdminDetails.company_details.profile_image,
       };
-
-      console.log("payload ----> ------> ----->", payload);
 
       setLoading(true);
       const resp = await Post("mediaHouse/addOfficeDetail", payload);
@@ -681,10 +619,6 @@ const Signup = () => {
         is_another_office_exist: true,
       };
 
-      console.log(
-        "adminPreRegistrationEmail office details ---->   ----->",
-        adminPreRegistrationEmail
-      );
       const step2Data = {
         email: userEmailId ?? adminPreRegistrationEmail,
         step2: {
@@ -697,8 +631,6 @@ const Signup = () => {
         step2Data
       );
 
-      console.log("respPreRegistrationData ------>", respPreRegistrationData);
-      console.log("respPreRegistrationData  admin------>", AdminDetails);
       if (respPreRegistrationData) {
         setShow(true);
         setIsWindowShowMessage(false);
@@ -727,13 +659,10 @@ const Signup = () => {
   const handleGetAllinformation = async () => {
     try {
       const userEmailId = localStorage.getItem("UserEmailId");
-      console.log("userEmail ------> ----->", userEmailId);
       const list = await Get(
         `mediaHouse/getPreRegistrationData?email=${userEmailId}`
       );
 
-      console.log("all list 2------>", list);
-      console.log("all list step2------>", list.data.data.step2);
       if (
         list?.data?.data?.step2 &&
         list?.data?.data?.step2?.office_details.length >= 1
@@ -1015,8 +944,6 @@ const Signup = () => {
                                       Add company logo
                                     </span>
                                   )}
-                                {/* {!AdminDetails?.company_details */}
-                                {/* // ?.profile_image && ( */}
                                 <input
                                   type="file"
                                   onChange={(e) => {
@@ -1024,7 +951,6 @@ const Signup = () => {
                                   }}
                                   style={{ padding: "0px" }}
                                 />
-                                {/* // )} */}
                               </div>
                             </Col>
                           </Row>
@@ -1033,6 +959,8 @@ const Signup = () => {
                           <p className="onbrdheading sign_hdng">
                             Office details
                           </p>
+
+
                           {/* New work for multi offices adding */}
                           {multiOffice.map((el, index) => (
                             <>
@@ -1092,24 +1020,6 @@ const Signup = () => {
                                     </Select>
                                   </Form.Group>
                                 </Col>
-                                {/* <Col md={4}>
-                                  <Form.Group className="mb-4 form-group">
-                                    <img src={ComputerPic} alt="" />
-                                    <Select
-                                      className="w-100 slct_sign">
-                                      <MenuItem
-                                        className="selectPlaceholder"
-                                        value="option1"
-                                      >
-                                        Kind{" "}
-                                      </MenuItem>
-                                      <MenuItem className="selectPlaceholder"
-                                        value="option2">
-                                        option1
-                                      </MenuItem>
-                                    </Select>
-                                  </Form.Group>
-                                </Col> */}
                                 <Col md={12} className="">
                                   <Form.Group className="mb-4 form-group">
                                     <img src={location} alt="" />
@@ -1117,17 +1027,26 @@ const Signup = () => {
                                       type="text"
                                       className=""
                                       placeholder="Address *"
-                                      name="pincode"
+                                      name="address"
                                       required
-                                      onChange={(e) =>
-                                        handleMultiAddOffice(
-                                          index,
-                                          e.target.name,
-                                          e.target.value
-                                        )
-                                      }
-                                      value={el?.address?.pincode || ""}
+                                      onFocus={handlePopupOpen}
+                                      onClick={handlePopupOpen}
+                                      ref={searchBoxRefStreet}
+                                    // onChange={(e) =>
+                                    //   handleMultiAddOffice(
+                                    //     index,
+                                    //     e.target.name,
+                                    //     e.target.value
+                                    //   )
+                                    // }
                                     />
+                                    {showPopup && (
+                                      <div className="map-popup">
+                                        <GoogleMap
+                                          onLoad={() => onMapLoadStreet(index)}
+                                        />
+                                      </div>
+                                    )}
                                   </Form.Group>
                                 </Col>
                                 <Col md={4}>
@@ -1137,15 +1056,23 @@ const Signup = () => {
                                       placeholder="Post code"
                                       className="addr_custom_inp w-100"
                                       type="textarea"
-                                      onFocus={handlePopupOpen}
-                                      onClick={handlePopupOpen}
-                                      ref={searchBoxRefStreet}
+                                      name="post_code"
+                                      onFocus={handlePostalCodePopUp}
+                                      onClick={handlePostalCodePopUp}
+                                      ref={searchBoxRefPostalCode}
+                                      value={el.post_code}
+                                      onChange={(e) =>
+                                        handleMultiAddOffice(
+                                          index,
+                                          e.target.name,
+                                          e.target.value
+                                        )
+                                      }
                                     />
-
-                                    {showPopup && (
+                                    {showPostalCodePopUp && (
                                       <div className="map-popup">
                                         <GoogleMap
-                                          onLoad={() => onMapLoadStreet(index)}
+                                          onLoad={() => onMapLoadPostalCode(index)}
                                         />
                                       </div>
                                     )}
@@ -1218,7 +1145,7 @@ const Signup = () => {
                                       className="f_1 cntry_code"
                                       international
                                       required
-                                      countryCallingCodeEditable={false}
+                                      // countryCallingCodeEditable={false}
                                       name="country_code"
                                       value={el?.country_code || ""}
                                       onChange={(e) => {
@@ -1348,7 +1275,7 @@ const Signup = () => {
                                   </Col>
                                   <Col lg={6} md={12} sm={12} xs={12}>
                                     <Form.Group className="form-group">
-                                      <img src={user} alt="" />
+                                      <img src={office} alt="" />
                                       <Select
                                         className="w-100 slct_sign"
                                         value={
@@ -1382,7 +1309,7 @@ const Signup = () => {
                                 </Row>
                               </Col>
                               <Col md={3}>
-                                <div className="currentPic adm_profile position-relative text-center">
+                                <div className="currentPic logo_inp position-relative text-center p-0">
                                   {AdminDetails.administrator_details
                                     .admin_profile === "" && (
                                       <img src={addPic} alt="" />
@@ -1461,8 +1388,7 @@ const Signup = () => {
                                     required
                                     className=""
                                     value={
-                                      AdminDetails.administrator_details
-                                        .office_email
+                                      localAdmin?.user_email
                                     }
                                     placeholder="Official email id *"
                                     name="office_email"
@@ -1510,7 +1436,7 @@ const Signup = () => {
                                   <PhoneInput
                                     className="f_1 cntry_code"
                                     international
-                                    countryCallingCodeEditable={false}
+                                    // countryCallingCodeEditable={false}
                                     required
                                     name="country_code"
                                     value={

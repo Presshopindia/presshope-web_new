@@ -529,6 +529,25 @@ const Accounts = () => {
     setDashboardSort({ ...dashboardSort, type: "" });
   }
 
+  const [pendingPayment, setPendingPayment] = useState(0);
+  const PendingPayment = async () => {
+    try {
+      const res = await Get(`mediahouse/paymenttobemade`);
+      const totalPrice = res?.data?.data?.reduce((acc, item) => {
+        const amount = res?.data?.chatdata?.find((el) => el?.image_id == item?._id)?.amount || 0;
+        return acc + Number(amount);
+      }, 0);
+
+      setPendingPayment(totalPrice);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    PendingPayment();
+  }, [])
+
   return (
     <>
       {loading && <Loader />}
@@ -681,7 +700,7 @@ const Accounts = () => {
                                     className="card-head-txt mb-2 mt-2"
                                   >
                                     £
-                                    {formatAmountInMillion(accountCount?.pending_payment || 0)}
+                                    {formatAmountInMillion(pendingPayment || 0)}
                                   </Typography>
                                 </div>
                                 <Typography
@@ -787,16 +806,9 @@ const Accounts = () => {
                                                               src={
                                                                 item?.media_type ===
                                                                   "video"
-                                                                  ? process.env
-                                                                    .REACT_APP_CONTENT_MEDIA +
-                                                                  item?.thumbnail
-                                                                  : item?.media_type ===
-                                                                    "audio"
-                                                                    ? audiosm
-                                                                    : item?.thumbnail ||
-                                                                    process.env
-                                                                      .REACT_APP_CONTENT_MEDIA +
-                                                                    item?.media
+                                                                  ? process.env.REACT_APP_THUMBNAIL + item?.media
+                                                                  : item?.media_type === "audio" ? audiosm
+                                                                    : process.env.REACT_APP_CONTENT_MEDIA + item?.media
                                                               }
                                                               className="content_img"
                                                             />
@@ -866,9 +878,9 @@ const Accounts = () => {
                                                         alt="Photo"
                                                         className="icn"
                                                       />{" "}
+                                                      <br />
                                                     </Tooltip>
                                                   ) : null}
-                                                  <br />
                                                   {getMediaType("video") ? (
                                                     <Tooltip title="Video">
                                                       {" "}
@@ -877,9 +889,9 @@ const Accounts = () => {
                                                         alt="Video"
                                                         className="icn"
                                                       />
+                                                      <br />
                                                     </Tooltip>
                                                   ) : null}
-                                                  <br />
                                                   {getMediaType("audio") ? (
                                                     <Tooltip title="Audio">
                                                       <img
@@ -1075,20 +1087,13 @@ const Accounts = () => {
                                                       .map((item) => {
                                                         return (
                                                           <img
-                                                            src={
-                                                              item?.media_type ===
-                                                                "video"
-                                                                ? process.env
-                                                                  .REACT_APP_CONTENT_MEDIA +
-                                                                item?.thumbnail
-                                                                : item?.media_type ===
-                                                                  "audio"
-                                                                  ? audiosm
-                                                                  : item?.thumbnail ||
-                                                                  process.env
-                                                                    .REACT_APP_CONTENT_MEDIA +
-                                                                  item?.media
-                                                            }
+                                                          src={
+                                                            item?.media_type ===
+                                                              "video"
+                                                              ? process.env.REACT_APP_THUMBNAIL + item?.media
+                                                              : item?.media_type === "audio" ? audiosm
+                                                                : process.env.REACT_APP_CONTENT_MEDIA + item?.media
+                                                          }
                                                             className="content_img"
                                                           />
                                                         );

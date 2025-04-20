@@ -7,13 +7,13 @@ import { useEffect, useRef, useState } from "react";
 import Loader from "./Loader";
 import { Get, Post } from "../services/user.services";
 import moment from "moment";
-import socketInternal from "../InternalSocket";
 import Overlay from "react-bootstrap/Overlay";
 import Tooltip from "react-bootstrap/Tooltip";
 import { ReactMic } from "react-mic-recorder";
 import Modal from "react-bootstrap/Modal";
 import { Container } from "react-bootstrap";
 import { useDarkMode } from "../context/DarkModeContext";
+import socketServer from "../socket.config";
 
 function Chatinternal(props) {
   const [isRecording, setIsRecording] = useState(false);
@@ -112,8 +112,8 @@ function Chatinternal(props) {
     if (messageContainer) {
       messageContainer.scrollTop = messageContainer?.scrollHeight;
     }
-    socketInternal.emit("room join", { room_id: props?.room_id });
-    socketInternal.on("internal group chat", (data) => {
+    socketServer.emit("room join", { room_id: props?.room_id });
+    socketServer.on("internal group chat", (data) => {
       const newMessage = data;
       if (!newMessage?.createdAt) {
         setMessage((prevMessages) => [...prevMessages, newMessage]);
@@ -121,36 +121,37 @@ function Chatinternal(props) {
       }
     });
     return () => {
-      socketInternal.emit("room leave", { room_id: props?.room_id });
-      socketInternal.off("internal group chat");
+      socketServer.emit("room leave", { room_id: props?.room_id });
+      socketServer.off("internal group chat");
     };
-  }, [socketInternal, props?.room_id, props.remove_user_id]);
+  }, [socketServer, props?.room_id, props.remove_user_id]);
 
   // chat messages list
   const handleButtonClick = (e) => {
-    console.log("chedck 1  ---->  --->", e);
     e.preventDefault();
     let messages = {
-      sender_id: props.user_id,
+      sender_id: profileData?._id,
       room_id: props?.room_id,
       message: mediaFile?.path ? mediaFile?.path : msg,
       type: mediaFile?.type ? mediaFile?.type : "text",
       user_info: {
-        profile_image: userImage,
+        profile_image: profileData?.hasOwnProperty("admin_detail")
+          ? profileData?.admin_detail?.admin_profile
+          : profileData?.profile_image,
         first_name: profileData?.first_name,
         last_name: profileData?.last_name,
       },
     };
-    console.log("chedck 2  ---->  --->");
-    socketInternal.on("connect", () => {
+    console.log("chedck 2  ---->  --->", messages);
+    socketServer.on("connect", () => {
       console.log("Socket connected successfully!");
     });
 
-    socketInternal.on("connect_error", (error) => {
+    socketServer.on("connect_error", (error) => {
       console.error("Connection error:", error);
     });
 
-    socketInternal.emit("internal group chat", messages);
+    socketServer.emit("internal group chat", messages);
     console.log("chedck 3  ---->  --->");
 
     setMsg("");
@@ -210,18 +211,25 @@ function Chatinternal(props) {
             id="message-container-1"
           >
             {message?.map((curr) => {
-              // console.log("alll audio element----<>", curr);
               return (
-                <div className="baat_cheet">
+                <div className="baat_cheet" key={curr?._id}>
                   {curr?.type === "add" && curr.user_id !== profileData._id ? (
                     <p className="usrAddedTxt mb-4">
-                      <span>You added {curr?.addedMsg}</span>
+                      <span>
+                        {
+                          profileData?._id === curr?.sender_id?._id ? `You added ${curr?.addedMsg}` : `You have been added by ${curr?.sender_id?.full_name}`
+                        }
+                      </span>
                     </p>
                   ) : curr?.type == "remove" ? (
                     <p className="usrAddedTxt mb-4">
-                      <span>You removed {curr?.addedMsg}</span>
+                      <span>
+                        {
+                          profileData?._id === curr?.sender_id?._id ? `You removed ${curr?.addedMsg}` : `You have been removed by ${curr?.sender_id?.full_name}`
+                        }
+                      </span>
                     </p>
-                  ) : (
+                  ) : curr?.user_info && (
                     <div className="chatting_itm d-flex align-items-start">
                       <img
                         src={

@@ -565,7 +565,7 @@ const TaskReports = ({
             <DashboardCardInfo
               showSort={false}
               title="Content purchased from tasks today"
-              path="/reports-tables-task/content_sourced_task"
+              path="/content-tables/content_sourced_from_task_today"
               trend={dashboardData?.contentPurchasedFromTaskToday?.trend}
               total={dashboardData?.contentPurchasedFromTaskToday?.totalCount}
             />
@@ -594,7 +594,7 @@ const TaskReports = ({
             <DashboardCardInfo
               showSort={false}
               title="Funds invested today"
-              path="/reports-tables-task/funds_invested_today"
+              path="/content-tables/content_sourced_from_task_funds_invested_today"
               trend={dashboardData?.contentPurchasedFromTask?.trend}
               total={"£" + formatAmountInMillion(dashboardData?.totalFundInvestedToday?.totalAmount || 0)}
             />
@@ -913,7 +913,7 @@ const TaskReports = ({
                             >
                               <img
                                 className="reportcontentImg img-fluid"
-                                src={(curr?.purchased_task_content?.type === "image" || curr?.purchased_task_content?.type === "video") ? curr?.purchased_task_content?.videothubnail : audioic}
+                                src={(curr?.purchased_task_content?.[0]?.type === "image" || curr?.purchased_task_content?.[0]?.type === "video") ? curr?.purchased_task_content?.[0]?.videothubnail : audioic}
                                 alt=""
                               />
                               <div className="contInfo d-flex">

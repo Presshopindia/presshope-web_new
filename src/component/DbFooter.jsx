@@ -223,7 +223,7 @@ const DbFooter = () => {
                         <img src={playstore} alt="" />
                       </div>
                       <h6 className="copyrText mt-1 mb-0">
-                        © 2024 PressHop UK. All rights reserved.
+                        © 2025 PressHop UK. All rights reserved.
                       </h6>
                     </Col>
                   </Row>

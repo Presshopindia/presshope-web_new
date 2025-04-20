@@ -35,7 +35,12 @@ const HopperUploadedContent = () => {
   const TaskDetails = async (id) => {
     setLoading(true);
     try {
-      let resp = await Get(`mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit}&task_id=${param?.task_id}`)
+      let resp = "";
+      if (param?.task_id !== "all") {
+        resp = await Get(`mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit}&task_id=${param?.task_id}`)
+      } else {
+        resp = await Get(`mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit}`)
+      }
       setNewUploadedContent(resp?.data);
       setTotalPage(Math.ceil(resp.data?.totalUploadedContent / limit));
       setLoading(false);
@@ -47,6 +52,14 @@ const HopperUploadedContent = () => {
   useEffect(() => {
     TaskDetails();
   }, [page]);
+
+  const handleFavourite = (i) => {
+    setNewUploadedContent((prev) => {
+      const allContent = {...prev};
+      allContent.uploadedContent[i].content[0]["favourited"] = allContent.uploadedContent[i].content[0]["favourited"] === "true" ? "false" : "true";
+      return allContent;
+    });
+  };
 
   return (
     <>
@@ -128,11 +141,11 @@ const HopperUploadedContent = () => {
                             lnkto={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
                             viewTransaction="View details"
                             viewDetail={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
-                            fvticns={
-                              item?.favourite_status === "true"
-                                ? favouritedic
-                                : favic
-                            }
+                            // fvticns={
+                            //   item?.content[0]?.favourited === "true"
+                            //     ? favouritedic
+                            //     : favic
+                            // }
                             type_tag={item?.content[0]?.category_details?.name}
                             allContent={item?.content[0]?.task_id?.content}
                             type_img={item?.content[0]?.category_details?.icon}
@@ -150,13 +163,13 @@ const HopperUploadedContent = () => {
                                     ? item?.content[0]?.task_id?.hopper_videos_price || 0
                                     : null
                             )}`}
-                            favourite={() => handleFavourite(index, "task")}
-                            bool_fav={
-                              item?.favourite_status === "true" ? "false" : "true"
-                            }
+                            // favourite={() => handleFavourite(index, "task")}
+                            // bool_fav={
+                            //   item?.content[0]?.favourited === "true" ? "false" : "true"
+                            // }
                             content_id={item?._id}
                             task_content_id={item?._id || item?.task_id?._id}
-                            taskContentId={item?._id}
+                            taskContentId={item?.content?.map((el) => el._id)}
                             is_sale_status={true}
                           />
                         </Col>
@@ -170,7 +183,7 @@ const HopperUploadedContent = () => {
           {totalPage ? (
             <PaginationComp
               totalPage={totalPage}
-              path="task"
+              path={`hopper-task-content/${param?.task_id}`}
               type="fav"
               setPage={setPage}
               page={page}

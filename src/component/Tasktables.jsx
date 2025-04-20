@@ -47,6 +47,7 @@ import exclusiveic from "../assets/images/exclusive.svg";
 import NewContentPurchasedOnline from "./Sortfilters/Content/NewContentPurchasedOnlne";
 import Loader from "./Loader";
 import proIcn from "../assets/images/pro-icon.svg";
+import locationPin from "../assets/images/locationPin.png";
 import typeInterviewwt from "../assets/images/typeinterview-wt.svg";
 import { formatAmountInMillion } from "./commonFunction";
 import { AiFillCaretDown } from "react-icons/ai";
@@ -224,12 +225,8 @@ const Tasktables = () => {
                         >
                           <thead>
                             <tr>
-                              <th className="brdcstd_tsk_th">
-                                Broadcasted tasks
-                              </th>
-                              <th className="time_th">
-                                Broadcasted time & date
-                              </th>
+                              <th className="brdcstd_tsk_th">Broadcasted tasks</th>
+                              <th className="time_th">Broadcasted time & date</th>
                               <th className="tsk_dlts">Task details</th>
                               <th className="location_th">Location</th>
                               <th className="type_th text-center">Type</th>
@@ -287,6 +284,10 @@ const Tasktables = () => {
                                                   ?.coordinates[0],
                                                 lng: curr?.address_location
                                                   ?.coordinates[1],
+                                              }}
+                                              icon={{
+                                                url: locationPin,
+                                                scaledSize: new window.google.maps.Size(30, 30), // Size of pin (Width, Height)
                                               }}
                                             />
                                           </GoogleMap>
@@ -507,6 +508,10 @@ const Tasktables = () => {
                                                     ?.coordinates[0],
                                                   lng: curr?.address_location
                                                     ?.coordinates[1],
+                                                }}
+                                                icon={{
+                                                  url: locationPin,
+                                                  scaledSize: new window.google.maps.Size(30, 30), // Size of pin (Width, Height)
                                                 }}
                                               />
                                             </GoogleMap>
@@ -1246,6 +1251,10 @@ const Tasktables = () => {
                                                   ?.coordinates[0],
                                                 lng: curr?.address_location
                                                   ?.coordinates[1],
+                                              }}
+                                              icon={{
+                                                url: locationPin,
+                                                scaledSize: new window.google.maps.Size(30, 30), // Size of pin (Width, Height)
                                               }}
                                             />
                                           </GoogleMap>

@@ -1307,8 +1307,6 @@ const ReportsTablesContent = () => {
                                       <div className="content_imgs_wrap">
                                         <div className="content_imgs">
                                           {value?.content?.slice(0, 5)?.map((el) => {
-
-                                            { console.log("allelementimage", el) }
                                             return (
                                               el?.content?.[0]?.media_type ===
                                                 "image" ? (
@@ -1325,8 +1323,8 @@ const ReportsTablesContent = () => {
                                                 <img
                                                   src={
                                                     process.env
-                                                      .REACT_APP_CONTENT_MEDIA +
-                                                    el?.content?.[0]?.thumbnail
+                                                      .REACT_APP_THUMBNAIL +
+                                                    el?.content?.[0]?.media
                                                   }
                                                   className="content_img"
                                                 />
@@ -1334,7 +1332,7 @@ const ReportsTablesContent = () => {
                                                 "audio" ? (
                                                 <img
                                                   src={audioic}
-                                                  className="content_img"
+                                                  className="content_img light-gray-bg"
                                                 />
                                               ) : null
                                             )
@@ -1434,10 +1432,7 @@ const ReportsTablesContent = () => {
                                           el?.content?.[0]?.media_type ===
                                             "image" ? (
                                             <img
-                                              src={
-                                                process.env
-                                                  .REACT_APP_CONTENT_MEDIA +
-                                                el?.content?.[0]?.media
+                                              src={process.env.REACT_APP_CONTENT_MEDIA + el?.content?.[0]?.media
                                               }
                                               className="content_img"
                                             />
@@ -1446,8 +1441,8 @@ const ReportsTablesContent = () => {
                                             <img
                                               src={
                                                 process.env
-                                                  .REACT_APP_CONTENT_MEDIA +
-                                                el?.content?.[0]?.thumbnail
+                                                  .REACT_APP_THUMBNAIL +
+                                                el?.content?.[0]?.media
                                               }
                                               className="content_img"
                                             />
@@ -1455,7 +1450,7 @@ const ReportsTablesContent = () => {
                                             "audio" ? (
                                             <img
                                               src={audioic}
-                                              className="content_img"
+                                              className="content_img light-gray-bg"
                                             />
                                           ) : null
                                         )}
@@ -1560,8 +1555,8 @@ const ReportsTablesContent = () => {
                                                 : el?.content[0]?.media_type ===
                                                   "video"
                                                   ? process.env
-                                                    .REACT_APP_CONTENT_MEDIA +
-                                                  el?.content[0]?.thumbnail
+                                                    .REACT_APP_THUMBNAIL +
+                                                  el?.content[0]?.media
                                                   : el?.content[0]?.media_type ===
                                                     "audio"
                                                     ? audioic
@@ -1570,7 +1565,7 @@ const ReportsTablesContent = () => {
                                             return mediaUrl ? (
                                               <img
                                                 src={mediaUrl}
-                                                className="content_img"
+                                                className="content_img light-gray-bg"
                                               />
                                             ) : null;
                                           })}
@@ -1684,8 +1679,8 @@ const ReportsTablesContent = () => {
                                             <img
                                               src={
                                                 process.env
-                                                  .REACT_APP_CONTENT_MEDIA +
-                                                el?.content?.[0]?.thumbnail
+                                                  .REACT_APP_THUMBNAIL +
+                                                el?.content?.[0]?.media
                                               }
                                               className="content_img"
                                             />
@@ -1693,7 +1688,7 @@ const ReportsTablesContent = () => {
                                             "audio" ? (
                                             <img
                                               src={audioic}
-                                              className="content_img"
+                                              className="content_img light-gray-bg"
                                             />
                                           ) : null
                                         )}
@@ -1844,8 +1839,8 @@ const ReportsTablesContent = () => {
                                                 <img
                                                   src={
                                                     process.env
-                                                      .REACT_APP_CONTENT_MEDIA +
-                                                    curr?.thumbnail
+                                                      .REACT_APP_THUMBNAIL +
+                                                    curr?.media
                                                   }
                                                   className="content_img"
                                                 />
@@ -1853,7 +1848,7 @@ const ReportsTablesContent = () => {
                                                 "audio" ? (
                                                 <img
                                                   src={audioic}
-                                                  className="content_img"
+                                                  className="content_img light-gray-bg"
                                                 />
                                               ) : null;
                                             }
@@ -2071,8 +2066,8 @@ const ReportsTablesContent = () => {
                                                   <img
                                                     src={
                                                       process.env
-                                                        .REACT_APP_CONTENT_MEDIA +
-                                                      curr?.thumbnail
+                                                        .REACT_APP_THUMBNAIL +
+                                                      curr?.media
                                                     }
                                                     className="content_img"
                                                   />
@@ -2080,7 +2075,7 @@ const ReportsTablesContent = () => {
                                                   "audio" ? (
                                                   <img
                                                     src={audioic}
-                                                    className="content_img"
+                                                    className="content_img light-gray-bg"
                                                   />
                                                 ) : null;
                                               }
@@ -2188,8 +2183,8 @@ const ReportsTablesContent = () => {
                                                 <img
                                                   src={
                                                     process.env
-                                                      .REACT_APP_CONTENT_MEDIA +
-                                                    curr?.thumbnail
+                                                      .REACT_APP_THUMBNAIL +
+                                                    curr?.media
                                                   }
                                                   className="content_img"
                                                 />
@@ -2197,7 +2192,7 @@ const ReportsTablesContent = () => {
                                                 "audio" ? (
                                                 <img
                                                   src={audioic}
-                                                  className="content_img"
+                                                  className="content_img light-gray-bg"
                                                 />
                                               ) : null;
                                             }

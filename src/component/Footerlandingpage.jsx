@@ -145,7 +145,7 @@ const Footerlandingpage = ({ scrollToDiv }) => {
                     </Col>
                     <Col md={3}>
                       <div className="aboutPress">
-                        <Link onClick={() => scrollToDiv("div5")}>FAQS</Link>
+                        <Link onClick={() => scrollToDiv("div5")}>FAQs</Link>
                         <Link to="/pre-login-tandc">Legal T&Cs</Link>
                         <Link to="/pre-privacy-policy">Privacy Policy</Link>
                         <Link to={"/contact-us"}>Contact us</Link>
@@ -171,7 +171,7 @@ const Footerlandingpage = ({ scrollToDiv }) => {
                   <Row className="align-items-center">
                     <Col sm={6}>
                       <h6 className="copyrText">
-                        © 2024 PressHop UK. All rights reserved.
+                        © 2025 PressHop UK. All rights reserved.
                       </h6>
                     </Col>
                     <Col sm={6}>

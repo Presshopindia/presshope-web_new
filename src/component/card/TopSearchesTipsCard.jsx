@@ -27,7 +27,7 @@ function TopSearchesTipsCard(props) {
     <>
       <div className="topSearches_tipsCard">
         <Row>
-          <Col lg={12} className="">
+          <Col lg={12} className="p-md-0">
             <Card className="dash-top-cards listing trending-search mt-0 mr-0 p-0">
               <CardContent className="dash-c-body rev">
                 <div className="mb-3">
@@ -35,19 +35,18 @@ function TopSearchesTipsCard(props) {
                     Trending searches
                   </h2>
                   <div className="trendSearch_wrap mt-3">
-                    {content_count.length &&
-                      content_count
-                        .filter((el) => el._id !== "")
-                        .slice(0, 7)
-                        .map((curr) => {
-                          return (
-                            <span key={curr._id}>
-                              <Link to={`/content-search/${curr._id}`}>
-                                {capitalizeWord(curr?._id)}
-                              </Link>
-                            </span>
-                          );
-                        })}
+                    {content_count
+                      ?.filter((el) => el._id !== "")
+                      ?.slice(0, 7)
+                      .map((curr) => {
+                        return (
+                          <span key={curr._id}>
+                            <Link to={`/content-search/${curr._id}`}>
+                              {capitalizeWord(curr?._id)}
+                            </Link>
+                          </span>
+                        );
+                      })}
                   </div>
                 </div>
               </CardContent>

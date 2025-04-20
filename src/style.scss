@@ -49,6 +49,10 @@ $dark-mode-bg: #dbdcdc;
   letter-spacing: 0 !important;
 }
 
+.input-border {
+  background-color: $input-border !important;
+}
+
 @font-face {
   font-family: "Airbnb";
   src: local("AirbnbCereal_W_Lt"),
@@ -142,7 +146,7 @@ nav {
     font-size: 15px;
     font-family: "AirbnbMedium";
 
-    &.active {
+    &.nav-active {
       color: $theme-color;
       font-family: "AirbnbBold";
     }
@@ -245,6 +249,10 @@ nav {
       height: auto;
     }
   }
+}
+
+.light-gray-bg {
+  background-color: $light-dark-grey !important;
 }
 
 .dash-top-cards {
@@ -1356,6 +1364,29 @@ button.round {
   background: $bg-grey;
 }
 
+.invite-user-disable-field:disabled {
+  background-color: $bg-grey !important;
+  color: $bg-color-dark !important;
+  border-color: $input-border !important;
+}
+
+.invite-user-enable-field {
+  color: $bg-color-dark !important;
+  border-color: $input-border !important;
+}
+
+.invite-user-enable-message {
+  border: 1px solid $input-border !important;
+  padding: 12px 12px 12px 40px;
+  border-radius: 12px;
+}
+
+.invite-user-heading {
+  font-size: 16px;
+  font-family: "AirbnbMedium" !important;
+  margin-bottom: 0.5rem !important;
+}
+
 .theme-btn.danger {
   border: 1px solid $danger;
   background: unset;
@@ -2200,6 +2231,22 @@ button.MuiButton-secondary {
     justify-content: center;
     align-items: center;
   }
+
+  .content-size {
+    background: rgba(63, 78, 76, 0.696484) !important;
+    backdrop-filter: blur(1.35914px);
+    left: 3px;
+    top: 3px;
+    border-radius: 6px;
+    display: inline-flex;
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    color: white;
+  }
 }
 
 .dashCard-heading {
@@ -2534,11 +2581,12 @@ button.MuiButton-secondary {
 }
 
 .listView_task {
-  background: #f3f5f4;
+  // background: #f3f5f4;
   border-radius: 16px;
   padding: 8px;
   margin-bottom: 12px;
   display: flex;
+  border: 1px solid $border-color;
 
   .listTask_action {
     display: flex;
@@ -3537,6 +3585,16 @@ button.MuiButton-secondary {
   margin-top: 32px;
 }
 
+.form-message {
+  position: relative;
+
+  img {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+  }
+}
+
 // onboarding update css
 .onboardStep {
   .form-group {
@@ -3950,7 +4008,8 @@ a.link {
 .currentPic.logo_inp img.uploaded {
   width: 100%;
   height: 100px;
-  object-fit: contain;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 .currentPic.adm_profile img.uploaded {
@@ -8343,6 +8402,10 @@ a {
   }
 }
 
+.w-80 {
+  width: 80px !important
+}
+
 .dash-tabs.prchased_cont_wrp {
   .tbs.nav.nav-tabs {
     padding: 0px 15px;
@@ -10958,6 +11021,11 @@ select.PhoneInputCountrySelect {
   left: 0;
 }
 
+.error-msg {
+  font-size: 13px;
+  color: red;
+}
+
 .minInput {
   padding-left: 15px !important;
 }
@@ -11274,6 +11342,15 @@ a.txtBlack svg {
   height: 27px;
 }
 
+.uploaded-magnifier {
+  top: 60px;
+}
+
+.uploaded-magnifier svg {
+  width: 23px;
+  height: 23px;
+}
+
 .notify_clear {
   font-family: "AirbnbBold";
   font-size: 14px;
@@ -11541,11 +11618,17 @@ p.text_light {
 }
 
 .tracker-task .type_price {
-  margin-bottom: 10px !important;
+  margin-bottom: 22px !important;
+  font-weight: 600;
+}
+
+.tracker-task .type_price span.sm-tiles {
+  width: 100px;
+  padding: 12px 4px;
 }
 
 .tracker-task .singleTask_detail {
-  height: 480px !important;
+  min-height: 490px !important;
 }
 
 .tracker-task .dashCard-heading {
@@ -12520,7 +12603,12 @@ span.cht_time {
   background: #ffffff;
   border-radius: 20px;
   padding: 14px;
-  height: 500px;
+  height: 485px;
+  overflow: hidden;
+}
+
+.scroll-wrap {
+  height: 100%;
   overflow: auto;
 }
 
@@ -12529,7 +12617,7 @@ span.cht_time {
 }
 
 .taskcard_body .mapView div:first-child {
-  height: 498px !important;
+  height: 482px !important;
 }
 
 .tasktables_wrap .cnt_online_img {
@@ -12658,6 +12746,10 @@ audio {
   justify-content: space-between;
   margin-left: -10px;
   margin-right: 10px;
+}
+
+.mb-10 {
+  margin-bottom: 40px;
 }
 
 .feedTrendingSearchWrap>.topSearches_tipsCard>.row>.p-0.col-lg-12 {
@@ -12915,4 +13007,80 @@ audio {
 
 .justify-between {
   justify-content: space-between;
+}
+
+.z-1000 {
+  z-index: 1000;
+}
+
+.admin_badge {
+  background-color: #ec4e54 !important;
+  font-size: 12px;
+  color: #ffff !important;
+  text-align: center;
+  border-radius: 4px;
+  padding: 4px 14px;
+  line-height: 12px;
+  position: absolute;
+  margin-left: 10px;
+  display: inline-block;
+}
+
+.relative {
+  position: relative;
+}
+
+.close-chat {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+
+.chat-hopper-listing {
+  padding-bottom: 0px !important;
+  padding: 10px !important;
+  border-radius: 10px;
+}
+
+.Deadline-card {
+  border-radius: 16px;
+  background-color: #313131;
+  overflow: hidden;
+  text-align: center;
+
+  .Deadline-card-top {
+    p {
+      color: #fff;
+    }
+
+    h5 {
+      font-size: 46px;
+      font-weight: 700;
+      color: #10AF0C;
+    }
+  }
+
+  .Deadline-card-bottom {
+    border-radius: 0px 0px 16px 16px;
+    background-color: #EC4E54;
+    color: #fff;
+    font-weight: 600;
+  }
+}
+
+.Deadline-cardflex {
+  display: flex !important;
+  justify-content: space-between;
+}
+
+.taskInfo_card_gray {
+  background-color: #F3F5F4 !important;
+}
+
+.singleTask_detail .taskSingle_info.addnewdesign_location {
+  height: 50px !important;
+}
+
+.task_pg .sm-tiles.addnewdesign_location_input {
+  padding: 12px 5px !important;
 }

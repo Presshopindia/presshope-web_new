@@ -4,7 +4,7 @@ import { BsArrowLeft } from "react-icons/bs";
 import logo from "../assets/images/presshop_new_logo.png";
 
 // presshopinvoice
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import audioic from "../assets/images/audimg.svg";
 import audioicon from "../assets/images/audio-icon.svg";
 import calendericn from "../assets/images/calendarnic.svg";
@@ -32,6 +32,7 @@ const Invoice = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
+  const navigate = useNavigate();
 
   const getInvoiceDetail = async () => {
     setLoading(true);
@@ -251,30 +252,24 @@ const Invoice = () => {
                                   <tbody>
                                     {
                                       <tr>
-                                        <td className="content_img_td position-relative add-icons-box">
-                                          <Link
-                                            to={data?.type === "content" ? `/purchased-content-detail/${id}` : `/purchased-task-content-detail/${id}`}
-                                          >
-                                            <div className="tbl_cont_wrp">
+                                        <td className="content_img_td position-relative add-icons-box clickable" onClick={() => {
+                                          navigate(data?.type === "content" ? `/purchased-content-detail/${id}` : `/purchased-task-content-detail/${id}`);
+                                        }}>
+                                          <div className="tbl_cont_wrp cnt_online_img noGrid">
+                                            <div className="paymentToBeMadeImgContent">
                                               {data?.type === "content" ? (
                                                 data?.content_id?.content[0]
                                                   ?.media_type === "image" ? (
                                                   <img
                                                     src={
-                                                      data?.content_id?.content[0]
-                                                        ?.watermark
+                                                      process.env.REACT_APP_CONTENT_MEDIA + data?.content_id?.content[0]?.media
                                                     }
                                                     className="cntnt-img"
                                                     alt="img"
                                                   />
-                                                ) : data?.content_id?.content[0]
-                                                  ?.media_type === "video" ? (
+                                                ) : data?.content_id?.content[0]?.media_type === "video" ? (
                                                   <img
-                                                    src={
-                                                      data.content[0].watermark ||
-                                                      process.env
-                                                        .REACT_APP_CONTENT_MEDIA +
-                                                      data.content[0].thumbnail
+                                                    src={process.env.REACT_APP_THUMBNAIL + data?.content_id?.content[0].media
                                                     }
                                                     className="cntnt-img"
                                                   />
@@ -282,7 +277,7 @@ const Invoice = () => {
                                                   ?.media_type === "audio" ? (
                                                   <img
                                                     src={audioic}
-                                                    className="cntnt-img"
+                                                    className="content_img"
                                                   />
                                                 ) : data?.content_id?.content[0]
                                                   ?.media_type === "pdf" ? (
@@ -302,33 +297,14 @@ const Invoice = () => {
                                                 className="cntnt-img"
                                               />}
                                             </div>
-                                            {/* <div className="tableContentTypeIcons">
-                                              <div className="post_icns_cstm_wrp camera-ico">
-                                                <div className="post_itm_icns dtl_icns">
-                                                  <span className="count">
-                                                    1
-                                                  </span>
-                                                  <img
-                                                    className="feedMediaType iconBg"
-                                                    src={cameraic}
-                                                    alt=""
-                                                  />
-                                                </div>
+                                          </div>
+                                          <div className="tableContentTypeIcons">
+                                            <div className="post_icns_cstm_wrp camera-ico">
+                                              <div className="post_itm_icns dtl_icns">
+                                                <span className="count">{data?.type === "content" ? data?.content_id?.content?.length : data?.type === "task_content" ? data?.purchased_task_content?.length : 0}</span>
                                               </div>
-                                              <div className="post_icns_cstm_wrp video-ico">
-                                                <div className="post_itm_icns dtl_icns">
-                                                  <span className="count">
-                                                    1
-                                                  </span>
-                                                  <img
-                                                    className="feedMediaType iconBg"
-                                                    src={videoic}
-                                                    alt=""
-                                                  />
-                                                </div>
-                                              </div>
-                                            </div> */}
-                                          </Link>
+                                            </div>
+                                          </div>
                                         </td>
                                         <td>
                                           <div className="desc">
@@ -365,9 +341,9 @@ const Invoice = () => {
                                                   alt="Photo"
                                                   className="icn"
                                                 />{" "}
+                                                <br />
                                               </Tooltip>
                                             ) : null}
-                                            <br />
                                             {getMediaType("video") ? (
                                               <Tooltip title="Video">
                                                 {" "}
@@ -376,9 +352,9 @@ const Invoice = () => {
                                                   alt="Video"
                                                   className="icn"
                                                 />
+                                                <br />
                                               </Tooltip>
                                             ) : null}
-                                            <br />
                                             {getMediaType("audio") ? (
                                               <Tooltip title="Audio">
                                                 <img

@@ -30,7 +30,6 @@ import { getDatabase, set, onValue } from "firebase/database";
 import tickic from "../assets/images/chat-icons/tick.svg";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase";
-import io from "socket.io-client";
 import photoic from "../assets/images/camera.svg";
 import contimg from "../assets/images/img10.jpg";
 import contimg1 from "../assets/images/vthumbnail.png";
@@ -40,8 +39,7 @@ import videoic from "../assets/images/video.svg";
 import { Rating } from "react-simple-star-rating";
 import { UserDetails } from "./Utils";
 import { addVat } from "./commonFunction";
-
-const socket = io.connect("https://uat.presshop.live:3005");
+import socketServer from "../socket.config";
 
 function ChatCardSocket(props) {
   const User = UserDetails;
@@ -90,7 +88,7 @@ function ChatCardSocket(props) {
   };
 
   const JoinRoom = () => {
-    socket.emit("room join", { room_id: roomDetails?.roomsdetails?.room_id });
+    socketServer.emit("room join", { room_id: roomDetails?.roomsdetails?.room_id });
   };
 
   useEffect(() => {
@@ -102,6 +100,9 @@ function ChatCardSocket(props) {
   });
 
   const getMessages = async () => {
+    if(!roomDetails?.roomsdetails?.room_id) {
+      return;
+    }
     const resp = await Post(`mediaHouse/getAllchat`, {
       room_id: roomDetails?.roomsdetails?.room_id,
     });
@@ -130,8 +131,8 @@ function ChatCardSocket(props) {
   };
 
   const SendMedia = () => {
-    socket.emit("media message", mediaMessage);
-    socket.on("media message", (obj) => { });
+    socketServer.emit("media message", mediaMessage);
+    socketServer.on("media message", (obj) => { });
 
     setMediaMessage({
       room_type: "",
@@ -187,7 +188,7 @@ function ChatCardSocket(props) {
       amount: curr?.media?.amount,
     };
 
-    socket.emit("offer message", obj1);
+    socketServer.emit("offer message", obj1);
     setLoading(false);
     window.open(resp.data.url, "_blank");
     if (resp) {
@@ -223,8 +224,8 @@ function ChatCardSocket(props) {
         message_type: "request_more_content",
       };
 
-      socket.emit("offer message", obj);
-      socket.on("offer message", (obj) => {
+      socketServer.emit("offer message", obj);
+      socketServer.on("offer message", (obj) => {
         getMessages();
       });
       setLoading(false);
@@ -280,8 +281,8 @@ function ChatCardSocket(props) {
 
     return;
 
-    socket.emit("rating", obj);
-    socket.on("rating", (obj) => { });
+    socketServer.emit("rating", obj);
+    socketServer.on("rating", (obj) => { });
     getMessages(roomDetails?.roomsdetails?._id);
   };
 
@@ -405,7 +406,6 @@ function ChatCardSocket(props) {
                               {curr?.media?.thumbnail_url ? (
                                 <img
                                   src={
-                                    process.env.REACT_APP_UPLOADED_CONTENT +
                                     curr?.media?.thumbnail_url
                                   }
                                   className="usr_upld_cont"
@@ -656,7 +656,7 @@ function ChatCardSocket(props) {
                 hoppers.map((curr) => {
                   return (
                     <div
-                      className="chatting_itm d-flex align-items-center justify-content-space-between"
+                      className={`chatting_itm chat-hopper-listing d-flex align-items-center justify-content-space-between clickable ${curr?._id === roomDetails?._id ? "light-gray-bg" : "bg-light-gray"}`}
                       onClick={() => setRoomDetails(curr)}
                     >
                       <img

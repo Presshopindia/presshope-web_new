@@ -32,7 +32,7 @@ const UserDetailsPopup = (props) => {
   const [show, setShow] = useState(true);
   const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
-  const [mediahouseListLoading, setMediahouseListLoading] = useState(false);
+  const [isMediahouseExists, setIsMediahouseExists] = useState(true);
   const [details, setDetails] = useState({
     user_full_name: "",
     user_first_name: "",
@@ -48,6 +48,7 @@ const UserDetailsPopup = (props) => {
     phone: "",
     country_code: "",
     profile_image: "",
+    administrator_company: ""
   });
 
   const handleChange = async (e) => {
@@ -64,22 +65,19 @@ const UserDetailsPopup = (props) => {
     setDepartmentTypes(list.data.data);
   };
 
-  const [mediahouseList, setMediahouseList] = useState([]);
   const getMediahouseList = async (search = "") => {
     try {
-      setMediahouseListLoading(true);
       const list = await Get(`auth/mediahouse-list?search=${search}`);
-      const updatedData = list?.data?.data?.map((el) => {
-        return {
-          ...el,
-          label: `${el?.company_name}`
-        }
-      })
-      setMediahouseList(updatedData);
-      setMediahouseListLoading(false);
+      console.log("Data", list?.data?.data)
+      setIsMediahouseExists(list?.data?.data);
+      if (list?.data?.data) {
+        setDetails({ ...details, administator_email: list?.data?.data?.email });
+        const data = await Post("mediaHouse/getOfficeListBasedUponMediahouseEmail", { email: list?.data?.data?.email });
+        setOffice(data?.data?.data);
+      }
     }
     catch (error) {
-      setMediahouseListLoading(false);
+    console.log(error)
     }
   };
 
@@ -173,33 +171,26 @@ const UserDetailsPopup = (props) => {
             </Modal.Header>
             <Modal.Body className="show-grid modal-body border-0">
               <Container>
-                <Row className="mb-4">
+                <Row className="rw_gp_sml mb-4">
                   <p className="bg_lbl">Administrator details</p>
                   <Col>
-                    <Autocomplete
-                      name="administator_email"
-                      size="small"
-                      className="w-100 slct_sign"
-                      options={mediahouseList}
-                      loading={mediahouseListLoading}
-                      noOptionsText="No data found"
-                      getOptionLabel={(option) => option?.company_name}
-                      onInputChange={(event, value) => handleSearch(value)}
-                      onChange={async (event, newValue) => {
-                        setDetails({ ...details, "administator_email": newValue?.email })
-                        if (newValue?.email) {
-                          const list = await Post("mediaHouse/getOfficeListBasedUponMediahouseEmail", { email: newValue?.email });
-                          setOffice(list?.data?.data);
-                        }
+                    <Form.Control
+                      type="text"
+                      size="sm"
+                      name="administrator_company"
+                      className="user"
+                      placeholder="Enter your company name OR company number *"
+                      required
+                      onChange={(e) => {
+                        // handleChange(e)
+                        handleSearch(e.target.value)
                       }}
-                      renderOption={(props, option) => (
-                        <li {...props} className="mediahouse-list" key={option?.email}>
-                          <img src={option?.profile_image} alt={option?.company_name} />
-                          <span>{option?.company_name}</span>
-                        </li>
-                      )}
-                      renderInput={(params) => <TextField {...params} placeholder="Enter your company name OR company number" />}
                     />
+                    {!isMediahouseExists && (
+                      <span className="error-msg">
+                        This mediahouse doesn't exist
+                      </span>
+                    )}
                   </Col>
                 </Row>
                 <div>
@@ -348,7 +339,7 @@ const UserDetailsPopup = (props) => {
                               className="f_1 cntry_code"
                               international
                               required
-                              countryCallingCodeEditable={false}
+                              countryCallingCodeEditable={true}
                               name="country_code"
                               onChange={(e) => {
                                 setDetails({ ...details, country_code: e });

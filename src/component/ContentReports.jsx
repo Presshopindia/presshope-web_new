@@ -1041,15 +1041,13 @@ const ContentReports = ({
                               }
                             >
                               <img
-                                className="reportcontentImg img-fluid"
+                                className="reportcontentImg img-fluid light-gray-bg"
                                 src={
-                                  curr?.contentDetails?.content[0]?.media_type === "video"
-                                    ? process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.contentDetails?.content[0]?.thumbnail
-                                    : curr?.contentDetails?.content[0]?.media_type === "audio"
-                                      ? audioic
-                                      : process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.contentDetails?.content[0]?.media
+                                  curr?.contentDetails?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.contentDetails?.content[0]?.media
+                                    : curr?.contentDetails?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.contentDetails?.content[0]?.media
+                                      : curr.contentDetails?.content[0]?.media_type === "audio" ? audioic
+                                        : curr?.contentDetails?.content[0]?.media_type === "doc" ? pdfic
+                                          : ""
                                 }
                                 alt=""
                               />

@@ -119,7 +119,7 @@ const PurchasedContentDetail = () => {
     getTransactionDetails();
     ExclusiveContnetLists();
     // For dynamic scrolling
-    // window.scrollTo(0, 950)
+    window.scrollTo(0, 0)
   }, []);
 
   const [openRecentActivity, setOpenRecentActivity] = useState(false);
@@ -366,9 +366,9 @@ const PurchasedContentDetail = () => {
                                 ) {
                                   const img = new Image();
                                   img.src =
-                                    transactionDetails?.content_id?.content[
+                                    process.env.REACT_APP_CONTENT_MEDIA + transactionDetails?.content_id?.content[
                                       e.activeIndex
-                                    ]?.watermark;
+                                    ]?.media;
                                   img.onload = function () {
                                     setImageSize({
                                       height: img.height,
@@ -385,7 +385,7 @@ const PurchasedContentDetail = () => {
                                       <div className="swiper-slide-content">
                                         {curr?.media_type === "image" && (
                                           <img
-                                            src={curr?.watermark}
+                                            src={process.env.REACT_APP_CONTENT_MEDIA + curr?.media}
                                             alt={`Image ${curr._id}`}
                                           />
                                         )}
@@ -399,11 +399,7 @@ const PurchasedContentDetail = () => {
                                             />
                                             <audio
                                               controls
-                                              src={
-                                                curr?.watermark ||
-                                                process.env
-                                                  .REACT_APP_CONTENT_MEDIA +
-                                                curr?.media
+                                              src={process.env.REACT_APP_CONTENT_MEDIA + curr?.media
                                               }
                                               type="audio/mpeg"
                                               className="slider-audio"
@@ -415,13 +411,17 @@ const PurchasedContentDetail = () => {
                                           <video
                                             controls
                                             className="slider-video"
-                                            src={curr?.media}
+                                            src={process.env.REACT_APP_CONTENT_MEDIA + curr?.media}
+                                            style={{
+                                              height: "380px",
+                                              width: "100%",
+                                            }}
                                           />
                                         )}
                                         {curr?.media_type === "pdf" && (
                                           <embed
                                             src={`${process.env
-                                                .REACT_APP_CONTENT_MEDIA +
+                                              .REACT_APP_CONTENT_MEDIA +
                                               curr?.media
                                               }`}
                                             type="application/pdf"
@@ -621,7 +621,7 @@ const PurchasedContentDetail = () => {
                                 >
                                   £
                                   {formatAmountInMillion(
-                                    +( (transactionDetails?.amount + transactionDetails?.Vat) || 0 )
+                                    +((transactionDetails?.amount) || 0)
                                   )}
                                 </Button>
                               </Link>
@@ -968,15 +968,11 @@ const PurchasedContentDetail = () => {
                               viewTransaction={"View details"}
                               viewDetail={`/Feeddetail/content/${curr._id}`}
                               feedImg={
-                                curr?.content[0]?.media_type === "video"
-                                  ? curr?.content[0]?.watermark ||
-                                  process.env.REACT_APP_CONTENT_MEDIA +
-                                  curr?.content[0]?.thumbnail
-                                  : curr?.content[0]?.media_type === "audio"
-                                    ? audioic
-                                    : curr?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.media
+                                curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                  : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                    : curr?.content[0]?.media_type === "audio" ? audioic
+                                      : curr?.content[0]?.media_type === "doc" ? pdfic
+                                        : ""
                               }
                               // feedType={contentVideo}
                               feedTag={"Most Viewed"}
@@ -1094,14 +1090,11 @@ const PurchasedContentDetail = () => {
                               viewTransaction={"View details"}
                               viewDetail={`/Feeddetail/content/${curr._id}`}
                               feedImg={
-                                curr?.content[0]?.media_type === "video"
-                                  ? process.env.REACT_APP_CONTENT_MEDIA +
-                                  curr?.content[0]?.thumbnail
-                                  : curr?.content[0]?.media_type === "audio"
-                                    ? audioic
-                                    : curr?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.media
+                                curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                  : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                    : curr?.content[0]?.media_type === "audio" ? audioic
+                                      : curr?.content[0]?.media_type === "doc" ? pdfic
+                                        : ""
                               }
                               // postcount={curr?.content?.length}
 

@@ -46,6 +46,7 @@ import {
   getDeepModifiedTaskContent,
   getModifiedContent,
   hasDecimal,
+  getFavContent
 } from "../component/commonFunction";
 import { DashboardCardInfo } from "../component/DashboardCardInfo";
 import RecentActivityCard from "../component/card/RecentActivityCard";
@@ -210,7 +211,7 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [dashboardSort, setDashboardSort] = useState({ type: "" });
   const [dashboardPayload, setDashboardPayload] = useState({
-    requestedItems: ["content_purchased_online", "total_fund_invested", "content_under_offer", "favourite", "broadcasted_task"],
+    requestedItems: ["content_purchased_online", "total_fund_invested", "content_under_offer", "favourite", "broadcasted_task", "chat_count"],
     requestedFilter: {
       favourite: "",
       broadcasted_task: "",
@@ -320,9 +321,7 @@ const Dashboard = () => {
                       <CardActions className="dash-c-foot">
                         <div className="card-imgs-wrap">
                           {current_chat_detais.slice(0, 3)?.map((curr) => {
-                            let avtartimage =
-                              "https://uat-presshope.s3.eu-west-2.amazonaws.com/public/avatarImages/" +
-                              curr?.sender_id?.avatar_id?.avatar;
+                            let avtartimage = process.env.REACT_APP_AVATAR_IMAGE + curr?.sender_id?.avatar_id?.avatar;
 
                             const Content = profileData?.hasOwnProperty(
                               "admin_detail"
@@ -373,7 +372,7 @@ const Dashboard = () => {
                     title="Favourited content"
                     type="favourite"
                     total={dashboardData?.content?.favourite?.totalCount}
-                    data={getDeepModifiedContent(dashboardData?.content?.favourite?.data)}
+                    data={getFavContent(dashboardData?.content?.favourite?.data)}
                     dashboardSort={dashboardSort}
                     setDashboardSort={setDashboardSort}
                     sort={dashboardPayload?.requestedFilter?.favourite}
@@ -467,15 +466,11 @@ const Dashboard = () => {
                               <DashBoardTabCards
                                 imgcount={curr.image_count}
                                 imgtab={
-                                  curr?.content[0]?.media_type === "video"
-                                    ? curr?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.thumbnail
-                                    : curr?.content[0]?.media_type === "audio"
-                                      ? audioicsm
-                                      : curr?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.media
+                                  curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                    : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                      : curr.content[0]?.media_type === "audio" ? audioicsm
+                                        : curr?.content[0]?.media_type === "doc" ? pdfic
+                                          : ""
                                 }
                                 lnkto={`/Feeddetail/content/${curr._id}`}
                                 tabcarddata={curr.heading}
@@ -520,15 +515,11 @@ const Dashboard = () => {
                               <DashBoardTabCards
                                 imgcount={curr.image_count}
                                 imgtab={
-                                  curr?.content[0]?.media_type === "video"
-                                    ? curr?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.thumbnail
-                                    : curr?.content[0]?.media_type === "audio"
-                                      ? audioicsm
-                                      : curr?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.media
+                                  curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                    : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                      : curr.content[0]?.media_type === "audio" ? audioicsm
+                                        : curr?.content[0]?.media_type === "doc" ? pdfic
+                                          : ""
                                 }
                                 feedIcon={
                                   curr?.content[0]?.media_type === "image"
@@ -571,15 +562,11 @@ const Dashboard = () => {
                               <DashBoardTabCards
                                 imgcount={curr.image_count}
                                 imgtab={
-                                  curr?.content[0]?.media_type === "video"
-                                    ? curr?.content[0]?.watermark ||
-                                    process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content[0]?.thumbnail
-                                    : curr?.content[0]?.media_type === "audio"
-                                      ? audioicsm
-                                      : curr?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.media
+                                  curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                    : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                      : curr.content[0]?.media_type === "audio" ? audioicsm
+                                        : curr?.content[0]?.media_type === "doc" ? pdfic
+                                          : ""
                                 }
                                 feedIcon={
                                   curr?.content[0]?.media_type === "image"
@@ -642,17 +629,11 @@ const Dashboard = () => {
                           <Link to={`/auto-invoice/${curr?.id}`} key={curr?._id}>
                             <DashBoardPayment
                               imgtab={
-                                curr?.content[0]?.media_type === "video"
-                                  ? curr?.content[0]?.watermark ||
-                                  process.env.REACT_APP_CONTENT_MEDIA +
-                                  curr?.content[0]?.thumbnail
-                                  : curr?.content[0]?.media_type === "audio"
-                                    ? audioicsm
-                                    : curr?.content[0]?.media_type === "pdf"
-                                      ? docsic
-                                      : curr?.content[0]?.watermark ||
-                                      process.env.REACT_APP_CONTENT_MEDIA +
-                                      curr?.content[0]?.media
+                                curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                  : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                    : curr.content[0]?.media_type === "audio" ? audioicsm
+                                      : curr?.content[0]?.media_type === "doc" ? pdfic
+                                        : ""
                               }
                               imgtab1={
                                 process.env.REACT_APP_AVATAR_IMAGE +
@@ -848,12 +829,12 @@ const Dashboard = () => {
                                       ? curr?.content_id?.content[0]
                                         ?.media_type === "video"
                                         ? process.env
-                                          .REACT_APP_CONTENT_MEDIA +
+                                          .REACT_APP_THUMBNAIL +
                                         curr?.content_id?.content[0]
-                                          ?.thumbnail
+                                          ?.media
                                         : curr?.content_id?.content[0]
                                           ?.media_type === "audio"
-                                          ? audioic
+                                          ? audioicsm
                                           : curr?.content_id?.content[0]
                                             ?.media_type === "pdf"
                                             ? docsic
@@ -866,16 +847,7 @@ const Dashboard = () => {
                                       : curr?.task_id?.content[0]?.media
                                   }
                                   imageCount={
-                                    curr?.content_id?.image_count || 0
-                                  }
-                                  videoCount={
-                                    curr?.content_id?.video_count || 0
-                                  }
-                                  audioCount={
-                                    curr?.content_id?.audio_count || 0
-                                  }
-                                  otherCount={
-                                    curr?.content_id?.other_count || 0
+                                    curr?.content_id?.content?.length || 0
                                   }
                                   colorWhite={false}
                                 />
@@ -893,7 +865,7 @@ const Dashboard = () => {
           <div className="mt-4">
             <div className="topSearches_tipsCard">
               <Row>
-                <Col lg={12} className="">
+                <Col lg={12} className="p-md-0">
                   <Card className="dash-top-cards listing trending-search mt-0 mr-0 p-0">
                     <CardContent className="dash-c-body rev">
                       <div className="mb-3">

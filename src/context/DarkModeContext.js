@@ -1,13 +1,16 @@
 // DarkModeContext.js
 import { createContext, useContext, useEffect, useState } from "react";
 import { Get } from "../services/user.services";
+import { useParams } from "react-router-dom";
 
 const DarkModeContext = createContext();
 
 export const DarkModeProvider = ({ children }) => {
+  const param = useParams();
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem("darkMode") === "enabled"
   );
+
   const [profileData, setProfileData] = useState({});
   const [navColor, setNavColor] = useState("");
   const [profileChange, setProfileChange] = useState(false);
@@ -47,6 +50,10 @@ export const DarkModeProvider = ({ children }) => {
   useEffect(() => {
     getProfileData();
   }, [isDarkMode, profileChange]);
+
+  useEffect(() => {
+    setNavColor(window.location.pathname);
+  }, [window.location.pathname]);
 
   return (
     <DarkModeContext.Provider

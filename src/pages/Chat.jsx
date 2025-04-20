@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import DbFooter from "../component/DbFooter";
 import Header from "../component/Header";
 
+import { RxCross1 } from "react-icons/rx";
 import { Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 import Accordion from "react-bootstrap/Accordion";
 import contactic from "../assets/images/chat-icons/contactus.svg";
@@ -54,11 +55,11 @@ const Chat = () => {
   const [groupIds, setGroupIds] = useState({
     contentId:
       localStorage.getItem("tabName") &&
-      JSON.parse(localStorage.getItem("tabName")) == "internal"
+        JSON.parse(localStorage.getItem("tabName")) == "internal"
         ? JSON.parse(localStorage.getItem("contentId"))
         : JSON.parse(localStorage.getItem("tabName")) == "external"
-        ? localStorage.getItem("hopperid")
-        : "",
+          ? localStorage.getItem("hopperid")
+          : "",
     type: localStorage.getItem("type") == "task" ? "task" : "content",
     room_id: localStorage.getItem("roomId") || "",
     taskId: "",
@@ -68,24 +69,24 @@ const Chat = () => {
   const [show, setShow] = useState({
     content:
       localStorage.getItem("tabName") &&
-      JSON.parse(localStorage.getItem("tabName")) == "external" &&
-      localStorage.getItem("type") == "content"
+        JSON.parse(localStorage.getItem("tabName")) == "external" &&
+        localStorage.getItem("type") == "content"
         ? true
         : false,
     task:
       localStorage.getItem("tabName") &&
-      JSON.parse(localStorage.getItem("tabName")) == "external" &&
-      localStorage.getItem("type") == "task"
+        JSON.parse(localStorage.getItem("tabName")) == "external" &&
+        localStorage.getItem("type") == "task"
         ? true
         : false,
     presshop:
       !localStorage.getItem("tabName") ||
-      JSON.parse(localStorage.getItem("tabName")) == "presshop"
+        JSON.parse(localStorage.getItem("tabName")) == "presshop"
         ? true
         : false,
     internal:
       localStorage.getItem("tabName") &&
-      JSON.parse(localStorage.getItem("tabName")) == "internal"
+        JSON.parse(localStorage.getItem("tabName")) == "internal"
         ? true
         : false,
   });
@@ -274,19 +275,12 @@ const Chat = () => {
                         <Tab eventKey="content" title="Content">
                           <div className="chat_list">
                             {hopperList?.map((curr) => {
-                              // console.log("internal ----ghfhfh---> alll", curr);
-                              // console.log(
-                              //   "internal ----ghfhfh---> alllcurr?.createdAt",
-                              //   curr?.hopper_id.createdAt
-                              // );
                               return (
                                 <div
-                                  className={`chat_usr_itm d-flex align-items-center clickable ${
-                                    show?.content &&
-                                    groupIds?.contentId === curr._id
-                                      ? "active"
-                                      : ""
-                                  }`}
+                                  className={`chat_usr_itm d-flex align-items-center clickable relative ${groupIds?.contentId === curr._id
+                                    ? "active"
+                                    : ""
+                                    }`}
                                   onClick={() => {
                                     ContentList(curr._id);
                                     setShow({
@@ -330,11 +324,19 @@ const Chat = () => {
                                       {" "}
                                       {curr?.hopper_id?.updatedAt
                                         ? moment(
-                                            curr?.hopper_id?.updatedAt
-                                          ).format("h:mm A, D MMM YYYY")
+                                          curr?.hopper_id?.updatedAt
+                                        ).format("h:mm A, D MMM YYYY")
                                         : ""}
                                     </span>
                                   </div>
+                                  {
+                                    (show.content && curr?._id === groupIds?.contentId) && (
+                                      <RxCross1 className="close-chat" onClick={(e) => {
+                                        e.stopPropagation();
+                                        setShow({ ...show, content: false })
+                                      }} />
+                                    )
+                                  }
                                 </div>
                               );
                             })}
@@ -343,90 +345,96 @@ const Chat = () => {
 
                         <Tab eventKey="task" title="Task">
                           <div className="chat_list">
-                            {liveTasks &&
-                              liveTasks.map((curr) => {
-                                return (
-                                  <div
-                                    className={`chat_usr_itm d-flex align-items-center ${
-                                      show.task && taskId === curr._id
-                                        ? "active"
-                                        : ""
+                            {liveTasks?.filter((el) => el?.content?.length > 0)?.map((curr) => {
+                              return (
+                                <div
+                                  className={`chat_usr_itm d-flex align-items-center relative clickable ${show.task && taskId === curr._id
+                                    ? "active"
+                                    : ""
                                     }`}
-                                    onClick={() => {
-                                      setTaskId(curr._id);
-                                      setShow({
-                                        content: false,
-                                        task: true,
-                                        presshop: false,
-                                      });
-                                    }}
-                                  >
-                                    <div className="cht_inn w-100 d-flex align-items-center">
-                                      <div className="mapInput">
-                                        <style>
-                                          {`
+                                  onClick={() => {
+                                    setTaskId(curr._id);
+                                    setShow({
+                                      content: false,
+                                      task: true,
+                                      presshop: false,
+                                    });
+                                  }}
+                                >
+                                  <div className="cht_inn w-100 d-flex align-items-center">
+                                    <div className="mapInput">
+                                      <style>
+                                        {`
                                             .gm-style > div:first-child {
                                             cursor: pointer !important;
                                           }
                                         `}
-                                        </style>
-                                        <GoogleMap
-                                          googleMapsApiKey={
-                                            process.env
-                                              .REACT_APP_GOOGLE_MAPS_API_KEY
-                                          }
-                                          center={{
+                                      </style>
+                                      <GoogleMap
+                                        googleMapsApiKey={
+                                          process.env
+                                            .REACT_APP_GOOGLE_MAPS_API_KEY
+                                        }
+                                        center={{
+                                          lat: curr?.address_location
+                                            ?.coordinates[0],
+                                          lng: curr?.address_location
+                                            ?.coordinates[1],
+                                        }}
+                                        zoom={7}
+                                        mapContainerStyle={{
+                                          height: "40px",
+                                          width: "40px",
+                                        }}
+                                        options={{
+                                          disableDefaultUI: true,
+                                          mapTypeControl: false,
+                                          streetViewControl: false,
+                                        }}
+                                      >
+                                        <Marker
+                                          key={curr._id}
+                                          position={{
                                             lat: curr?.address_location
                                               ?.coordinates[0],
                                             lng: curr?.address_location
                                               ?.coordinates[1],
                                           }}
-                                          zoom={7}
-                                          mapContainerStyle={{
-                                            height: "40px",
-                                            width: "40px",
-                                          }}
-                                          options={{
-                                            disableDefaultUI: true,
-                                            mapTypeControl: false,
-                                            streetViewControl: false,
-                                          }}
-                                        >
-                                          <Marker
-                                            key={curr._id}
-                                            position={{
-                                              lat: curr?.address_location
-                                                ?.coordinates[0],
-                                              lng: curr?.address_location
-                                                ?.coordinates[1],
-                                            }}
-                                          />
-                                        </GoogleMap>
+                                        />
+                                      </GoogleMap>
+                                    </div>
+                                    <div className="cht_dtl d-flex justify-content-between w-100">
+                                      <div className="cht_txt d-flex flex-column">
+                                        <p className="usr_nme mb-0">
+                                          <a> {curr.task_description}</a>
+                                        </p>
+                                        <p className="msg_dlt mb-0">
+                                          <a> {curr.location}</a>
+                                        </p>
                                       </div>
-                                      <div className="cht_dtl d-flex justify-content-between w-100">
-                                        <div className="cht_txt d-flex flex-column">
-                                          <p className="usr_nme mb-0">
-                                            <a> {curr.task_description}</a>
-                                          </p>
-                                          <p className="msg_dlt mb-0">
-                                            <a> {curr.location}</a>
-                                          </p>
-                                        </div>
-                                      </div>
-                                      <div>
-                                    <span className="cht_time d-flex flex-column align-items-end">
-                                      {" "}
-                                      {curr?.updatedAt
-                                        ? moment(
+                                    </div>
+                                    <div>
+                                      <span className="cht_time d-flex flex-column align-items-end">
+                                        {" "}
+                                        {curr?.updatedAt
+                                          ? moment(
                                             curr?.updatedAt
                                           ).format("h:mm A, D MMM YYYY")
-                                        : ""}
-                                    </span>
-                                  </div>
+                                          : ""}
+                                      </span>
                                     </div>
+                                    {
+                                      (show.task && curr?._id === taskId) && (
+                                        <RxCross1 className="close-chat" onClick={(e) => {
+                                          e.stopPropagation();
+                                          setShow({ ...show, task: false })
+                                        }} />
+                                      )
+                                    }
                                   </div>
-                                );
-                              })}
+                                </div>
+                              );
+                            })}
                           </div>
                         </Tab>
                       </Tabs>
@@ -450,12 +458,11 @@ const Chat = () => {
                         ?.map((curr, index) => {
                           return (
                             <div
-                              className={`chat_usr_itm d-flex align-items-center ${
-                                groupIds?.contentId === curr?.content_id &&
+                              className={`relative chat_usr_itm d-flex align-items-center ${groupIds?.contentId === curr?.content_id &&
                                 groupIds?.room_id === curr?.room_id
-                                  ? "active"
-                                  : ""
-                              }`}
+                                ? "active"
+                                : ""
+                                }`}
                               style={{ cursor: "pointer" }}
                               onClick={() => {
                                 setShow({
@@ -506,7 +513,7 @@ const Chat = () => {
                                     <p className="msg_dlt mb-0">
                                       <a>
                                         {curr?.latest_messege[0]?.type ===
-                                        "text" ? (
+                                          "text" ? (
                                           curr?.latest_messege[0]?.message
                                         ) : curr?.latest_messege[0]?.type ===
                                           "image" ? (
@@ -538,6 +545,14 @@ const Chat = () => {
                                       ).format("h:mm A, D MMM YYYY z")}
                                     </span>
                                   </div>
+                                  {
+                                    (show.internal && curr?.content_id === groupIds?.contentId) && (
+                                      <RxCross1 className="close-chat" onClick={(e) => {
+                                        e.stopPropagation();
+                                        setShow({ ...show, internal: false })
+                                      }} />
+                                    )
+                                  }
                                 </div>
                               </div>
                             </div>
@@ -553,112 +568,61 @@ const Chat = () => {
                   </Accordion.Header>
                   <Accordion.Body>
                     <div className="chat_list">
-                      {adminList &&
-                        adminList &&
-                        adminList
-                          .filter((obj1) =>
-                            admins.some((obj2) => obj1._id == obj2.userId?.id)
-                          )
-                          .map((curr) => {
-                            console.log("all amins list ------>", curr);
-                            return (
-                              <div
-                                className={`d-flex align-items-center ${
-                                  curr._id == senderId ? "activeChat" : ""
-                                }`}
-                                onClick={() => {
-                                  setSenderId(curr._id);
-                                  setShow({
-                                    content: false,
-                                    task: false,
-                                    presshop: true,
-                                  });
-                                }}
-                              >
-                                <div className="cht_inn w-100 d-flex align-items-center">
-                                  <div className="usr_img_wrp position-relative">
-                                    <img
-                                      src={
-                                        process.env.REACT_APP_ADMIN_IMAGE +
-                                        curr?.profile_image
-                                      }
-                                      alt="user image"
-                                    />
-                                    <div className="status">
-                                      <span className="active"></span>
-                                    </div>
-                                  </div>
-                                  <div className="cht_dtl d-flex justify-content-between w-100">
-                                    <div className="cht_txt d-flex flex-column">
-                                      <p className="usr_nme mb-0">
-                                        <a>{curr?.name}</a>
-                                        <a>
-                                          {curr.role === "admin" && (
-                                            <img
-                                              src={presshopchatic}
-                                              alt="PressHop logo"
-                                              className="ms-1"
-                                            />
-                                          )}
-                                        </a>
-                                      </p>
-                                    </div>
-                                  </div>
+                      {adminList?.filter((obj1) => obj1.role === "admin")?.map((curr) => {
+                        return (
+                          <div
+                            className={`chat_usr_itm d-flex align-items-center clickable relative ${curr?._id === senderId
+                              ? "active activeChat"
+                              : ""
+                              }`}
+                            onClick={() => {
+                              setSenderId(curr._id);
+                              setShow({
+                                content: false,
+                                task: false,
+                                presshop: true,
+                              });
+                            }}
+                          >
+                            <div className="cht_inn w-100 d-flex align-items-center">
+                              <div className="usr_img_wrp position-relative">
+                                <img
+                                  src={
+                                    process.env.REACT_APP_ADMIN_IMAGE +
+                                    curr?.profile_image
+                                  }
+                                  alt="user image"
+                                />
+                                <div className="status">
+                                  <span className="active"></span>
                                 </div>
                               </div>
-                            );
-                          })}
-                      {admins.length === 0 &&
-                        adminList
-                          .filter((obj1) => obj1.role === "admin")
-                          .map((curr) => {
-                            return (
-                              <div
-                                className={`chat_usr_itm d-flex align-items-center ${
-                                  curr?._id === senderId
-                                    ? "active activeChat"
-                                    : ""
-                                }`}
-                                onClick={() => {
-                                  setSenderId(curr._id);
-                                  setShow({
-                                    content: false,
-                                    task: false,
-                                    presshop: true,
-                                  });
-                                }}
-                              >
-                                <div className="cht_inn w-100 d-flex align-items-center">
-                                  <div className="usr_img_wrp position-relative">
-                                    <img
-                                      src={
-                                        process.env.REACT_APP_ADMIN_IMAGE +
-                                        curr?.profile_image
-                                      }
-                                      alt="user image"
-                                    />
-                                    <div className="status">
-                                      <span className="active"></span>
-                                    </div>
-                                  </div>
-                                  <div className="cht_dtl d-flex justify-content-between w-100">
-                                    <div className="cht_txt d-flex flex-column">
-                                      <p className="usr_nme mb-0">
-                                        <a>{curr?.name}</a>
-                                      </p>
-                                    </div>
-                                    <div className="cht_time d-flex flex-column align-items-end">
-                                      <span className="msg_time">
-                                        {moment(curr?.updatedAt).format(
-                                          "h:mm A, D MMM YYYY"
-                                        )}
-                                      </span>
-                                    </div>
-                                  </div>
+                              <div className="cht_dtl d-flex justify-content-between w-100">
+                                <div className="cht_txt d-flex flex-column">
+                                  <p className="usr_nme mb-0">
+                                    <a>{curr?.name}</a>
+                                  </p>
                                 </div>
+                                <div className="cht_time d-flex flex-column align-items-end">
+                                  <span className="msg_time">
+                                    {moment(curr?.updatedAt).format(
+                                      "h:mm A, D MMM YYYY"
+                                    )}
+                                  </span>
+                                </div>
+                                {
+                                  (show.presshop && curr?._id === senderId) && (
+                                    <RxCross1 className="close-chat" onClick={(e) => {
+                                      e.stopPropagation();
+                                      setShow({ ...show, presshop: false })
+                                    }} />
+                                  )
+                                }
                               </div>
-                            );
-                          })}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </Accordion.Body>
                 </Accordion.Item>

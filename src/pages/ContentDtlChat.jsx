@@ -97,6 +97,9 @@ const ContentDtlChat = (props) => {
   };
 
   const getMessages = async (room_id = localStorage.getItem("roomId2")) => {
+    if(!room_id) {
+      return;
+    }
     const resp = await Post(`mediaHouse/getAllchat`, { room_id });
     if (resp) {
       console.log("This message", resp.data.response);
@@ -198,7 +201,7 @@ const ContentDtlChat = (props) => {
                         <img
                           src={
                             process.env.REACT_APP_CONTENT_MEDIA +
-                            data?.content[0]?.thumbnail
+                            data?.content[0]?.media
                           }
                           alt={null}
                         />
@@ -210,7 +213,7 @@ const ContentDtlChat = (props) => {
                             data.paid_status === "paid"
                               ? process.env.REACT_APP_CONTENT_MEDIA +
                                 data?.content[0]?.media
-                              : data?.content[0]?.watermark
+                              : data?.content[0]?.media
                           }
                           alt={null}
                         />
@@ -238,7 +241,7 @@ const ContentDtlChat = (props) => {
                                   <img
                                     src={
                                       process.env.REACT_APP_CONTENT_MEDIA +
-                                      item.thumbnail
+                                      item.media
                                     }
                                     alt={null}
                                   />
@@ -254,11 +257,8 @@ const ContentDtlChat = (props) => {
                                   />
                                 ) : (
                                   <img
-                                    src={
-                                      data.paid_status === "paid"
-                                        ? process.env.REACT_APP_CONTENT_MEDIA +
-                                          item.media
-                                        : item.watermark
+                                    src={process.env.REACT_APP_CONTENT_MEDIA +
+                                      item.media
                                     }
                                     alt={null}
                                   />
@@ -485,7 +485,7 @@ const ContentDtlChat = (props) => {
                   <div className="chatting_header d-flex align-items-start justify-content-start">
                     <p className="mb-0">Content</p>
                   </div>
-                  <div className="chat_content_list">
+                  <div className="chat_content_list" style={{maxHeight: "423px"}}>
                     {props.contents &&
                       props.contents.map((curr) => {
                         return (
@@ -505,28 +505,24 @@ const ContentDtlChat = (props) => {
                             <CardContent className="dash-c-body p-0 clickable active">
                               <div className="list-in d-flex align-items-start">
                                 <div className="rateReview_content me-2">
-                                  <span className="rateView-type">
-                                    <img
-                                      className="cont_type_ic"
-                                      src={
-                                        curr?.content[0]?.media_type === "video"
-                                          ? videoic
-                                          : cameraic
-                                      }
-                                    />
+                                  <span className="content-size">
+                                    {
+                                      curr?.content?.length || 0
+                                    }
                                   </span>
                                   <img
                                     className="list-card-img"
                                     src={
                                       curr?.content[0]?.media_type === "video"
-                                        ? process.env.REACT_APP_CONTENT_MEDIA +
-                                          curr?.content[0]?.thumbnail
+                                        ? process.env.REACT_APP_THUMBNAIL +
+                                          curr?.content[0]?.media
                                         : curr?.content[0]?.media_type ===
                                           "audio"
                                         ? audioic
                                         : curr?.content[0]?.media_type === "pdf"
                                         ? docsic
-                                        : curr?.content?.[0]?.watermark
+                                        : process.env
+                                        .REACT_APP_CONTENT_MEDIA + curr?.content?.[0]?.media
                                     }
                                     alt="1"
                                   />

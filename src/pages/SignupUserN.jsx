@@ -318,8 +318,9 @@ const SignupUserN = () => {
         status: "approved",
       });
       if (res) {
-        navigate("/login");
+        toast.success("New user onboarded successfully");
         setLoading(false);
+        navigate("/");
       }
     } catch (error) {
       setLoading(false);
@@ -819,7 +820,7 @@ const SignupUserN = () => {
                               </Row>
                             </Col>
                             <Col md={3} className="mb-4">
-                              <div className="currentPic adm_profile position-relative text-center">
+                              <div className="currentPic logo_inp position-relative text-center">
                                 {onboardingUser?.profile_image === "" && (
                                   <img src={addPic} alt="" />
                                 )}

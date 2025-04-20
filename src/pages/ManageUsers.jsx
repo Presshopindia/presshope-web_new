@@ -247,20 +247,16 @@ const ManageUsers = () => {
     setLoading(true);
     try {
       const isDeletedUser = getUsers?.filter((el) => el?.is_deleted);
-      const deletedUserId = [...isDeletedUser]?.map((el) => el._id);
       if (isDeletedUser?.length > 0) {
         await Post(`mediaHouse/updateMultipleUser`, { user_data: getUsers });
         setLoading(false);
-        successToasterFun("Deleted successfully.");
-        setGetUsers((prev) => {
-          return [...prev].filter((el) => !deletedUserId.includes(el._id))
-        })
+        successToasterFun("Blocked successfully.");
         setGetUserProfile(null)
       }
       else {
         await Post(`mediaHouse/updateMultipleUser`, { user_data: getUsers });
         setLoading(false);
-        successToasterFun("Updated successfully.")
+        successToasterFun("Activated successfully.")
       }
     }
     catch (error) {
