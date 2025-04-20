@@ -455,12 +455,9 @@ const Chat = () => {
                         ?.map((curr, index) => {
                           return (
                             <div
-                              className={`relative chat_usr_itm d-flex align-items-center ${groupIds?.contentId === curr?.content_id &&
-                                groupIds?.room_id === curr?.room_id
-                                ? "active"
-                                : ""
-                                }`}
+                              className={`relative chat_usr_itm d-flex align-items-center ${groupIds?.contentId === curr?.content_id && (groupIds?.room_id === curr?.room_id ? "active" : "")}`}
                               style={{ cursor: "pointer" }}
+                              key={index}
                               onClick={() => {
                                 setShow({
                                   content: false,
@@ -474,12 +471,13 @@ const Chat = () => {
                                   room_id: curr?.room_id,
                                   taskId: "",
                                   _id: index,
+                                  type: curr?.room_type,
                                 }));
                                 // localStorage.setItem(
                                 //   "contentId",
                                 //   curr?.content_id
                                 // );
-                                // localStorage.setItem("roomId", curr?.room_id);
+                                localStorage.setItem("type", curr?.room_type);
 
                                 handleUnseenMsg(curr);
                               }}

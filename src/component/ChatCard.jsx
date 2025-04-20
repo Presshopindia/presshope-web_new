@@ -311,7 +311,7 @@ function ChatCard(props) {
           const allMessages = [...prevMessages, ...newMessages];
           return allMessages.sort((a, b) => new Date(a.date) - new Date(b.date));
         });
-        // scrollToBottom();
+        scrollToBottom();
       });
 
       return unsubscribe;
@@ -330,7 +330,7 @@ function ChatCard(props) {
           ...doc.data(),
         }));
         setMessages(newMessages);
-        // scrollToBottom();
+        scrollToBottom();
       });
 
       return unsubscribe;

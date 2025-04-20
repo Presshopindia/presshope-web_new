@@ -634,7 +634,6 @@ const Feeddetail = (props) => {
         sender_id: user._id,
         room_id: chatContentIds ? chatContentIds?.room_id : "",
       };
-      // console.log("Obj ----->", obj)
       const resp = await Post("mediaHouse/internalGroupChatMH", obj);
       if (resp) {
         setSelectedIds([]);
@@ -711,6 +710,11 @@ const Feeddetail = (props) => {
     e.preventDefault();
     let messages = {
       sender_id: chatContentIds?.sender_id,
+      senderData: {
+        first_name: user?.first_name,
+        last_name: user?.last_name,
+        profile_image: user?.profile_image,
+      },
       room_id: chatContentIds?.room_id,
       message: mediaFile?.path ? mediaFile?.path : msg1,
       type: mediaFile?.type ? mediaFile?.type : "text",
@@ -755,6 +759,7 @@ const Feeddetail = (props) => {
     }
   };
 
+  console.log("message ----->", message);
   // internal chat end
 
   // Detail of current User
@@ -1722,7 +1727,7 @@ const Feeddetail = (props) => {
                                                     {`${curr?.user_info?.first_name} ${curr?.user_info?.last_name}`}
                                                     <span className="text-secondary time">
                                                       {moment(
-                                                        curr?.createdAt
+                                                        curr?.createdAt || curr?.chatDate
                                                       ).format(
                                                         "hh:mm A, DD MMM YYYY"
                                                       )}
@@ -2964,13 +2969,9 @@ const Feeddetail = (props) => {
                                         Welcome{" "}<span className="txt_bld">{fullName}</span>{" to "}<span className="txt_bold">PressHop</span> support
                                       </h6>
                                     </div>
-                                    {showChat.presshop ? (
-                                      <ChatCard
-                                        senderId={senderId && senderId}
-                                      />
-                                    ) : (
-                                      <ChatCard />
-                                    )}
+                                    {tabSelect === "presshop" ? (
+                                      <ChatCard/>
+                                    ) : null}
                                   </div>
                                 </Col>
                                 {/* <Col md={3}>

@@ -373,9 +373,10 @@ const UploadedContentDetails = (props) => {
 
       setChatContentIds((pre) => ({
         ...pre,
-        room_id: resp.data.data[0]?.roomsdetails?.room_id,
+        room_id: resp?.data?.room_id?.room_id,
+        sender_id: User && ( User?._id || User?.id )
       }));
-      setChatContentIds((pre) => ({ ...pre, sender_id: profileData?._id }));
+
       localStorage.setItem("internal", resp?.data?.data?.[0]?.task_id?._id);
       setHopper(resp.data.data[0]?.hopper_id);
       setHopperid(resp.data.data[0]?.hopper_id?._id);
@@ -645,6 +646,7 @@ const UploadedContentDetails = (props) => {
         content_id: param.id,
         sender_id: user._id,
         room_id: chatContentIds ? chatContentIds?.room_id : "",
+        room_type: "task",
       };
       // console.log("Obj ----->", obj)
       const resp = await Post("mediaHouse/internalGroupChatMH", obj);
@@ -665,6 +667,8 @@ const UploadedContentDetails = (props) => {
       // Handle errors
     }
   };
+
+  console.log("chatContentIds", chatContentIds);
 
   const handleChange = async (event) => {
     const file = event.target.files[0];
@@ -723,9 +727,7 @@ const UploadedContentDetails = (props) => {
         localStorage.setItem("contentId", JSON.stringify(param.id));
         localStorage.setItem("type", "task");
         localStorage.setItem(
-          "roomId",
-          JSON.stringify(chatContentIds?.room_id) || ""
-        );
+          "roomId", chatContentIds?.room_id || "");
         localStorage.removeItem("receiverId");
         localStorage.setItem("tabName", JSON.stringify("internal"));
         const newData = resp?.data?.response?.data?.filter((el) => el?.type);
@@ -1316,7 +1318,7 @@ const UploadedContentDetails = (props) => {
                                       <div
                                         className="baat_cheet"
                                         // ref={chatBoxRef}
-                                        ref={chatBoxInternalRef}
+                                        // ref={chatBoxInternalRef}
                                         // chatBoxInternalRef
                                         key={curr?._id}
                                       >
@@ -1356,7 +1358,7 @@ const UploadedContentDetails = (props) => {
                                                     {`${curr?.user_info?.first_name} ${curr?.user_info?.last_name}`}
                                                     <span className="text-secondary time">
                                                       {moment(
-                                                        curr?.createdAt
+                                                        curr?.createdAt || curr?.chatDate
                                                       ).format(
                                                         "hh:mm A, DD MMM YYYY"
                                                       )}
