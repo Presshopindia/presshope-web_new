@@ -505,7 +505,7 @@ const Invoice = () => {
 
           </div>
           <div className="mt-0">
-            <TopSearchesTipsCard />
+            <TopSearchesTipsCard dashboard />
           </div>
         </Container>
       </div>

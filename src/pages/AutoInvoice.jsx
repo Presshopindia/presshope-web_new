@@ -980,7 +980,7 @@ const AutoInvoice = () => {
             </p>
           </div>
           <div className="mt-0">
-            <TopSearchesTipsCard />
+            <TopSearchesTipsCard dashboard />
           </div>
         </Container>
       </div>

@@ -50,6 +50,7 @@ import {
 } from "../component/commonFunction";
 import { DashboardCardInfo } from "../component/DashboardCardInfo";
 import RecentActivityCard from "../component/card/RecentActivityCard";
+import TopSearchesTipsCard from "../component/card/TopSearchesTipsCard";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -863,33 +864,7 @@ const Dashboard = () => {
             </Col>
           </Row>
           <div className="mt-4">
-            <div className="topSearches_tipsCard">
-              <Row>
-                <Col lg={12} className="p-md-0">
-                  <Card className="dash-top-cards listing trending-search mt-0 mr-0 p-0">
-                    <CardContent className="dash-c-body rev">
-                      <div className="mb-3">
-                        <h2 className="dashCard-heading p-0 mb-4">
-                          Trending searches
-                        </h2>
-                        <div className="trendSearch_wrap mt-3">
-                          {trading
-                            ?.filter((el) => el._id !== "")
-                            ?.slice(0, 7)
-                            ?.map((curr) => (
-                              <span key={curr._id}>
-                                <Link to={`/content-search/${curr._id}`}>
-                                  {capitalizeWord(curr?._id)}
-                                </Link>
-                              </span>
-                            ))}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Col>
-              </Row>
-            </div>
+            <TopSearchesTipsCard dashboard />
           </div>
         </Container>
       </div>

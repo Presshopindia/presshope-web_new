@@ -1787,7 +1787,7 @@ const RatingReview = () => {
             </Col>
           </Row>
           <div className="mt-4">
-            <TopSearchesTipsCard />
+            <TopSearchesTipsCard dashboard />
           </div>
         </Container>
       </div>

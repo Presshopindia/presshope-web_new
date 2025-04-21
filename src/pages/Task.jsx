@@ -397,7 +397,7 @@ const BroadcastedTask = () => {
           </Row>
 
           <div className="mt-4">
-            <TopSearchesTipsCard />
+            <TopSearchesTipsCard dashboard />
           </div>
         </Container>
       </div>

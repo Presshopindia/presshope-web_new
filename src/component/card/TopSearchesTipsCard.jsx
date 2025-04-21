@@ -5,7 +5,7 @@ import { Get } from "../../services/user.services";
 import { Link } from "react-router-dom";
 import { capitalizeWord } from "../commonFunction"
 
-function TopSearchesTipsCard(props) {
+function TopSearchesTipsCard({dashboard = false}) {
   const [content_count, setContent_count] = useState([]);
 
   const ChatCount = async () => {
@@ -25,7 +25,7 @@ function TopSearchesTipsCard(props) {
 
   return (
     <>
-      <div className="topSearches_tipsCard">
+      <div className={`topSearches_tipsCard ${!dashboard ? "trending_search_div" : ""}`}>
         <Row>
           <Col lg={12} className="p-md-0">
             <Card className="dash-top-cards listing trending-search mt-0 mr-0 p-0">

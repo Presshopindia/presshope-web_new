@@ -1355,7 +1355,7 @@ const Accounts = () => {
             </Col>
           </Row>
           <div className="mt-4 topSearchWrapPadding">
-            <TopSearchesTipsCard />
+            <TopSearchesTipsCard dashboard />
           </div>
         </Container>
       </div>
