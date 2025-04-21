@@ -1054,7 +1054,7 @@ const DashboardTables = () => {
                             <th>Published by</th>
                             <th>Published price</th>
                             <th>Discounted Price</th>
-                            <th>Purchase price</th>
+                            <th>Purchased price</th>
                           </tr>
                         </thead>
                         <tbody>

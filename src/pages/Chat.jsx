@@ -242,7 +242,7 @@ const Chat = () => {
     <>
       {loading && <Loader />}
       <Header />
-      <div className="chat_wrap">
+      <div className="chat_wrap page-wrap">
         {localStorage.getItem("backBtnVisibility") && (
           <Link onClick={() => history.back()} className="back_link mb-3">
             <BsArrowLeft className="text-pink" />

@@ -232,6 +232,11 @@ const AdminDetailsPopup = (props) => {
     e.preventDefault();
 
     setSubmit(true);
+
+    if (!isChecked.check1 || !isChecked.check2 || !isChecked.check3 || !isChecked.check4) {
+      toast.success("Please select all the boxes to confirm your acceptance of our Terms & Conditions.")
+    }
+
     if (emailExist) {
       toast.error("Email already exist");
       return;

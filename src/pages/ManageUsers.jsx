@@ -406,6 +406,26 @@ const ManageUsers = () => {
     }
   }
 
+  const [emailIds, setEmailIds] = useState("");
+
+  const handleNewUserRequest = async (e) => {
+    e.preventDefault();
+    try {
+      if (!emailIds) {
+        return;
+      }
+      setLoading(true);
+      await Post("auth/sendInvitationLink", { emailIds, _id: user?._id });
+      setEmailIds("");
+      toast.success("Invitation link sent.");
+      setLoading(false);
+    }
+    catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  }
+
 
   return (
     <>
@@ -498,588 +518,658 @@ const ManageUsers = () => {
                       </Form>
 
                       {show && (
-                        <Form onSubmit={AddUser}>
-                          <div className="officeDetails sign_section">
-                            <p className="onbrdheading sign_hdng">
-                              Office details
-                            </p>
-                            <Row>
-                              <Col md={6}>
-                                <Form.Group className="mb-4 form-group">
-                                  <img src={office} alt="" />
-                                  <Form.Control
-                                    type="text"
-                                    className=""
-                                    disabled
-                                    value={officeDetails?.name}
-                                    name="name"
-                                  />
-                                </Form.Group>
-                              </Col>
-                              <Col md={6}>
-                                <Form.Group className="mb-4 form-group">
-                                  <img src={chair} alt="" />
-                                  <Form.Control
-                                    type="text"
-                                    className=""
-                                    disabled
-                                    value={officeDetails?.office_type_id?.name}
-                                    name="office_name"
-                                  />
-                                </Form.Group>
-                              </Col>
-                              <Col md={12}>
-                                <Form.Group className="mb-4 form-group">
-                                  <img src={location} alt="" />
-                                  <Autocomplete
-                                    className="addr_custom_inp w-100"
-                                    disabled
-                                    value={
-                                      officeDetails?.address?.complete_address
-                                    }
-                                  />
-                                </Form.Group>
-                              </Col>
-                              <Col md={3} className="">
-                                <Form.Group className="mb-4 form-group">
-                                  <img src={location} alt="" />
-                                  <Form.Control
-                                    type="number"
-                                    className=""
-                                    disabled
-                                    value={officeDetails?.address?.pincode}
-                                    name="pincode"
-                                  />
-                                </Form.Group>
-                              </Col>
-                              <Col md={4}>
-                                <Form.Group className="mb-4 form-group">
-                                  <img src={location} alt="" />
-                                  <Form.Control
-                                    type="text"
-                                    className=""
-                                    value={officeDetails?.address?.city}
-                                    name="city"
-                                    disabled
-                                  />
-                                </Form.Group>
-                              </Col>
-                              <Col md={5}>
-                                <Form.Group className="mb-4 form-group">
-                                  <img src={location} alt="" />
-                                  <Form.Control
-                                    type="text"
-                                    className=""
-                                    value={officeDetails?.address?.country}
-                                    name="United Kingdom"
-                                    disabled
-                                  />
-                                </Form.Group>
-                              </Col>
-                              <Col md={6}>
-                                <div className="number_inp_wrap disabled">
-                                  <input
-                                    type="number"
-                                    className="input_nmbr"
-                                    placeholder="Phone"
-                                    name="phone"
-                                    value={officeDetails?.phone}
-                                    maxLength={15}
-                                  />
-                                  <PhoneInput
-                                    className="f_1 cntry_code"
-                                    international
-                                    countryCallingCodeEditable={true}
-                                    name="country_code"
-                                    value={officeDetails?.country_code}
-                                    defaultCountry={`${getCountryCodeFromCallingCode(officeDetails?.country_code + officeDetails?.phone) || "IN"}`}
-                                  />
-                                </div>
-                              </Col>
-                              <Col md={6}>
-                                <Form.Group className="mb-4 form-group">
-                                  <img src={website} alt="" />
-                                  <Form.Control
-                                    type="url"
-                                    disabled
-                                    className=""
-                                    placeholder="Website"
-                                    name="website"
-                                    required
-                                    value={officeDetails?.website}
-                                  />
-                                </Form.Group>
-                              </Col>
-                              <Col md={6}>
-                                <Form.Group className="mb-4 form-group">
-                                  <img src={chair} alt="" />
-                                  <Select
-                                    className="w-100 slct_sign"
-                                    name="office_name"
-                                    defaultValue={"option1"}
-                                  >
-                                    <MenuItem
-                                      className="selectPlaceholder"
-                                      value="option1"
-                                    >
-                                      Select office
-                                    </MenuItem>
-                                    {officeNames?.map((value, index) => {
-                                      return (
-                                        <MenuItem
-                                          key={value?._id}
-                                          onClick={() => {
-                                            Profile(index);
-                                            getUsersOfOffice(value?._id)
-                                            setGetUserProfile(null)
-                                          }}
-                                          value={value._id}
-                                        >
-                                          {value.name}
-                                        </MenuItem>
-                                      );
-                                    })}
-                                  </Select>
-                                </Form.Group>
-                              </Col>
-                            </Row>
-                          </div>
-                          {
-                            getUsers?.length > 0
-                              ?
-                              <div className="edit_user_tble">
-                                <Col md={12}>
-                                  <div className="tbl_crd vt_dtl_wrp">
-                                    <div className="">
-                                      <div className="d-flex justify-content-between align-items-center tbl_hdr">
-                                        <p className="onbrdheading sign_hdng">
-                                          Edit users
-                                        </p>
-                                      </div>
-                                      <div className="fix_ht_table">
-                                        <table
-                                          width="100%"
-                                          className="common_table vat_dtls"
-                                        >
-                                          <thead>
-                                            <tr>
-                                              <th className="cnt_prchsd_th">User</th>
-                                              <th>Rights</th>
-                                              <th>Edit purchase range</th>
-                                              <th>Status</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            {
-                                              getUsers?.map((el, i) => <tr key={el?._id}>
-                                                <td className="">
-                                                  <div className="image-wrap d-flex align-items-center">
-                                                    <img src={el?.profile_image || userImg} alt="Profile Image" />
-                                                    <Link
-                                                      to="#"
-                                                      className="link view_link d-flex align-items-center"
-                                                      onClick={() => handleGetUserProfile(el._id)}
-                                                    >
-                                                      <BsEye />
-                                                      View profile
-                                                    </Link>
-                                                  </div>
-                                                  <div className="text">
-                                                    <p className="text_bold">
-                                                      {el?.full_name}
-                                                    </p>
-                                                    <p className="timedate">
-                                                      <img
-                                                        src={calendar}
-                                                        className="icn_time"
-                                                        alt="Calendar"
-                                                      />
-                                                      {moment(el?.createdAt).format("DD MMM YYYY")}
-                                                    </p>
-                                                    <p className="text_light">
-                                                      {el?.email}
-                                                    </p>
-                                                  </div>
-                                                </td>
-                                                <td className="edit_user_checkbox">
-                                                  <Row>
-                                                    <Col md={12} className="mb-1">
-                                                      <FormControlLabel
-                                                        className="check_label"
-                                                        checked={el?.admin_rignts?.allowed_complete_access}
-                                                        onChange={(e) => handleUpdateUsers("allowed_complete_access", e.target.checked, i, "checked")}
-                                                        control={<Checkbox />}
-                                                        name="allowed_complete_access"
-                                                        label="Allowed complete access"
-                                                      />
-                                                    </Col>
-                                                    <Col md={12} className="mb-1">
-                                                      <FormControlLabel
-                                                        className="check_label"
-                                                        checked={el?.admin_rignts?.allowed_to_broadcast_tasks}
-                                                        onChange={(e) => handleUpdateUsers("allowed_to_broadcast_tasks", e.target.checked, i, "checked")}
-                                                        control={<Checkbox />}
-                                                        name="allowed_to_broadcast_tasks"
-                                                        label="Allowed to broadcast tasks"
-                                                      />
-                                                    </Col>
-                                                    <Col md={12} className="mb-1">
-                                                      <FormControlLabel
-                                                        className="check_label"
-                                                        checked={el?.admin_rignts?.allow_to_chat_externally}
-                                                        onChange={(e) => handleUpdateUsers("allow_to_chat_externally", e.target.checked, i, "checked")}
-                                                        control={<Checkbox />}
-                                                        name="allow_to_chat_externally"
-                                                        label="Allowed to chat externally"
-                                                      />
-                                                    </Col>
-                                                    <Col md={12} className="mb-1">
-                                                      <FormControlLabel
-                                                        className="check_label"
-                                                        checked={el?.admin_rignts?.allowed_to_purchase_content}
-                                                        onChange={(e) => handleUpdateUsers("allowed_to_purchase_content", e.target.checked, i, "checked")}
-                                                        control={<Checkbox />}
-                                                        name="allowed_to_purchase_content"
-                                                        label="Allowed to purchase content"
-                                                      />
-                                                    </Col>
-                                                  </Row>
-                                                </td>
-                                                <td>
-                                                  <div className="set_price mng_price">
-                                                    <Form.Group className="mb-2 form-group">
-                                                      <p className="mb-0 font-bold">Min</p>
-                                                      <Form.Control
-                                                        type="text"
-                                                        className=""
-                                                        value={el?.admin_rignts?.price_range?.minimum_price}
-                                                        name="minimum_price"
-                                                        onChange={(e) => handleUpdateUsers("minimum_price", e.target.value, i, "price")}
-                                                        placeholder="£Min"
-                                                        disabled={!el?.admin_rignts?.allowed_to_purchase_content}
-                                                      />
-                                                    </Form.Group>
-                                                    <Form.Group className="mb-2 form-group">
-                                                      <p className="mb-0 font-bold">Max</p>
-                                                      <Form.Control
-                                                        type="text"
-                                                        className=""
-                                                        value={el?.admin_rignts?.price_range?.maximum_price}
-                                                        name="maximum_price"
-                                                        onChange={(e) => handleUpdateUsers("maximum_price", e.target.value, i, "price")}
-                                                        placeholder="£Max"
-                                                        disabled={!el?.admin_rignts?.allowed_to_purchase_content}
-                                                      />
-                                                    </Form.Group>
-                                                  </div>
-                                                </td>
-                                                <td className="text-center">
-                                                  <FormControlLabel
-                                                    style={{ fontSize: "13px" }}
-                                                    className="check_label"
-                                                    checked={el?.is_deleted}
-                                                    onChange={(e) => handleUpdateUsers("is_deleted", e.target.checked, i, "delete")}
-                                                    control={<Checkbox />}
-                                                    name=""
-                                                    label={el?.is_deleted ? "Blocked" : "Active"}
-                                                  />
-                                                </td>
-                                              </tr>)
-                                            }
-                                          </tbody>
-                                        </table>
-                                      </div>
+                        <>
+                          {/* Invite New User */}
+                          <Form onSubmit={handleNewUserRequest}>
+                            <div className="officeDetails sign_section">
+                              <p className="onbrdheading sign_hdng">
+                                Invite new users
+                              </p>
+                              <Row className="rw_gp_sml mb-10">
+                                <p className="invite-user-heading">Add official email id's</p>
+                                <Col lg={12} md={12} xs={12}>
+                                  <Form.Group className="form-group">
+                                    <img src={mail} alt="" />
+                                    <Form.Control
+                                      type="text"
+                                      size="sm"
+                                      className="user invite-user-enable-field"
+                                      placeholder="Enter email id"
+                                      value={emailIds}
+                                      onChange={(e) => setEmailIds(e.target.value)}
+                                    />
+                                    <span className="errorInput mt-2">
+                                      You can add multiple id's of your team-members. Please put commas between each id.
+                                    </span>
+                                  </Form.Group>
+                                </Col>
+                              </Row>
+                              <Row className="rw_gp_sml mb-4">
+                                <p className="invite-user-heading">Activation link</p>
+                                <Col lg={12} md={12} xs={12}>
+                                  <Form.Group className="form-group">
+                                    <img src={mail} alt="" />
+                                    <Form.Control
+                                      type="text"
+                                      size="sm"
+                                      className="user invite-user-disable-field"
+                                      value={`${process.env.REACT_APP_FRONTEND_URL}user-onboard-request/${user?._id}`}
+                                      disabled
+                                    />
+                                  </Form.Group>
+                                </Col>
+                              </Row>
+                              <Row className="rw_gp_sml mb-4">
+                                <p className="invite-user-heading">Message</p>
+                                <Col lg={12} md={12} xs={12}>
+                                  <Form.Group className="form-message">
+                                    <img src={mail} alt="" />
+                                    <div className="font-14 invite-user-enable-message">
+                                      <p>Dear team-members,</p>
+                                      <p>Please use this activation link to commence your onboarding process onto the <span className="txt-success">PressHop</span> platform. This activation link is valid for 5 days from now and will automatically expire.</p>
+                                      <p>If you have any questions, you can always contact me by email.</p>
+                                      <p>Thank you,</p>
+                                      <p><span className='txt-success'>Administrator.</span></p>
                                     </div>
-                                  </div>
-                                  <div className="stepFooter">
-                                    <Button
-                                      className="w-100 mt_25"
-                                      variant="primary"
-                                      onClick={() => handleUpdateAllUsers()}
-                                    >
-                                      Save
-                                    </Button>
+                                  </Form.Group>
+                                </Col>
+                              </Row>
+                              <div className="stepFooter">
+                                <Button
+                                  className="w-100 mt_25"
+                                  variant="primary"
+                                  type="submit"
+                                  disabled={!emailIds || loading}
+                                >
+                                  <div className="link_white">Send Invite</div>
+                                </Button>
+                              </div>
+                            </div>
+                          </Form>
+
+                          <Form onSubmit={AddUser}>
+                            <div className="officeDetails sign_section">
+                              <p className="onbrdheading sign_hdng">
+                                Office details
+                              </p>
+                              <Row>
+                                <Col md={6}>
+                                  <Form.Group className="mb-4 form-group">
+                                    <img src={office} alt="" />
+                                    <Form.Control
+                                      type="text"
+                                      className=""
+                                      disabled
+                                      value={officeDetails?.name}
+                                      name="name"
+                                    />
+                                  </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                  <Form.Group className="mb-4 form-group">
+                                    <img src={chair} alt="" />
+                                    <Form.Control
+                                      type="text"
+                                      className=""
+                                      disabled
+                                      value={officeDetails?.office_type_id?.name}
+                                      name="office_name"
+                                    />
+                                  </Form.Group>
+                                </Col>
+                                <Col md={12}>
+                                  <Form.Group className="mb-4 form-group">
+                                    <img src={location} alt="" />
+                                    <Autocomplete
+                                      className="addr_custom_inp w-100"
+                                      disabled
+                                      value={
+                                        officeDetails?.address?.complete_address
+                                      }
+                                    />
+                                  </Form.Group>
+                                </Col>
+                                <Col md={3} className="">
+                                  <Form.Group className="mb-4 form-group">
+                                    <img src={location} alt="" />
+                                    <Form.Control
+                                      type="number"
+                                      className=""
+                                      disabled
+                                      value={officeDetails?.address?.pincode}
+                                      name="pincode"
+                                    />
+                                  </Form.Group>
+                                </Col>
+                                <Col md={4}>
+                                  <Form.Group className="mb-4 form-group">
+                                    <img src={location} alt="" />
+                                    <Form.Control
+                                      type="text"
+                                      className=""
+                                      value={officeDetails?.address?.city}
+                                      name="city"
+                                      disabled
+                                    />
+                                  </Form.Group>
+                                </Col>
+                                <Col md={5}>
+                                  <Form.Group className="mb-4 form-group">
+                                    <img src={location} alt="" />
+                                    <Form.Control
+                                      type="text"
+                                      className=""
+                                      value={officeDetails?.address?.country}
+                                      name="United Kingdom"
+                                      disabled
+                                    />
+                                  </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                  <div className="number_inp_wrap disabled">
+                                    <input
+                                      type="number"
+                                      className="input_nmbr"
+                                      placeholder="Phone"
+                                      name="phone"
+                                      value={officeDetails?.phone}
+                                      maxLength={15}
+                                    />
+                                    <PhoneInput
+                                      className="f_1 cntry_code"
+                                      international
+                                      countryCallingCodeEditable={true}
+                                      name="country_code"
+                                      value={officeDetails?.country_code}
+                                      defaultCountry={`${getCountryCodeFromCallingCode(officeDetails?.country_code + officeDetails?.phone) || "IN"}`}
+                                    />
                                   </div>
                                 </Col>
-                              </div>
-                              : <p className="red_text" style={{ marginTop: "-2rem" }}>
-                                Please select office to view existing users or add a new user by clicking below. Thank you.
-                              </p>
-                          }
-                          {
-                            multiUser?.length === 0 && <button className="red_text clickable bg-none" onClick={() => handleMultiUser("first_add")}>Add new user</button>
-                          }
-                          {
-                            multiUser?.map((el, i) => <div key={i}>
-                              <div className="adminDetails sign_section">
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                  <p className="onbrdheading sign_hdng">Add new user details</p>
-                                  <p className="red_text clickable" onClick={() => handleMultiUser("deleteUser", el?.uniqueId)}>Delete</p>
+                                <Col md={6}>
+                                  <Form.Group className="mb-4 form-group">
+                                    <img src={website} alt="" />
+                                    <Form.Control
+                                      type="url"
+                                      disabled
+                                      className=""
+                                      placeholder="Website"
+                                      name="website"
+                                      required
+                                      value={officeDetails?.website}
+                                    />
+                                  </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                  <Form.Group className="mb-4 form-group">
+                                    <img src={chair} alt="" />
+                                    <Select
+                                      className="w-100 slct_sign"
+                                      name="office_name"
+                                      defaultValue={"option1"}
+                                    >
+                                      <MenuItem
+                                        className="selectPlaceholder"
+                                        value="option1"
+                                      >
+                                        Select office
+                                      </MenuItem>
+                                      {officeNames?.map((value, index) => {
+                                        return (
+                                          <MenuItem
+                                            key={value?._id}
+                                            onClick={() => {
+                                              Profile(index);
+                                              getUsersOfOffice(value?._id)
+                                              setGetUserProfile(null)
+                                            }}
+                                            value={value._id}
+                                          >
+                                            {value.name}
+                                          </MenuItem>
+                                        );
+                                      })}
+                                    </Select>
+                                  </Form.Group>
+                                </Col>
+                              </Row>
+                            </div>
+                            {
+                              getUsers?.length > 0
+                                ?
+                                <div className="edit_user_tble">
+                                  <Col md={12}>
+                                    <div className="tbl_crd vt_dtl_wrp">
+                                      <div className="">
+                                        <div className="d-flex justify-content-between align-items-center tbl_hdr">
+                                          <p className="onbrdheading sign_hdng">
+                                            Edit users
+                                          </p>
+                                        </div>
+                                        <div className="fix_ht_table">
+                                          <table
+                                            width="100%"
+                                            className="common_table vat_dtls"
+                                          >
+                                            <thead>
+                                              <tr>
+                                                <th className="cnt_prchsd_th">User</th>
+                                                <th>Rights</th>
+                                                <th>Edit purchase range</th>
+                                                <th>Status</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              {
+                                                getUsers?.map((el, i) => <tr key={el?._id}>
+                                                  <td className="">
+                                                    <div className="image-wrap d-flex align-items-center">
+                                                      <img src={el?.profile_image || userImg} alt="Profile Image" />
+                                                      <Link
+                                                        to="#"
+                                                        className="link view_link d-flex align-items-center"
+                                                        onClick={() => handleGetUserProfile(el._id)}
+                                                      >
+                                                        <BsEye />
+                                                        View profile
+                                                      </Link>
+                                                    </div>
+                                                    <div className="text">
+                                                      <p className="text_bold">
+                                                        {el?.full_name}
+                                                      </p>
+                                                      <p className="timedate">
+                                                        <img
+                                                          src={calendar}
+                                                          className="icn_time"
+                                                          alt="Calendar"
+                                                        />
+                                                        {moment(el?.createdAt).format("DD MMM YYYY")}
+                                                      </p>
+                                                      <p className="text_light">
+                                                        {el?.email}
+                                                      </p>
+                                                    </div>
+                                                  </td>
+                                                  <td className="edit_user_checkbox">
+                                                    <Row>
+                                                      <Col md={12} className="mb-1">
+                                                        <FormControlLabel
+                                                          className="check_label"
+                                                          checked={el?.admin_rignts?.allowed_complete_access}
+                                                          onChange={(e) => handleUpdateUsers("allowed_complete_access", e.target.checked, i, "checked")}
+                                                          control={<Checkbox />}
+                                                          name="allowed_complete_access"
+                                                          label="Allowed complete access"
+                                                        />
+                                                      </Col>
+                                                      <Col md={12} className="mb-1">
+                                                        <FormControlLabel
+                                                          className="check_label"
+                                                          checked={el?.admin_rignts?.allowed_to_broadcast_tasks}
+                                                          onChange={(e) => handleUpdateUsers("allowed_to_broadcast_tasks", e.target.checked, i, "checked")}
+                                                          control={<Checkbox />}
+                                                          name="allowed_to_broadcast_tasks"
+                                                          label="Allowed to broadcast tasks"
+                                                        />
+                                                      </Col>
+                                                      <Col md={12} className="mb-1">
+                                                        <FormControlLabel
+                                                          className="check_label"
+                                                          checked={el?.admin_rignts?.allow_to_chat_externally}
+                                                          onChange={(e) => handleUpdateUsers("allow_to_chat_externally", e.target.checked, i, "checked")}
+                                                          control={<Checkbox />}
+                                                          name="allow_to_chat_externally"
+                                                          label="Allowed to chat externally"
+                                                        />
+                                                      </Col>
+                                                      <Col md={12} className="mb-1">
+                                                        <FormControlLabel
+                                                          className="check_label"
+                                                          checked={el?.admin_rignts?.allowed_to_purchase_content}
+                                                          onChange={(e) => handleUpdateUsers("allowed_to_purchase_content", e.target.checked, i, "checked")}
+                                                          control={<Checkbox />}
+                                                          name="allowed_to_purchase_content"
+                                                          label="Allowed to purchase content"
+                                                        />
+                                                      </Col>
+                                                    </Row>
+                                                  </td>
+                                                  <td>
+                                                    <div className="set_price mng_price">
+                                                      <Form.Group className="mb-2 form-group">
+                                                        <p className="mb-0 font-bold">Min</p>
+                                                        <Form.Control
+                                                          type="text"
+                                                          className=""
+                                                          value={el?.admin_rignts?.price_range?.minimum_price}
+                                                          name="minimum_price"
+                                                          onChange={(e) => handleUpdateUsers("minimum_price", e.target.value, i, "price")}
+                                                          placeholder="£Min"
+                                                          disabled={!el?.admin_rignts?.allowed_to_purchase_content}
+                                                        />
+                                                      </Form.Group>
+                                                      <Form.Group className="mb-2 form-group">
+                                                        <p className="mb-0 font-bold">Max</p>
+                                                        <Form.Control
+                                                          type="text"
+                                                          className=""
+                                                          value={el?.admin_rignts?.price_range?.maximum_price}
+                                                          name="maximum_price"
+                                                          onChange={(e) => handleUpdateUsers("maximum_price", e.target.value, i, "price")}
+                                                          placeholder="£Max"
+                                                          disabled={!el?.admin_rignts?.allowed_to_purchase_content}
+                                                        />
+                                                      </Form.Group>
+                                                    </div>
+                                                  </td>
+                                                  <td className="text-center">
+                                                    <FormControlLabel
+                                                      style={{ fontSize: "13px" }}
+                                                      className="check_label"
+                                                      checked={el?.is_deleted}
+                                                      onChange={(e) => handleUpdateUsers("is_deleted", e.target.checked, i, "delete")}
+                                                      control={<Checkbox />}
+                                                      name=""
+                                                      label={el?.is_deleted ? "Blocked" : "Active"}
+                                                    />
+                                                  </td>
+                                                </tr>)
+                                              }
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="stepFooter">
+                                      <Button
+                                        className="w-100 mt_25"
+                                        variant="primary"
+                                        onClick={() => handleUpdateAllUsers()}
+                                      >
+                                        Save
+                                      </Button>
+                                    </div>
+                                  </Col>
                                 </div>
-                                <Row>
-                                  <Col md={9}>
-                                    <Row>
-                                      <Col md={6}>
-                                        <Form.Group className="mb-4 form-group">
-                                          <img src={userLogo} alt="" />
-                                          <Form.Control
-                                            type="text"
-                                            className=""
-                                            value={el?.full_name}
-                                            onChange={(e) => handleUpadteMultiUser("full_name", e.target.value, i)}
-                                            placeholder="Enter full name *"
-                                          />
-                                        </Form.Group>
-                                      </Col>
+                                : <p className="red_text" style={{ marginTop: "-2rem" }}>
+                                  Please select office to view existing users or add a new user by clicking below. Thank you.
+                                </p>
+                            }
+                            {
+                              multiUser?.length === 0 && <button className="red_text clickable bg-none" onClick={() => handleMultiUser("first_add")}>Add new user</button>
+                            }
+                            {
+                              multiUser?.map((el, i) => <div key={i}>
+                                <div className="adminDetails sign_section">
+                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                    <p className="onbrdheading sign_hdng">Add new user details</p>
+                                    <p className="red_text clickable" onClick={() => handleMultiUser("deleteUser", el?.uniqueId)}>Delete</p>
+                                  </div>
+                                  <Row>
+                                    <Col md={9}>
+                                      <Row>
+                                        <Col md={6}>
+                                          <Form.Group className="mb-4 form-group">
+                                            <img src={userLogo} alt="" />
+                                            <Form.Control
+                                              type="text"
+                                              className=""
+                                              value={el?.full_name}
+                                              onChange={(e) => handleUpadteMultiUser("full_name", e.target.value, i)}
+                                              placeholder="Enter full name *"
+                                            />
+                                          </Form.Group>
+                                        </Col>
 
-                                      <Col md={6}>
-                                        <Form.Group className="mb-4 form-group">
-                                          <img src={chair} alt="" />
-                                          <Select
-                                            className="w-100 slct_sign"
-                                            name="designation"
-                                            value={el?.designation_id || "option1"}
-                                            onChange={(e) => handleUpadteMultiUser("designation_id", e.target.value, i)}
-                                          >
-                                            <MenuItem
-                                              className="selectPlaceholder"
-                                              disabled
-                                              value="option1"
+                                        <Col md={6}>
+                                          <Form.Group className="mb-4 form-group">
+                                            <img src={chair} alt="" />
+                                            <Select
+                                              className="w-100 slct_sign"
+                                              name="designation"
+                                              value={el?.designation_id || "option1"}
+                                              onChange={(e) => handleUpadteMultiUser("designation_id", e.target.value, i)}
                                             >
-                                              Select designation
-                                            </MenuItem>
-                                            {designation &&
-                                              designation.map((item) => {
-                                                return (
-                                                  <MenuItem value={item._id}>
-                                                    {item.name}
-                                                  </MenuItem>
-                                                );
-                                              })}
-                                          </Select>
-                                        </Form.Group>
-                                      </Col>
+                                              <MenuItem
+                                                className="selectPlaceholder"
+                                                disabled
+                                                value="option1"
+                                              >
+                                                Select designation
+                                              </MenuItem>
+                                              {designation &&
+                                                designation.map((item) => {
+                                                  return (
+                                                    <MenuItem value={item._id}>
+                                                      {item.name}
+                                                    </MenuItem>
+                                                  );
+                                                })}
+                                            </Select>
+                                          </Form.Group>
+                                        </Col>
 
-                                      <Col md={6}>
-                                        <Form.Group className="mb-4 form-group">
-                                          <img src={chair} alt="" />
-                                          <Select
-                                            className="w-100 slct_sign"
-                                            value={el?.office_id || "option1"}
-                                            onChange={(e) => handleUpadteMultiUser("office_id", e.target.value, i)}
-                                          >
-                                            <MenuItem
-                                              className="selectPlaceholder"
-                                              disabled
-                                              value="option1"
+                                        <Col md={6}>
+                                          <Form.Group className="mb-4 form-group">
+                                            <img src={chair} alt="" />
+                                            <Select
+                                              className="w-100 slct_sign"
+                                              value={el?.office_id || "option1"}
+                                              onChange={(e) => handleUpadteMultiUser("office_id", e.target.value, i)}
                                             >
-                                              Select office
-                                            </MenuItem>
-                                            {officeNames?.map((value, index) => {
-                                              return (
-                                                <MenuItem
-                                                  value={value._id}
-                                                >
-                                                  {value.name}
-                                                </MenuItem>
-                                              );
-                                            })}
-                                          </Select>
-                                        </Form.Group>
-                                      </Col>
-                                      <Col md={6}>
-                                        <Form.Group className="mb-4 form-group">
-                                          <img src={chair} alt="" />
-                                          <Select
-                                            className="w-100 slct_sign"
-                                            name="select_user_office_department"
-                                            value={el?.department_id || "option1"}
-                                            onChange={(e) => handleUpadteMultiUser("department_id", e.target.value, i)}
-                                          >
-                                            <MenuItem
-                                              disabled
-                                              className="selectPlaceholder"
-                                              value="option1"
-                                            >
-                                              Select department
-                                            </MenuItem>
-                                            {departmentTypes &&
-                                              departmentTypes.map((value, index) => {
+                                              <MenuItem
+                                                className="selectPlaceholder"
+                                                disabled
+                                                value="option1"
+                                              >
+                                                Select office
+                                              </MenuItem>
+                                              {officeNames?.map((value, index) => {
                                                 return (
-                                                  <MenuItem value={value._id}>
+                                                  <MenuItem
+                                                    value={value._id}
+                                                  >
                                                     {value.name}
                                                   </MenuItem>
                                                 );
                                               })}
-                                          </Select>
-                                        </Form.Group>
-                                      </Col>
-                                    </Row>
-                                  </Col>
-                                  <Col md={3}>
-                                    <div className="currentPic adm_profile position-relative text-center">
-                                      {el?.profile_image ? (
+                                            </Select>
+                                          </Form.Group>
+                                        </Col>
+                                        <Col md={6}>
+                                          <Form.Group className="mb-4 form-group">
+                                            <img src={chair} alt="" />
+                                            <Select
+                                              className="w-100 slct_sign"
+                                              name="select_user_office_department"
+                                              value={el?.department_id || "option1"}
+                                              onChange={(e) => handleUpadteMultiUser("department_id", e.target.value, i)}
+                                            >
+                                              <MenuItem
+                                                disabled
+                                                className="selectPlaceholder"
+                                                value="option1"
+                                              >
+                                                Select department
+                                              </MenuItem>
+                                              {departmentTypes &&
+                                                departmentTypes.map((value, index) => {
+                                                  return (
+                                                    <MenuItem value={value._id}>
+                                                      {value.name}
+                                                    </MenuItem>
+                                                  );
+                                                })}
+                                            </Select>
+                                          </Form.Group>
+                                        </Col>
+                                      </Row>
+                                    </Col>
+                                    <Col md={3}>
+                                      <div className="currentPic adm_profile position-relative text-center">
+                                        {el?.profile_image ? (
+                                          <img
+                                            className="uploaded"
+                                            src={el?.profile_image}
+                                            alt=""
+                                          />
+                                        ) : (
+                                          <>
+                                            <img src={addPic} alt="" />
+                                            <span className="mt-2 d-block">
+                                              Add current photo
+                                            </span>
+                                          </>
+                                        )}
+                                        <input
+                                          type="file"
+                                          required
+                                          onChange={(e) => {
+                                            handleAdminImageChange(e, i)
+                                          }}
+                                        />
+                                      </div>
+                                    </Col>
+                                    <Col md={6} className="admn_eml_wrp mt-3">
+                                      <Form.Group className="form-group position-relative w-100">
                                         <img
-                                          className="uploaded"
-                                          src={el?.profile_image}
+                                          src={mail}
+                                          className="eml_inp_icn"
                                           alt=""
                                         />
-                                      ) : (
-                                        <>
-                                          <img src={addPic} alt="" />
-                                          <span className="mt-2 d-block">
-                                            Add current photo
-                                          </span>
-                                        </>
-                                      )}
-                                      <input
-                                        type="file"
-                                        required
-                                        onChange={(e) => {
-                                          handleAdminImageChange(e, i)
-                                        }}
-                                      />
-                                    </div>
-                                  </Col>
-                                  <Col md={6} className="admn_eml_wrp mt-3">
-                                    <Form.Group className="form-group position-relative w-100">
-                                      <img
-                                        src={mail}
-                                        className="eml_inp_icn"
-                                        alt=""
-                                      />
-                                      <Form.Control
-                                        type="email"
-                                        required
-                                        className=""
-                                        placeholder="Official email id *"
-                                        value={el?.email}
-                                        onChange={(e) => handleUpadteMultiUser("email", e.target.value, i)}
-                                      />
-                                    </Form.Group>
-                                  </Col>
-                                  <Col md={6} className="admn_numb_wrap mt-3">
-                                    <div className="number_inp_wrap w-100">
-                                      <input
-                                        type="number"
-                                        required
-                                        className="input_nmbr"
-                                        placeholder=" phone"
-                                        maxLength={12}
-                                        name="phone"
-                                        value={el?.phone}
-                                        onChange={(e) => {
-                                          if (e.target.value.length <= 12) {
-                                            handleUpadteMultiUser("phone", e.target.value, i)
-                                          }
-                                        }}
-                                        ref={phoneInputRef}
-                                      />
-                                      <PhoneInput
-                                        className="f_1 cntry_code"
-                                        international
-                                        countryCallingCodeEditable={true}
-                                        required
-                                        name="country_code"
-                                        value={el?.country_code}
-                                        onChange={(e) => {
-                                          handleUpadteMultiUser("country_code", e, i)
-                                          handleCountryCodeChange(e)
-                                        }}
-                                      />
-                                    </div>
-                                  </Col>
-                                </Row>
-                              </div>
-                              <div className="adminDetails sign_section mng_usr_rt">
-                                <p className="onbrdheading sign_hdng">
-                                  Add new user rights
-                                </p>
-                                <Row>
-                                  <Col md={4} className="mb-3">
-                                    <FormControlLabel
-                                      className="check_label"
-                                      checked={el?.admin_rignts?.allowed_complete_access}
-                                      onChange={(e) => handleUpadteMultiUser("allowed_complete_access", e.target.checked, i, "checked")}
-                                      control={<Checkbox />}
-                                      name="allowed_complete_access"
-                                      label="Allowed complete access"
-                                    />
-                                  </Col>
-                                  <Col md={4} className="mb-3">
-                                    <FormControlLabel
-                                      className="check_label"
-                                      checked={el?.admin_rignts?.allowed_to_broadcast_tasks}
-                                      onChange={(e) => handleUpadteMultiUser("allowed_to_broadcast_tasks", e.target.checked, i, "checked")}
-                                      control={<Checkbox />}
-                                      name="allowed_to_broadcast_tasks"
-                                      label="Allowed to broadcast tasks"
-                                    />
-                                  </Col>
-                                  <Col md={4} className="mb-3">
-                                    <FormControlLabel
-                                      className="check_label"
-                                      checked={el?.admin_rignts?.allow_to_chat_externally}
-                                      onChange={(e) => handleUpadteMultiUser("allow_to_chat_externally", e.target.checked, i, "checked")}
-                                      control={<Checkbox />}
-                                      name="allow_to_chat_externally"
-                                      label="Allowed to chat externally"
-                                    />
-                                  </Col>
-                                  <Col md={4} className="mb-3">
-                                    <FormControlLabel
-                                      className="check_label"
-                                      checked={el?.admin_rignts?.allowed_to_purchase_content}
-                                      onChange={(e) => handleUpadteMultiUser("allowed_to_purchase_content", e.target.checked, i, "checked")}
-                                      control={<Checkbox />}
-                                      name="allowed_to_purchase_content"
-                                      label="Allowed to purchase content"
-                                    />
-                                  </Col>
-                                  <Col md={8}>
-                                    <div className="d-flex set_price mng_price">
-                                      <p className="mb-0">Set purchase range</p>
-                                      <Form.Group className="mb-4 form-group">
                                         <Form.Control
-                                          type="text"
+                                          type="email"
+                                          required
                                           className=""
-                                          value={el?.price_range?.minimum_price}
-                                          name="minimum_price"
-                                          onChange={(e) => handleUpadteMultiUser("minimum_price", e.target.value, i, "price")}
-                                          placeholder="£Min"
-                                          disabled={!el?.admin_rignts?.allowed_to_purchase_content}
+                                          placeholder="Official email id *"
+                                          value={el?.email}
+                                          onChange={(e) => handleUpadteMultiUser("email", e.target.value, i)}
                                         />
                                       </Form.Group>
-                                      <Form.Group className="mb-4 form-group">
-                                        <Form.Control
-                                          type="text"
-                                          className=""
-                                          value={el?.price_range?.maximum_price}
-                                          name="maximum_price"
-                                          onChange={(e) => handleUpadteMultiUser("maximum_price", e.target.value, i, "price")}
-                                          placeholder="£Max"
-                                          disabled={!el?.admin_rignts?.allowed_to_purchase_content}
+                                    </Col>
+                                    <Col md={6} className="admn_numb_wrap mt-3">
+                                      <div className="number_inp_wrap w-100">
+                                        <input
+                                          type="number"
+                                          required
+                                          className="input_nmbr"
+                                          placeholder=" phone"
+                                          maxLength={12}
+                                          name="phone"
+                                          value={el?.phone}
+                                          onChange={(e) => {
+                                            if (e.target.value.length <= 12) {
+                                              handleUpadteMultiUser("phone", e.target.value, i)
+                                            }
+                                          }}
+                                          ref={phoneInputRef}
                                         />
-                                      </Form.Group>
-                                    </div>
-                                  </Col>
-                                </Row>
+                                        <PhoneInput
+                                          className="f_1 cntry_code"
+                                          international
+                                          countryCallingCodeEditable={true}
+                                          required
+                                          name="country_code"
+                                          value={el?.country_code}
+                                          onChange={(e) => {
+                                            handleUpadteMultiUser("country_code", e, i)
+                                            handleCountryCodeChange(e)
+                                          }}
+                                        />
+                                      </div>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className="adminDetails sign_section mng_usr_rt">
+                                  <p className="onbrdheading sign_hdng">
+                                    Add new user rights
+                                  </p>
+                                  <Row>
+                                    <Col md={4} className="mb-3">
+                                      <FormControlLabel
+                                        className="check_label"
+                                        checked={el?.admin_rignts?.allowed_complete_access}
+                                        onChange={(e) => handleUpadteMultiUser("allowed_complete_access", e.target.checked, i, "checked")}
+                                        control={<Checkbox />}
+                                        name="allowed_complete_access"
+                                        label="Allowed complete access"
+                                      />
+                                    </Col>
+                                    <Col md={4} className="mb-3">
+                                      <FormControlLabel
+                                        className="check_label"
+                                        checked={el?.admin_rignts?.allowed_to_broadcast_tasks}
+                                        onChange={(e) => handleUpadteMultiUser("allowed_to_broadcast_tasks", e.target.checked, i, "checked")}
+                                        control={<Checkbox />}
+                                        name="allowed_to_broadcast_tasks"
+                                        label="Allowed to broadcast tasks"
+                                      />
+                                    </Col>
+                                    <Col md={4} className="mb-3">
+                                      <FormControlLabel
+                                        className="check_label"
+                                        checked={el?.admin_rignts?.allow_to_chat_externally}
+                                        onChange={(e) => handleUpadteMultiUser("allow_to_chat_externally", e.target.checked, i, "checked")}
+                                        control={<Checkbox />}
+                                        name="allow_to_chat_externally"
+                                        label="Allowed to chat externally"
+                                      />
+                                    </Col>
+                                    <Col md={4} className="mb-3">
+                                      <FormControlLabel
+                                        className="check_label"
+                                        checked={el?.admin_rignts?.allowed_to_purchase_content}
+                                        onChange={(e) => handleUpadteMultiUser("allowed_to_purchase_content", e.target.checked, i, "checked")}
+                                        control={<Checkbox />}
+                                        name="allowed_to_purchase_content"
+                                        label="Allowed to purchase content"
+                                      />
+                                    </Col>
+                                    <Col md={8}>
+                                      <div className="d-flex set_price mng_price">
+                                        <p className="mb-0">Set purchase range</p>
+                                        <Form.Group className="mb-4 form-group">
+                                          <Form.Control
+                                            type="text"
+                                            className=""
+                                            value={el?.price_range?.minimum_price}
+                                            name="minimum_price"
+                                            onChange={(e) => handleUpadteMultiUser("minimum_price", e.target.value, i, "price")}
+                                            placeholder="£Min"
+                                            disabled={!el?.admin_rignts?.allowed_to_purchase_content}
+                                          />
+                                        </Form.Group>
+                                        <Form.Group className="mb-4 form-group">
+                                          <Form.Control
+                                            type="text"
+                                            className=""
+                                            value={el?.price_range?.maximum_price}
+                                            name="maximum_price"
+                                            onChange={(e) => handleUpadteMultiUser("maximum_price", e.target.value, i, "price")}
+                                            placeholder="£Max"
+                                            disabled={!el?.admin_rignts?.allowed_to_purchase_content}
+                                          />
+                                        </Form.Group>
+                                      </div>
+                                    </Col>
+                                  </Row>
+                                </div>
+                              </div>)
+                            }
+                            {
+                              multiUser?.length >= 1 && <div className="stepFooter">
+                                <Button
+                                  className="w-100 mt_25"
+                                  variant="primary"
+                                  onClick={() => handleAddMultiUser()}
+                                >
+                                  Save
+                                </Button>
+                                <p className="red_text clickable" onClick={() => handleMultiUser("more_add")}>Add another new user</p>
                               </div>
-                            </div>)
-                          }
-                          {
-                            multiUser?.length >= 1 && <div className="stepFooter">
-                              <Button
-                                className="w-100 mt_25"
-                                variant="primary"
-                                onClick={() => handleAddMultiUser()}
-                              >
-                                Save
-                              </Button>
-                              <p className="red_text clickable" onClick={() => handleMultiUser("more_add")}>Add another new user</p>
-                            </div>
-                          }
-                        </Form>
+                            }
+                          </Form>
+                        </>
                       )}
 
 
