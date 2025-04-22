@@ -20,6 +20,7 @@ import Loader from "../component/Loader";
 import bullseye from "../assets/images/bullseye.svg";
 import calendaric from "../assets/images/calendarnic.svg";
 import timeic from "../assets/images/watch.svg";
+import { formatAmountInMillion } from "./commonFunction";
 
 const Chatbroadcasttask = (props) => {
   const [latitude, setLatitude] = useState(null);
@@ -274,7 +275,7 @@ const Chatbroadcasttask = (props) => {
                             }
                           >
                             {taskDetails?.need_photos === true
-                              ? "£ " + taskDetails?.photo_price
+                              ? "£ " + formatAmountInMillion(taskDetails?.photo_price)
                               : "-"}
                           </span>
                         </div>
@@ -288,7 +289,7 @@ const Chatbroadcasttask = (props) => {
                             }
                           >
                             {taskDetails?.need_interview === true
-                              ? "£ " + taskDetails?.interview_price
+                              ? "£ " + formatAmountInMillion(taskDetails?.interview_price)
                               : "-"}
                           </span>
                         </div>
@@ -302,7 +303,7 @@ const Chatbroadcasttask = (props) => {
                             }
                           >
                             {taskDetails?.need_videos === true
-                              ? "£ " + taskDetails?.videos_price
+                              ? "£ " + formatAmountInMillion(taskDetails?.videos_price)
                               : "-"}
                           </span>
                         </div>
@@ -316,7 +317,7 @@ const Chatbroadcasttask = (props) => {
                         }
                       >
                         <div className="mediaWrap uploaded_mda">
-                          {taskDetails?.content?.map((el) => (
+                          {taskDetails?.content?.slice(0, 3)?.map((el) => (
                             <img src={el?.watermark} alt="" />
                           ))}
                         </div>

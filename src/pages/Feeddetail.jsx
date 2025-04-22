@@ -1626,6 +1626,20 @@ const Feeddetail = (props) => {
                                     <Button className="greyBtn">Paid</Button>
                                   </Link>
                                 )}
+                                {/* Sandeep work */}
+                              {/* <Button
+                                className="newbtndesign" variant="secondary"
+
+                              ><small>Offered</small>
+                                £ 100
+                              </Button>
+                              <Button
+
+                                variant="primary newbtndesign"
+                              >
+                                <small>Buy</small>
+                                £ 100
+                              </Button> */}
                             </div>
                           </div>
                         </CardContent>
@@ -2970,7 +2984,7 @@ const Feeddetail = (props) => {
                                       </h6>
                                     </div>
                                     {tabSelect === "presshop" ? (
-                                      <ChatCard/>
+                                      <ChatCard />
                                     ) : null}
                                   </div>
                                 </Col>

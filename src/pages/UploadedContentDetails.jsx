@@ -374,7 +374,7 @@ const UploadedContentDetails = (props) => {
       setChatContentIds((pre) => ({
         ...pre,
         room_id: resp?.data?.room_id?.room_id,
-        sender_id: User && ( User?._id || User?.id )
+        sender_id: User && (User?._id || User?.id)
       }));
 
       localStorage.setItem("internal", resp?.data?.data?.[0]?.task_id?._id);
@@ -1035,7 +1035,7 @@ const UploadedContentDetails = (props) => {
                                         />
                                         <audio
                                           controls
-                                          src={curr?.videothubnail}
+                                          src={process.env.REACT_APP_CONTENT_MEDIA + curr?.imageAndVideo}
                                           type="audio/mpeg"
                                           className="slider-audio"
                                           ref={audioRef}
@@ -1050,7 +1050,7 @@ const UploadedContentDetails = (props) => {
                                         //     .REACT_APP_UPLOADED_CONTENT +
                                         //   curr?.media
                                         // }
-                                        src={curr?.videothubnail}
+                                        src={process.env.REACT_APP_UPLOADED_CONTENT + curr?.imageAndVideo}
                                       />
                                     ) : null}
                                   </SwiperSlide>
@@ -1819,7 +1819,7 @@ const UploadedContentDetails = (props) => {
                                                                 <video
                                                                   controls
                                                                   className="slider-vddo"
-                                                                  src={`${item?.thumbnail_url}`}
+                                                                  src={`${process.env.REACT_APP_UPLOADED_CONTENT + item?.name}`}
                                                                 />
                                                               ) : item?.mime ===
                                                                 "audio" ||
@@ -1838,7 +1838,7 @@ const UploadedContentDetails = (props) => {
                                                                   />
                                                                   <audio
                                                                     controls
-                                                                    src={`${item?.thumbnail_url}`}
+                                                                    src={`${process.env.REACT_APP_CONTENT_MEDIA + item?.name}`}
                                                                     type="audio/mpeg"
                                                                     className="slider-audio"
                                                                     ref={
@@ -1868,7 +1868,7 @@ const UploadedContentDetails = (props) => {
                                                                 <video
                                                                   controls
                                                                   className="slider-vddo"
-                                                                  src={`${item?.thumbnail_url}`}
+                                                                  src={`${process.env.REACT_APP_UPLOADED_CONTENT + item?.thumbnail_url}`}
                                                                 />
                                                               ) : item?.mime ===
                                                                 "audio" ||
@@ -1887,7 +1887,7 @@ const UploadedContentDetails = (props) => {
                                                                   />
                                                                   <audio
                                                                     controls
-                                                                    src={`${item?.thumbnail_url}`}
+                                                                    src={`${process.env.REACT_APP_CONTENT_MEDIA + item?.thumbnail_url}`}
                                                                     type="audio/mpeg"
                                                                     className="slider-audio"
                                                                     ref={
@@ -2438,17 +2438,13 @@ const UploadedContentDetails = (props) => {
                                 process.env.REACT_APP_UPLOADED_CONTENT +
                                 item?.content[0]?.imageAndVideo
                                 : item?.content[0]?.type === "video"
-                                  ? item?.content[0]?.videothubnail ||
-                                  process.env.REACT_APP_UPLOADED_CONTENT +
-                                  item?.content[0]?.videothubnail
+                                  ? item?.content[0]?.videothubnail
                                   : item?.content[0]?.type === "audio"
                                     ? audioic
                                     : null
                             }
                             type={"task"}
-                            postcount={filteredContent("image")?.length}
-                            postcount2={filteredContent("video")?.length}
-                            postcount3={filteredContent("interview")?.length}
+                            postcount={1}
                             feedTypeImg1={
                               item?.content[0]?.type === "image"
                                 ? cameraic
