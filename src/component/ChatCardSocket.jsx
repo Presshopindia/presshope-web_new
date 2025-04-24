@@ -99,7 +99,7 @@ function ChatCardSocket(props) {
 
   useEffect(() => {
     getMessages();
-  }, [socketServer, roomDetails?.roomsdetails?.room_id]);
+  });
 
   const getMessages = async () => {
     if (!roomDetails?.roomsdetails?.room_id) {
@@ -124,92 +124,6 @@ function ChatCardSocket(props) {
     }
   };
 
-  const handleFileChange = async (event) => {
-    event.preventDefault();
-    const formdata = new FormData();
-    formdata.append("media", event.target.files[0]);
-    formdata.append("path", "chatMedia");
-    const resp = await Post(`mediaHouse/uploadUserMedia`, formdata);
-    if (resp) {
-      setMediaMessage({
-        room_id: roomDetails.roomsdetails.room_id,
-        message: msg,
-        primary_room_id: roomDetails.roomsdetails._id,
-        sender_id: roomDetails.roomsdetails.receiver_id,
-        message_type: "media",
-        attachment_name: event.target.files[0].name,
-        attachment_size: event.target.files[0].size,
-        attachment: resp.data.path,
-        receiver_id: roomDetails.roomsdetails.sender_id,
-      });
-    }
-  };
-
-  const SendMedia = () => {
-    socketServer.emit("media message", mediaMessage);
-    socketServer.on("media message", (obj) => { });
-
-    setMediaMessage({
-      room_type: "",
-      room_id: "",
-      message: "",
-      primary_room_id: "",
-      sender_id: "",
-      message_type: "",
-      attachment_name: "",
-      attachment_size: "",
-      attachment: "",
-      receiver_id: "",
-    });
-    setMsg("");
-    getMessages();
-  };
-
-  const staticPayment = async (data) => {
-    const obj = {
-      image_id: data.image_id,
-      sender_id: data.sender_id._id,
-      receiver_id: data.receiver_id._id,
-      room_id: data.room_id,
-      sender_type: "mediahouse",
-      amount: data.media.amount,
-      message_type: "buy",
-    };
-    const resp = await Post("mediahouse/buyuploadedcontent", obj);
-    if (resp) {
-      getMessages();
-    }
-  };
-
-  // const stripePayment = async (curr) => {
-  //   setLoading(true);
-
-  //   let obj = {
-  //     image_id: curr?.image_id,
-  //     customer_id: UserDetails.stripe_customer_id,
-  //     amount: curr?.media?.amount,
-  //     type: "task_content",
-  //     task_id: taskId,
-  //     description: curr?.content?.heading || curr?.content?.description,
-  //   };
-  //   const resp = await Post("mediahouse/createPayment", obj);
-
-  //   let obj1 = {
-  //     room_id: curr?.room_id,
-  //     sender_id: curr?.sender_id?._id,
-  //     receiver_id: curr?.receiver_id?._id,
-  //     sender_type: "mediahouse",
-  //     message_type: "buy",
-  //     amount: curr?.media?.amount,
-  //   };
-
-  //   socketServer.emit("offer message", obj1);
-  //   setLoading(false);
-  //   window.open(resp.data.url, "_blank");
-  //   if (resp) {
-  //   }
-  // };
-
   const [selectedItems, setSelectedItems] = useState([]);
 
   const handleSelectionChange = (item, isChecked) => {
@@ -224,6 +138,7 @@ function ChatCardSocket(props) {
     });
   };
 
+  console.log("roomDetails", roomDetails)
   const stripePayment = async (curr) => {
     setLoading(true);
     let totalAmount = 0;
@@ -240,7 +155,7 @@ function ChatCardSocket(props) {
       description: taskDetails?.heading,
       room_id: roomDetails?.roomsdetails?.room_id,
       chat_id: curr?._id,
-      hopper_id: taskHopperId
+      hopper_id: roomDetails?.hopper_id?._id
     };
     try {
       const resp = await Post("mediahouse/createPayment", obj);
@@ -254,20 +169,10 @@ function ChatCardSocket(props) {
 
 
   const DownloadContent = async (id) => {
-    const resp = await Get(`mediahouse/image_pathdownload?image_id=${id}`);
-    if (resp) {
-      const filename = resp.data.message.slice(85);
-      fetch(resp.data.message)
-        .then((response) => response.blob())
-        .then((blob) => {
-          const downloadElement = document.createElement("a");
-          const url = URL.createObjectURL(blob);
-          downloadElement.href = url;
-          downloadElement.download = filename;
-          downloadElement.click();
-          URL.revokeObjectURL(url);
-        });
-    }
+    window.open(
+      `${process.env.REACT_APP_BASE_URL}mediahouse/image_pathdownload?image_id=${id}&type=task`,
+      "_blank"
+    );
   };
 
   const requestMoreContent = (curr) => {
@@ -333,7 +238,34 @@ function ChatCardSocket(props) {
     }
   };
 
+  // const RatingNReview = (curr) => {
+  //   const obj = {
+  //     room_id: curr?.room_id,
+  //     sender_type: "Mediahouse",
+  //     receiver_id: curr?.receiver_id?._id,
+  //     sender_id: curr?.sender_id?._id,
+  //     rating: rating,
+  //     review: review,
+  //     chat_id:
+  //       messages &&
+  //       messages.find((obj) => obj.message_type === "rating_mediaHouse")?._id,
+  //     type: "task_content",
+  //     image_id: curr?.image_id,
+  //     message_type: "rating_mediaHouse",
+  //   };
+  //   console.log(obj);
+
+  //   return;
+
+  //   socketServer.emit("rating", obj);
+  //   socketServer.on("rating", (obj) => { });
+  //   getMessages(roomDetails?.roomsdetails?._id);
+  // };
+
   const RatingNReview = (curr) => {
+    if (!roomDetails?.roomsdetails?._id) {
+      alert("Room id is important")
+    }
     const obj = {
       room_id: curr?.room_id,
       sender_type: "Mediahouse",
@@ -341,20 +273,13 @@ function ChatCardSocket(props) {
       sender_id: curr?.sender_id?._id,
       rating: rating,
       review: review,
-      chat_id:
-        messages &&
-        messages.find((obj) => obj.message_type === "rating_mediaHouse")?._id,
       type: "task_content",
-      image_id: curr?.image_id,
-      message_type: "rating_mediaHouse",
+      image_id: curr?._id,
+      features: features,
+      message_type: "rating_by_mediahouse",
+      paid_status: curr?.paid_status,
     };
-    console.log(obj);
-
-    return;
-
     socketServer.emit("rating", obj);
-    socketServer.on("rating", (obj) => { });
-    getMessages(roomDetails?.roomsdetails?._id);
   };
 
   useEffect(() => {
@@ -1028,8 +953,7 @@ function ChatCardSocket(props) {
               <p className="mb-0">Hoppers</p>
             </div>
             <div className="chat_content_list">
-              {hoppers &&
-                hoppers.map((curr) => {
+              {hoppers?.map((curr) => {
                   return (
                     <div
                       className={`chatting_itm chat-hopper-listing d-flex align-items-center justify-content-space-between clickable ${curr?._id === roomDetails?._id ? "light-gray-bg" : "bg-light-gray"}`}

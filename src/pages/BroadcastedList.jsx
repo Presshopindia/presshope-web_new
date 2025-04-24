@@ -88,6 +88,41 @@ const BroadcastedTrackings = (props) => {
     setOpenSortComponent(values);
   };
 
+  const [timeRemaining, setTimeRemaining] = useState({ hours: 0, minutes: 0 });
+  const [deadlineTime, setDeadlineTime] = useState("");
+  
+  useEffect(() => {
+    if (taskDetails?.deadline_date) {
+      // Set the deadline time format
+      setDeadlineTime(moment(taskDetails.deadline_date).format("hh:mm A"));
+      
+      // Calculate time remaining
+      const calculateTimeRemaining = () => {
+        const now = moment();
+        const deadline = moment(taskDetails.deadline_date);
+        
+        if (deadline.isBefore(now)) {
+          setTimeRemaining({ hours: 0, minutes: 0 });
+          return;
+        }
+        
+        const duration = moment.duration(deadline.diff(now));
+        const hours = Math.floor(duration.asHours());
+        const minutes = Math.floor(duration.asMinutes()) % 60;
+        
+        setTimeRemaining({ hours, minutes });
+      };
+      
+      // Initial calculation
+      calculateTimeRemaining();
+      
+      // Update every minute
+      const timer = setInterval(calculateTimeRemaining, 60000);
+      
+      return () => clearInterval(timer);
+    }
+  }, [taskDetails?.deadline_date]);
+
   return (
     <>
       {loading && <Loader />}
@@ -595,7 +630,7 @@ const BroadcastedTrackings = (props) => {
                                       )
                                       : " 00:00 AM"} */}
 
-                          5 Hoppers
+                          {taskDetails?.accepted_by?.length} Hoppers
                         </span>
                       </div>
                     </Col>
@@ -669,6 +704,9 @@ const BroadcastedTrackings = (props) => {
                             </span>
                           </div>
                         </div>
+                        {
+                          console.log("taskDetails", taskDetails)
+                        }
                         <div className="w-50 ps-3">
                           <div className="Deadline-card ">
                             <div className="Deadline-card-top py-4">
@@ -676,11 +714,11 @@ const BroadcastedTrackings = (props) => {
                                 Time remaining
                               </p>
                               <h5>
-                                28:15
+                              {timeRemaining.hours.toString().padStart(2, '0')}:{timeRemaining.minutes.toString().padStart(2, '0')}
                               </h5>
                             </div>
                             <div className="Deadline-card-bottom p-2">
-                              Deadline 03:00 pm
+                              Deadline {deadlineTime}
                             </div>
                           </div>
                         </div>

@@ -21,6 +21,7 @@ import bullseye from "../assets/images/bullseye.svg";
 import calendaric from "../assets/images/calendarnic.svg";
 import timeic from "../assets/images/watch.svg";
 import { formatAmountInMillion } from "./commonFunction";
+import audioic from "../assets/images/audimg.svg";
 
 const Chatbroadcasttask = (props) => {
   const [latitude, setLatitude] = useState(null);
@@ -316,10 +317,15 @@ const Chatbroadcasttask = (props) => {
                           navigate(`/hopper-task-content/${taskDetails?._id}`)
                         }
                       >
+                        {
+                          console.log("taskDetails", taskDetails)
+                        }
                         <div className="mediaWrap uploaded_mda">
-                          {taskDetails?.content?.slice(0, 3)?.map((el) => (
-                            <img src={el?.watermark} alt="" />
-                          ))}
+                        {taskDetails?.content?.slice(0, 3)?.map((el, index) => {
+                            return (
+                              el?.media_type === "image" ? <img key={index} src={el?.watermark} alt="" /> : <div className="card-imgs-wrap"><img className="card-img" key={index} src={audioic} alt="" /></div>
+                            );
+                          })}
                         </div>
                         <Link
                           className="text-dark"
