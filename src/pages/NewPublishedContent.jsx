@@ -44,6 +44,8 @@ import { useDarkMode } from "../context/DarkModeContext";
 
 const NewPublishedContent = (props) => {
   const [loading, setLoading] = useState(false);
+  const [openContent, setOpenContent] = useState(false);
+  const [showContent, setShowContent] = useState([]);
   const [publishedContent, setPublishedContent] = useState(initStateOfFeed);
   const {
     isDarkMode,
@@ -117,10 +119,6 @@ const NewPublishedContent = (props) => {
     window.scrollTo(0, 0);
   }, [publishedContent?.filter?.active, publishedContent?.sort?.active]);
 
-  useEffect(() => {
-    MultiData();
-  }, [cartCount]);
-
   const handleFavourite = (index, i) => {
     setPublishedContent((prev) => {
       const updatedContent = { ...prev };
@@ -158,12 +156,6 @@ const NewPublishedContent = (props) => {
       return updatedContent;
     });
   };
-
-  const [openContent, setOpenContent] = useState(false);
-  const [showContent, setShowContent] = useState([]);
-
-
-  console.log("publishedContent123", publishedContent);
 
   return (
     <>
@@ -257,8 +249,6 @@ const NewPublishedContent = (props) => {
             <Col md={12}>
               <div className="feedsMain_wrap">
                 {publishedContent?.data?.map((el, index) => {
-
-                  console.log("allPublishedData", el);
                   const header = feedTitle(
                     publishedContent?.title[index],
                     publishedContent?.categoryData
@@ -411,6 +401,9 @@ const NewPublishedContent = (props) => {
                                   ? curr?.before_discount_value
                                   : null
                               }
+                              hopper_id={curr?.hopper_id?._id}
+                              hopper_stripe_account_id={curr?.hopper_id?.stripe_account_id}
+                              type="content"
                             />
                           </Col>
                         ))}

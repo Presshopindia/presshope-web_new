@@ -170,7 +170,6 @@ const RelatedContent = () => {
                             }
                             type_tag={curr?.type}
                             feedHead={curr.heading}
-                            // feedTime={moment(curr?.createdAt).format("hh:mm A, DD MMM YYYY")}
                             feedTime={moment(curr.createdAt).format(" hh:mm A, DD MMM YYYY")}
                             feedLocation={curr.location}
                             contentPrice={formatAmountInMillion(curr.ask_price)}
@@ -180,6 +179,9 @@ const RelatedContent = () => {
                                 : favic
                             }
                             content_id={curr?._id}
+                            hopper_id={curr?.hopper_id?._id}
+                            type={"content"}
+                            hopper_stripe_account_id={curr?.hopper_id?.stripe_account_id}
                             allContent={curr?.content}
                             basketValue={curr?.basket_status}
                             basket={()=>{console.log("myData");

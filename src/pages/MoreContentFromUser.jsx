@@ -149,6 +149,9 @@ const MoreContentFromUser = () => {
                                 : favic
                             }
                             content_id={curr?._id}
+                            hopper_id={curr?.hopper_id?._id}
+                            type={"content"}
+                            hopper_stripe_account_id={curr?.hopper_id?.stripe_account_id}
                             allContent={curr?.content}
                             basketValue={curr?.basket_status}
                             basket={()=>{console.log("myData");

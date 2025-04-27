@@ -1,4 +1,4 @@
-import { Card, Tooltip, Typography } from "@mui/material";
+import { Card, Switch, Tooltip, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { BsArrowLeft } from "react-icons/bs";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -15,7 +15,7 @@ import reuters from "../assets/images/reuters.png";
 import shared from "../assets/images/share.png";
 import videoic from "../assets/images/video.svg";
 import stripeLogo from "../assets/images/stripe.png";
-import contentVideo from "../assets/images/contentVideo.svg";
+import task from "../assets/images/task.svg";
 import watchic from "../assets/images/watch.svg";
 import Header from "../component/Header";
 const moment = require("moment");
@@ -35,8 +35,6 @@ import {
 } from "../component/commonFunction";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import { forEach } from "lodash";
-import { toast } from "react-toastify";
 
 const Basket = () => {
   const [loading, setLoading] = useState(false);
@@ -53,7 +51,7 @@ const Basket = () => {
     off: "",
   });
 
-  const { cartCount, setCartCount, profileData } = useDarkMode();
+  const { setCartCount, profileData } = useDarkMode();
   const user = profileData;
   console.log("userData", user);
   const navigate = useNavigate();
@@ -61,19 +59,16 @@ const Basket = () => {
   async function getCountOfBasketItems() {
     try {
       const res = await Get(`mediaHouse/getBasketDataCount`);
-
-      console.log("count", res?.data?.data);
       setCartCount(res?.data?.data || 0);
-      // setBasketItemsCount(res?.data?.data || 0);
     } catch (error) {
       console.log("basketcountError", error);
     }
   }
 
-  const ContentByID = async () => {
+  const BasketData = async () => {
     setLoading(true);
     try {
-      const resp = await Post(`mediaHouse/getBasketData`, { type: "task" });
+      const resp = await Post(`mediaHouse/getBasketData`, { type: "content" });
       setData(resp?.data?.data);
       setLoading(false);
     } catch (error) {
@@ -82,180 +77,14 @@ const Basket = () => {
   };
 
   const paymentintents = async (data) => {
-    const UserDetails = JSON.parse(localStorage.getItem("user"));
-
-    console.log("all payment basket data --->  ---->", data);
-    const paymentData = {
-      data: [],
-      product: [],
-    };
-
-    data?.forEach((curr, index) => {
-      console.log(
-        "curr?.details?.stripe_account_id",
-        curr?.details?.stripe_account_id
+    try {
+      const resp = await Post(
+        "mediaHouse/createPaymentforBasket",
       );
-      // hopper_stripe_id = curr?.details?.hopper_id;
 
-      let task_original_price =
-        +curr?.details?.photo_price ||
-        +curr?.details?.video_price ||
-        +curr?.details?.interview_price;
-
-      if (curr?.details?.type === "image") {
-        task_original_price = +curr?.details?.taskDetails?.hopper_photo_price;
-      } else if (curr?.details?.type === "video") {
-        task_original_price = +curr?.details?.taskDetails?.hopper_video_price;
-      } else if (curr?.details?.type === "audio") {
-        task_original_price =
-          +curr?.details?.taskDetails?.hopper_interview_price;
-      } else {
-        task_original_price =
-          +curr?.details?.taskDetails?.hopper_interview_price;
-      }
-
-      let hooperPricePercentage;
-
-      if (curr?.type == "uploaded_content") {
-        hooperPricePercentage =
-          curr?.details?.hopperDetails?.category == "pro"
-            ? (task_original_price * 15) / 100
-            : task_original_price / 5;
-      } else {
-        hooperPricePercentage =
-          curr?.details?.hopperDetails?.category == "pro"
-            ? (curr?.details?.original_ask_price * 15) / 100
-            : curr?.details?.original_ask_price / 5;
-      }
-      const hopper_charge_ac_category =
-        curr?.details?.hopperDetails?.category == "pro" ? 15 : 20;
-
-      const obj = {};
-      obj.user_id = user?._id;
-      obj.product_id = curr?.post_id;
-      obj.customer_id = user?.stripe_customer_id;
-      obj.amount = +curr?.details?.original_ask_price || task_original_price;
-      obj.type = curr?.type;
-      obj.original_ask_price =
-        +curr?.details?.original_ask_price || task_original_price;
-      //  obj.offer=curr?.details?.offer;
-      obj.offer = false;
-      obj.is_charity =
-        curr?.details?.is_charity || curr?.details?.taskDetails?.is_charity;
-      obj.charity =
-        curr?.details?.charity || curr?.details?.taskDetails?.charity || "";
-      obj.description =
-        curr?.details?.heading || curr?.details?.taskDetails?.heading;
-      if (curr.type == "uploaded_content") {
-        obj.application_fee = +hooperPricePercentage;
-      } else {
-        obj.application_fee = +(
-          curr?.details?.original_ask_price / 5 +
-          hooperPricePercentage
-        );
-      }
-
-      obj.stripe_account_id = curr?.details?.stripe_account_id;
-      obj.hopper_charge_ac_category = hopper_charge_ac_category;
-      obj.items_vat_amount = Number(
-        curr?.details?.ask_price / 5 || task_original_price / 5
-      ).toFixed(2);
-
-      // Add coupon code
-      if (promoCode?.code) {
-        obj.coupon = promoCode?.code;
-      }
-      paymentData?.data?.push(obj);
-    });
-
-    data?.forEach((curr, index) => {
-      let obj = {};
-      if (curr?.type == "uploaded_content") {
-        obj = {
-          price_data: {
-            currency: "gbp",
-            product_data: {
-              name: curr?.details?.taskDetails?.heading,
-              metadata: {
-                customer_id: user?.stripe_customer_id,
-                // amount: Number(curr?.details?.ask_price),
-                amount:
-                  curr?.details?.type === "image"
-                    ? +curr?.details?.taskDetails?.hopper_photo_price
-                    : curr?.details?.type === "video"
-                      ? +curr?.details?.taskDetails?.hopper_video_price
-                      : +curr?.details?.taskDetails?.hopper_interview_price,
-                type: "content",
-              },
-            },
-            // unit_amount: Number(curr?.details?.ask_price) * 100,
-            unit_amount:
-              (curr?.details?.type === "image"
-                ? +curr?.details?.taskDetails?.hopper_photo_price
-                : curr?.details?.type === "video"
-                  ? +curr?.details?.taskDetails?.hopper_video_price
-                  : +curr?.details?.taskDetails?.hopper_interview_price) * 100,
-          },
-          quantity: 1,
-          tax_rates: ["txr_1Q54oaCf1t3diJjXVbYnv7sO"],
-        };
-      } else {
-        obj = {
-          price_data: {
-            currency: "gbp",
-            product_data: {
-              name: curr?.details?.heading,
-              metadata: {
-                customer_id: user?.stripe_customer_id,
-                amount: Number(curr?.details?.hopper_ask_price),
-                type: "content",
-              },
-            },
-            unit_amount: Number(curr?.details?.hopper_ask_price) * 100,
-          },
-          quantity: 1,
-          tax_rates: ["txr_1Q54oaCf1t3diJjXVbYnv7sO"],
-        };
-      }
-      paymentData.product.push(obj);
-    });
-
-    //   paymentData.product=[
-    //     {
-    //         "price_data": {
-    //             "currency": "gbp",
-    //             "product_data": {
-    //                 "name": "Challanges",
-    //                 "metadata": {
-    //                     // "product_id": "670fc0a808d2546940499bd2",
-    //                     "customer_id":user?.stripe_customer_id,
-    //                     "amount": Number(totalAmount?.totalAmount),
-    //                     "type": "content"
-    //                 }
-    //             },
-    //             "unit_amount": Number(totalAmount?.totalAmount)*100,
-    //         },
-    //         "quantity": 1,
-    //         "tax_rates": [
-    //             "txr_1Q54oaCf1t3diJjXVbYnv7sO"
-    //         ]
-    //     }
-    // ];
-    console.log("all data of payment =========>", paymentData);
-
-    if (paymentData.product.length >= 1 && paymentData.data.length >= 1) {
-      try {
-        const resp = await Post(
-          "mediaHouse/createPaymentforBasket",
-          paymentData
-        );
-
-        window.open(resp.data.url, "_blank");
-      } catch (error) {
-        successToasterFun(error?.response?.data?.errors?.msg);
-      }
-    } else {
-      toast.error("Please add atleast one items");
+      window.open(resp.data.url, "_blank");
+    } catch (error) {
+      successToasterFun(error?.response?.data?.errors?.msg);
     }
   };
 
@@ -287,57 +116,10 @@ const Basket = () => {
       console.log("object", obj);
       const res = await Post(`mediaHouse/addToBasket`, { order: [obj] });
       if (res) {
-        ContentByID();
+        BasketData();
         getCountOfBasketItems();
       }
     } catch (error) { }
-  }
-
-  function calculateTotalAmount(data) {
-    try {
-      // const amountDetails=data.
-      let sum = 0;
-      data.forEach((value, index) => {
-        console.log("value all --->", value);
-        let priceOfTaskUploaded = 0;
-        if (value?.type == "uploaded_content") {
-          if (value?.details?.type == "image") {
-            priceOfTaskUploaded =
-              value?.details?.taskDetails?.hopper_photo_price;
-          } else if (value?.details?.type == "video") {
-            priceOfTaskUploaded =
-              value?.details?.taskDetails?.hopper_videos_price;
-          } else if (value?.details?.type == "audio") {
-            priceOfTaskUploaded =
-              value?.details?.taskDetails?.hopper_interview_price;
-          }
-          sum += priceOfTaskUploaded;
-        } else {
-          const askingPrice =
-            value?.details?.ask_price ?? value?.details?.hopper_photo_price;
-          console.log("askingPrice", askingPrice);
-          sum += askingPrice;
-        }
-        //for task
-
-        //   const askingPrice =
-        //     value?.details?.ask_price ?? value?.details?.photo_price;
-        //   console.log("askingPrice", askingPrice);
-        //   sum += askingPrice;
-      });
-
-      let amountWithVat = sum * (120 / 100);
-      let vatAmount = sum * (20 / 100);
-
-      setTotalAmount((old) => ({
-        ...(old || {}),
-        totalAmount: sum,
-        amountWithVat: amountWithVat,
-        vatAmount,
-      }));
-    } catch (error) {
-      console.log("all error --->> ", error);
-    }
   }
 
   function capitaliseLetterPromocode(value) {
@@ -384,15 +166,69 @@ const Basket = () => {
   };
 
   useEffect(() => {
-    ContentByID();
+    BasketData();
   }, []);
+
+  function calculateTotalAmount(data) {
+    try {
+      let sum = 0;
+      if (!data || !Array.isArray(data)) return;
+
+      data.forEach((value) => {
+        if (value?.type === "uploaded_content") {
+          let priceOfTaskUploaded = 0;
+          if (value?.contentDetails?.type === "image") {
+            priceOfTaskUploaded = value?.contentDetails?.taskDetails?.hopper_photo_price || 0;
+          } else if (value?.contentDetails?.type === "video") {
+            priceOfTaskUploaded = value?.contentDetails?.taskDetails?.hopper_videos_price || 0;
+          } else if (value?.contentDetails?.type === "audio") {
+            priceOfTaskUploaded = value?.contentDetails?.taskDetails?.hopper_interview_price || 0;
+          }
+          sum += priceOfTaskUploaded;
+        } else {
+          const askingPrice = value?.amount || 0;
+          sum += askingPrice;
+        }
+      });
+
+      let vatAmount = sum * 0.2; // 20% VAT
+      let amountWithVat = sum + vatAmount;
+
+      setTotalAmount({
+        totalAmount: sum,
+        amountWithVat: amountWithVat,
+        vatAmount: vatAmount
+      });
+    } catch (error) {
+      console.log("Error calculating total amount:", error);
+    }
+  }
+
+  // Add this useEffect to calculate total amount when data changes
   useEffect(() => {
     if (data) {
       calculateTotalAmount(data);
     }
   }, [data]);
 
-  console.log("basketdata ----> ----->", data);
+  const getMediaType = (type) => {
+    if (!data) return 0;
+
+    // Check if we're working with the current item in the loop
+    const currentItem = el => {
+      if (el.type === "content") {
+        // For content type, check the content array
+        return el.contentDetails?.content?.filter(item => item.media_type === type).length || 0;
+      } else if (el.type === "uploaded_content") {
+        // For uploaded_content type, check if the type matches
+        return el.contentDetails?.type === type ? 1 : 0;
+      }
+      return 0;
+    };
+
+    // Return the function to be used in the rendering context
+    return currentItem;
+  }
 
   return (
     <>
@@ -496,9 +332,17 @@ const Basket = () => {
                                 px="20px"
                                 mb="10px"
                               >
-                                <Typography className="tbl_hdng">
-                                  Invoice details
-                                </Typography>
+                                {/* <FormControl component="fieldset" variant="standard">
+                                  <FormLabel component="legend">Assign responsibility</FormLabel>
+                                  <FormGroup>
+                                    <FormControlLabel
+                                      control={
+                                        <Switch checked={state.gilad} onChange={handleChange} name="gilad" />
+                                      }
+                                      label="Task"
+                                    />
+                                  </FormGroup>
+                                </FormControl> */}
                               </div>
 
                               <div className="fix_ht_table ">
@@ -525,161 +369,67 @@ const Basket = () => {
                                   </thead>
                                   <tbody>
                                     {data?.map((el, i) => {
-                                      console.log(
-                                        "allbaskent element-->>>",
-                                        el
-                                      );
-                                      const contentType = el?.content;
-                                      let imageAcToType = "";
-                                      let videoAcToType = "";
-                                      let docAcToType = "";
-                                      let priceOfTaskUploaded = 0;
-                                      let taskImage = "";
-                                      if (el?.details?.videothubnail) {
-                                        taskImage = el?.details?.videothubnail;
-                                      }
-                                      if (el?.details?.type == "image") {
-                                        imageAcToType = cameraic;
-                                        priceOfTaskUploaded =
-                                          el?.details?.taskDetails
-                                            ?.hopper_photo_price;
-                                      } else if (el?.details?.type == "video") {
-                                        videoAcToType = videoic;
-                                        priceOfTaskUploaded =
-                                          el?.details?.taskDetails
-                                            ?.hopper_videos_price;
-                                      } else if (el?.details?.type == "audio") {
-                                        docAcToType = docsic;
-                                        priceOfTaskUploaded =
-                                          el?.details?.taskDetails
-                                            ?.hopper_interview_price;
-                                      }
-                                      // console.log(
-                                      //   "ajdfghfdhg",
-                                      //   el?.details?.type
-                                      // );
-                                      contentType.map((ele, index) => {
-                                        if (ele.media_type == "image") {
-                                          imageAcToType = cameraic;
-                                        } else if (ele.media_type == "video") {
-                                          videoAcToType = videoic;
-                                        } else if (ele.media_type == "pdf") {
-                                          docAcToType = docsic;
-                                        }
-                                      });
 
                                       return (
                                         <tr key={i}>
-                                          <td className="content_img_td position-relative add-icons-box">
-                                            <div
-                                              className="tbl_cont_wrp cnt_online_img noGrid"
-                                              onClick={() => {
-                                                if (
-                                                  el.type == "uploaded_content"
-                                                ) {
-                                                  navigate(
-                                                    `/content-details/${el?.details?._id}`
-                                                  );
-                                                }
-                                                if (el?.type == "content") {
-                                                  navigate(
-                                                    `/Feeddetail/content/${el?.details?._id}`
-                                                  );
-                                                }
-                                                console.log(
-                                                  "hello content published"
-                                                );
-                                              }}
-                                            >
-                                              {el?.content[0]?.media_type ===
-                                                "image" ? (
-                                                <img
-                                                  src={
-                                                    el?.content[0]?.watermark
-                                                  }
-                                                  className="content_img"
-                                                  alt="img"
-                                                />
-                                              ) : el?.content[0]?.media_type ===
-                                                "video" ? (
-                                                <img
-                                                  src={
-                                                    el?.content[0]?.watermark
-                                                  }
-                                                  className="cntnt-img content_img"
-                                                />
-                                              ) : el?.content[0]?.media_type ===
-                                                "audio" ? (
-                                                <img
+                                          <td className="content_img_td position-relative add-icons-box clickable" onClick={() => {
+                                            navigate(el?.type === "content" ? `/purchased-content-detail/${el?.contentDetails?._id}` : `/purchased-task-content-detail/${el?.contentDetails?._id}`);
+                                          }}>
+                                            <div className="tbl_cont_wrp cnt_online_img noGrid">
+                                              <div className="paymentToBeMadeImgContent">
+                                                {el?.type === "content" ? (
+                                                  el?.contentDetails?.content[0]
+                                                    ?.media_type === "image" ? (
+                                                    <img
+                                                      src={
+                                                        process.env.REACT_APP_CONTENT_MEDIA + el?.contentDetails?.content[0]?.media
+                                                      }
+                                                      className="cntnt-img"
+                                                      alt="img"
+                                                    />
+                                                  ) : el?.contentDetails?.content[0]?.media_type === "video" ? (
+                                                    <img
+                                                      src={process.env.REACT_APP_THUMBNAIL + el?.contentDetails?.content[0].media
+                                                      }
+                                                      className="cntnt-img"
+                                                    />
+                                                  ) : el?.contentDetails?.content[0]
+                                                    ?.media_type === "audio" ? (
+                                                    <img
+                                                      src={audioic}
+                                                      className="content_img"
+                                                    />
+                                                  ) : el?.contentDetails?.content[0]
+                                                    ?.media_type === "pdf" ? (
+                                                    <img
+                                                      src={docsic}
+                                                      className="cntnt-img"
+                                                    />
+                                                  ) : null
+                                                ) : (el?.contentDetails?.type === "image" || el?.contentDetails?.type === "video") ? (
+                                                  <img
+                                                    src={el?.contentDetails?.videothubnail}
+                                                    className="cntnt-img"
+                                                    alt="img"
+                                                  />
+                                                ) : <img
                                                   src={audioic}
-                                                  className="cntnt-img content_img"
-                                                />
-                                              ) : el?.content[0]?.media_type ===
-                                                "pdf" ? (
-                                                <img
-                                                  src={docsic}
-                                                  className="cntnt-img content_img"
-                                                />
-                                              ) : (
-                                                <img
-                                                  src={taskImage}
-                                                  className="cntnt-img content_img"
-                                                />
-                                              )}
-                                              {/* <span className="cont_count">
-                                                {el?.content?.length || 0}
-                                              </span> */}
-
+                                                  className="cntnt-img"
+                                                />}
+                                              </div>
                                             </div>
                                             <div className="tableContentTypeIcons">
-                                              <div class="post_icns_cstm_wrp camera-ico">
-                                                <div class="post_itm_icns dtl_icns">
-                                                  <span class="count">1</span>
-                                                  {/* <img
-                                                    class="feedMediaType iconBg"
-                                                    src={cameraic}
-                                                    alt=""
-                                                  /> */}
+                                              <div className="post_icns_cstm_wrp camera-ico">
+                                                <div className="post_itm_icns dtl_icns">
+                                                  <span className="count">{el?.type === "content" ? el?.contentDetails?.content?.length : 1}</span>
                                                 </div>
                                               </div>
-                                              {/* <div class="post_icns_cstm_wrp video-ico">
-                                                <div class="post_itm_icns dtl_icns">
-                                                  <span class="count">1</span>
-                                                  <img
-                                                    class="feedMediaType iconBg"
-                                                    src={videoic}
-                                                    alt=""
-                                                  />
-                                                </div>
-                                              </div> */}
-                                              {/* <div class="post_icns_cstm_wrp audio-ico">
-                                                  <div class="post_itm_icns dtl_icns">
-                                                    <span class="count">
-                                                      1
-                                                    </span>
-                                                    <img
-                                                      class="feedMediaType iconBg"
-                                                      src={interviewic}
-                                                      alt=""
-                                                    />
-                                                  </div>
-                                                </div> */}
-                                            </div>
-                                            <div
-                                              onClick={() => {
-                                                handleRemoveBasketItems(el);
-                                              }}
-                                              style={{ left: '63px', position: 'absolute', top: '5px' }}>
-                                              <i class="bi bi-trash3 custom_delete_icon"></i>
-                                              {/* <i class="bi bi-trash3-fill custom_delete_icon"></i> */}
                                             </div>
                                           </td>
                                           <td>
                                             <div className="desc">
                                               <p>
-                                                {el?.details?.heading ||
-                                                  el?.details?.taskDetails
-                                                    ?.heading}
+                                                {el?.contentDetails?.heading || el?.taskDetails?.heading}
                                               </p>
                                             </div>
                                           </td>
@@ -689,161 +439,111 @@ const Basket = () => {
                                                 src={watchic}
                                                 className="icn_time"
                                               />
-                                              {moment(el?.order_date).format(
-                                                "h:mm:A"
-                                              )}
+                                              {moment(el?.createdAt).format("h:mm:A")}
                                             </p>
                                             <p className="timedate">
                                               <img
                                                 src={calendar}
                                                 className="icn_time"
                                               />
-                                              {moment(el?.order_date).format(
-                                                "DD MMM YYYY"
-                                              )}
+                                              {moment(el?.createdAt).format("DD MMM YYYY")}
                                             </p>
                                           </td>
 
                                           <td className="text-center">
-                                            <Tooltip
-                                              title={
-                                                el?.content[0]?.media_type ==
-                                                  "image"
-                                                  ? "Photo"
-                                                  : el?.content[0]
-                                                    ?.media_type == "audio"
-                                                    ? "Audio"
-                                                    : el?.content[0]
-                                                      ?.media_type == "video"
-                                                      ? "Video"
-                                                      : el?.content[0]
-                                                        ?.media_type == "pdf"
-                                                        ? "Pdf"
-                                                        : "Scan"
-                                              }
-                                            >
-                                              {/* <img
-                                                src={
-                                                  el?.content[0]?.media_type ==
-                                                  "image"
-                                                    ? cameraic
-                                                    : el?.content[0]
-                                                        ?.media_type == "audio"
-                                                    ? audioicon
-                                                    : el?.content[0]
-                                                        ?.media_type == "pdf"
-                                                    ? docsic
-                                                    : el?.content[0]
-                                                        ?.media_type == "video"
-                                                    ? videoic
-                                                    : null
-                                                }
-                                                className="tbl_ic"
-                                                alt="camera"
-                                              /> */}
-                                              {imageAcToType ? (
-                                                <img
-                                                  src={cameraic}
-                                                  className="tbl_ic"
-                                                  alt="Photo"
-                                                />
-                                              ) : (
-                                                ""
-                                              )}
-                                              {videoAcToType ? (
-                                                <img
-                                                  src={videoic}
-                                                  className="tbl_ic"
-                                                  alt="Video"
-                                                />
-                                              ) : (
-                                                ""
-                                              )}
-                                              {docAcToType ? (
-                                                <img
-                                                  src={docsic}
-                                                  className="tbl_ic"
-                                                  alt="Pdf"
-                                                />
-                                              ) : (
-                                                ""
-                                              )}
-                                            </Tooltip>
+                                            <div className="">
+                                              {getMediaType("image")(el) ? (
+                                                <Tooltip title="Photo">
+                                                  <img
+                                                    src={cameraic}
+                                                    alt="Photo"
+                                                    className="icn"
+                                                  />{" "}
+                                                  <br />
+                                                </Tooltip>
+                                              ) : null}
+                                              {getMediaType("video")(el) ? (
+                                                <Tooltip title="Video">
+                                                  {" "}
+                                                  <img
+                                                    src={videoic}
+                                                    alt="Video"
+                                                    className="icn"
+                                                  />
+                                                  <br />
+                                                </Tooltip>
+                                              ) : null}
+                                              {getMediaType("audio")(el) ? (
+                                                <Tooltip title="Audio">
+                                                  <img
+                                                    src={interviewic}
+                                                    alt="Audio"
+                                                    className="icn"
+                                                  />
+                                                </Tooltip>
+                                              ) : null}
+                                              {getMediaType("pdf")(el) ? (
+                                                <Tooltip title="Pdf">
+                                                  <img
+                                                    src={docsic}
+                                                    alt="Pdf"
+                                                    className="icn"
+                                                  />
+                                                </Tooltip>
+                                              ) : null}
+                                            </div>
                                           </td>
 
                                           <td className="text-center">
-                                            <Tooltip
-                                              title={
-                                                el?.details?.type !==
-                                                  "exclusive"
-                                                  ? "Shared"
-                                                  : "exclusive"
-                                              }
-                                            >
-                                              <img
-                                                src={
-                                                  el?.details?.type !==
-                                                    "exclusive"
-                                                    ? shared
-                                                    : exclusiveic
-                                                }
-                                                className="tbl_ic"
-                                                alt="camera"
-                                              />
-                                            </Tooltip>
+                                            {
+                                              el?.type === "content" ? <Tooltip
+                                                title={el?.contentDetails?.type === "shared" ? "Shared" : "Exclusive"}
+                                              >
+                                                <img
+                                                  src={el?.contentDetails?.type === "shared" ? shared : exclusiveic}
+                                                  className="tbl_ic"
+                                                  alt="camera"
+                                                />
+                                              </Tooltip> : <Tooltip
+                                                title="Task"
+                                              >
+                                                <img
+                                                  src={task}
+                                                  className="tbl_ic"
+                                                  alt="camera"
+                                                />
+                                              </Tooltip>
+                                            }
                                           </td>
 
                                           <td className="text-center">
-                                            {/* content */}
+                                            {/* content */}+
                                             <Tooltip
                                               title={
-                                                el?.details?.categoryDetails
+                                                el?.categoryDetails
                                                   ?.name
-                                              }
+                                              } s
                                             >
                                               <img
                                                 src={
-                                                  el?.details?.categoryDetails
+                                                  el?.categoryDetails
                                                     ?.icon
                                                 }
-                                                alt="shared"
+                                                alt={el?.categoryDetails
+                                                  ?.name}
                                                 className="icn"
                                               />
                                             </Tooltip>
                                           </td>
-
-                                          {/* <td className="text-center">
-                                          <Tooltip title={el?.category_name}>
-                                            {el?.type}
-                                            <img src={el?.category_icon} className='tbl_ic' alt="Content category" />
-                                          </Tooltip>
-                                        </td> */}
 
                                           <td>
                                             <p
                                               className="ttl_prc "
                                               style={{
                                                 textAlign: "center",
-                                                // marginRight: "15px",
                                               }}
                                             >
-                                              £
-                                              {
-                                                // data?.chatdata?.amount
-                                                //   ? formatAmountInMillion(
-                                                //       data?.chatdata?.amount
-                                                //     )
-                                                //   :
-                                                el.type == "uploaded_content"
-                                                  ? formatAmountInMillion(
-                                                    priceOfTaskUploaded
-                                                  )
-                                                  : formatAmountInMillion(
-                                                    el?.details?.ask_price ||
-                                                    el?.details?.photo_price
-                                                  )
-                                              }
-                                              {/* {`£${formatAmountInMillion(data?.chatdata?.amount ? data?.chatdata?.amount : data?.details?.ask_price)}`} */}
+                                              £{formatAmountInMillion(el?.amount)}
                                             </p>
                                           </td>
                                         </tr>
