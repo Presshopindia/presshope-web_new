@@ -9,8 +9,6 @@ import ContentFeedCard from "../component/card/ContentFeedCard";
 import audioic from "../assets/images/audimg.svg";
 import interviewic from "../assets/images/interview.svg";
 import videoic from "../assets/images/video.svg";
-
-
 import moment from "moment/moment";
 import { Col, Container, Row } from "react-bootstrap";
 import cameraic from "../assets/images/camera.svg";
@@ -34,7 +32,7 @@ const ArchieveItems = () => {
             const allContent = [...prev];
             allContent[i]["favourite_status"] = allContent[i]["favourite_status"] === "true" ? "false" : "true";
             return allContent
-          })
+        })
     };
 
     const PublishedContent = async () => {
@@ -122,14 +120,14 @@ const ArchieveItems = () => {
                                                             audioic
                                                             : curr?.content[0]?.media_type === "doc" || 'pdf' ? docsic : ''}
                                             feedType={contentCamera}
-                                            feedTag={curr?.sales_prefix ? `${curr?.sales_prefix} ${curr?.discount_percent}% Off` : curr?.content_view_type == "mostpopular" ? "Most Popular" : curr?.content_view_type == "mostviewed" ? "Most viewed" :  null}
+                                            feedTag={curr?.sales_prefix ? `${curr?.sales_prefix} ${curr?.discount_percent}% Off` : curr?.content_view_type == "mostpopular" ? "Most Popular" : curr?.content_view_type == "mostviewed" ? "Most viewed" : null}
                                             user_avatar={process.env.REACT_APP_AVATAR_IMAGE + curr?.hopper_id?.avatar_id?.avatar}
                                             author_Name={curr?.hopper_id?.user_name}
                                             lnkto={`/Feeddetail/content/${curr._id}`}
                                             fvticns={curr?.favourite_status === "true" ? favouritedic : favic}
                                             content_id={curr._id}
                                             bool_fav={curr.favourite_status === "true" ? "false" : "true"}
-                                            favourite={()=> handleFavourite(index)}
+                                            favourite={() => handleFavourite(index)}
                                             type_img={curr?.type === "shared" ? shared : exclusive}
                                             type_tag={curr.type}
                                             feedHead={curr.heading}
