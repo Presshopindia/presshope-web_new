@@ -50,7 +50,6 @@ const HopperContent = () => {
     setLoading(true);
     try {
       const resp = await Post(`mediaHouse/view/published/content`, obj);
-      console.log("resp.data.content",resp.data.content)
       setPub_Content(resp.data.content);
       setTotalPage(Math.ceil(resp.data.count / limit));
       setLoading(false);
@@ -58,8 +57,6 @@ const HopperContent = () => {
       setLoading(false);
     }
   };
-
-  console.log(pub_content, limit, totalPage, page);
 
   useEffect(() => {
     PublishedContent();
@@ -70,8 +67,6 @@ const HopperContent = () => {
       maximumFractionDigits: 0,
     });
 
-
-    console.log("pub_content",pub_content)
   return (
     <>
       {loading && <Loader />}
@@ -122,7 +117,6 @@ const HopperContent = () => {
                       const audioCount = Audio.length;
                       const pdfCount = Pdf.length;
                       const docCount = Doc.length;
-                        //  console.log("curr?.basket_status",curr?.basket_status)
                       return (
                         <Col lg={3} md={4} sm={6}>
                           <ContentFeedCard
@@ -168,13 +162,11 @@ const HopperContent = () => {
                             basket={() =>{
 
                               //  handleBasket(index, i)
-                              // console.log("success")
                               // getTransactionDetails();
                                 //  PublishedContent();
                                 setPub_Content((old)=>{
                                   let alldata=[...old]
                                   alldata[index].basket_status=alldata[index].basket_status=="true"?"false":"true";
-                                  console.log("aasdfjkl;",alldata,"index",index)
                                    return alldata ;
                                  });
 

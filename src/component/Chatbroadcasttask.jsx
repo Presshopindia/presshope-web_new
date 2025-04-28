@@ -20,6 +20,8 @@ import Loader from "../component/Loader";
 import bullseye from "../assets/images/bullseye.svg";
 import calendaric from "../assets/images/calendarnic.svg";
 import timeic from "../assets/images/watch.svg";
+import { formatAmountInMillion } from "./commonFunction";
+import audioic from "../assets/images/audimg.svg";
 
 const Chatbroadcasttask = (props) => {
   const [latitude, setLatitude] = useState(null);
@@ -274,7 +276,7 @@ const Chatbroadcasttask = (props) => {
                             }
                           >
                             {taskDetails?.need_photos === true
-                              ? "£ " + taskDetails?.photo_price
+                              ? "£ " + formatAmountInMillion(taskDetails?.photo_price)
                               : "-"}
                           </span>
                         </div>
@@ -288,7 +290,7 @@ const Chatbroadcasttask = (props) => {
                             }
                           >
                             {taskDetails?.need_interview === true
-                              ? "£ " + taskDetails?.interview_price
+                              ? "£ " + formatAmountInMillion(taskDetails?.interview_price)
                               : "-"}
                           </span>
                         </div>
@@ -302,7 +304,7 @@ const Chatbroadcasttask = (props) => {
                             }
                           >
                             {taskDetails?.need_videos === true
-                              ? "£ " + taskDetails?.videos_price
+                              ? "£ " + formatAmountInMillion(taskDetails?.videos_price)
                               : "-"}
                           </span>
                         </div>
@@ -315,10 +317,15 @@ const Chatbroadcasttask = (props) => {
                           navigate(`/hopper-task-content/${taskDetails?._id}`)
                         }
                       >
+                        {
+                          console.log("taskDetails", taskDetails)
+                        }
                         <div className="mediaWrap uploaded_mda">
-                          {taskDetails?.content?.map((el) => (
-                            <img src={el?.watermark} alt="" />
-                          ))}
+                        {taskDetails?.content?.slice(0, 3)?.map((el, index) => {
+                            return (
+                              el?.media_type === "image" ? <img key={index} src={el?.watermark} alt="" /> : <div className="card-imgs-wrap"><img className="card-img" key={index} src={audioic} alt="" /></div>
+                            );
+                          })}
                         </div>
                         <Link
                           className="text-dark"

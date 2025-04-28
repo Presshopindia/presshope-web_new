@@ -116,9 +116,7 @@ const HopperUploadedContent = () => {
                                     : null
                             }
                             type={"task"}
-                            postcount={filteredContent("image")?.length}
-                            postcount2={filteredContent("video")?.length}
-                            postcount3={filteredContent("interview")?.length}
+                            postcount={1}
                             feedTypeImg1={
                               item?.content[0]?.type === "image"
                                 ? cameraic

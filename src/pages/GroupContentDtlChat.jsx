@@ -285,7 +285,7 @@ const GroupContentDtlChat = (props) => {
                                   />
                                   <audio
                                     controls
-                                    src={item?.content?.[0]?.videothubnail}
+                                    src={process.env.REACT_APP_CONTENT_MEDIA + item?.content?.[0]?.imageAndVideo}
                                     type="audio/mpeg"
                                     className="slider-audio"
                                     ref={audioRef}
@@ -295,7 +295,7 @@ const GroupContentDtlChat = (props) => {
                                 <video
                                   controls
                                   className="slider-vddo"
-                                  src={item?.content?.[0]?.videothubnail}
+                                  src={process.env.REACT_APP_UPLOADED_CONTENT + item?.content?.[0]?.imageAndVideo}
                                 />
                               ) : item?.content?.[0]?.type === "image" ? (
                                 <img

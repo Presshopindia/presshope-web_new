@@ -14,6 +14,7 @@ import { MdAdd } from "react-icons/md";
 import { InputGroup } from "react-bootstrap";
 import inpimg from "../assets/images/profile.webp";
 import Form from "react-bootstrap/Form";
+import audioic from "../assets/images/audimg.svg";
 // import Button from 'react-bootstrap/Button';
 // import presshopchatic from "../assets/images/chat-icons/presshoplogo.svg";
 import presshopchatic from "../assets/images/chat_logo.png";
@@ -38,11 +39,12 @@ import videoic from "../assets/images/video.svg";
 // rating start
 import { Rating } from "react-simple-star-rating";
 import { UserDetails } from "./Utils";
-import { addVat } from "./commonFunction";
+import { addVat, contentUploadedMsgInTaskChat, formatAmountInMillion } from "./commonFunction";
 import socketServer from "../socket.config";
 
 function ChatCardSocket(props) {
   const User = UserDetails;
+  const [taskExpireDiff, setTaskExpireDiff] = useState(null);
   const [roomId, setRoomId] = useState(null);
   const [msg, setMsg] = useState("");
   const [messages, setMessages] = useState([]);
@@ -100,7 +102,7 @@ function ChatCardSocket(props) {
   });
 
   const getMessages = async () => {
-    if(!roomDetails?.roomsdetails?.room_id) {
+    if (!roomDetails?.roomsdetails?.room_id) {
       return;
     }
     const resp = await Post(`mediaHouse/getAllchat`, {
@@ -109,107 +111,68 @@ function ChatCardSocket(props) {
     setMessages(resp.data.response);
   };
 
-  const handleFileChange = async (event) => {
-    event.preventDefault();
-    const formdata = new FormData();
-    formdata.append("media", event.target.files[0]);
-    formdata.append("path", "chatMedia");
-    const resp = await Post(`mediaHouse/uploadUserMedia`, formdata);
-    if (resp) {
-      setMediaMessage({
-        room_id: roomDetails.roomsdetails.room_id,
-        message: msg,
-        primary_room_id: roomDetails.roomsdetails._id,
-        sender_id: roomDetails.roomsdetails.receiver_id,
-        message_type: "media",
-        attachment_name: event.target.files[0].name,
-        attachment_size: event.target.files[0].size,
-        attachment: resp.data.path,
-        receiver_id: roomDetails.roomsdetails.sender_id,
+  const audioRef = useRef(null);
+
+  const toggleAudio = () => {
+    const audio = audioRef.current;
+    if (audio.paused) {
+      audio.play().catch((error) => {
+        // Handle play error, if any
       });
+    } else {
+      audio.pause();
     }
   };
 
-  const SendMedia = () => {
-    socketServer.emit("media message", mediaMessage);
-    socketServer.on("media message", (obj) => { });
+  const [selectedItems, setSelectedItems] = useState([]);
 
-    setMediaMessage({
-      room_type: "",
-      room_id: "",
-      message: "",
-      primary_room_id: "",
-      sender_id: "",
-      message_type: "",
-      attachment_name: "",
-      attachment_size: "",
-      attachment: "",
-      receiver_id: "",
+  const handleSelectionChange = (item, isChecked) => {
+    setSelectedItems((prev) => {
+      if (isChecked) {
+        // Add the item if it is checked
+        return [...prev, item];
+      } else {
+        // Remove the item if it is unchecked
+        return prev.filter((selectedItem) => selectedItem._id !== item._id);
+      }
     });
-    setMsg("");
-    getMessages();
   };
 
-  const staticPayment = async (data) => {
-    const obj = {
-      image_id: data.image_id,
-      sender_id: data.sender_id._id,
-      receiver_id: data.receiver_id._id,
-      room_id: data.room_id,
-      sender_type: "mediahouse",
-      amount: data.media.amount,
-      message_type: "buy",
-    };
-    const resp = await Post("mediahouse/buyuploadedcontent", obj);
-    if (resp) {
-      getMessages();
-    }
-  };
-
+  console.log("roomDetails", roomDetails)
   const stripePayment = async (curr) => {
     setLoading(true);
-
+    let totalAmount = 0;
+    selectedItems.forEach((ele) => {
+      totalAmount += Number(ele.amount);
+    });
     let obj = {
-      image_id: curr?.image_id,
-      customer_id: UserDetails.stripe_customer_id,
-      amount: curr?.media?.amount,
+      items: selectedItems,
+      customer_id: User?.stripe_customer_id,
+      stripe_account_id: curr?.sender_id?.stripe_account_id || "no data",
+      amount: totalAmount || curr?.media?.amount,
       type: "task_content",
-      task_id: taskId,
-      description: curr?.content?.heading || curr?.content?.description,
+      task_id: taskDetails?._id,
+      description: taskDetails?.heading,
+      room_id: roomDetails?.roomsdetails?.room_id,
+      chat_id: curr?._id,
+      hopper_id: roomDetails?.hopper_id?._id
     };
-    const resp = await Post("mediahouse/createPayment", obj);
-
-    let obj1 = {
-      room_id: curr?.room_id,
-      sender_id: curr?.sender_id?._id,
-      receiver_id: curr?.receiver_id?._id,
-      sender_type: "mediahouse",
-      message_type: "buy",
-      amount: curr?.media?.amount,
-    };
-
-    socketServer.emit("offer message", obj1);
-    setLoading(false);
-    window.open(resp.data.url, "_blank");
-    if (resp) {
+    try {
+      const resp = await Post("mediahouse/createPayment", obj);
+      setLoading(false);
+      window.open(resp.data.url, "_blank");
+    }
+    catch (error) {
+      setLoading(false);
     }
   };
 
+
   const DownloadContent = async (id) => {
-    const resp = await Get(`mediahouse/image_pathdownload?image_id=${id}`);
-    if (resp) {
-      const filename = resp.data.message.slice(85);
-      fetch(resp.data.message)
-        .then((response) => response.blob())
-        .then((blob) => {
-          const downloadElement = document.createElement("a");
-          const url = URL.createObjectURL(blob);
-          downloadElement.href = url;
-          downloadElement.download = filename;
-          downloadElement.click();
-          URL.revokeObjectURL(url);
-        });
-    }
+    window.open(
+      `${process.env.REACT_APP_BASE_URL}mediahouse/image_pathdownload?image_id=${id}&type=task`,
+      "_blank"
+    );
   };
 
   const requestMoreContent = (curr) => {
@@ -257,12 +220,52 @@ function ChatCardSocket(props) {
       );
       setTaskDetails(resp.data.tasks);
       setTaskId(resp?.data?.tasks?._id);
+      const deadlineDate = moment(resp?.data?.data?.[0]?.task_id?.deadline_date);
+      const newDateDiff = nowDate.diff(deadlineDate, "hours");
+      setTaskExpireDiff(newDateDiff);
     } catch (error) {
       //   setLoading(false)
     }
   };
 
+  const [features, setFeatures] = useState([]);
+  const handleFeatures = (val) => {
+    if (features.includes(val)) {
+      const data = features.filter((el) => el != val);
+      setFeatures(data);
+    } else {
+      setFeatures([...features, val]);
+    }
+  };
+
+  // const RatingNReview = (curr) => {
+  //   const obj = {
+  //     room_id: curr?.room_id,
+  //     sender_type: "Mediahouse",
+  //     receiver_id: curr?.receiver_id?._id,
+  //     sender_id: curr?.sender_id?._id,
+  //     rating: rating,
+  //     review: review,
+  //     chat_id:
+  //       messages &&
+  //       messages.find((obj) => obj.message_type === "rating_mediaHouse")?._id,
+  //     type: "task_content",
+  //     image_id: curr?.image_id,
+  //     message_type: "rating_mediaHouse",
+  //   };
+  //   console.log(obj);
+
+  //   return;
+
+  //   socketServer.emit("rating", obj);
+  //   socketServer.on("rating", (obj) => { });
+  //   getMessages(roomDetails?.roomsdetails?._id);
+  // };
+
   const RatingNReview = (curr) => {
+    if (!roomDetails?.roomsdetails?._id) {
+      alert("Room id is important")
+    }
     const obj = {
       room_id: curr?.room_id,
       sender_type: "Mediahouse",
@@ -270,20 +273,13 @@ function ChatCardSocket(props) {
       sender_id: curr?.sender_id?._id,
       rating: rating,
       review: review,
-      chat_id:
-        messages &&
-        messages.find((obj) => obj.message_type === "rating_mediaHouse")?._id,
       type: "task_content",
-      image_id: curr?.image_id,
-      message_type: "rating_mediaHouse",
+      image_id: curr?._id,
+      features: features,
+      message_type: "rating_by_mediahouse",
+      paid_status: curr?.paid_status,
     };
-    console.log(obj);
-
-    return;
-
     socketServer.emit("rating", obj);
-    socketServer.on("rating", (obj) => { });
-    getMessages(roomDetails?.roomsdetails?._id);
   };
 
   useEffect(() => {
@@ -335,7 +331,9 @@ function ChatCardSocket(props) {
                         <div className="sngl_btn">
                           <p className="prc">
                             {taskDetails.need_photos === true
-                              ? "£" + taskDetails.photo_price
+                              ? "£" + formatAmountInMillion(
+                                 taskDetails.photo_price
+                               )
                               : "--"}
                           </p>
                           <p className="offrd_txt">Offered</p>
@@ -344,7 +342,9 @@ function ChatCardSocket(props) {
                         <div className="sngl_btn">
                           <p className="prc">
                             {taskDetails.need_interview === true
-                              ? "£" + taskDetails.interview_price
+                              ? "£" + formatAmountInMillion(
+                                taskDetails.interview_price 
+                              )
                               : "--"}
                           </p>
                           <p className="offrd_txt">Offered</p>
@@ -353,7 +353,9 @@ function ChatCardSocket(props) {
                         <div className="sngl_btn">
                           <p className="prc">
                             {taskDetails.need_videos === true
-                              ? "£" + taskDetails.videos_price
+                              ? "£" + formatAmountInMillion(
+                                taskDetails.videos_price
+                              )
                               : "--"}
                           </p>
                           <p className="offrd_txt">Offered</p>
@@ -364,285 +366,584 @@ function ChatCardSocket(props) {
                   </div>
                 </div>
               )}
-              {messages &&
-                messages.map((curr, index) => {
-                  const Ratingg =
-                    messages &&
-                    messages.find(
-                      (item) => item?.message_type === "rating_mediaHouse"
-                    );
-                  const Ratings = Ratingg ? Ratingg?.rating : "";
-                  return (
-                    <>
-                      {curr.message_type === "media" && (
-                        <div className="chatting_itm sngl_cht d-flex align-items-start">
-                          <img
-                            src={
-                              process.env.REACT_APP_AVATAR_IMAGE +
-                              roomDetails?.avatar_detals[0]?.avatar
-                            }
-                            alt="User"
-                            className="usr_img"
-                          />
-                          <div className="cht_txt">
-                            <div className="d-flex align-items-center">
-                              <h5 className="usr_name mb-0">
-                                {curr?.sender_id?.user_name}
-                              </h5>
-                              <p className="cht_time mb-0">
-                                {moment(curr?.createdAt).format(
-                                  "h:mm A, D MMM YYYY"
-                                )}
-                              </p>
-                            </div>
-                            <p className="mb-0 msg">
-                              Has uploaded 1{" "}
-                              {curr?.media?.thumbnail_url ? "Video" : "Image"}
+              {messages?.map((curr, index) => {
+                const Ratingg = messages?.find((item) => item?.message_type === "rating_mediaHouse");
+                const Ratings = Ratingg ? Ratingg?.rating : "";
+                return (
+                  <>
+                    {curr.message_type === "media" && (
+                      <div className="chatting_itm sngl_cht d-flex align-items-start">
+                        <img
+                          src={process.env.REACT_APP_AVATAR_IMAGE + roomDetails?.avatar_detals[0]?.avatar}
+                          alt="User"
+                          className="usr_img"
+                        />
+                        <div className="cht_txt">
+                          <div className="d-flex align-items-center">
+                            <p className="usr_name mb-0">
+                              {curr?.sender_id?.user_name}
                             </p>
-                            <div className="content_uplded position-relative">
-                              <span className="cont_tp">
-                                <img src={photoic} alt="Content type" />
-                              </span>
-                              {curr?.media?.thumbnail_url ? (
-                                <img
-                                  src={
-                                    curr?.media?.thumbnail_url
-                                  }
-                                  className="usr_upld_cont"
-                                  alt="Content Image"
-                                />
-                              ) : (
-                                <img
-                                  src={
-                                    process.env.REACT_APP_UPLOADED_CONTENT +
-                                    curr?.media?.name
-                                  }
-                                  className="usr_upld_cont"
-                                  alt="Content Image"
-                                />
-                              )}
-                            </div>
-                            <div className="usr_upld_opts">
-                              {curr?.paid_status !== true ? (
-                                <button
-                                  className="theme_btn"
-                                  onClick={() => {
-                                    stripePayment(curr);
-                                  }}
-                                >
-                                  Buy
-                                </button>
-                              ) : (
-                                ""
-                              )}
-                              {curr?.paid_status !== true &&
-                                curr?.request_sent === null && <span>or</span>}
-                              {curr?.request_sent === null && (
-                                <button
-                                  className="secondary_btn"
-                                  onClick={() => requestMoreContent(curr)}
-                                >
-                                  Request more content
-                                </button>
-                              )}
-                            </div>
-                            <p className="buy_btn_txt mb-0">
-                              This content has been directly uploaded by the
-                              Hopper on our platform. We have not reviewed the
-                              content for authenticity & privacy, and are not
-                              responsible. Please review the content properly
-                              before purchasing it. Please{" "}
-                              <a className="link">contact us </a>
-                              should you wish to discuss this content.
+                            <p className="cht_time mb-0">
+                              {moment(curr?.createdAt).format("h:mm A, D MMM YYYY")}
                             </p>
                           </div>
-                        </div>
-                      )}
+                          <p className="mb-0 msg">
+                            {contentUploadedMsgInTaskChat(curr?.media)}
+                          </p>
+                          <div className="content_uplded position-relative vido_cnt">
+                            {curr?.media?.map(
+                              (item, index) => (
+                                <div className="mb-13">
+                                  {!item.paid_status ? (
+                                    <div
+                                      key={
+                                        item?._id ||
+                                        index
+                                      }
+                                      className="media-item"
+                                    >
+                                      <label className="checkbox-label">
+                                        <input
+                                          type="checkbox"
+                                          className="media-checkbox z-1000"
+                                          onChange={(e) => handleSelectionChange(item, e.target.checked)}
+                                        />
+                                      </label>
 
-                      {curr?.paid_status === true && (
-                        <div className="chatting_itm auto_msg sngl_cht d-flex align-items-start">
-                          <img
-                            src={presshopchatic}
-                            alt="User"
-                            className="usr_img"
-                          />
-                          <div className="cht_txt">
-                            <div className="d-flex align-items-center">
-                              <h5 className="usr_name mb-0">PressHop</h5>
-                              <p className="cht_time mb-0">
-                                {moment(curr?.createdAt).format(
-                                  "h:mm A, D MMM YYYY"
-                                )}
-                              </p>
-                            </div>
-                            <p className="mb-0 msg auto_press_msg">
-                              Congrats, you’ve successfully purchased 1{" "}
-                              {curr?.thumbnail_url ? "video" : "photo"} for £
-                              {curr?.thumbnail_url
-                                ? addVat(taskDetails.videos_price)
-                                : addVat(taskDetails.photo_price)}{" "}
-                              from {curr?.sender_id?.user_name}. Please download
-                              the water-mark free, and high definition content,
-                              by clicking below
-                            </p>
-                            <div className="usr_upld_opts">
+                                      {item?.mime ===
+                                        "image" ? (
+                                        <img
+                                          src={`${item?.thumbnail_url}`}
+                                          className="usr_upld_cont"
+                                          alt={`Content Image ${index + 1}`}
+                                        />
+                                      ) : item?.mime ===
+                                        "video" ? (
+                                        <video
+                                          controls
+                                          className="slider-vddo"
+                                          src={`${process.env.REACT_APP_UPLOADED_CONTENT + item?.name}`}
+                                        />
+                                      ) : item?.mime ===
+                                        "audio" ||
+                                        item?.mime ==
+                                        "" ? (
+                                        <div>
+                                          <img
+                                            src={
+                                              audioic
+                                            }
+                                            alt={`Audio ${item?._id}`}
+                                            className="slider-img"
+                                            onClick={
+                                              toggleAudio
+                                            }
+                                          />
+                                          <audio
+                                            controls
+                                            src={`${process.env.REACT_APP_CONTENT_MEDIA + item?.name}`}
+                                            type="audio/mpeg"
+                                            className="slider-audio"
+                                            ref={
+                                              audioRef
+                                            }
+                                          />
+                                        </div>
+                                      ) : (
+                                        <p>
+                                          Unsupported
+                                          media type
+                                        </p>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    <>
+                                      {item?.mime ===
+                                        "image" ? (
+                                        <img
+                                          src={`${item?.thumbnail_url}`}
+                                          className="usr_upld_cont"
+                                          alt={`Content Image ${index + 1
+                                            }`}
+                                        />
+                                      ) : item?.mime ===
+                                        "video" ? (
+                                        <video
+                                          controls
+                                          className="slider-vddo"
+                                          src={`${process.env.REACT_APP_UPLOADED_CONTENT + item?.name}`}
+                                        />
+                                      ) : item?.mime ===
+                                        "audio" ||
+                                        item?.mime ==
+                                        "" ? (
+                                        <div>
+                                          <img
+                                            src={
+                                              audioic
+                                            }
+                                            alt={`Audio ${item?._id}`}
+                                            className="slider-img"
+                                            onClick={
+                                              toggleAudio
+                                            }
+                                          />
+                                          <audio
+                                            controls
+                                            src={`${process.env.REACT_APP_CONTENT_MEDIA + item?.name}`}
+                                            type="audio/mpeg"
+                                            className="slider-audio"
+                                            ref={
+                                              audioRef
+                                            }
+                                          />
+                                        </div>
+                                      ) : (
+                                        <p>
+                                          Unsupported media type
+                                        </p>
+                                      )}
+                                    </>
+                                  )}
+                                </div>
+                              )
+                            )}
+                          </div>
+
+                          <div className="usr_upld_opts">
+                            <div className="d-flex gap_20">
                               <button
-                                className="theme_btn"
-                                onClick={() => DownloadContent(curr?.image_id)}
+                                className={curr?.media?.filter((el) => el.paid_status)?.length > 0 ? "light-gray-bg txt_bld" : "theme_btn"}
+                                onClick={() => {
+                                  if (taskExpireDiff >= 1) {
+                                    successToasterFun("This task has been expired");
+                                  } else {
+                                    if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
+                                      return;
+                                    } else {
+                                      stripePayment(curr);
+                                    }
+                                  }
+                                }}
                               >
-                                Download
+                                Add to basket
+                              </button>
+                              <button
+                                className={curr?.media?.filter((el) => el.paid_status)?.length > 0 ? "light-gray-bg txt_bld" : "theme_btn"}
+                                onClick={() => {
+                                  if (taskExpireDiff >= 1) {
+                                    successToasterFun("This task has been expired");
+                                  } else {
+                                    if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
+                                      return;
+                                    } else {
+                                      stripePayment(curr);
+                                    }
+                                  }
+                                }}
+                              >
+                                Buy
                               </button>
                             </div>
-                            <p className="buy_btn_txt mb-0">
-                              Please refer to our{" "}
-                              <a className="link">licensing terms of usage</a>,
-                              and <a className="link">terms and conditions</a>.
-                              If you have any questions, please{" "}
-                              <a className="link">chat</a> or{" "}
-                              <a className="link">contact</a> our helpful teams
-                              who are available 24x7 to assist you. Thank you.
-                            </p>
+                            <span className="txt_mdm">or</span>
+                            <button
+                              className={curr?.request_sent ? "light-gray-bg txt_bld" : "secondary_btn"}
+                              onClick={() => {
+                                if (taskExpireDiff >= 1) {
+                                  successToasterFun("This task has been expired");
+                                } else {
+                                  if (curr?.request_sent) {
+                                    return;
+                                  } else {
+                                    requestMoreContent(curr);
+                                  }
+                                }
+                              }}
+                            >
+                              Request more content
+                            </button>
                           </div>
                         </div>
-                      )}
-                      {curr.message_type === "request_more_content" && (
-                        <div className="chatting_itm auto_msg sngl_cht d-flex align-items-start">
-                          <img
-                            src={curr?.receiver_id?.profile_image}
-                            alt="User"
-                            className="usr_img"
-                          />
-                          <div className="cht_txt">
-                            <div className="d-flex align-items-center">
-                              <h5 className="usr_name mb-0">
-                                {curr?.receiver_id?.first_name +
-                                  " " +
-                                  curr?.receiver_id?.last_name}
-                                {/* <img src={presshopchatic} alt="PressHop logo" className='ms-1' /> */}
-                              </h5>
-                              <p className="cht_time mb-0">
-                                {moment(curr?.createdAt).format(
-                                  "h:mm A, D MMM YYYY"
-                                )}
-                              </p>
-                            </div>
-                            <p className="mb-0 msg auto_press_msg">
-                              Has requested for more content from{" "}
-                              {curr?.sender_id?.user_name}
-                            </p>
-                          </div>
-                        </div>
-                      )}
+                      </div>
+                    )}
 
-                      {curr.paid_status && (
-                        <div className="chatting_itm auto_msg rating sngl_cht d-flex align-items-start">
+                    {curr?.message_type === "PaymentIntent" && (
+                      <div className="chatting_itm auto_msg sngl_cht d-flex align-items-start">
+                        <img
+                          src={presshopchatic}
+                          alt="User"
+                          className="usr_img"
+                        />
+                        <div className="cht_txt">
+                          <div className="d-flex align-items-center">
+                            <p className="usr_name mb-0">
+                              PressHop
+                            </p>
+                            <p className="cht_time mb-0">
+                              {moment(curr?.createdAt).format("h:mm A, D MMM YYYY")}
+                            </p>
+                          </div>
+                          <p className="mb-0 msg auto_press_msg">
+                            Congrats, you’ve purchased the content for £{formatAmountInMillion(+(curr?.amount_paid))}.{" "}
+                            Please download the water-mark free, and high definition content, by clicking below.
+                          </p>
+                          <div className="usr_upld_opts">
+                            <button
+                              className="theme_btn"
+                              onClick={() => DownloadContent(curr?.content?.join(","))}
+                            >
+                              Download
+                            </button>
+                          </div>
+                          <p className="buy_btn_txt mb-0">
+                            Please refer to our{" "}
+                            <Link className="link" to={"/privacy-policy"}>licensing terms of usage</Link>, and{" "}
+                            <Link className="link" to={"/post-login-tandc"}>terms and conditions</Link>. If you have any questions, please{" "}
+                            <Link className="link" to={"/chat"}>chat</Link>{" "}or{" "}
+                            <Link className="link" to={"/contact-us-post"}>contact</Link>{" "}our helpful teams who are available 24x7 to assist you. Thank you.
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {curr.message_type === "request_more_content" && (
+                      <div className="chatting_itm auto_msg sngl_cht d-flex align-items-start">
+                        <img
+                          src={
+                            curr?.receiver_id
+                              ?.profile_image
+                          }
+                          alt="User"
+                          className="usr_img"
+                        />
+                        <div className="cht_txt">
+                          <div className="d-flex align-items-center">
+                            <p className="usr_name mb-0">{curr?.receiver_id?.first_name + " " + curr?.receiver_id?.last_name}</p>
+                            <p className="cht_time mb-0">{moment(curr?.createdAt).format("h:mm A, D MMM YYYY")}</p>
+                          </div>
+                          <p className="mb-0 msg auto_press_msg">
+                            Has requested for more content from {" "}
+                            {curr?.sender_id?.user_name}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {curr?.message_type === "PaymentIntent" && (
+                      <div className="crd chatting_itm auto_msg rating sngl_cht d-flex align-items-start">
+                        <div className="img">
                           <img
                             src={presshopchatic}
                             alt="User"
                             className="usr_img"
                           />
-                          <div className="cht_txt">
-                            <div className="d-flex align-items-center">
-                              <h5 className="usr_name mb-0">PressHop</h5>
-                              <p className="cht_time mb-0">
-                                {moment(curr?.createdAt).format(
+                        </div>
+                        <div className="cht_txt postedcmnt_info rating-update">
+                          <div className="d-flex align-items-center">
+                            <h5 className="usr_name mb-0">
+                              PressHop
+                              <span className="text-secondary time">
+                                {moment(
+                                  curr?.createdAt
+                                ).format(
                                   "h:mm A, D MMM YYYY"
                                 )}
-                              </p>
-                            </div>
+                              </span>
+                            </h5>
+                          </div>
+                          <p className="mb-0 msg auto_press_msg">
+                            Please rate your experience
+                            with PressHop
+                          </p>
+                          <div className="usr_reviews">
+                            <Rating
+                              onClick={handleRating}
+                              value={rating}
+                              disabled={messages?.find((el) => el.message_type == "rating_by_mediahouse")?.rating}
+                            />
                             <p className="mb-0 msg auto_press_msg">
-                              Rate your experience with{" "}
-                              {curr?.sender_id?.user_name}
+                              Please select the key
+                              features you liked about
+                              our platform
                             </p>
-                            <div className="usr_upld_opts">
-                              <Rating
-                                onClick={handleRating}
-                                disabled={!Number(Ratings)}
-                                initialValue={Ratings ? Number(Ratings) : 0}
-                                value={rating}
-                              />
+                            <ul>
+                              <li
+                                onClick={() =>
+                                  handleFeatures(
+                                    "Experience"
+                                  )
+                                }
+                                className={
+                                  messages
+                                    ?.find(
+                                      (el) =>
+                                        el?.message_type ==
+                                        "rating_by_mediahouse"
+                                    )
+                                    ?.features?.includes(
+                                      "Experience"
+                                    ) ||
+                                    features.includes(
+                                      "Experience"
+                                    )
+                                    ? "selected clickable"
+                                    : "clickable"
+                                }
+                              >
+                                Experience
+                              </li>
+                              <li
+                                onClick={() =>
+                                  handleFeatures(
+                                    "Easy to use"
+                                  )
+                                }
+                                className={
+                                  messages
+                                    ?.find(
+                                      (el) =>
+                                        el?.message_type ==
+                                        "rating_by_mediahouse"
+                                    )
+                                    ?.features?.includes(
+                                      "Easy to use"
+                                    ) ||
+                                    features.includes(
+                                      "Easy to use"
+                                    )
+                                    ? "selected clickable"
+                                    : "clickable"
+                                }
+                              >
+                                Easy to use
+                              </li>
+                              <li
+                                onClick={() =>
+                                  handleFeatures(
+                                    "Connectivity with Hoppers"
+                                  )
+                                }
+                                className={
+                                  messages
+                                    ?.find(
+                                      (el) =>
+                                        el?.message_type ==
+                                        "rating_by_mediahouse"
+                                    )
+                                    ?.features?.includes(
+                                      "Connectivity with Hoppers"
+                                    ) ||
+                                    features.includes(
+                                      "Connectivity with Hoppers"
+                                    )
+                                    ? "selected clickable"
+                                    : "clickable"
+                                }
+                              >
+                                Connectivity with
+                                Hoppers
+                              </li>
+                              <li
+                                onClick={() =>
+                                  handleFeatures(
+                                    "Pricing"
+                                  )
+                                }
+                                className={
+                                  messages
+                                    ?.find(
+                                      (el) =>
+                                        el?.message_type ==
+                                        "rating_by_mediahouse"
+                                    )
+                                    ?.features?.includes(
+                                      "Pricing"
+                                    ) ||
+                                    features.includes(
+                                      "Pricing"
+                                    )
+                                    ? "selected clickable"
+                                    : "clickable"
+                                }
+                              >
+                                Pricing
+                              </li>
+                              <li
+                                onClick={() =>
+                                  handleFeatures(
+                                    "Secure payment"
+                                  )
+                                }
+                                className={
+                                  messages
+                                    ?.find(
+                                      (el) =>
+                                        el?.message_type ==
+                                        "rating_by_mediahouse"
+                                    )
+                                    ?.features?.includes(
+                                      "Secure payment"
+                                    ) ||
+                                    features.includes(
+                                      "Secure payment"
+                                    )
+                                    ? "selected clickable"
+                                    : "clickable"
+                                }
+                              >
+                                Secure payment
+                              </li>
+                              <li
+                                onClick={() =>
+                                  handleFeatures(
+                                    "Support"
+                                  )
+                                }
+                                className={
+                                  messages
+                                    ?.find(
+                                      (el) =>
+                                        el?.message_type ==
+                                        "rating_by_mediahouse"
+                                    )
+                                    ?.features?.includes(
+                                      "Support"
+                                    ) ||
+                                    features.includes(
+                                      "Support"
+                                    )
+                                    ? "selected clickable"
+                                    : "clickable"
+                                }
+                              >
+                                Support
+                              </li>
+                            </ul>
+                            <div className="position-relative">
+                              <div className="right_text_svg">
+                                <svg
+                                  width="22"
+                                  height="21"
+                                  viewBox="0 0 22 21"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <g clip-path="url(#clip0_5392_68582)">
+                                    <path
+                                      d="M13.5472 5.87891H3.86719V6.71891H13.5472V5.87891Z"
+                                      fill="#9DA3A3"
+                                    />
+                                    <path
+                                      d="M13.5472 8.40039H3.86719V9.24039H13.5472V8.40039Z"
+                                      fill="#9DA3A3"
+                                    />
+                                    <path
+                                      d="M11.3472 10.9199H3.86719V11.7599H11.3472V10.9199Z"
+                                      fill="#9DA3A3"
+                                    />
+                                    <path
+                                      d="M9.14719 13.4395H3.86719V14.2795H9.14719V13.4395Z"
+                                      fill="#9DA3A3"
+                                    />
+                                    <path
+                                      d="M9.14719 15.9609H3.86719V16.8009H9.14719V15.9609Z"
+                                      fill="#9DA3A3"
+                                    />
+                                    <path
+                                      d="M17.0677 7.80604V3.60604L13.7298 0.419922H0.347656V20.5799H17.0677V13.1938L21.6498 8.81992L18.8277 6.12604L17.0677 7.80604ZM16.6277 9.4138L18.2055 10.9199L12.9255 15.9599H11.3477V14.4538L16.6277 9.4138ZM13.9877 1.8538L15.5655 3.35992H13.9877V1.8538ZM16.1877 19.7399H1.22766V1.25992H13.1077V4.19992H16.1877V8.64604L10.4677 14.106V16.7999H13.2898L16.1877 14.0338V19.7399ZM18.8277 10.326L17.2498 8.81992L18.8277 7.3138L20.4055 8.81992L18.8277 10.326Z"
+                                      fill="#9DA3A3"
+                                    />
+                                  </g>
+                                  <defs>
+                                    <clipPath id="clip0_5392_68582">
+                                      <rect
+                                        width="22"
+                                        height="21"
+                                        fill="white"
+                                      />
+                                    </clipPath>
+                                  </defs>
+                                </svg>
+                              </div>
                               <Form.Group
                                 className="mb-3"
                                 controlId="exampleForm.ControlTextarea1"
                               >
                                 <Form.Control
-                                  placeholder="Write your review"
-                                  disabled={curr.review}
-                                  value={curr.review ? curr.review : review}
-                                  onChange={(e) => {
-                                    setReview(e.target.value);
-                                  }}
+                                  placeholder="We hope you're enjoying your experience with PressHop. Please share your feedback with us. Your insights will help us enhance both your experience, and the quality of our service. Thank you"
                                   as="textarea"
                                   rows={3}
+                                  onChange={(e) =>
+                                    setReview(
+                                      e.target.value
+                                    )
+                                  }
+                                  value={
+                                    messages?.find(
+                                      (el) =>
+                                        el.message_type ==
+                                        "rating_by_mediahouse"
+                                    )?.review || review
+                                  }
                                 ></Form.Control>
                               </Form.Group>
-                              {!curr.rating && (
-                                <button
-                                  className="theme_btn"
-                                  onClick={() => RatingNReview(curr)}
-                                >
-                                  Submit
-                                </button>
-                              )}
                             </div>
+
+                            <button
+                              className="theme_btn"
+                              onClick={() =>
+                                RatingNReview(curr)
+                              }
+                              disabled={
+                                messages?.filter(
+                                  (el) =>
+                                    el.message_type ==
+                                    "rating_by_mediahouse"
+                                )?.length != 0
+                              }
+                            >
+                              Submit
+                            </button>
                           </div>
                         </div>
-                      )}
-                      {curr.message_type === "reject_mediaHouse_offer" &&
-                        !curr.paid_status && (
-                          <div className="chatting_itm auto_msg rating sngl_cht d-flex align-items-start">
-                            <img
-                              src={presshopchatic}
-                              alt="User"
-                              className="usr_img"
-                            />
-                            <div className="cht_txt">
-                              <div className="d-flex align-items-center">
-                                <h5 className="usr_name mb-0">PressHop</h5>
-                                <p className="cht_time mb-0">
-                                  {moment(curr?.createdAt).format(
-                                    "h:mm A, D MMM YYYY"
-                                  )}
-                                </p>
-                              </div>
-                              <p className="mb-0 msg auto_press_msg">
-                                Rate your experience with Pseudonymous
-                              </p>
-                              <div className="usr_upld_opts">
-                                <Rating
-                                  onClick={handleRating}
-                                  value={rating}
-                                  disabled={!Number(Ratings)}
-                                  initialValue={Ratings ? Number(Ratings) : 0}
-                                />
-                                <Form.Group
-                                  className="mb-3"
-                                  controlId="exampleForm.ControlTextarea1"
-                                >
-                                  <Form.Control
-                                    placeholder="Write your review"
-                                    disabled={curr.review}
-                                    value={curr.review ? curr.review : review}
-                                    onChange={(e) => {
-                                      setReview(e.target.value);
-                                    }}
-                                    as="textarea"
-                                    rows={3}
-                                  ></Form.Control>
-                                </Form.Group>
-                                <button
-                                  className="theme_btn"
-                                  onClick={() => RatingNReview(curr.image_id)}
-                                >
-                                  Submit
-                                </button>
-                              </div>
-                            </div>
+                      </div>
+                    )}
+
+                    {curr?.message_type == "rating_by_mediahouse" && (
+                      <div className="crd chatting_itm auto_msg sngl_cht d-flex align-items-start heart-icon">
+                        <div className="img">
+                          <img
+                            src={presshopchatic}
+                            alt="User"
+                            className="usr_img"
+                          />
+                        </div>
+                        <div className="cht_txt postedcmnt_info">
+                          <div className="d-flex align-items-center">
+                            <h5 className="usr_name mb-0">
+                              PressHop
+                              <span className="text-secondary time">
+                                {moment(
+                                  curr?.createdAt
+                                ).format(
+                                  "h:mm A, D MMM YYYY"
+                                )}
+                              </span>
+                            </h5>
                           </div>
-                        )}
-                    </>
-                  );
-                })}
+                          <p className="mb-0 msg auto_press_msg">
+                            Thank you for your valuable
+                            feedback. Your views matter a
+                            lot to us. Thank you very much
+                            for your business{" "}
+                            <img src={heart} />
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
@@ -652,8 +953,7 @@ function ChatCardSocket(props) {
               <p className="mb-0">Hoppers</p>
             </div>
             <div className="chat_content_list">
-              {hoppers &&
-                hoppers.map((curr) => {
+              {hoppers?.map((curr) => {
                   return (
                     <div
                       className={`chatting_itm chat-hopper-listing d-flex align-items-center justify-content-space-between clickable ${curr?._id === roomDetails?._id ? "light-gray-bg" : "bg-light-gray"}`}

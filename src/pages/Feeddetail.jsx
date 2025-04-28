@@ -905,39 +905,108 @@ const Feeddetail = (props) => {
   // Add to basket-
   const AddToBasket = async (element) => {
     try {
-      let obj = {};
+      setData({
+        ...data,
+        basket_status: data?.basket_status == "true" ? "false" : "true",
+      });
 
-      if (data.type == "task") {
-        obj = {
-          type: "uploaded_content",
-          uploaded_content: element.content_id,
-        };
-      } else {
-        obj = {
-          type: element?.type == "task" ? "task" : "content",
-          post_id: element._id,
-          content: element?.content?.map((el) => {
-            return {
-              media_type: el?.media_type,
-              media: el?.media,
-              watermark: el?.watermark,
-              content_id: el?._id,
-            };
-          }),
-        };
-      }
-      const res = await Post(`mediaHouse/addToBasket`, { order: [obj] });
+      let object = {
+        content_id: [element._id],
+        type: "content",
+        hopper_id: element?.hopper_id?._id,
+        stripe_account_id: element?.hopper_id?.stripe_account_id,
+        amount: Number(element?.ask_price),
+        offer: false,
+        application_fee: 15,
+        hopper_charge_ac_category: 5,
+        room_id: ""
+      };
+      const res = await Post(`mediaHouse/addToBasket`, object);
       if (res) {
-        //  ContentByID();
-        setData({
-          ...data,
-          basket_status: data?.basket_status == "true" ? "false" : "true",
-        });
-
         getCountOfBasketItems();
       }
     } catch (error) { }
   };
+
+    // Add this function near your other state management functions
+    const handleBasket = (index, section) => {
+      console.log(index, section)
+      if (section === "related") {
+        const allContent = [...content];
+        const updatedContent = allContent.map((ele, indx) => {
+          if (index === indx) {
+            return {
+              ...ele,
+              basket_status: ele.basket_status === "true" ? "false" : "true",
+            };
+          }
+          return ele;
+        });
+        setRelatedContent(updatedContent);
+        
+        // Update the same content in moreContent if it exists there
+        const contentId = content[index]?._id;
+        if (contentId) {
+          const allMoreContent = [...moreContent];
+          const updatedMoreContent = allMoreContent.map((ele) => {
+            if (contentId === ele._id) {
+              return {
+                ...ele,
+                basket_status: ele.basket_status === "true" ? "false" : "true",
+              };
+            }
+            return ele;
+          });
+          setMoreContent(updatedMoreContent);
+          
+          // Also update main data if it's the same content
+          if (contentId === data?._id) {
+            setData({
+              ...data,
+              basket_status: data.basket_status === "true" ? "false" : "true",
+            });
+          }
+        }
+      } else if (section === "more") {
+        const allContent = [...moreContent];
+        console.log(allContent, "moreContent");
+        const updatedContent = allContent.map((ele, indx) => {
+          if (index === indx) {
+            return {
+              ...ele,
+              basket_status: ele.basket_status === "true" ? "false" : "true",
+            };
+          }
+          return ele;
+        });
+        console.log(updatedContent, "updatedContent");
+        setMoreContent(updatedContent);
+        
+        // Update the same content in relatedContent if it exists there
+        const contentId = moreContent[index]?._id;
+        if (contentId) {
+          const allRelatedContent = [...content];
+          const updatedRelatedContent = allRelatedContent.map((ele) => {
+            if (contentId === ele._id) {
+              return {
+                ...ele,
+                basket_status: ele.basket_status === "true" ? "false" : "true",
+              };
+            }
+            return ele;
+          });
+          setRelatedContent(updatedRelatedContent);
+          
+          // Also update main data if it's the same content
+          if (contentId === data?._id) {
+            setData({
+              ...data,
+              basket_status: data.basket_status === "true" ? "false" : "true",
+            });
+          }
+        }
+      }
+    };
 
   return (
     <>
@@ -1084,29 +1153,12 @@ const Feeddetail = (props) => {
                             </div>
 
                             <div
-                              className="post_itm_icns right dtl_icns cart_icn"
+                              className="post_itm_icns right dtl_icns cart_icn clickable"
                               onClick={(event) => {
                                 event.stopPropagation();
                                 AddToBasket(data);
-                                // props.basket();
                               }}
-                            // onClick={() => Favourite(data?.favourite_status === "true" ? "false" : "true")}
                             >
-                              {/* Favourite icon */}
-                              {/* <svg
-                                width="31"
-                                height="30"
-                                viewBox="0 0 31 30"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M3 2.5H7.15316C7.37715 2.5 7.57421 2.64798 7.63667 2.8631L9.13911 8.03819M9.13911 8.03819L11.9571 17.7445C12.0195 17.9597 12.2166 18.1076 12.4406 18.1076H24.7597C24.9907 18.1076 25.1921 17.9504 25.2481 17.7263L27.5137 8.66378C27.5932 8.34601 27.3528 8.03819 27.0253 8.03819H9.13911ZM14.0764 21.1285C15.6057 21.2675 16.7328 22.62 16.5937 24.1493C16.4679 25.5339 15.461 26.5408 14.0764 26.6667C12.5471 26.8057 11.1946 25.6786 11.0556 24.1493C10.9045 22.4878 12.4149 20.9774 14.0764 21.1285ZM23.6424 21.1285C25.1717 21.2675 26.2988 22.62 26.1597 24.1493C26.0338 25.5339 25.027 26.5408 23.6424 26.6667C22.113 26.8057 20.7606 25.6786 20.6215 24.1493C20.4705 22.4878 21.9809 20.9774 23.6424 21.1285Z"
-                                  stroke="white"
-                                  stroke-width="1.96354"
-                                />
-                              </svg> */}
-
                               {data?.basket_status == "false" ? (
                                 <svg
                                   width="31"
@@ -1626,6 +1678,20 @@ const Feeddetail = (props) => {
                                     <Button className="greyBtn">Paid</Button>
                                   </Link>
                                 )}
+                                {/* Sandeep work */}
+                              {/* <Button
+                                className="newbtndesign" variant="secondary"
+
+                              ><small>Offered</small>
+                                £ 100
+                              </Button>
+                              <Button
+
+                                variant="primary newbtndesign"
+                              >
+                                <small>Buy</small>
+                                £ 100
+                              </Button> */}
                             </div>
                           </div>
                         </CardContent>
@@ -2970,7 +3036,7 @@ const Feeddetail = (props) => {
                                       </h6>
                                     </div>
                                     {tabSelect === "presshop" ? (
-                                      <ChatCard/>
+                                      <ChatCard />
                                     ) : null}
                                   </div>
                                 </Col>
@@ -3066,53 +3132,7 @@ const Feeddetail = (props) => {
                             viewDetail={`/Feeddetail/content/${curr._id}`}
                             allContent={curr?.content}
                             basketValue={curr?.basket_status}
-                            basket={() => {
-                              const allContent = [...content];
-                              const updatedCont = allContent.map(
-                                (ele, indx) => {
-                                  if (index == indx) {
-                                    return {
-                                      ...ele,
-                                      basket_status:
-                                        curr.basket_status == "true"
-                                          ? "false"
-                                          : "true",
-                                    };
-                                  }
-                                  return ele;
-                                }
-                              );
-
-                              setRelatedContent(updatedCont);
-
-                              const content_id = curr?._id;
-                              const allContents = [...moreContent];
-                              const updatedConts = allContents.map(
-                                (ele, indx) => {
-                                  if (content_id == ele._id) {
-                                    return {
-                                      ...ele,
-                                      basket_status:
-                                        curr.basket_status == "true"
-                                          ? "false"
-                                          : "true",
-                                    };
-                                  }
-                                  return ele;
-                                }
-                              );
-                              setMoreContent(updatedConts);
-                              if (content_id == data._id) {
-                                setData({
-                                  ...data,
-                                  basket_status:
-                                    data?.basket_status == "true"
-                                      ? "false"
-                                      : "true",
-                                });
-                              }
-                            }}
-                            // postcount={curr?.content?.length}
+                            basket={() => handleBasket(index, "related")}
                             feedImg={
                               curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
                                 : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
@@ -3135,6 +3155,9 @@ const Feeddetail = (props) => {
                               curr?.hopper_id?.avatar_id?.avatar
                             }
                             author_Name={curr.hopper_id?.user_name}
+                            hopper_id={curr?.hopper_id?._id}
+                            type="content"
+                            hopper_stripe_account_id={curr?.hopper_id?.stripe_account_id}
                             fvticns={
                               curr?.favourite_status === "true"
                                 ? favouritedic
@@ -3183,28 +3206,6 @@ const Feeddetail = (props) => {
                   <div className="feedContent_header">
                     <h1>More content from {hopper?.user_name}</h1>
                     <div className="d-flex align-items-center">
-                      {/* <div className="fltrs_prnt me-3 ht_sort">
-                        <Button
-                          className="sort_btn"
-                          onClick={() => {
-                            setOpenMoreContent(true);
-                          }}
-                        >
-                          Sort
-                          <BsChevronDown />
-                        </Button>
-                        {openMoreContent && (
-                          <RecentActivityDF
-                            closeRecentActivity={handleCloseRecentActivity}
-                            recentActivityValues={handleRecentActivityValue}
-                            active={moreContentState}
-                            setActive={setMoreContentState}
-                            handleCloseRecentActivity={() =>
-                              setOpenMoreContent(false)
-                            }
-                          />
-                        )}
-                      </div> */}
                       <Link
                         to={`/more-content/${hopper?._id}`}
                         className="next_link"
@@ -3238,7 +3239,7 @@ const Feeddetail = (props) => {
                       const pdfCount = Pdf.length;
                       const docCount = Doc.length;
                       return (
-                        <Col md={3}>
+                        <Col md={3} key={curr?._id}>
                           <ContentFeedCard
                             lnkto={`/Feeddetail/content/${curr._id}`}
                             viewTransaction={"View details"}
@@ -3264,48 +3265,13 @@ const Feeddetail = (props) => {
                               process.env.REACT_APP_AVATAR_IMAGE +
                               curr?.hopper_id?.avatar_id?.avatar || authorimg
                             }
-                            // basketValue={curr?.basket_status}
-                            // basket={()=>{console.log("myData");handleBasket(index,curr?._id)}}
-                            allContent={curr?.content}
                             basketValue={curr?.basket_status}
-                            basket={() => {
-                              // handleBasket(index,curr?._id)
-                              const allContent = [...moreContent];
-                              const updatedCont = allContent.map(
-                                (ele, indx) => {
-                                  if (index == indx) {
-                                    return {
-                                      ...ele,
-                                      basket_status:
-                                        curr.basket_status == "true"
-                                          ? "false"
-                                          : "true",
-                                    };
-                                  }
-                                  return ele;
-                                }
-                              );
-                              setMoreContent(updatedCont);
-
-                              const content_id = curr?._id;
-                              const allContents = [...content];
-                              const updatedConts = allContents.map(
-                                (ele, indx) => {
-                                  if (content_id == ele._id) {
-                                    return {
-                                      ...ele,
-                                      basket_status:
-                                        curr.basket_status == "true"
-                                          ? "false"
-                                          : "true",
-                                    };
-                                  }
-                                  return ele;
-                                }
-                              );
-                              setRelatedContent(updatedConts);
-                            }}
+                            basket={() => handleBasket(index, "more")}
+                            allContent={curr?.content}
                             author_Name={curr.hopper_id?.user_name}
+                            hopper_id={curr?.hopper_id?._id}
+                            type="content"
+                            hopper_stripe_account_id={curr?.hopper_id?.stripe_account_id}
                             type_img={
                               curr?.type === "shared" ? shared : exclusive
                             }

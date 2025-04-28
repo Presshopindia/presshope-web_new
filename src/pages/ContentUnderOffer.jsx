@@ -190,66 +190,6 @@ const ContentUnderOffer = () => {
                     <h1 className="rw_hdng">Content under offer</h1>
                   </div>
                   <Row className="">
-                    {/* {contentUnderOffer?.data?.map((curr, index) => {
-                      const Audio = curr?.content?.filter((curr) => curr?.media_type === "audio");
-                      const Video = curr?.content?.filter((curr) => curr?.media_type === "video");
-                      const Image = curr?.content?.filter((curr) => curr?.media_type === "image");
-                      const Pdf = curr?.content?.filter((curr) => curr?.media_type === "pdf");
-                      const Doc = curr?.content?.filter((curr) => curr?.media_type === "doc");
-                      const imageCount = Image.length;
-                      const videoCount = Video.length;
-                      const audioCount = Audio.length;
-                      const pdfCount = Pdf.length;
-                      const docCount = Doc.length;
-                      return (
-                        <Col lg={3} md={4} sm={6} key={index}>
-                          <ContentFeedCard
-                            className="undr_ofr_crd"
-                            feedImg={
-                              curr.content[0].media_type === "video"
-                                ? curr.content[0].watermark || process.env.REACT_APP_CONTENT_MEDIA + curr.content[0].thumbnail
-                                : curr.content[0].media_type === "image"
-                                  ? curr.content[0].watermark || process.env.REACT_APP_CONTENT_MEDIA + curr.content[0].media
-                                  : curr.content[0].media_type === "audio"
-                                    ? audioic
-                                    : curr?.content[0]?.media_type === "doc" || 'pdf' ? docsic : ''
-                            }
-                            user_avatar={curr?.hopper_id?.avatar_details[0]?.avatar ? process.env.REACT_APP_AVATAR_IMAGE + curr?.hopper_id?.avatar_details[0]?.avatar : avatar}
-                            author_Name={curr?.hopper_id?.user_name}
-                            lnkto={`/Feeddetail/content/${curr?._id}`}
-                            feedTypeImg1={imageCount > 0 ? cameraic : null}
-                            postcount={imageCount > 0 ? imageCount : null}
-                            feedTypeImg2={videoCount > 0 ? videoic : null}
-                            postcount2={videoCount > 0 ? videoCount : null}
-                            feedTypeImg3={audioCount > 0 ? interviewic : null}
-                            postcount3={audioCount > 0 ? audioCount : null}
-                            feedTypeImg4={pdfCount > 0 ? docsic : null}
-                            postcount4={pdfCount > 0 ? pdfCount : null}
-                            feedTypeImg5={docCount > 0 ? docsic : null}
-                            postcount5={docCount > 0 ? docCount : null}
-                            fvticns={
-                              curr?.favourite_status === "true"
-                                ? favouritedic
-                                : favic
-                            }
-                            content_id={curr?._id}
-                            bool_fav={
-                              curr?.favourite_status === "true"
-                                ? "false"
-                                : "true"
-                            }
-                            favourite={() => favContentHandler(index, "content")}
-                            type_img={curr?.type === "exclusive" ? exclusive : shared}
-                            type_tag={curr?.type}
-                            feedHead={curr?.heading}
-                            feedTime={moment(curr?.createdAt).format("hh:mm A , DD MMM YYYY")}
-                            feedLocation={curr?.location}
-                            contentPrice={`${formatAmountInMillion(curr?.ask_price || 0)}`}
-                            offeredPrice={`£${formatAmountInMillion(+(curr?.offered_price[curr?.offered_price.length - 1]?.initial_offer_price || curr?.offered_price[curr?.offered_price.length - 1]?.finaloffer_price))}`}
-                          />
-                        </Col>
-                      );
-                    })} */}
                     {contentUnderOffer?.data?.length >= 1 ? (
                       contentUnderOffer?.data?.map((curr, i) => (
                         <Col lg={3} md={4} sm={6} key={i}>
@@ -292,6 +232,9 @@ const ContentUnderOffer = () => {
                                 : favic
                             }
                             content_id={curr._id}
+                            hopper_id={curr?.hopper_id?._id}
+                            hopper_stripe_account_id={curr?.hopper_id?.stripe_account_id}
+                            type={"content"}
                             bool_fav={
                               curr.favourite_status === "true"
                                 ? "false"

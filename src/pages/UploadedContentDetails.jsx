@@ -172,108 +172,31 @@ const UploadedContentDetails = (props) => {
       console.log("basketcountError", error);
     }
   }
+
   // Add to basket-
-  const AddToBasket = async (element, type) => {
+  const AddToBasket = async (element) => {
     try {
-      // return
-      let obj = {};
+      // setData({
+      //   ...data,
+      //   basket_status: data?.basket_status == "true" ? "false" : "true",
+      // });
 
-      if (type == "task") {
-        obj = {
-          type: "uploaded_content",
-          uploaded_content: element?._id,
-          post_id: element?._id || element?.task_id?._id,
-          name: "hello",
-          content: element?.task_id?.content?.map((el) => {
-            return {
-              media_type: el?.media_type,
-              media: el?.media,
-              watermark: el?.watermark,
-              content_id: el?._id,
-            };
-          }),
-        };
-      } else {
-        obj = {
-          type: element?.type == "task" ? "task" : "content",
-          post_id: element._id,
-          content: element?.content?.map((el) => {
-            return {
-              media_type: el?.media_type,
-              media: el?.media,
-              watermark: el?.watermark,
-              content_id: el?._id,
-            };
-          }),
-        };
-      }
-      const res = await Post(`mediaHouse/addToBasket`, { order: [obj] });
+      let object = {
+        content_id: selectedItems,
+        type: "task",
+        hopper_id: taskHopperId,
+        task_id: param.id,
+        stripe_account_id: data?.[0]?.hopper_id?.stripe_account_id,
+        offer: false,
+        application_fee: 15,
+        hopper_charge_ac_category: 5,
+        room_id: ""
+      };
+      const res = await Post(`mediaHouse/addToBasket`, object);
       if (res) {
-        //  ContentByID();
-        setData({
-          ...data,
-          basket_status: data?.basket_status == "true" ? "false" : "true",
-        });
-
         getCountOfBasketItems();
       }
     } catch (error) { }
-  };
-
-  // const AddToBasket = async () => {
-  //   console.log("props ----->", props);
-  //   try {
-  //     let obj = {};
-
-  //     // if (props?.type == "task") {
-  //     //   obj = {
-  //     //     type: "uploaded_content",
-  //     //     uploaded_content: props.content_id,
-  //     //   };
-  //     // } else {
-  //     //   obj = {
-  //     //     type: props?.type == "task" ? "task" : "content",
-  //     //     post_id: props.content_id,
-  //     //     content: props?.allContent?.map((el) => {
-  //     //       return {
-  //     //         media_type: el?.media_type,
-  //     //         media: el?.media,
-  //     //         watermark: el?.watermark,
-  //     //         content_id: el?._id,
-  //     //       };
-  //     //     }),
-  //     //   };
-  //     // }
-  //     // const res = await Post(`mediaHouse/addToBasket`, { order: [obj] });
-  //     // if (res) {
-  //     //   getCountOfBasketItems();
-  //     //   props.basket();
-  //     // }
-  //   } catch (error) {
-  //     console.log("errorMessage", error);
-  //   }
-  // };
-
-  let TaskFavourite = async () => {
-    try {
-      let obj = {};
-
-      if (props?.type == "task") {
-        obj = {
-          type: "uploaded_content",
-          uploaded_content: props.content_id,
-        };
-      } else {
-        obj = {
-          favourite_status: props.bool_fav === "true" ? "true" : "false",
-          content_id: props.content_id,
-        };
-      }
-
-      const resp = await Patch(`mediaHouse/add/to/favourites`, obj);
-    } catch (error) {
-      console.log("addfav", error);
-    }
   };
 
   const RatingNReview = (curr) => {
@@ -374,7 +297,7 @@ const UploadedContentDetails = (props) => {
       setChatContentIds((pre) => ({
         ...pre,
         room_id: resp?.data?.room_id?.room_id,
-        sender_id: User && ( User?._id || User?.id )
+        sender_id: User && (User?._id || User?.id)
       }));
 
       localStorage.setItem("internal", resp?.data?.data?.[0]?.task_id?._id);
@@ -1035,7 +958,7 @@ const UploadedContentDetails = (props) => {
                                         />
                                         <audio
                                           controls
-                                          src={curr?.videothubnail}
+                                          src={process.env.REACT_APP_CONTENT_MEDIA + curr?.imageAndVideo}
                                           type="audio/mpeg"
                                           className="slider-audio"
                                           ref={audioRef}
@@ -1050,7 +973,7 @@ const UploadedContentDetails = (props) => {
                                         //     .REACT_APP_UPLOADED_CONTENT +
                                         //   curr?.media
                                         // }
-                                        src={curr?.videothubnail}
+                                        src={process.env.REACT_APP_UPLOADED_CONTENT + curr?.imageAndVideo}
                                       />
                                     ) : null}
                                   </SwiperSlide>
@@ -1233,7 +1156,6 @@ const UploadedContentDetails = (props) => {
                               </div>
 
                               <div className="add-to-basket-btn">
-                                {/* <button className="black-btn"  onClick={AddToBasket}>Add to Basket</button> */}
                                 <button
                                   onClick={() => AddToBasket(data?.[0], "task")}
                                   className="red-btn"
@@ -1819,7 +1741,7 @@ const UploadedContentDetails = (props) => {
                                                                 <video
                                                                   controls
                                                                   className="slider-vddo"
-                                                                  src={`${item?.thumbnail_url}`}
+                                                                  src={`${process.env.REACT_APP_UPLOADED_CONTENT + item?.name}`}
                                                                 />
                                                               ) : item?.mime ===
                                                                 "audio" ||
@@ -1838,7 +1760,7 @@ const UploadedContentDetails = (props) => {
                                                                   />
                                                                   <audio
                                                                     controls
-                                                                    src={`${item?.thumbnail_url}`}
+                                                                    src={`${process.env.REACT_APP_CONTENT_MEDIA + item?.name}`}
                                                                     type="audio/mpeg"
                                                                     className="slider-audio"
                                                                     ref={
@@ -1868,7 +1790,7 @@ const UploadedContentDetails = (props) => {
                                                                 <video
                                                                   controls
                                                                   className="slider-vddo"
-                                                                  src={`${item?.thumbnail_url}`}
+                                                                  src={`${process.env.REACT_APP_UPLOADED_CONTENT + item?.thumbnail_url}`}
                                                                 />
                                                               ) : item?.mime ===
                                                                 "audio" ||
@@ -1887,7 +1809,7 @@ const UploadedContentDetails = (props) => {
                                                                   />
                                                                   <audio
                                                                     controls
-                                                                    src={`${item?.thumbnail_url}`}
+                                                                    src={`${process.env.REACT_APP_CONTENT_MEDIA + item?.thumbnail_url}`}
                                                                     type="audio/mpeg"
                                                                     className="slider-audio"
                                                                     ref={
@@ -1918,7 +1840,7 @@ const UploadedContentDetails = (props) => {
                                                             if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
                                                               return;
                                                             } else {
-                                                              stripePayment(curr);
+                                                              AddToBasket(curr);
                                                             }
                                                           }
                                                         }}
@@ -2438,17 +2360,13 @@ const UploadedContentDetails = (props) => {
                                 process.env.REACT_APP_UPLOADED_CONTENT +
                                 item?.content[0]?.imageAndVideo
                                 : item?.content[0]?.type === "video"
-                                  ? item?.content[0]?.videothubnail ||
-                                  process.env.REACT_APP_UPLOADED_CONTENT +
-                                  item?.content[0]?.videothubnail
+                                  ? item?.content[0]?.videothubnail
                                   : item?.content[0]?.type === "audio"
                                     ? audioic
                                     : null
                             }
                             type={"task"}
-                            postcount={filteredContent("image")?.length}
-                            postcount2={filteredContent("video")?.length}
-                            postcount3={filteredContent("interview")?.length}
+                            postcount={1}
                             feedTypeImg1={
                               item?.content[0]?.type === "image"
                                 ? cameraic
@@ -2533,74 +2451,6 @@ const UploadedContentDetails = (props) => {
                     {moreContent.slice(0, 4)?.map((item, index) => {
                       return (
                         <Col md={3}>
-                          {/* <ContentFeedCard
-                            feedImg={
-                              item?.type === "image"
-                                ? item.videothubnail ||
-                                  process.env.REACT_APP_UPLOADED_CONTENT +
-                                    item.imageAndVideo
-                                : item?.type === "video"
-                                ? item.videothubnail ||
-                                  process.env.REACT_APP_UPLOADED_CONTENT +
-                                    item.videothubnail
-                                : item?.type === "audio"
-                                ? audioic
-                                : null
-                            }
-                            type={"task"}
-                            postcount={1}
-                            feedTypeImg1={
-                              item?.type === "image"
-                                ? cameraic
-                                : item?.type === "audio"
-                                ? interviewic
-                                : item?.type === "video"
-                                ? videoic
-                                : null
-                            }
-                            user_avatar={
-                              process.env.REACT_APP_AVATAR_IMAGE +
-                              item?.avatar_detals[0]?.avatar
-                            }
-                            author_Name={item?.hopper_id?.user_name}
-                            basket={() => handleBasket(index, "more")}
-                            basketValue={item?.basket_status}
-                            lnkto={`/content-details/${item?._id}`}
-                            viewTransaction="View details"
-                            viewDetail={`/content-details/${item?._id}`}
-                            fvticns={
-                              item.favourite_status === "true"
-                                ? favouritedic
-                                : favic
-                            }
-                            allContent={item?.task_id?.content}
-                            type_tag={item?.category_details[0]?.name}
-                            type_img={item?.category_details[0]?.icon}
-                            feedHead={item.task_id.task_description}
-                            feedTime={moment(item.createdAt).format(
-                              " hh:mm A, DD MMM YYYY"
-                            )}
-                            feedLocation={item.task_id.location}
-                            contentPrice={`${formatAmountInMillion(
-                              item?.type === "image"
-                                ? item?.task_id?.photo_price
-                                : item?.type === "audio"
-                                ? item?.task_id?.interview_price || 0
-                                : item?.type === "video"
-                                ? item?.task_id?.videos_price || 0
-                                : null
-                            )}`}
-                            favourite={() => handleFavourite(index, "more")}
-                            bool_fav={
-                              item.favourite_status === "true"
-                                ? "false"
-                                : "true"
-                            }
-                      
-                            content_id={item?._id}
-                            taskc_ontent_id={item?._id || item?.task_id?._id}
-                            taskHopperId={item?._id}
-                          /> */}
                           <ContentFeedCard
                             feedImg={
                               item?.type === "image"
@@ -2640,14 +2490,7 @@ const UploadedContentDetails = (props) => {
                             lnkto={`/content-details/${item?._id}?task_content_id=${item?.content_id}`}
                             viewTransaction="View details"
                             viewDetail={`/content-details/${item?._id}?task_content_id=${item?.content_id}`}
-                            fvticns={
-                              item?.favourite_status === "true"
-                                ? favouritedic
-                                : favic
-                            }
                             type_tag={item?.category_details[0]?.name}
-                            basket={() => handleBasket(index, "more")}
-                            basketValue={item?.basket_status}
                             allContent={item?.task_id?.content}
                             type_img={item?.category_details[0]?.icon}
                             feedHead={item?.task_id?.task_description}
@@ -2674,6 +2517,7 @@ const UploadedContentDetails = (props) => {
                             content_id={item?._id}
                             task_content_id={item?._id || item?.task_id?._id}
                             taskHopperId={item?._id}
+                            is_sale_status={true}
                           />
                         </Col>
                       );

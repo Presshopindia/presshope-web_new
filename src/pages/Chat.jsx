@@ -242,7 +242,7 @@ const Chat = () => {
     <>
       {loading && <Loader />}
       <Header />
-      <div className="chat_wrap">
+      <div className="chat_wrap page-wrap">
         {localStorage.getItem("backBtnVisibility") && (
           <Link onClick={() => history.back()} className="back_link mb-3">
             <BsArrowLeft className="text-pink" />
@@ -253,9 +253,10 @@ const Chat = () => {
           <div className="d-flex cht_cards_wrap">
             <Card className="cht_lft_card">
               <Accordion
-                defaultActiveKey={
-                  JSON.parse(localStorage.getItem("tabName")) || "presshop"
-                }
+                defaultActiveKey={JSON.parse(localStorage.getItem("tabName")) || "presshop"}
+                onSelect={(e) => {
+                  localStorage.setItem("tabName", JSON.stringify(e));
+                }}
                 className="cht_accrdn"
               >
                 <Accordion.Item className="cht_accdn_item" eventKey="external">

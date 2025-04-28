@@ -315,6 +315,9 @@ const UploadedContent = () => {
                                     : favic
                                 }
                                 content_id={curr._id}
+                                hopper_id={curr?.hopper_id?._id}
+                                type="content"
+                                hopper_stripe_account_id={curr?.hopper_id?.stripe_account_id}
                                 bool_fav={
                                   curr.favourite_status === "true"
                                     ? "false"
@@ -418,6 +421,9 @@ const UploadedContent = () => {
                                       : favic
                                   }
                                   content_id={curr._id}
+                                  hopper_id={curr?.hopper_id?._id}
+                                  type="content"
+                                  hopper_stripe_account_id={curr?.hopper_id?.stripe_account_id}
                                   bool_fav={
                                     curr.favourite_status === "true"
                                       ? "false"
@@ -520,6 +526,9 @@ const UploadedContent = () => {
                                         : favic
                                     }
                                     content_id={curr._id}
+                                    hopper_id={curr?.hopper_id?._id}
+                                    type="content"
+                                    hopper_stripe_account_id={curr?.hopper_id?.stripe_account_id}
                                     bool_fav={
                                       curr.favourite_status === "true"
                                         ? "false"
@@ -574,17 +583,6 @@ const UploadedContent = () => {
                             })
                             : type?.type?.length > 20
                               ? taskDetails?.map((item, index) => {
-                                // const Audio = curr?.filter((curr) => curr?.media_type === "audio");
-                                // const Video = curr?.filter((curr) => curr?.media_type === "video");
-                                // const Image = curr?.filter((curr) => curr?.media_type === "image");
-                                // const Pdf = curr?.filter((curr) => curr?.media_type === "pdf");
-                                // const Doc = curr?.filter((curr) => curr?.media_type === "doc");
-                                // const imageCount = Image.length;
-                                // const videoCount = Video.length;
-                                // const audioCount = Audio.length;
-                                // const pdfCount = Pdf.length;
-                                // const docCount = Doc.length;
-
                                 return (
                                   <Col lg={3} md={4} sm={6}>
                                     <ContentFeedCard
@@ -712,6 +710,9 @@ const UploadedContent = () => {
                                           : favic
                                       }
                                       content_id={curr._id}
+                                      hopper_id={curr?.hopper_id?._id}
+                                      type="content"
+                                      hopper_stripe_account_id={curr?.hopper_id?.stripe_account_id}
                                       bool_fav={
                                         curr.favourite_status === "true"
                                           ? "false"
@@ -789,7 +790,6 @@ const UploadedContent = () => {
                                         ? audioic
                                         : null
                                 }
-                                type={"task"}
                                 postcount={1}
                                 feedTypeImg1={
                                   item?.type === "image"
@@ -840,6 +840,9 @@ const UploadedContent = () => {
                                 }
                                 // content_id={item?.task_id}
                                 content_id={item?.content_id}
+                                hopper_id={curr?.hopper_id?._id}
+                                type="content"
+                                hopper_stripe_account_id={curr?.hopper_id?.stripe_account_id}
                                 basket={() => handleBasket(index, "upload")}
                                 basketValue={item?.basket_status}
                                 allContent={item?.task_id?.content}

@@ -54,8 +54,6 @@ const InviteUserModal = ({
     }
   }
 
-  const jsxElement = <strong>Hello, JSX!</strong>;
-
   return (
     <>
       {loading && <Loader />}
@@ -199,6 +197,7 @@ const InviteUserModal = ({
                 className="w-50 m-auto d-inline-block py-2 text-lowercase mdl_btn"
                 variant="primary"
                 type="submit"
+                disabled={!emailIds || loading}
               >
                 <div className="link_white">Send Invite</div>
               </Button>

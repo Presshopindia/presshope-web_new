@@ -133,16 +133,9 @@ const MoreContentFromUserForTask = () => {
                             }
                             author_Name={item?.hopper_id?.user_name}
                             lnkto={`/content-details/${item?.task_id?._id}?hopper_id=${item?.hopper_id?._id}`}
-                            basket={() => handleBasket(index)}
-                            basketValue={item?.basket_status}
                             // lnkto={`/Feeddetail/content/${item._id}uploaded`}
                             viewTransaction="View details"
                             viewDetail={`/content-details/${item?.task_id?._id}?hopper_id=${item?.hopper_id?._id}`}
-                            fvticns={
-                              item.favourite_status === "true"
-                                ? favouritedic
-                                : favic
-                            }
                             type_tag={item?.category_details[0]?.name}
                             type_img={item?.category_details[0]?.icon}
                             feedHead={item.task_id.task_description}
@@ -168,6 +161,7 @@ const MoreContentFromUserForTask = () => {
                             content_id={item?._id}
                             task_content_id={item?._id || item?.task_id?._id}
                             taskContentId={item?._id}
+                            is_sale_status={true}
                           />
                         </Col>
                       );

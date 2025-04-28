@@ -68,6 +68,11 @@ const Tandc = () => {
   const SignUp = async (e) => {
     e.preventDefault();
 
+    if (!isChecked.sign_leagel_terms.is_condition_one) {
+      toast.success("Please accept the terms and conditions")
+      return;
+    }
+
     try {
       const obj = {
         phone: page1?.administrator_details?.phone,
@@ -296,6 +301,7 @@ const Tandc = () => {
                               control={<Checkbox />}
                               name="is_condition_one"
                               value="option1"
+                              checked={isChecked.sign_leagel_terms.is_condition_one}
                               inputProps={{ "aria-label": "Option 1" }}
                               onChange={handleChange}
                               label="I agree to PressHop's Terms and Conditions & Privacy Policy."
