@@ -1,0 +1,45 @@
+@media(max-width:1199.9px) {
+    .crd_edit_wrap .dash-top-cards.crd_edit .card-head-txt {
+        font-size: 24px;
+    }
+
+    .right-cards .review-txt.card-head-txt {
+        font-size: 16px;
+    }
+
+    .rating_tp_crd .review-in .rating-txt {
+        line-height: 40px;
+        font-size: 24px !important;
+    }
+
+    .card-imgs-wrap img.card-img {
+        width: 24px;
+        height: 24px;
+    }
+
+    .card-imgs-wrap span {
+        height: 24px;
+        width: 24px;
+        padding: 0px;
+    }
+
+    .dashboardStat_cards.crd_edit_wrap.dsh_n_crds .dash-c-foot {
+        padding-top: 12px !important;
+        padding-bottom: 12px;
+    }
+
+    .crd_edit_wrap .dash-top-cards.crd_edit .cardContent_head {
+        height: 39px;
+    }
+
+    .dash-top-cards.rt_crd,
+    .dash-top-cards,
+    .crd_edit_wrap .dash-top-cards.crd_edit {
+        height: 190px;
+    }
+
+    .dash-top-cards.rt_crd .broadcast p {
+
+        font-size: 10px;
+    }
+}

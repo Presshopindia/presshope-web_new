@@ -2,7 +2,7 @@
 import RouteAll from "./pages/routes/RouteAll";
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-
+import './assets/responsive.css';
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
 const stripePromise = loadStripe('pk_test_51NITL2AKmuyBTjDNLTxs7YjdUbe40lZYUoKLocUh1sxp0KADCAeETz2AczzxtSqG1UdFZ0HhxFSuTF5CVF2OLRHZ00aProJxkS');
