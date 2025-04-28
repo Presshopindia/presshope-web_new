@@ -802,12 +802,12 @@ const Header = () => {
                                               return part;
                                             })}
                                         </p>
-                                        {curr?.promo_code_link ? (
+                                        {curr?.content_link ? (
                                           <button
                                             className="notify_clear clear-btn"
                                             onClick={() => {
                                               let promoCode =
-                                                curr?.promo_code_link;
+                                                curr?.content_link;
                                               console.log(
                                                 "Promo Code:",
                                                 promoCode
