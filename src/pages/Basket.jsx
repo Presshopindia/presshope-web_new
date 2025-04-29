@@ -91,6 +91,7 @@ const Basket = () => {
       const resp = await Post("mediaHouse/createPaymentforBasket", {
         type: checked ? "task" : "content",
         coupon: promoCode.value,
+        promocodePercentOff: promoCode?.off ? promoCode?.off : 0
       });
       setLoading(false);
       window.open(resp.data.url, "_blank");
@@ -203,7 +204,7 @@ const Basket = () => {
       console.log("Error calculating total amount:", error);
     }
   }
-
+console.log(promoCode)
   // Add this useEffect to calculate total amount when data changes
   useEffect(() => {
     if (data) {
