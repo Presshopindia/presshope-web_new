@@ -917,8 +917,9 @@ const Header = () => {
                       <div className="drpMenu_hdr">
                         <p className="menu_hdng">Menu</p>
                         <MdClose
-                          onClick={() => {
-                            setModalShow(true);
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            document.body.click();
                           }}
                         />
                       </div>
