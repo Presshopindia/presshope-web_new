@@ -254,9 +254,9 @@ const Dashboard = () => {
       <Header />
       <div className="page-wrap dashb_page">
         <Container fluid>
-          <Row>
+          <Row className="dashboardStat_cards crd_edit_wrap dsh_n_crds">
             <Col md={8}>
-              <Row className="dashboardStat_cards crd_edit_wrap dsh_n_crds">
+              <Row>
                 {/* Current Chat */}
                 <Col md={4} className="p-0 mb-0">
                   <Card className="dash-top-cards crd_edit">
@@ -383,6 +383,113 @@ const Dashboard = () => {
                     handleClearSort={() => handleClearSort({ ...dashboardPayload, requestedFilter: { ...dashboardPayload.requestedFilter, favourite: "" } })}
                   />
                 </Col>
+              </Row>
+            </Col>
+            <Col md={4}>
+              <div className="right-cards">
+                <Row>
+                  <Col md={8} className="p-0">
+                    <Card className="dash-top-cards ">
+                      <Link to="/rating-and-review">
+                        <CardContent className="dash-c-body rev rating_tp_crd">
+                          <div className="tp_txt d-flex justify-content-between align-items-center">
+                            <Typography
+                              variant="body2"
+                              className="review-txt card-head-txt mb-0"
+                            >
+                              Ratings & reviews
+                              <br />
+                            </Typography>
+                            <div className="card-imgs-wrap">
+                              <span
+                                onClick={() => navigate("/rating-and-review")}
+                              >
+                                <BsArrowRight />
+                              </span>
+                            </div>
+                          </div>
+                          <div className="review-in d-flex">
+                            <Typography
+                              className="rating-txt mb-0"
+                              gutterBottom
+                            >
+                              {rat_count?.avgRating !== undefined
+                                ? Number.isInteger(rat_count.avgRating)
+                                  ? rat_count?.avgRating?.toFixed(1)
+                                  : rat_count.avgRating.toFixed(1)
+                                : "0"}
+                            </Typography>
+                            <div className="ic-txt-wrap">
+                              {/* <div className="star-icons d-flex">
+                                <Rating
+                                  initialValue={rat_count?.avgRating}
+                                  readonly
+                                  allowFraction={true}
+                                />
+                              </div> */}
+                              <div className="star-rate d-flex gap-2">
+                                {rat_count?.avgRating > 0 && (
+                                  <>
+                                    {Array.from(
+                                      {
+                                        length: Math.floor(
+                                          rat_count?.avgRating
+                                        ),
+                                      },
+                                      (_, i) => (
+                                        <img src={star} alt={i} key={i} />
+                                      )
+                                    )}
+                                    {hasDecimal(rat_count?.avgRating) ? (
+                                      <img src={FillStar} alt="half_star" />
+                                    ) : null}
+                                  </>
+                                )}
+                              </div>
+                              <Typography
+                                sx={{ fontSize: 14 }}
+                                color="text.secondary"
+                                gutterBottom
+                                className="rating-count mb-0"
+                              >
+                                {receivedCount || 0} Reviews
+                              </Typography>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Link>
+                    </Card>
+                  </Col>
+                  <Col md={4} n className="p-0">
+                    <Card className="dash-top-cards rt_crd p-0 add-br d-flex align-items-center justify-content-center">
+                      <CardContent className="dash-c-body rev">
+                        <div className="broadcast">
+                          <Typography className="mb-3 text-center d-flex justify-content-center">
+                            <span className="clickable" onClick={handleShow}>
+                              +
+                            </span>
+                            {/* <Tooltip title="Launching soon">
+                              <span className="clickable">+</span>
+                            </Tooltip> */}
+                          </Typography>
+                          <Typography className="mb-0 text-center txt_bold text-white">
+                            Broadcast task
+                          </Typography>
+                        </div>
+                      </CardContent>
+                      {show && (
+                        <AddBroadcastTask isOpen={show} show={handleShow} />
+                      )}
+                    </Card>
+                  </Col>
+                </Row>
+              </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={8}>
+              <Row className="dashboardStat_cards crd_edit_wrap dsh_n_crds">
+
 
                 {/* Content Purchase Online */}
                 <Col md={4} className="p-0">
@@ -664,100 +771,7 @@ const Dashboard = () => {
             <Col md={4} className="pe-0">
               <div className="right-cards">
                 <Row>
-                  <Col md={8} className="p-0">
-                    <Card className="dash-top-cards ">
-                      <Link to="/rating-and-review">
-                        <CardContent className="dash-c-body rev rating_tp_crd">
-                          <div className="tp_txt d-flex justify-content-between align-items-center">
-                            <Typography
-                              variant="body2"
-                              className="review-txt card-head-txt mb-0"
-                            >
-                              Ratings & reviews
-                              <br />
-                            </Typography>
-                            <div className="card-imgs-wrap">
-                              <span
-                                onClick={() => navigate("/rating-and-review")}
-                              >
-                                <BsArrowRight />
-                              </span>
-                            </div>
-                          </div>
-                          <div className="review-in d-flex">
-                            <Typography
-                              className="rating-txt mb-0"
-                              gutterBottom
-                            >
-                              {rat_count?.avgRating !== undefined
-                                ? Number.isInteger(rat_count.avgRating)
-                                  ? rat_count?.avgRating?.toFixed(1)
-                                  : rat_count.avgRating.toFixed(1)
-                                : "0"}
-                            </Typography>
-                            <div className="ic-txt-wrap">
-                              {/* <div className="star-icons d-flex">
-                                <Rating
-                                  initialValue={rat_count?.avgRating}
-                                  readonly
-                                  allowFraction={true}
-                                />
-                              </div> */}
-                              <div className="star-rate d-flex gap-2">
-                                {rat_count?.avgRating > 0 && (
-                                  <>
-                                    {Array.from(
-                                      {
-                                        length: Math.floor(
-                                          rat_count?.avgRating
-                                        ),
-                                      },
-                                      (_, i) => (
-                                        <img src={star} alt={i} key={i} />
-                                      )
-                                    )}
-                                    {hasDecimal(rat_count?.avgRating) ? (
-                                      <img src={FillStar} alt="half_star" />
-                                    ) : null}
-                                  </>
-                                )}
-                              </div>
-                              <Typography
-                                sx={{ fontSize: 14 }}
-                                color="text.secondary"
-                                gutterBottom
-                                className="rating-count mb-0"
-                              >
-                                {receivedCount || 0} Reviews
-                              </Typography>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Link>
-                    </Card>
-                  </Col>
-                  <Col md={4} n className="p-0">
-                    <Card className="dash-top-cards rt_crd p-0 add-br d-flex align-items-center justify-content-center">
-                      <CardContent className="dash-c-body rev">
-                        <div className="broadcast">
-                          <Typography className="mb-3 text-center d-flex justify-content-center">
-                            <span className="clickable" onClick={handleShow}>
-                              +
-                            </span>
-                            {/* <Tooltip title="Launching soon">
-                              <span className="clickable">+</span>
-                            </Tooltip> */}
-                          </Typography>
-                          <Typography className="mb-0 text-center txt_bold text-white">
-                            Broadcast task
-                          </Typography>
-                        </div>
-                      </CardContent>
-                      {show && (
-                        <AddBroadcastTask isOpen={show} show={handleShow} />
-                      )}
-                    </Card>
-                  </Col>
+
                   <Col md={12} className="pe-0 list-card-wrap pt-0">
                     <Card className="dash-top-cards listing rt_crd rcnt_actvt mb-0 h-100">
                       <CardContent className="dash-c-body rev">
