@@ -110,33 +110,23 @@ const Login = () => {
                   <div className='onboardMain'>
 
                     <div className="onboardIntro sign_section border-bottom-0">
-                      <h1 className="mb-0 position-relative">Welcome
+                      <h1 className="mb-0 position-relative">Back so soon? We like that
+
                       </h1>
 
-                      {/* <div className="onboardStep b_border top_txt">
-                        <p>Congratulations, your onboarding process is now fully
-                          complete. You are now part of our growing publications
-                          community around the UK, and soon the rest of the World.
+                      <div className="onboardStep b_border top_txt">
+                        <p>
+                          Welcome back to PressHop — clearly, you’ve got an eye for extraordinary stories.
+
                         </p>
                         <p>
-                          Please enter your email and password below to gain
-                          access onto our marketplace platform. If you have
-                          forgotten your password, please{" "}
-                          <Link to="/User-Forget-Password" className="link">
-                            click here
-                          </Link>{" "}
-                          and we will help create a new password for you. This
-                          happens to most of us, and is absolutely fine.
+                        Pop in your activation link below and dive straight back into the action.
+
                         </p>
                         <p>
-                          If you face any trouble logging in, please{" "}
-                          <Link to="/contact-us" className="link">
-                            contact
-                          </Link>{" "}
-                          our helpful team members who will be happy to assist. See
-                          you on the other side. Cheers!
+                        Lost your link? No worries, we got you! Send us an (email) and we’ll whip up a fresh one just for you.
                         </p>
-                      </div> */}
+                      </div>
                     </div>
                     <Col lg="12">
                       <Form>
@@ -167,7 +157,7 @@ const Login = () => {
                             await AddFirebaseMessaging();
                           }}
                         >
-                          <span>Check Our Demo Platform</span>
+                          <span>Login</span>
                         </Button>
                       </Form>
                     </Col>
@@ -184,8 +174,8 @@ const Login = () => {
                   </div>
                   <div className="right_txt">
                     <p>
-                      It's <span className="txt_bld">action</span> time, let's
-                      dive straight in
+                    *The news won’t wait. Neither should you
+                      
                     </p>
                   </div>
                 </div>

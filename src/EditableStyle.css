@@ -1,0 +1,274 @@
+/* Custom styles for registration page */
+.right-side-content {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.right-side-content .image-container {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 20px;
+  max-width: 100%;
+}
+
+.right-side-content .img-fluid {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.right-side-content .right-text-content {
+  position: relative;
+  z-index: 2;
+  color: #333;
+}
+
+.right-side-content .right-text-content h2 {
+  font-size: 32px;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+.right-side-content .right-text-content h2 .fw-bold {
+  font-weight: 700;
+  color: #ec4e54;
+}
+
+/* Decorative elements */
+.right-side-content .tri {
+  position: absolute;
+  top: 10%;
+  right: 5%;
+  width: 40px;
+  height: 40px;
+  background-color: #ffd369;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  z-index: 1;
+}
+
+.right-side-content .circle {
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  width: 30px;
+  height: 30px;
+  background-color: #ec4e54;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.right-side-content .big_circle {
+  position: absolute;
+  bottom: 15%;
+  right: 15%;
+  width: 60px;
+  height: 60px;
+  background-color: #4ecdc4;
+  border-radius: 50%;
+  opacity: 0.6;
+  z-index: 1;
+}
+
+/* Section heading styling */
+.section-heading {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+/* Form input field styling - consistent height and padding */
+.input-field,
+.form-control,
+.form-select,
+.MuiInputBase-root,
+.phone-wrapper {
+  height: 48px;
+}
+
+.form-control,
+.form-select,
+.MuiInputBase-root {
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  font-size: 16px;
+}
+
+/* Company name input field styling */
+.input-field {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.input-field .frnt_ic {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  z-index: 2;
+}
+
+.input-field .form-control {
+  padding-left: 40px;
+}
+
+.input-field .form-control:focus {
+  border-color: #ec4e54;
+  box-shadow: 0 0 0 0.25rem rgba(236, 78, 84, 0.25);
+  outline: none;
+}
+
+/* Fix icon positioning during validation */
+.is-invalid ~ .frnt_ic {
+  top: 30%;
+}
+
+/* Fix invalid feedback positioning */
+.invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: #dc3545;
+}
+
+/* Phone number input styling */
+.phone-input-container {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.phone-wrapper {
+  position: relative;
+  height: 48px;
+}
+
+.phone-wrapper .PhoneInput {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.phone-field {
+  height: 48px;
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  font-size: 16px;
+  padding-left: 75px !important;
+  width: 100%;
+}
+
+.phone-field:focus {
+  border-color: #ec4e54;
+  box-shadow: 0 0 0 0.25rem rgba(236, 78, 84, 0.25);
+  outline: none;
+}
+
+.PhoneInputCountry {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+}
+
+.PhoneInputCountryIcon {
+  width: 25px;
+  height: 18px;
+  margin-right: 8px;
+}
+
+.PhoneInputCountrySelectArrow {
+  opacity: 0.6;
+  margin-left: 5px;
+}
+
+.PhoneInputCountrySelect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Fix for invalid styling */
+.phone-field.is-invalid {
+  border-color: #dc3545;
+  padding-right: 4rem;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+/* Select Styling */
+.MuiSelect-select {
+  height: 48px !important;
+  padding-left: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.MuiSelect-icon {
+  right: 12px !important;
+}
+
+/* Digit note under company number field */
+.digit-note {
+  display: #ec4e54;
+  font-size: 12px;
+  color: #6c757d;
+  margin-top: 5px;
+  padding-left: 5px;
+}
+
+/* Custom button styling to match design */
+.theme-btn {
+  background: #ec4e54 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  padding: 12px 20px !important;
+  transition: all 0.3s ease !important;
+}
+
+.theme-btn:hover {
+  background: #d63c42 !important;
+}
+
+/* Form section styling */
+.onboardIntro h1 {
+  font-size: 30px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.onboardIntro p {
+  font-size: 16px;
+  color: #6c757d;
+  margin-bottom: 30px;
+}
+
+/* Fix PhoneInput border style when invalid */
+.is-invalid.PhoneInput {
+  border-color: #dc3545;
+} 

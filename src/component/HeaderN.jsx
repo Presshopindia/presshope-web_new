@@ -85,6 +85,15 @@ const HeaderN = ({ scrollToDiv,activeHeader}) => {
                       <span>Demo</span>
                     </Link>
                   </li>
+                  <li className="nav-text">
+                    <Link
+                      to={"/register"}
+                      className="authbtns"
+                      style={{ fontFamily: "AirbnbBold" }}
+                    >
+                      <span>Register</span>
+                    </Link>
+                  </li>
                 </ul>
               </nav>
             </IconContext.Provider>
@@ -140,6 +149,13 @@ const HeaderN = ({ scrollToDiv,activeHeader}) => {
                   style={{ fontFamily: "AirbnbBold" }}
                 >
                   <span className="headAuth">Demo</span>
+                </NavLink>
+                <NavLink
+                  to={"/register"}
+                  className="authbtns header_btn"
+                  style={{ fontFamily: "AirbnbBold", marginLeft: "10px" }}
+                >
+                  <span className="headAuth">Register</span>
                 </NavLink>
               </Nav>
             </Navbar.Collapse>
