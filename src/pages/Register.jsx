@@ -363,9 +363,6 @@ const Register = () => {
                           <span>Register</span>
                         </Button>
                         
-                        <p className="mt-4 text-center">
-                          Already have an account? <Link to="/login" className="link">Login here</Link>
-                        </p>
                       </Form>
                     </Col>
                   </div>

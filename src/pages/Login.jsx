@@ -110,21 +110,23 @@ const Login = () => {
                   <div className='onboardMain'>
 
                     <div className="onboardIntro sign_section border-bottom-0">
-                      <h1 className="mb-0 position-relative">Back so soon? We like that
-
-                      </h1>
+                      <h1 className="mb-0 position-relative">The Scoop’s Waiting</h1>
 
                       <div className="onboardStep b_border top_txt">
                         <p>
-                          Welcome back to PressHop — clearly, you’ve got an eye for extraordinary stories.
+                        Welcome to PressHop — the home of real stories, told in real time.
+
 
                         </p>
                         <p>
-                        Pop in your activation link below and dive straight back into the action.
+                        Pop in your official email id below to jump into the demo and explore what the buzz is all about. 
+
 
                         </p>
                         <p>
-                        Lost your link? No worries, we got you! Send us an (email) and we’ll whip up a fresh one just for you.
+                          This access lasts for 5 days only.
+                          Feel free to share it with your colleagues while it’s active.
+                          Need more time? Just drop us a line at hello@presshop.co.uk and we’ll gladly sort you out with a fresh link.
                         </p>
                       </div>
                     </div>
@@ -157,7 +159,7 @@ const Login = () => {
                             await AddFirebaseMessaging();
                           }}
                         >
-                          <span>Login</span>
+                          <span>Log in</span>
                         </Button>
                       </Form>
                     </Col>
