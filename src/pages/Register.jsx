@@ -113,33 +113,33 @@ const Register = () => {
     if (!formData.company_number.trim()) newErrors.company_number = "Company number is required";
     if (!formData.department) newErrors.department = "Department is required";
     if (!formData.designation) newErrors.designation = "Designation is required";
-    
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!emailRegex.test(formData.email)) {
       newErrors.email = "Please enter a valid email address";
     }
-    
+
     if (!formData.phone) {
       newErrors.phone = "Phone number is required";
     } else if (!isValidPhoneNumber(formData.phone)) {
       newErrors.phone = "Please enter a valid phone number";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setLoading(true);
     console.log("formData========", formData);
 
-    
+
     try {
       const obj = {
         email: formData.email,
@@ -147,7 +147,7 @@ const Register = () => {
         userType: "demo"
       };
       const response = await Post("mediaHouse/registerCompany", formData);
-      
+
       if (response && response.data) {
         toast.success("Registration successful! Our team will contact you shortly.");
         navigate("/landing-page");
@@ -197,13 +197,13 @@ const Register = () => {
                         employee details to register.
                       </p>
                     </div>
-                    
+
                     <Col lg="12" className="companyDetails sign_section rw_gp_sml adminDetails officeDetails">
                       {/* <h2 className="section-heading">Company Details</h2> */}
                       <Form onSubmit={handleSubmit}>
                         <Row className="comp_frm_gap row_gap_20">
-                        <Col md="6">
-                            <Form.Group className="position-relative mb-4 input-field">
+                          <Col md="6">
+                            <Form.Group className="position-relative mb-0 input-field">
                               <img className="frnt_ic" src={user} alt="user icon" />
                               <Form.Control
                                 type="text"
@@ -217,7 +217,7 @@ const Register = () => {
                             </Form.Group>
                           </Col>
                           <Col md="6">
-                            <Form.Group className="position-relative mb-4 input-field">
+                            <Form.Group className="position-relative mb-0 input-field">
                               <img className="frnt_ic" src={user} alt="user icon" />
                               <Form.Control
                                 type="text"
@@ -230,8 +230,8 @@ const Register = () => {
                               {errors.last_name && <div className="invalid-feedback">{errors.last_name}</div>}
                             </Form.Group>
                           </Col>
-                          <Col md="6" className="mb-4">
-                            <div className="input-field">
+                          <Col md="6" className="mb-0">
+                            <div className="input-field mb-0">
                               <img className="frnt_ic" src={follower} alt="company icon" />
                               <Form.Control
                                 type="text"
@@ -244,8 +244,8 @@ const Register = () => {
                               {errors.company_name && <div className="invalid-feedback">{errors.company_name}</div>}
                             </div>
                           </Col>
-                          <Col md="6" className="mb-4">
-                            <div className="input-field">
+                          <Col md="6" className="mb-0">
+                            <div className="input-field mb-0">
                               <img className="frnt_ic" src={hash} alt="company icon" />
                               <Form.Control
                                 type="text"
@@ -259,10 +259,10 @@ const Register = () => {
                               {/* <small className="digit-note">Please enter 8 digits</small> */}
                             </div>
                           </Col>
-                      
-                        
+
+
                           <Col md="12">
-                            <Form.Group className="position-relative mb-4 input-field">
+                            <Form.Group className="position-relative mb-0 input-field">
                               <img className="frnt_ic" src={website} alt="website icon" />
                               <Form.Control
                                 type="text"
@@ -278,35 +278,35 @@ const Register = () => {
                           {/* <Col md="12">
                             <h2 className="section-heading">Employee Details</h2>
                           </Col> */}
-                         
+
                           <Col md={6}>
-                                <Form.Group className="form-group">
-                                  <img src={chair} alt="" />
-                                  <Select
-                                    className="w-100 slct_sign"
-                                    labelId="department-label"
-                                    id="department"
-                                    name="department"
-                                    value={formData.department}
-                                    label="Department *"
-                                    onChange={handleChange}
-                                    error={!!errors.department}
-                                  >
+                            <Form.Group className="form-group">
+                              <img src={chair} alt="" />
+                              <Select
+                                className="w-100 slct_sign"
+                                labelId="department-label"
+                                id="department"
+                                name="department"
+                                value={formData.department}
+                                label="Department *"
+                                onChange={handleChange}
+                                error={!!errors.department}
+                              >
                                 {departments.map((dept) => (
-                                  <MenuItem  className="selectPlaceholder" key={dept._id} value={dept._id}>
+                                  <MenuItem className="selectPlaceholder" key={dept._id} value={dept._id}>
                                     {dept.name}
                                   </MenuItem>
                                 ))}
                               </Select>
                               {errors.department && <div className="text-danger small mt-1">{errors.department}</div>}
-                                </Form.Group>
-                              </Col>
+                            </Form.Group>
+                          </Col>
                           <Col md={6}>
-                                <Form.Group className="form-group">
-                                  <img src={chair} alt="" />
-                                  <Select
-                                  className="w-100 slct_sign"
-                                  
+                            <Form.Group className="form-group">
+                              <img src={chair} alt="" />
+                              <Select
+                                className="w-100 slct_sign"
+
                                 labelId="designation-label"
                                 id="designation"
                                 name="designation"
@@ -316,17 +316,17 @@ const Register = () => {
                                 error={!!errors.designation}
                               >
                                 {designations.map((dept) => (
-                                  <MenuItem  className="selectPlaceholder" key={dept._id} value={dept._id}>
+                                  <MenuItem className="selectPlaceholder" key={dept._id} value={dept._id}>
                                     {dept.name}
                                   </MenuItem>
                                 ))}
                               </Select>
                               {errors.designation && <div className="text-danger small mt-1">{errors.designation}</div>}
-                                </Form.Group>
-                              </Col>
-                         
+                            </Form.Group>
+                          </Col>
+
                           <Col md="6">
-                            <Form.Group className="position-relative mb-4 input-field">
+                            <Form.Group className="position-relative mb-0 input-field">
                               <img className="frnt_ic" src={mail} alt="mail icon" />
                               <Form.Control
                                 type="email"
@@ -352,7 +352,7 @@ const Register = () => {
                               {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
                             </div>
                           </Col>
-                          
+
                         </Row>
 
                         <Button
@@ -362,7 +362,7 @@ const Register = () => {
                         >
                           <span>Register</span>
                         </Button>
-                        
+
                       </Form>
                     </Col>
                   </div>
@@ -370,7 +370,7 @@ const Register = () => {
               </Col>
               <Col lg="6" className="rt_col pos_stick position-relative">
                 <div className="right-side position-relative">
-                <span className="shape yl_sqr pos-abs"></span>
+                  <span className="shape yl_sqr pos-abs"></span>
                   <span className="shape bl_crcl pos_abs"></span>
                   <span className="shape gr_tri pos_abs"></span>
                   <span className="shape rd_crcl pos_abs"></span>
