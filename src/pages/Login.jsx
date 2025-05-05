@@ -114,12 +114,12 @@ const Login = () => {
 
                       <div className="onboardStep b_border top_txt">
                         <p>
-                        Welcome to PressHop — the home of real stories, told in real time.
+                          Welcome to PressHop — the home of real stories, told in real time.
 
 
                         </p>
                         <p>
-                        Pop in your official email id below to jump into the demo and explore what the buzz is all about. 
+                          Pop in your official email id below to jump into the demo and explore what the buzz is all about.
 
 
                         </p>
@@ -168,17 +168,16 @@ const Login = () => {
               </Col>
               <Col lg="6" className="">
                 <div className="left-side">
-                  <div className="tri"></div>
-                  <div className="circle"></div>
-                  <div className="big_circle"></div>
-                  <div className="">
+                  <span className="shape gr_tri pos_abs"></span>
+                  <span className="shape yl_sqr pos-abs"></span>
+                  <span className="shape rd_crcl pos_abs"></span>
+                  <div className="px-3 p-3 text-center">
                     <img src={loginimg} className="rt_bg_img" />
                   </div>
                   <div className="right_txt">
-                    <p>
-                    *The news won’t wait. Neither should you
-                      
-                    </p>
+                    <h2>
+                      *The <span className="txt_bld">news won’t</span> wait. Neither should you
+                    </h2>
                   </div>
                 </div>
               </Col>

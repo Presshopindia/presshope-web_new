@@ -92,7 +92,7 @@
 .form-select,
 .MuiInputBase-root,
 .phone-wrapper {
-  height: 48px;
+  height: 40px;
 }
 
 .form-control,
@@ -130,7 +130,7 @@
 }
 
 /* Fix icon positioning during validation */
-.is-invalid ~ .frnt_ic {
+.is-invalid~.frnt_ic {
   top: 30%;
 }
 
@@ -151,7 +151,7 @@
 
 .phone-wrapper {
   position: relative;
-  height: 48px;
+  height: 40px;
 }
 
 .phone-wrapper .PhoneInput {
@@ -271,4 +271,4 @@
 /* Fix PhoneInput border style when invalid */
 .is-invalid.PhoneInput {
   border-color: #dc3545;
-} 
+}
