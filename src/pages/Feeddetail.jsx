@@ -2336,15 +2336,7 @@ const Feeddetail = (props) => {
                                                             curr.paid_status ===
                                                             true
                                                           }
-                                                          onClick={() => {
-                                                            Payment(
-                                                              +curr?.amount,
-                                                              data?._id,
-                                                              false,
-                                                              0,
-                                                              roomDetails
-                                                            );
-                                                          }}
+                                                          onClick={() => toast.error("Buying is disabled in demo mode. This is curated content and not available for sale") }
                                                         >
                                                           Buy
                                                         </button>
@@ -2430,15 +2422,7 @@ const Feeddetail = (props) => {
                                                   <div className="usr_upld_opts user-btn d-flex align-items-center">
                                                     <button
                                                       className="theme_btn"
-                                                      onClick={() => {
-                                                        Payment(
-                                                          +data?.original_ask_price,
-                                                          data?._id,
-                                                          true,
-                                                          data?.original_ask_price,
-                                                          roomDetails
-                                                        );
-                                                      }}
+                                                      onClick={() => toast.error("Buying is disabled in demo mode. This is curated content and not available for sale") }
                                                     >
                                                       Buy
                                                     </button>

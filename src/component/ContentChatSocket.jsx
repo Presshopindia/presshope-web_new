@@ -14,6 +14,7 @@ import { useDarkMode } from "../context/DarkModeContext";
 import socketServer from "../socket.config";
 import heart from "../assets/images/heart.svg";
 import { successToasterFun } from "./commonFunction";
+import { toast } from "react-toastify";
 
 function ContentChatSocket(props) {
   const [offer_value, setOffer_value] = useState("");
@@ -348,19 +349,7 @@ function ContentChatSocket(props) {
                                   : "theme_btn"
                               }
                               disabled={curr.paid_status === true}
-                              onClick={() => {
-                                Payment(
-                                  +props?.messages?.find(
-                                    (el) =>
-                                      el?.message_type ==
-                                      "Mediahouse_initial_offer"
-                                  )?.initial_offer_price,
-                                  props?.data?._id,
-                                  false,
-                                  0,
-                                  props?.room_details
-                                );
-                              }}
+                              onClick={() => toast.error("Buying is disabled in demo mode. This is curated content and not available for sale") }
                             >
                               Buy
                             </button>
@@ -453,18 +442,7 @@ function ContentChatSocket(props) {
                         <div className="usr_upld_opts user-btn d-flex align-items-center">
                           <button
                             className="theme_btn"
-                            onClick={() => {
-                              Payment(
-                                +props?.data?.original_ask_price,
-                                props?.data?._id,
-                                true,
-                                props?.data?.original_ask_price,
-                                props?.room_details
-                              );
-                            }}
-                            disabled={props?.messages?.find(
-                              (el) => el?.message_type == "PaymentIntent"
-                            )}
+                            onClick={() => toast.error("Buying is disabled in demo mode. This is curated content and not available for sale") }
                           >
                             Buy
                           </button>
