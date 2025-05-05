@@ -112,7 +112,7 @@
 .input-field .frnt_ic {
   position: absolute;
   left: 12px;
-  top: calc(50% - 5px);
+  top: calc(50%);
   transform: translateY(-50%);
   width: 20px;
   height: 20px;
