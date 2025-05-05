@@ -272,3 +272,42 @@
 .is-invalid.PhoneInput {
   border-color: #dc3545;
 }
+
+/* Add styles for select placeholders */
+.MuiSelect-select.MuiSelect-select {
+  color: inherit;
+}
+
+.MuiSelect-select.MuiSelect-select[aria-expanded="false"]:empty + .MuiSelect-select.MuiSelect-select,
+.MuiSelect-select.MuiSelect-select[value=""] {
+  color: #6c757d !important;
+}
+
+/* Fix style for placeholder text in Select components */
+.slct_sign .MuiSelect-select.Mui-disabled {
+  color: #6c757d !important;
+}
+
+.slct_sign .MuiInputBase-input::placeholder {
+  color: #6c757d !important;
+  opacity: 1;
+}
+
+/* Placeholder text styling for empty select */
+.MuiSelect-select[role="button"] {
+  color: inherit;
+}
+
+.MuiSelect-select[role="button"].empty-select {
+  color: #6c757d !important;
+}
+
+/* Target the specific render value text when placeholder is showing */
+.selectPlaceholder {
+  color: inherit;
+}
+
+/* This styles the placeholder text in the Material-UI Select component */
+.MuiSelect-root.MuiSelect-select.placeholder-showing {
+  color: #6c757d !important;
+}

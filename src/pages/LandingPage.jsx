@@ -443,14 +443,9 @@ const LandingPage = () => {
                                 </div>
                               </Accordion.Header>
                               <Accordion.Body>
-                                Similar to Uber, registered publications can now
-                                broadcast multiple tasks for shooting pics,
-                                videos or taking interviews and instantly access
-                                thousands of our registered Hoppers within a 5
-                                mile radius of the task location. On accepting
-                                the task, our Hoppers can shoot and upload
-                                content on the app, and sell it directly to the
-                                publications.
+                              Just like Uber, publications can broadcast tasks to Hoppers within a 5-mile radius — 
+                              whether it’s for photos, videos or interviews. Once accepted, Hoppers capture and 
+                              upload the content via the app, ready to be purchased directly by the publication
                               </Accordion.Body>
                             </Accordion.Item>
                           </div>
@@ -466,14 +461,9 @@ const LandingPage = () => {
                                 </div>
                               </Accordion.Header>
                               <Accordion.Body>
-                                Through PressHop, publications can access live,
-                                periodical reports that help them take more
-                                informed decisions. They can view detailed and
-                                up-to-date reports on content purchased, and
-                                also view LIVE tasks broadcasted to the Hoppers.
-                                Publications can seamlessly keep track of funds
-                                invested by them, pending payments to be made,
-                                manage invoices, and VAT details.
+                              PressHop gives publications access to live, detailed reports for smarter decision-making. 
+                              Track purchased content, view live task activity, manage spend, monitor pending payments, 
+                              and download VAT-compliant invoices — all in one place
                               </Accordion.Body>
                             </Accordion.Item>
                           </div>
@@ -491,14 +481,15 @@ const LandingPage = () => {
                                 </div>
                               </Accordion.Header>
                               <Accordion.Body>
-                                Prior to the content being published on our
-                                marketplace, each content undergoes a mandatory
-                                3 level verification process through the
-                                efficient use of AI tech and our trained human
-                                team members. This verification process is
-                                critical, as it ensures that only authentic and
-                                real content is uploaded on PressHop at all
-                                times.
+                              Strict 3 level - 
+
+                                All content on PressHop undergoes a strict triple-layered verification process before it's made available.
+                                This includes:
+                                  (1) Metadata validation - time and location
+                                  (2) AI moderation - to detect nudity, children images, AI generated content & deepfakes
+                                  (3) Human review - to ensure accuracy and strict verification
+
+                                      Only content that passes all three checks is listed on the platform — giving publishers peace of mind and legal clarity.
                               </Accordion.Body>
                             </Accordion.Item>
                           </div>
@@ -518,10 +509,8 @@ const LandingPage = () => {
                                 </div>
                               </Accordion.Header>
                               <Accordion.Body>
-                                Change from user generated to live, instant feed
-                                - Publications can access a steady flow of
-                                genuine, news-worthy pics, videos, recordings &
-                                scans uploaded by users 24x7 all across London.
+                              Publications get a constant stream of authentic, newsworthy content — photos, videos, audio, and scans — uploaded 24/7 across London.
+                              Easily sort, filter, or search by location, event, or hashtag to find exactly what you need.
                               </Accordion.Body>
                             </Accordion.Item>
                           </div>
@@ -537,11 +526,8 @@ const LandingPage = () => {
                                 </div>
                               </Accordion.Header>
                               <Accordion.Body>
-                                Publications can instantly chat with the Hoppers
-                                on our platform, discuss, negotiate, and buy the
-                                content. Since PressHop is a multi user, multi
-                                office platform, publications can also chat
-                                internally across offices with other team
+                              PressHop is a free, multi-user, multi-office platform that lets publications chat directly with Hoppers to discuss, negotiate, and purchase content.
+                              It also enables seamless internal communication between editorial teams across different offices
                                 members.
                               </Accordion.Body>
                             </Accordion.Item>
@@ -558,16 +544,9 @@ const LandingPage = () => {
                                 </div>
                               </Accordion.Header>
                               <Accordion.Body>
-                                For all content that our publications buy on
-                                PressHop, they can pay the Hoppers directly and
-                                safely through the platform. Payments can be
-                                made by debit /credit cards, bank transfers,
-                                PayPal, and Google Pay, using the Stripe payment
-                                gateway. Once the payment is received, the
-                                PressHop watermark on the content is
-                                automatically removed, allowing the publication
-                                to use the content exclusively or on a shared
-                                basis.
+                              Publications can pay Hoppers directly and securely via Stripe — using cards, 
+                              bank transfer, PayPal or Google Pay. Once payment is complete, the watermark is 
+                              removed and the content is ready for use, whether exclusive or shared.
                               </Accordion.Body>
                             </Accordion.Item>
                           </div>

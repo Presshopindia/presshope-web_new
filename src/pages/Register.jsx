@@ -149,7 +149,7 @@ const Register = () => {
       const response = await Post("mediaHouse/registerCompany", formData);
 
       if (response && response.data) {
-        toast.success("Registration successful! Our team will contact you shortly.");
+        toast.success("You’re on the list! Get ready to change the way you source stories");
         navigate("/landing-page");
       }
 
@@ -191,10 +191,10 @@ const Register = () => {
                 <div className="login_stepsWrap left-pdng">
                   <div className="onboardMain onboardStep">
                     <div className="onboardIntro sign_section border-bottom-0">
-                      <h1 className="mb-4 position-relative">Register now</h1>
+                      <h1 className="mb-4 position-relative">Ready to Hop in? We’ve saved you a seat
+                      </h1>
                       <p className="mb-4">
-                        Join our growing tribe, and connect directly with the people. Please add your company and
-                        employee details to register.
+                      Join the early wave of publishers getting ahead. Sign up for our exclusive waitlist to bag priority access and a cheeky discount — when we launch soon.
                       </p>
                     </div>
 
@@ -283,14 +283,23 @@ const Register = () => {
                             <Form.Group className="form-group">
                               <img src={chair} alt="" />
                               <Select
-                                className="w-100 slct_sign"
+                                className={`w-100 slct_sign ${!formData.department ? 'placeholder-showing' : ''}`}
                                 labelId="department-label"
                                 id="department"
                                 name="department"
-                                value={formData.department}
+                                value={formData.department || ""}
                                 label="Department *"
                                 onChange={handleChange}
                                 error={!!errors.department}
+                                displayEmpty
+                                renderValue={value => {
+                                  return value ? departments.find(dept => dept._id === value)?.name : "Select department";
+                                }}
+                                sx={{
+                                  '& .MuiSelect-select': {
+                                    color: formData.department ? 'inherit' : '#6c757d'
+                                  }
+                                }}
                               >
                                 {departments.map((dept) => (
                                   <MenuItem className="selectPlaceholder" key={dept._id} value={dept._id}>
@@ -305,15 +314,23 @@ const Register = () => {
                             <Form.Group className="form-group">
                               <img src={chair} alt="" />
                               <Select
-                                className="w-100 slct_sign"
-
+                                className={`w-100 slct_sign ${!formData.designation ? 'placeholder-showing' : ''}`}
                                 labelId="designation-label"
                                 id="designation"
                                 name="designation"
-                                value={formData.designation}
+                                value={formData.designation || ""}
                                 label="designation *"
                                 onChange={handleChange}
                                 error={!!errors.designation}
+                                displayEmpty
+                                renderValue={value => {
+                                  return value ? designations.find(design => design._id === value)?.name : "Select designation";
+                                }}
+                                sx={{
+                                  '& .MuiSelect-select': {
+                                    color: formData.designation ? 'inherit' : '#6c757d'
+                                  }
+                                }}
                               >
                                 {designations.map((dept) => (
                                   <MenuItem className="selectPlaceholder" key={dept._id} value={dept._id}>
