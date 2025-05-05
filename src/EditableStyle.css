@@ -163,9 +163,9 @@
 .phone-field {
   height: 48px;
   border-radius: 6px;
-  border: 1px solid #ced4da;
+  border: 1px solid #858585;
   font-size: 16px;
-  padding-left: 75px !important;
+  padding-left: 60px !important;
   width: 100%;
 }
 
@@ -246,7 +246,7 @@
   border: none !important;
   border-radius: 6px !important;
   font-weight: 600 !important;
-  padding: 12px 20px !important;
+  padding: 8px 20px !important;
   transition: all 0.3s ease !important;
 }
 
@@ -264,7 +264,7 @@
 
 .onboardIntro p {
   font-size: 16px;
-  color: #6c757d;
+  /* color: #6c757d; */
   margin-bottom: 30px;
 }
 
@@ -278,7 +278,7 @@
   color: inherit;
 }
 
-.MuiSelect-select.MuiSelect-select[aria-expanded="false"]:empty + .MuiSelect-select.MuiSelect-select,
+.MuiSelect-select.MuiSelect-select[aria-expanded="false"]:empty+.MuiSelect-select.MuiSelect-select,
 .MuiSelect-select.MuiSelect-select[value=""] {
   color: #6c757d !important;
 }

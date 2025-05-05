@@ -18,7 +18,7 @@ import accessCenter from "../assets/images/accessCenter.png";
 import follower from "../assets/images/follower.svg";
 import hash from "../assets/images/hash.svg";
 import chair from "../assets/images/chair.svg";
-
+import location from "../assets/images/location.svg";
 
 import { isValidPhoneNumber } from "react-phone-number-input";
 import "../EditableStyle.css";
@@ -149,7 +149,7 @@ const Register = () => {
       const response = await Post("mediaHouse/registerCompany", formData);
 
       if (response && response.data) {
-        toast.success("You’re on the list! Get ready to change the way you source stories");
+        toast.success("You’re on the list! Get ready to change the way you source stories");
         navigate("/landing-page");
       }
 
@@ -191,16 +191,16 @@ const Register = () => {
                 <div className="login_stepsWrap left-pdng">
                   <div className="onboardMain onboardStep">
                     <div className="onboardIntro sign_section border-bottom-0">
-                      <h1 className="mb-4 position-relative">Ready to Hop in? We’ve saved you a seat
+                      <h1 className="mb-0 position-relative">Ready to Hop in? We’ve saved you a seat
                       </h1>
                       <p className="mb-4">
-                      Join the early wave of publishers getting ahead. Sign up for our exclusive waitlist to bag priority access and a cheeky discount — when we launch soon.
+                        Join the early wave of publishers getting ahead. Sign up for our exclusive waitlist to bag priority access and a cheeky discount — when we launch soon.
                       </p>
                     </div>
 
                     <Col lg="12" className="companyDetails sign_section rw_gp_sml adminDetails officeDetails">
                       {/* <h2 className="section-heading">Company Details</h2> */}
-                      <Form onSubmit={handleSubmit}>
+                      <Form onSubmit={handleSubmit} className="regit-newfrom">
                         <Row className="comp_frm_gap row_gap_20">
                           <Col md="6">
                             <Form.Group className="position-relative mb-0 input-field">
@@ -236,7 +236,7 @@ const Register = () => {
                               <Form.Control
                                 type="text"
                                 className={`rnd grey ${errors.company_name ? "is-invalid" : ""}`}
-                                placeholder="Company name *"
+                                placeholder="Publication  name *"
                                 name="company_name"
                                 value={formData.company_name}
                                 onChange={handleChange}
@@ -246,11 +246,11 @@ const Register = () => {
                           </Col>
                           <Col md="6" className="mb-0">
                             <div className="input-field mb-0">
-                              <img className="frnt_ic" src={hash} alt="company icon" />
+                              <img className="frnt_ic" src={location} alt="company icon" />
                               <Form.Control
                                 type="text"
                                 className={`rnd grey ${errors.company_number ? "is-invalid" : ""}`}
-                                placeholder="Company number *"
+                                placeholder="Post code *"
                                 name="company_number"
                                 value={formData.company_number}
                                 onChange={handleChange}
@@ -258,16 +258,17 @@ const Register = () => {
                               {errors.company_number && <div className="invalid-feedback">{errors.company_number}</div>}
                               {/* <small className="digit-note">Please enter 8 digits</small> */}
                             </div>
+
                           </Col>
 
 
                           <Col md="12">
                             <Form.Group className="position-relative mb-0 input-field">
-                              <img className="frnt_ic" src={website} alt="website icon" />
+                              <img className="frnt_ic" src={location} alt="website icon" />
                               <Form.Control
                                 type="text"
                                 className={`rnd grey ${errors.company_url ? "is-invalid" : ""}`}
-                                placeholder="Company URL"
+                                placeholder="Address"
                                 name="company_url"
                                 value={formData.company_url}
                                 onChange={handleChange}
@@ -375,7 +376,7 @@ const Register = () => {
                         <Button
                           variant=""
                           type="submit"
-                          className="theme-btn custom-ab w-100 sm_btn mt-3"
+                          className="theme-btn custom-ab w-100 sm_btn mt-5"
                         >
                           <span>Register</span>
                         </Button>

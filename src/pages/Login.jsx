@@ -4,7 +4,9 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Typography from "@mui/material/Typography";
-import loginimg from "../assets/images/login-img.png";
+//import loginimg from "../assets/images/login-img.png";
+import loginimg from "../assets/images/forlogin.jpeg";
+
 import { Post } from "../services/user.services";
 import { toast } from "react-toastify";
 import user from "../assets/images/user.svg";
@@ -172,9 +174,9 @@ const Login = () => {
                   <span className="shape yl_sqr pos-abs"></span>
                   {/* <span className="shape rd_crcl pos_abs"></span> */}
                   <div className="px-3 p-3 text-center">
-                    <img src={loginimg} className="rt_bg_img" />
+                    <img src={loginimg} className="rt_bg_img w-100" />
                   </div>
-                  <div className="right_txt">
+                  <div className="right_txt text-center">
                     <h3>
                       The <span className="txt_bld">news won’t wait</span>. Neither should you
                     </h3>

@@ -18528,9 +18528,9 @@ button {
   top: 2%;
   width: 0;
   height: 0;
-  border-top: 20px solid transparent;
-  border-bottom: 33px solid transparent;
-  border-left: 40px solid #10af0c;
+  border-top: 10px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-left: 24px solid #10af0c;
   transform: rotate(198deg);
 }
 

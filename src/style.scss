@@ -5127,9 +5127,9 @@ button {
     top: 2%;
     width: 0;
     height: 0;
-    border-top: 20px solid transparent;
-    border-bottom: 33px solid transparent;
-    border-left: 40px solid #10af0c;
+    border-top: 10px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-left: 22px solid #10af0c;
     transform: rotate(198deg);
   }
 
@@ -10588,6 +10588,10 @@ select.PhoneInputCountrySelect {
     }
   }
 
+  .login-page button {
+    padding: 8px 0px !important;
+  }
+
   .login-page {
     .left-side {
       background-color: $dark-mode-bg !important;
@@ -11006,8 +11010,8 @@ select.PhoneInputCountrySelect {
 }
 
 .signupBigImg {
-  width: 376px;
-  height: 298px;
+  width: 500px;
+  height: 400px;
   object-fit: contain;
   max-width: 100%;
 }
@@ -13104,6 +13108,8 @@ audio {
 .login-page .PhoneInput input.PhoneInputInput {
   border: none;
   height: 39px;
+  padding-left: 0px;
+  outline: none;
 }
 
 .news-w-text {
@@ -13113,4 +13119,34 @@ audio {
 
 .left-side.forposition {
   position: relative;
+}
+
+
+
+.regit-newfrom .input-field .form-control {
+  box-shadow: none !important;
+  outline: none !important;
+  border: 1px solid #858585 !important;
+}
+
+
+.regit-newfrom .form-group legend {
+  display: none;
+}
+
+.onboardStep .regit-newfrom .form-group>.MuiInputBase-root {
+  padding: 10px 16px 10px 0px;
+  height: 40px;
+  border: none;
+}
+
+
+.onboardStep .regit-newfrom .form-group input {
+  border-radius: 8px;
+  border: 1px solid #858585;
+}
+
+.onboardStep .regit-newfrom .form-group fieldset {
+  border: 1px solid #858585 !important;
+  border-radius: 8px;
 }
