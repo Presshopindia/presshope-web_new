@@ -802,12 +802,12 @@ const Header = () => {
                                               return part;
                                             })}
                                         </p>
-                                        {curr?.promo_code_link ? (
+                                        {curr?.content_link ? (
                                           <button
                                             className="notify_clear clear-btn"
                                             onClick={() => {
                                               let promoCode =
-                                                curr?.promo_code_link;
+                                                curr?.content_link;
                                               console.log(
                                                 "Promo Code:",
                                                 promoCode
@@ -917,8 +917,9 @@ const Header = () => {
                       <div className="drpMenu_hdr">
                         <p className="menu_hdng">Menu</p>
                         <MdClose
-                          onClick={() => {
-                            setModalShow(true);
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            document.body.click();
                           }}
                         />
                       </div>

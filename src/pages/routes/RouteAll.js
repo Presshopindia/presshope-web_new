@@ -4,6 +4,7 @@ import Dashboard from "../Dashboard";
 import Content from "../Content";
 import Login from "../Login";
 import Signup from "../Signup";
+import Register from "../Register";
 // import Eror404 from '../404eror';
 // import Feed from '../Feed';
 import AllContents from "../AllContents";
@@ -101,6 +102,7 @@ function RouteAll() {
       <Routes>
         <Route path="*" element={<Navigate to="/login" />} />
         <Route exact path="/login" element={token ? <Navigate to="/dashboard/exclusive" /> : <Login />} />
+        <Route exact path="/register" element={token ? <Navigate to="/dashboard/exclusive" /> : <Register />} />
 
         <Route path="/landing-page" element={<LandingPage />} />
         <Route path="/onboard" element={<Onboard />} />

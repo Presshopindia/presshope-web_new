@@ -18,6 +18,7 @@ const HeaderN = ({ scrollToDiv }) => {
   const showSidebar = () => setSidebar(!sidebar);
   const location = useLocation();
   const navigate = useNavigate();
+  const isRegisterPage = location.pathname === "/register";
 
   function handleScrollToDiv(div) {
     if (location.pathname == "/login") {
@@ -101,20 +102,11 @@ const HeaderN = ({ scrollToDiv }) => {
                   </li>
                   <li className="nav-text">
                     <Link
-                      to={"/login"}
+                      to={isRegisterPage ? "/login" : "/register"}
                       className="authbtns"
                       style={{ fontFamily: "AirbnbBold" }}
                     >
-                      <span>Log in</span>
-                    </Link>
-                  </li>
-                  <li className="nav-text">
-                    <Link
-                      to={"/onboard"}
-                      className="authbtns"
-                      style={{ fontFamily: "AirbnbBold" }}
-                    >
-                      <span>Onboard</span>
+                      <span>{isRegisterPage ? "Login" : "Register"}</span>
                     </Link>
                   </li>
                 </ul>
@@ -163,18 +155,11 @@ const HeaderN = ({ scrollToDiv }) => {
                   FAQs
                 </NavLink>
                 <NavLink
-                  to={"/login"}
+                  to={isRegisterPage ? "/login" : "/register"}
                   className="authbtns header_btn"
                   style={{ fontFamily: "AirbnbBold" }}
                 >
-                  <span className="headAuth">Log in</span>
-                </NavLink>
-                <NavLink
-                  to={"/onboard"}
-                  className="authbtns header_btn"
-                  style={{ fontFamily: "AirbnbBold" }}
-                >
-                  <span className="headAuth">Onboard</span>
+                  <span className="headAuth">{isRegisterPage ? "Login" : "Register"}</span>
                 </NavLink>
               </Nav>
             </Navbar.Collapse>

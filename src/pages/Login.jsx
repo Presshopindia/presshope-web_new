@@ -52,38 +52,22 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const auth = getAuth();
       const obj = {
         email: credentials.email,
-        password: credentials.password,
+        password: "test@123456",
+        userType: "demo"
       };
 
       const resp = await Post("auth/loginMediaHouse", obj);
-      // return
       if (resp) {
         setLoading(false);
         navigate("/dashboard/exclusive");
-        // toast.success("Login Successfully")
-
         localStorage.setItem("token", resp.data.token);
         localStorage.setItem("id", resp.data.user._id);
         localStorage.setItem("user", JSON.stringify(resp.data.user));
 
         window.location.reload();
 
-        signInWithEmailAndPassword(
-          auth,
-          credentials.email,
-          credentials.password
-        )
-          .then((userCredential) => {
-            // Signed in successfully
-            const user = userCredential.user;
-          })
-
-          .catch((error) => {
-            // Handle errors here
-          });
       }
     } catch (error) {
       if (error?.response?.data?.msg) {
@@ -94,8 +78,6 @@ const Login = () => {
       setLoading(false);
     }
   };
-
-  // console.log(localStorage.getItem("DeviceToken"), "token")
 
   const AddFirebaseMessaging = async () => {
     const formdata = new FormData();
@@ -113,16 +95,10 @@ const Login = () => {
   };
   useEffect(() => {
     window.scrollTo(0, 0);
-    // socket.disconnect();
   }, []);
-
-  // const scrollToDiv = (divName) => {
-  //   targetRefs[divName].current.scrollIntoView({ behavior: "smooth" });
-  // };
 
   return (
     <>
-      {/* <HeaderN scrollToDiv={scrollToDiv}/> */}
       <LoginHeader />
       {loading && <Loader />}
       <div className="page-wrap login-page p-0">
@@ -134,43 +110,29 @@ const Login = () => {
                   <div className='onboardMain'>
 
                     <div className="onboardIntro sign_section border-bottom-0">
-                      <h1 className="mb-0 position-relative">Welcome{fullName ? `, ${fullName}` : null}
-                        {
-                          fullName ? (<Badge className='admin_badge' text="dark">
-                            Admin
-                          </Badge>
-                        ) : null
-                      }
-                      </h1>
+                      <h1 className="mb-0 position-relative">The Scoop’s Waiting</h1>
 
                       <div className="onboardStep b_border top_txt">
-                        <p>Congratulations, your onboarding process is now fully
-                          complete. You are now part of our growing publications
-                          community around the UK, and soon the rest of the World.
+                        <p>
+                        Welcome to PressHop — the home of real stories, told in real time.
+
+
                         </p>
                         <p>
-                          Please enter your email and password below to gain
-                          access onto our marketplace platform. If you have
-                          forgotten your password, please{" "}
-                          <Link to="/User-Forget-Password" className="link">
-                            click here
-                          </Link>{" "}
-                          and we will help create a new password for you. This
-                          happens to most of us, and is absolutely fine.
+                        Pop in your official email id below to jump into the demo and explore what the buzz is all about. 
+
+
                         </p>
                         <p>
-                          If you face any trouble logging in, please{" "}
-                          <Link to="/contact-us" className="link">
-                            contact
-                          </Link>{" "}
-                          our helpful team members who will be happy to assist. See
-                          you on the other side. Cheers!
+                          This access lasts for 5 days only.
+                          Feel free to share it with your colleagues while it’s active.
+                          Need more time? Just drop us a line at hello@presshop.co.uk and we’ll gladly sort you out with a fresh link.
                         </p>
                       </div>
                     </div>
                     <Col lg="12">
                       <Form>
-                        <div className="inputs_wrap d-flex justify-content-between log_inputs">
+                        <div className="inputs_wrap d-flex justify-content-between log_inputs mb-4">
                           <Form.Group
                             className="position-relative"
                             controlId="formBasicEmail"
@@ -182,90 +144,23 @@ const Login = () => {
                               required
                               autoComplete="off"
                               className="rnd grey"
-                              placeholder="Enter registered email id *"
+                              placeholder="Enter your email id *"
                               value={credentials.email}
                               name="email"
                               onChange={Credentials}
                             />
                           </Form.Group>
-                          <Form.Group
-                            className="position-relative"
-                            controlId="formBasicPassword"
-                          >
-                            <img src={lock} className="frnt_ic" alt="" />
-                            <Form.Control
-                              type={!visibility ? "password" : "text"}
-                              required
-                              className="rnd grey"
-                              autoComplete="off"
-                              placeholder="Enter password *"
-                              value={credentials.password}
-                              name="password"
-                              onChange={Credentials}
-                            />
-                            {!visibility && (
-                              <div
-                                color="#000"
-                                className="pass_ic_wrap"
-                                onClick={() => {
-                                  setVisibility(true);
-                                }}
-                              >
-                                <BsEyeSlash />
-                              </div>
-                            )}
-                            {visibility && (
-                              <div
-                                color="#000"
-                                className="pass_ic_wrap"
-                                onClick={() => {
-                                  setVisibility(false);
-                                }}
-                              >
-                                <BsEye />
-                              </div>
-                            )}
-                          </Form.Group>
-
-                          {/* <Form.Control type="password" required className="rnd grey" placeholder="Password" value={credentials.password} name='password' onChange={Credentials} /> */}
-
-                          {/* <Form>
-                                                    <div className="inputs_wrap d-flex justify-content-between log_inputs">
-                                                        <Form.Group className="position-relative" controlId="formBasicEmail">
-                                                            <img className="frnt_ic" src={user} alt="user icon" />
-                                                            <Form.Control type="email" className="rnd grey" placeholder="Enter email" />
-                                                        </Form.Group>
-                                                        <Form.Group className="position-relative" controlId="formBasicPassword">
-                                                            <img src={lock} className="frnt_ic" alt="" />
-                                                            <Form.Control type="password" className="rnd grey" placeholder="Password" />
-                                                            <img className='view_pass' src={eye} alt="" />
-                                            </Form.Group> */}
                         </div>
-                        <Form.Group
-                          className="mb-4 mt-1 d-flex justify-content-end"
-                          controlId="formBasicCheckbox"
-                        >
-                          <Link to={"/User-Forget-Password"} className="link">
-                            {" "}
-                            Forgot Password?
-                          </Link>
-                        </Form.Group>
                         <Button
                           variant=""
-                          className="theme-btn custom-ab mb-4 w-100 sm_btn"
+                          className="theme-btn custom-ab w-100 sm_btn"
                           onClick={async (e) => {
                             await Submit(e);
                             await AddFirebaseMessaging();
                           }}
                         >
-                          <span>Log In</span>
+                          <span>Log in</span>
                         </Button>
-                        <Form.Group
-                          className="mb-4 mt-0 d-flex justify-content-end sign_link_wrp"
-                          controlId="formBasicCheckbox"
-                        >
-                          <Link to={"/onboard"} className="link"> New User?</Link>
-                        </Form.Group>
                       </Form>
                     </Col>
                   </div>
@@ -281,8 +176,8 @@ const Login = () => {
                   </div>
                   <div className="right_txt">
                     <p>
-                      It's <span className="txt_bld">action</span> time, let's
-                      dive straight in
+                    *The news won’t wait. Neither should you
+                      
                     </p>
                   </div>
                 </div>

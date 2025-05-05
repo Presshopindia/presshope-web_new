@@ -30,8 +30,9 @@ const PrivateRoute = (props) => {
                          Please sign in to continue!
                     </Modal.Body>
                     <Button variant="primary" onClick={() => {
+                         localStorage.clear()
+                         window.location.href = "/login"
                          handleClose()
-                         navigate("login")
                     }}
                     >
                          Ok

@@ -176,11 +176,7 @@ const UploadedContentDetails = (props) => {
   // Add to basket-
   const AddToBasket = async (element) => {
     try {
-      // setData({
-      //   ...data,
-      //   basket_status: data?.basket_status == "true" ? "false" : "true",
-      // });
-
+      setLoading(true);
       let object = {
         content_id: selectedItems,
         type: "task",
@@ -195,8 +191,12 @@ const UploadedContentDetails = (props) => {
       const res = await Post(`mediaHouse/addToBasket`, object);
       if (res) {
         getCountOfBasketItems();
+        setLoading(false);
+        successToasterFun("Content added to Basket");
       }
-    } catch (error) { }
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   const RatingNReview = (curr) => {
@@ -968,11 +968,6 @@ const UploadedContentDetails = (props) => {
                                       <video
                                         controls
                                         className="slider-vddo"
-                                        // src={
-                                        //   process.env
-                                        //     .REACT_APP_UPLOADED_CONTENT +
-                                        //   curr?.media
-                                        // }
                                         src={process.env.REACT_APP_UPLOADED_CONTENT + curr?.imageAndVideo}
                                       />
                                     ) : null}
@@ -1157,7 +1152,7 @@ const UploadedContentDetails = (props) => {
 
                               <div className="add-to-basket-btn">
                                 <button
-                                  onClick={() => AddToBasket(data?.[0], "task")}
+                                  onClick={() => navigate("/basket")}
                                   className="red-btn"
                                 >
                                   Go to Basket
