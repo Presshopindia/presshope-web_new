@@ -41,6 +41,7 @@ import {
   formatAmountInMillion,
   successToasterFun,
 } from "../component/commonFunction";
+import { toast } from "react-toastify";
 
 const AutoInvoice = () => {
   const { id } = useParams();
@@ -920,7 +921,7 @@ const AutoInvoice = () => {
                 <Button
                   variant=""
                   className="theme-btn custom-ab mb-4 mt-2 w-100 sm_btn"
-                  onClick={() => paymentintents(data)}
+                  onClick={() => toast.error("Buying is disabled in demo mode. This is curated content and not available for sale") }
                 >
                   <span>
                     Pay £

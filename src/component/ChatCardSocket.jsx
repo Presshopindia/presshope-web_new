@@ -41,6 +41,7 @@ import { Rating } from "react-simple-star-rating";
 import { UserDetails } from "./Utils";
 import { addVat, contentUploadedMsgInTaskChat, formatAmountInMillion } from "./commonFunction";
 import socketServer from "../socket.config";
+import { toast } from "react-toastify";
 
 function ChatCardSocket(props) {
   const User = UserDetails;
@@ -530,17 +531,7 @@ function ChatCardSocket(props) {
                               </button>
                               <button
                                 className={curr?.media?.filter((el) => el.paid_status)?.length > 0 ? "light-gray-bg txt_bld" : "theme_btn"}
-                                onClick={() => {
-                                  if (taskExpireDiff >= 1) {
-                                    successToasterFun("This task has been expired");
-                                  } else {
-                                    if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
-                                      return;
-                                    } else {
-                                      stripePayment(curr);
-                                    }
-                                  }
-                                }}
+                                onClick={() => toast.error("Buying is disabled in demo mode. This is curated content and not available for sale") }
                               >
                                 Buy
                               </button>

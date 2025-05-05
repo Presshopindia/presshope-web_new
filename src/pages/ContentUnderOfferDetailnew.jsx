@@ -754,7 +754,7 @@ const ContentunderofferdetailNew = () => {
                                 <Col md={9}>
                                   <div className="feed_dtl_msgs">
                                     <div className="externalText">
-                                      <h6>Welcome Ritesh. Please click the 'Offerssss' button to make an offer, or simply click 'Buy' to purchase the content
+                                      <h6>Welcome Ritesh. Please click the 'Offer' button to make an offer, or simply click 'Buy' to purchase the content
                                       </h6>
                                     </div>
                                     {/* <div className="crd position-relative">
