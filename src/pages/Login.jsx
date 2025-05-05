@@ -167,7 +167,7 @@ const Login = () => {
                 </div>
               </Col>
               <Col lg="6" className="">
-                <div className="left-side">
+                <div className="left-side forposition">
                   <span className="shape gr_tri pos_abs"></span>
                   <span className="shape yl_sqr pos-abs"></span>
                   <span className="shape rd_crcl pos_abs"></span>
