@@ -110,7 +110,7 @@ const Login = () => {
                   <div className='onboardMain'>
 
                     <div className="onboardIntro sign_section border-bottom-0">
-                      <h1 className="mb-0 position-relative">The Scoop’s Waiting</h1>
+                      <h1 className="mb-0 position-relative">Hop right in - the Scoop's waiting</h1>
 
                       <div className="onboardStep b_border top_txt">
                         <p>
@@ -170,14 +170,14 @@ const Login = () => {
                 <div className="left-side forposition">
                   <span className="shape gr_tri pos_abs"></span>
                   <span className="shape yl_sqr pos-abs"></span>
-                  <span className="shape rd_crcl pos_abs"></span>
+                  {/* <span className="shape rd_crcl pos_abs"></span> */}
                   <div className="px-3 p-3 text-center">
                     <img src={loginimg} className="rt_bg_img" />
                   </div>
                   <div className="right_txt">
-                    <h2>
-                      *The <span className="txt_bld">news won’t</span> wait. Neither should you
-                    </h2>
+                    <h3>
+                      The <span className="txt_bld">news won’t wait</span>. Neither should you
+                    </h3>
                   </div>
                 </div>
               </Col>
