@@ -174,7 +174,7 @@ const Login = () => {
                     </div>
                     <Col lg="12">
                       <Form>
-                        <div className="inputs_wrap d-flex justify-content-between log_inputs mb-4">
+                        <div className="inputs_wrap d-flex justify-content-between log_inputs mb-6">
                           <Form.Group
                             className="position-relative"
                             controlId="formBasicEmail"
