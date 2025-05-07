@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -19,7 +19,7 @@ import follower from "../assets/images/follower.svg";
 import hash from "../assets/images/hash.svg";
 import chair from "../assets/images/chair.svg";
 import location from "../assets/images/location.svg";
-
+import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import "../EditableStyle.css";
 import {
@@ -35,17 +35,89 @@ const Register = () => {
   const [errors, setErrors] = useState({});
   const [departments, setDepartments] = useState([]);
   const [designations, setDesignations] = useState([]);
+  const searchBoxRefPostalCode = useRef(null);
+  const [showPostalCodePopUp, setPostalCodePopUp] = useState(false);
+  
+  // Load Google Maps API
+  const libraries = ["places"];
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    libraries,
+  });
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
-    company_name: "",
-    company_number: "",
-    company_url: "",
+    publication_name: "",
     department: "",
     designation: "",
     email: "",
-    phone: ""
+    phone: "",
+    address: {
+      country: "",
+      city: "",
+      pincode: "",
+      complete_address: "",
+    }
   });
+  
+  const handlePostalCodePopUp = () => {
+    setPostalCodePopUp(true);
+  };
+  
+  // Google map address for postal code
+  const onMapLoadPostalCode = (index) => {
+    const searchBox = new window.google.maps.places.SearchBox(
+      searchBoxRefPostalCode.current
+    );
+    searchBox.addListener("places_changed", () => {
+      const places = searchBox.getPlaces();
+      if (places.length === 0) {
+        return;
+      }
+      
+      const place = places[0];
+      
+      if (!place.geometry || !place.geometry.location) {
+        return;
+      }
+      
+      let city = "";
+      let postcode = "";
+      let country = "";
+      
+      // Extract address components
+      for (const component of place.address_components) {
+        const componentType = component.types[0];
+        
+        if (componentType === "postal_code") {
+          postcode = component.long_name;
+        }
+        
+        if (componentType === "locality" || componentType === "postal_town") {
+          city = component.long_name;
+        }
+        
+        if (componentType === "country") {
+          country = component.long_name;
+        }
+      }
+      
+      // Update the form data with the address information
+      setFormData({
+        ...formData,
+        address: {
+          ...formData.address,
+          city: city,
+          pincode: postcode,
+          country: country,
+          complete_address: place.formatted_address,
+        }
+      });
+      
+      // Close the popup after selection
+      setPostalCodePopUp(false);
+    });
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -109,10 +181,11 @@ const Register = () => {
     const newErrors = {};
     if (!formData.first_name.trim()) newErrors.first_name = "First name is required";
     if (!formData.last_name.trim()) newErrors.last_name = "Last name is required";
-    if (!formData.company_name.trim()) newErrors.company_name = "Company name is required";
-    if (!formData.company_number.trim()) newErrors.company_number = "Company number is required";
+    if (!formData.publication_name.trim()) newErrors.publication_name = "Publication name is required";
     if (!formData.department) newErrors.department = "Department is required";
     if (!formData.designation) newErrors.designation = "Designation is required";
+    if (!formData.address.pincode) newErrors.post_code = "Post code is required";
+    if (!formData.address.complete_address) newErrors.complete_address = "Full address is required";
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
@@ -138,7 +211,7 @@ const Register = () => {
 
     setLoading(true);
     console.log("formData========", formData);
-
+    return
 
     try {
       const obj = {
@@ -235,28 +308,51 @@ const Register = () => {
                               <img className="frnt_ic" src={follower} alt="company icon" />
                               <Form.Control
                                 type="text"
-                                className={`rnd grey ${errors.company_name ? "is-invalid" : ""}`}
+                                className={`rnd grey ${errors.publication_name ? "is-invalid" : ""}`}
                                 placeholder="Publication  name *"
-                                name="company_name"
-                                value={formData.company_name}
+                                name="publication_name"
+                                value={formData.publication_name}
                                 onChange={handleChange}
                               />
-                              {errors.company_name && <div className="invalid-feedback">{errors.company_name}</div>}
+                              {errors.publication_name && <div className="invalid-feedback">{errors.publication_name}</div>}
                             </div>
                           </Col>
                           <Col md="6" className="mb-0">
                             <div className="input-field mb-0">
                               <img className="frnt_ic" src={location} alt="company icon" />
                               <Form.Control
-                                type="text"
-                                className={`rnd grey ${errors.company_number ? "is-invalid" : ""}`}
                                 placeholder="Post code *"
-                                name="company_number"
-                                value={formData.company_number}
-                                onChange={handleChange}
+                                className={`rnd grey ${errors.post_code ? "is-invalid" : ""}`}
+                                type="text"
+                                name="post_code"
+                                onFocus={handlePostalCodePopUp}
+                                onClick={handlePostalCodePopUp}
+                                ref={searchBoxRefPostalCode}
+                                value={formData.address.pincode}
+                                onChange={(e) => {
+                                  setFormData({
+                                    ...formData,
+                                    address: {
+                                      ...formData.address,
+                                      pincode: e.target.value
+                                    }
+                                  });
+                                  if (errors.post_code) {
+                                    setErrors({
+                                      ...errors,
+                                      post_code: ""
+                                    });
+                                  }
+                                }}
                               />
-                              {errors.company_number && <div className="invalid-feedback">{errors.company_number}</div>}
-                              {/* <small className="digit-note">Please enter 8 digits</small> */}
+                              {showPostalCodePopUp && isLoaded && (
+                                <div className="map-popup">
+                                  <GoogleMap
+                                    onLoad={() => onMapLoadPostalCode(0)}
+                                  />
+                                </div>
+                              )}
+                              {errors.post_code && <div className="invalid-feedback">{errors.post_code}</div>}
                             </div>
 
                           </Col>
@@ -267,13 +363,27 @@ const Register = () => {
                               <img className="frnt_ic" src={location} alt="website icon" />
                               <Form.Control
                                 type="text"
-                                className={`rnd grey ${errors.company_url ? "is-invalid" : ""}`}
-                                placeholder="Address"
-                                name="company_url"
-                                value={formData.company_url}
-                                onChange={handleChange}
+                                className={`rnd grey ${errors.complete_address ? "is-invalid" : ""}`}
+                                placeholder="Full Address *"
+                                name="complete_address"
+                                value={formData.address.complete_address}
+                                onChange={(e) => {
+                                  setFormData({
+                                    ...formData,
+                                    address: {
+                                      ...formData.address,
+                                      complete_address: e.target.value
+                                    }
+                                  });
+                                  if (errors.complete_address) {
+                                    setErrors({
+                                      ...errors,
+                                      complete_address: ""
+                                    });
+                                  }
+                                }}
                               />
-                              {errors.company_url && <div className="invalid-feedback">{errors.company_url}</div>}
+                              {errors.complete_address && <div className="invalid-feedback">{errors.complete_address}</div>}
                             </Form.Group>
                           </Col>
                           {/* <Col md="12">

@@ -145,17 +145,17 @@ const LandingPage = () => {
                     News delivered straight to your desktop
                   </p>
                   <p className="landing_cstm_txt">
-                  PressHop is an easy-to-use platform that connects the public
+                  PressHop is an easy-to-use platform that connects the public
                     directly with the press.
                   </p>
                   <p className="landing_cstm_txt cstm_mb">
-                    By using the PressHop App, users (we call them Hoppers) can
+                    By using the PressHop App, users (we call them Hoppers) can
                     shoot pics, videos, etc they see around themselves in their
                     everyday lives, and can sell the content directly to the
                     press at the click of a button. Registered local &
                     international publications, can also broadcast multiple
                     tasks, and instantly reach out to thousands of our
-                    registered Hoppers across the UK to source live content.
+                    registered Hoppers across the UK to source live content.
                   </p>
                   <div className="newsDeliverFeatures">
                     <Row className="m-0">
@@ -182,47 +182,6 @@ const LandingPage = () => {
                       </Col>
                     </Row>
                   </div>
-                  <h6 className="text-center font-bold lndg_join_txt">
-                    Join our 100+ growing tribe
-                  </h6>
-                  <Swiper
-                    className="mySwiper mt-0 logos_swiper"
-                    modules={[Navigation]}
-                    slidesPerView={4}
-                    navigation
-                    // onSlideChange={() => console.log("slide change")}
-                    from={1}
-                    minDistanceForAction={0.1}
-                    controlsProps={{
-                      dotsTouchable: true,
-                      prevPos: "left",
-                      nextPos: "right",
-                      nextTitle: "",
-                      prevTitle: "",
-                      dotsWrapperStyle: {},
-                      nextTitleStyle: {
-                        color: "#AAAAAA",
-                        fontSize: 20,
-                        fontWeight: "500",
-                      },
-                    }}
-                  >
-                    <SwiperSlide>
-                      <img src={dailymail} alt="" />
-                    </SwiperSlide>
-                    <SwiperSlide>
-                      <img src={times} alt="" />
-                    </SwiperSlide>
-                    <SwiperSlide>
-                      <img src={guar} alt="" />
-                    </SwiperSlide>
-                    <SwiperSlide>
-                      <img src={telegraph} alt="" />
-                    </SwiperSlide>
-                    <SwiperSlide>
-                      <img src={guar} alt="" />
-                    </SwiperSlide>
-                  </Swiper>
                   <span className="addtnshape yellowRect"></span>
                 </div>
               </Col>
@@ -245,7 +204,7 @@ const LandingPage = () => {
                   <Row>
                     <Col md={6} className="">
                       <img
-                        className="marketTemp"
+                        className="marketTempLaptop"
                         src={marketPlaceDemo}
                         alt=""
                       />
@@ -314,13 +273,13 @@ const LandingPage = () => {
                     </Col>
                   </Row>
                   <div className="martketActn viewDemo mt-4 text-end">
-                    <Button
+                    {/* <Button
                       className="btn_bld"
                       variant="secondary"
                       onClick={() => navigate("/all-tutorials")}
                     >
                       <BsPlay className="me-1" /> View Demo
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
               </Col>
@@ -405,14 +364,14 @@ const LandingPage = () => {
                     </div>
                   </div>
                   <div className="martketActn mt-4 text-end">
-                    <a
+                    {/* <a
                       href="https://drive.google.com/file/d/1KaGYZh_3jtkicJ3mVxmJ8nnj_ZhHBrD1/view?usp=sharing"
                       download
                     >
                       <Button className="btn_bld" variant="primary">
                         <HiArrowNarrowDown className="me-1" /> Download App
                       </Button>
-                    </a>
+                    </a> */}
                   </div>
                 </div>
               </Col>
@@ -444,8 +403,8 @@ const LandingPage = () => {
                               </Accordion.Header>
                               <Accordion.Body>
                               Just like Uber, publications can broadcast tasks to Hoppers within a 5-mile radius — 
-                              whether it’s for photos, videos or interviews. Once accepted, Hoppers capture and 
-                              upload the content via the app, ready to be purchased directly by the publication
+                              whether it's for photos, videos or interviews. Once accepted, Hoppers capture and 
+                              upload the content via the app, ready to be purchased directly by the publication
                               </Accordion.Body>
                             </Accordion.Item>
                           </div>
@@ -463,7 +422,7 @@ const LandingPage = () => {
                               <Accordion.Body>
                               PressHop gives publications access to live, detailed reports for smarter decision-making. 
                               Track purchased content, view live task activity, manage spend, monitor pending payments, 
-                              and download VAT-compliant invoices — all in one place
+                              and download VAT-compliant invoices — all in one place
                               </Accordion.Body>
                             </Accordion.Item>
                           </div>
@@ -489,7 +448,7 @@ const LandingPage = () => {
                                   (2) AI moderation - to detect nudity, children images, AI generated content & deepfakes
                                   (3) Human review - to ensure accuracy and strict verification
 
-                                      Only content that passes all three checks is listed on the platform — giving publishers peace of mind and legal clarity.
+                                      Only content that passes all three checks is listed on the platform — giving publishers peace of mind and legal clarity.
                               </Accordion.Body>
                             </Accordion.Item>
                           </div>
@@ -510,7 +469,7 @@ const LandingPage = () => {
                               </Accordion.Header>
                               <Accordion.Body>
                               Publications get a constant stream of authentic, newsworthy content — photos, videos, audio, and scans — uploaded 24/7 across London.
-                              Easily sort, filter, or search by location, event, or hashtag to find exactly what you need.
+                              Easily sort, filter, or search by location, event, or hashtag to find exactly what you need.
                               </Accordion.Body>
                             </Accordion.Item>
                           </div>
@@ -527,7 +486,7 @@ const LandingPage = () => {
                               </Accordion.Header>
                               <Accordion.Body>
                               PressHop is a free, multi-user, multi-office platform that lets publications chat directly with Hoppers to discuss, negotiate, and purchase content.
-                              It also enables seamless internal communication between editorial teams across different offices
+                              It also enables seamless internal communication between editorial teams across different offices
                                 members.
                               </Accordion.Body>
                             </Accordion.Item>
@@ -546,7 +505,7 @@ const LandingPage = () => {
                               <Accordion.Body>
                               Publications can pay Hoppers directly and securely via Stripe — using cards, 
                               bank transfer, PayPal or Google Pay. Once payment is complete, the watermark is 
-                              removed and the content is ready for use, whether exclusive or shared.
+                              removed and the content is ready for use, whether exclusive or shared.
                               </Accordion.Body>
                             </Accordion.Item>
                           </div>
@@ -580,12 +539,12 @@ const LandingPage = () => {
                     </div>
                   </div>
                   <div className="contentTaskAction mt-5 text-end">
-                    <a href="/onboard">
+                    {/* <a href="/onboard">
                       <Button variant="primary">
                         <BsCheckSquare className="me-1" />
                         Onboard Now
                       </Button>
-                    </a>
+                    </a> */}
                   </div>
                   <span className="grn_tri pos_abs"></span>
                 </div>
