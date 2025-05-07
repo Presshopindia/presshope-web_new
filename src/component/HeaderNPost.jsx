@@ -110,7 +110,7 @@ const HeaderNPost = ({ scrollToDiv, activeHeader }) => {
                   className="authbtns header_btn"
                   style={{ fontFamily: "AirbnbBold" }}
                 >
-                  <span className="headAuth">Demo</span>
+                  <span className="headAuth">Log in</span>
                 </NavLink>
               </Nav>
             </Navbar.Collapse>

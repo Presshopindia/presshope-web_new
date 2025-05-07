@@ -82,7 +82,7 @@ const HeaderN = ({ scrollToDiv,activeHeader}) => {
                       className="authbtns"
                       style={{ fontFamily: "AirbnbBold" }}
                     >
-                      <span>Demo</span>
+                      <span>Log in</span>
                     </Link>
                   </li>
                   <li className="nav-text">
