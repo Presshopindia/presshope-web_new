@@ -134,7 +134,7 @@ const Login = () => {
                   <div className='onboardMain'>
 
                     <div className="onboardIntro sign_section border-bottom-0">
-                      <h1 className="mb-0 position-relative">Welcome{fullName ? `, ${fullName}` : null}
+                      <h1 className="mb-0 position-relative">Welcome{fullName ? `, ${fullName}` : " to PressHop"}
                         {
                           fullName ? (<Badge className='admin_badge' text="dark">
                             Admin
@@ -144,10 +144,10 @@ const Login = () => {
                       </h1>
 
                       <div className="onboardStep b_border top_txt">
-                        <p>Congratulations, your onboarding process is now fully
+                        {/* <p>Congratulations, your onboarding process is now fully
                           complete. You are now part of our growing publications
                           community around the UK, and soon the rest of the World.
-                        </p>
+                        </p> */}
                         <p>
                           Please enter your email and password below to gain
                           access onto our marketplace platform. If you have

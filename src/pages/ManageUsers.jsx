@@ -630,6 +630,7 @@ const ManageUsers = () => {
                                   </Form.Group>
                                 </Col>
                                 <Col md={3} className="">
+                                {console.log("officeDetail", officeDetails)}
                                   <Form.Group className="mb-4 form-group">
                                     <img src={location} alt="" />
                                     <Form.Control

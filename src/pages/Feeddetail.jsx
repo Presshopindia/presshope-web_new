@@ -873,10 +873,10 @@ const Feeddetail = (props) => {
     ) {
       setTimeout(() => {
         setIsShowBuyMessage(true);
-      }, 11000);
+      }, 2000);
       setTimeout(() => {
         setIsShowOffer(true);
-      }, 21000);
+      }, 3000);
       // setIsShowOffer
     }
   }, [messages]);
@@ -928,50 +928,28 @@ const Feeddetail = (props) => {
     } catch (error) { }
   };
 
-    // Add this function near your other state management functions
-    const handleBasket = (index, section) => {
-      console.log(index, section)
-      if (section === "related") {
-        const allContent = [...content];
-        const updatedContent = allContent.map((ele, indx) => {
-          if (index === indx) {
-            return {
-              ...ele,
-              basket_status: ele.basket_status === "true" ? "false" : "true",
-            };
-          }
-          return ele;
-        });
-        setRelatedContent(updatedContent);
-        
-        // Update the same content in moreContent if it exists there
-        const contentId = content[index]?._id;
-        if (contentId) {
-          const allMoreContent = [...moreContent];
-          const updatedMoreContent = allMoreContent.map((ele) => {
-            if (contentId === ele._id) {
-              return {
-                ...ele,
-                basket_status: ele.basket_status === "true" ? "false" : "true",
-              };
-            }
-            return ele;
-          });
-          setMoreContent(updatedMoreContent);
-          
-          // Also update main data if it's the same content
-          if (contentId === data?._id) {
-            setData({
-              ...data,
-              basket_status: data.basket_status === "true" ? "false" : "true",
-            });
-          }
+  // Add this function near your other state management functions
+  const handleBasket = (index, section) => {
+    console.log(index, section)
+    if (section === "related") {
+      const allContent = [...content];
+      const updatedContent = allContent.map((ele, indx) => {
+        if (index === indx) {
+          return {
+            ...ele,
+            basket_status: ele.basket_status === "true" ? "false" : "true",
+          };
         }
-      } else if (section === "more") {
-        const allContent = [...moreContent];
-        console.log(allContent, "moreContent");
-        const updatedContent = allContent.map((ele, indx) => {
-          if (index === indx) {
+        return ele;
+      });
+      setRelatedContent(updatedContent);
+
+      // Update the same content in moreContent if it exists there
+      const contentId = content[index]?._id;
+      if (contentId) {
+        const allMoreContent = [...moreContent];
+        const updatedMoreContent = allMoreContent.map((ele) => {
+          if (contentId === ele._id) {
             return {
               ...ele,
               basket_status: ele.basket_status === "true" ? "false" : "true",
@@ -979,34 +957,56 @@ const Feeddetail = (props) => {
           }
           return ele;
         });
-        console.log(updatedContent, "updatedContent");
-        setMoreContent(updatedContent);
-        
-        // Update the same content in relatedContent if it exists there
-        const contentId = moreContent[index]?._id;
-        if (contentId) {
-          const allRelatedContent = [...content];
-          const updatedRelatedContent = allRelatedContent.map((ele) => {
-            if (contentId === ele._id) {
-              return {
-                ...ele,
-                basket_status: ele.basket_status === "true" ? "false" : "true",
-              };
-            }
-            return ele;
+        setMoreContent(updatedMoreContent);
+
+        // Also update main data if it's the same content
+        if (contentId === data?._id) {
+          setData({
+            ...data,
+            basket_status: data.basket_status === "true" ? "false" : "true",
           });
-          setRelatedContent(updatedRelatedContent);
-          
-          // Also update main data if it's the same content
-          if (contentId === data?._id) {
-            setData({
-              ...data,
-              basket_status: data.basket_status === "true" ? "false" : "true",
-            });
-          }
         }
       }
-    };
+    } else if (section === "more") {
+      const allContent = [...moreContent];
+      console.log(allContent, "moreContent");
+      const updatedContent = allContent.map((ele, indx) => {
+        if (index === indx) {
+          return {
+            ...ele,
+            basket_status: ele.basket_status === "true" ? "false" : "true",
+          };
+        }
+        return ele;
+      });
+      console.log(updatedContent, "updatedContent");
+      setMoreContent(updatedContent);
+
+      // Update the same content in relatedContent if it exists there
+      const contentId = moreContent[index]?._id;
+      if (contentId) {
+        const allRelatedContent = [...content];
+        const updatedRelatedContent = allRelatedContent.map((ele) => {
+          if (contentId === ele._id) {
+            return {
+              ...ele,
+              basket_status: ele.basket_status === "true" ? "false" : "true",
+            };
+          }
+          return ele;
+        });
+        setRelatedContent(updatedRelatedContent);
+
+        // Also update main data if it's the same content
+        if (contentId === data?._id) {
+          setData({
+            ...data,
+            basket_status: data.basket_status === "true" ? "false" : "true",
+          });
+        }
+      }
+    }
+  };
 
   return (
     <>
@@ -1530,23 +1530,15 @@ const Feeddetail = (props) => {
                                 </div>
                               </div>
                             </div>
+                            {
+                              console.log("messages --------------------->", messages)
+                            }
                             <div className="foot cont-info-actions d-flex gap-5 justify-content-between align-items-center">
                               {messages && messages.length === 0 ? (
                                 data?.sales_prefix ? (
-                                  <Button
-                                    variant={
-                                      data?.sales_prefix ? "" : "secondary"
-                                    }
-                                    className={
-                                      data?.sales_prefix ? "greyBtn" : ""
-                                    }
-                                    onClick={() => {
-                                      setTabSelect("external");
-
-                                    }}
-                                  // disabled={data?.sales_prefix ? true : loading}
-                                  >
-                                    Offer
+                                  <Button className="newbtndesign" variant="secondary">
+                                    <small>Original Price</small>£ 
+                                    <span className={data?.sales_prefix ? "text-decoration-line-through discount-button" : ""}>{formatAmountInMillion(Number(data?.before_discount_value))}</span>
                                   </Button>
                                 ) : (
                                   <Button
@@ -1574,31 +1566,6 @@ const Feeddetail = (props) => {
                                   </Button>
                                 )
                               )
-
-                                //   <Button
-                                //       variant={
-                                //         data?.sales_prefix ? "" : "secondary"
-                                //       }
-                                //       onClick={() => {
-                                //         if (
-                                //           messages[0]?.message_type !==
-                                //           "offer_started"
-                                //         ) {
-                                //           setTabSelect("external");
-                                //           // Start_Offer();
-                                //           // setMessages((old) => [...old]);
-                                //         }
-                                //       }}
-                                //       className={
-                                //         data?.sales_prefix ? "greyBtn" : ""
-                                //       }
-                                //       // disabled={
-                                //       //   data?.sales_prefix ? true : loading
-                                //       // }
-                                //     >
-                                //       Offer
-                                //     </Button>
-                                // ) 
                                 : messages?.length === 1 ? (
                                   <Button
                                     onClick={() => {
@@ -1609,15 +1576,8 @@ const Feeddetail = (props) => {
                                     Offer
                                   </Button>
                                 ) : (
-                                  <Button
-                                    className="offeredPrice_btn bigBtn"
-                                    onClick={() => {
-                                      setTabSelect("external");
-                                    }}
-                                  // disabled={true}
-                                  >
-                                    £
-                                    {Number(
+                                  <Button className="newbtndesign" variant="secondary">
+                                    <small>{messages?.filter((el) => el?.message_type === "decline_mediaHouse_offer")?.length > 0 ? "Offer Rejected" : messages?.filter((el) => el?.message_type === "accept_mediaHouse_offer")?.length > 0 ? "Offer Accepted" : "Offered"}</small>£ {Number(
                                       messages?.find(
                                         (el) =>
                                           el.message_type ===
@@ -1631,6 +1591,7 @@ const Feeddetail = (props) => {
                                   </Button>
                                 )}
 
+                              {/* Auto invoice button */}
                               {(data
                                 ? !data?.purchased_mediahouse.find(
                                   (el) =>
@@ -1644,22 +1605,12 @@ const Feeddetail = (props) => {
                                     JSON.parse(localStorage.getItem("user"))
                                       ?._id
                                 )) && (
-                                  <Link to={`/auto-invoice/${param.id}`}>
-                                    {" "}
-                                    <Button variant="primary">
-                                      £
-                                      {data
-                                        ? data?.ask_price?.toLocaleString(
-                                          "en-US",
-                                          { maximumFractionDigits: 2 }
-                                        ) || 0
-                                        : fav?.content_id?.ask_price?.toLocaleString(
-                                          "en-US",
-                                          { maximumFractionDigits: 2 }
-                                        ) || 0}
-                                    </Button>
-                                  </Link>
+                                  <Button onClick={() => navigate(`/auto-invoice/${param.id}`)} variant="primary newbtndesign">
+                                    <small>{data?.sales_prefix ? "Discounted Price" : "Buy"}</small>£ {data?.sales_prefix ? formatAmountInMillion(Number(data?.ask_price)) : messages?.find((el) => el?.message_type === "accept_mediaHouse_offer")?.amount ? formatAmountInMillion(Number(messages?.find((el) => el?.message_type === "accept_mediaHouse_offer")?.amount)) : formatAmountInMillion(Number(data?.ask_price ?? 0))}
+                                  </Button>
                                 )}
+
+                              {/* Paid */}
                               {(data
                                 ? data?.purchased_mediahouse.find(
                                   (el) =>
@@ -1678,20 +1629,6 @@ const Feeddetail = (props) => {
                                     <Button className="greyBtn">Paid</Button>
                                   </Link>
                                 )}
-                                {/* Sandeep work */}
-                              {/* <Button
-                                className="newbtndesign" variant="secondary"
-
-                              ><small>Offered</small>
-                                £ 100
-                              </Button>
-                              <Button
-
-                                variant="primary newbtndesign"
-                              >
-                                <small>Buy</small>
-                                £ 100
-                              </Button> */}
                             </div>
                           </div>
                         </CardContent>

@@ -524,6 +524,10 @@ const Signup = () => {
 
           newOffice[index] = {
             ...newOffice[index],
+            address: {
+              ...newOffice[index].address,
+              pincode: name,
+            },
             post_code: name,
           };
 
