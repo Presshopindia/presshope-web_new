@@ -2625,8 +2625,8 @@ const Feeddetail = (props) => {
                                                             features.includes(
                                                               "Experience"
                                                             )
-                                                            ? "selected clickable"
-                                                            : "clickable"
+                                                            ? "clickable"
+                                                            : "selected clickable"
                                                         }
                                                       >
                                                         Experience
@@ -2650,8 +2650,8 @@ const Feeddetail = (props) => {
                                                             features.includes(
                                                               "Easy to use"
                                                             )
-                                                            ? "selected clickable"
-                                                            : "clickable"
+                                                            ? "clickable"
+                                                            : "selected clickable"
                                                         }
                                                       >
                                                         Easy to use
@@ -2675,8 +2675,8 @@ const Feeddetail = (props) => {
                                                             features.includes(
                                                               "Connectivity with Hoppers"
                                                             )
-                                                            ? "selected clickable"
-                                                            : "clickable"
+                                                            ? "clickable"
+                                                            : "selected clickable"
                                                         }
                                                       >
                                                         Connectivity with
@@ -2701,8 +2701,8 @@ const Feeddetail = (props) => {
                                                             features.includes(
                                                               "Pricing"
                                                             )
-                                                            ? "selected clickable"
-                                                            : "clickable"
+                                                            ? "clickable"
+                                                            : "selected clickable"
                                                         }
                                                       >
                                                         Pricing
@@ -2726,8 +2726,8 @@ const Feeddetail = (props) => {
                                                             features.includes(
                                                               "Secure payment"
                                                             )
-                                                            ? "selected clickable"
-                                                            : "clickable"
+                                                            ? "clickable"
+                                                            : "selected clickable"
                                                         }
                                                       >
                                                         Secure payment
@@ -2751,8 +2751,8 @@ const Feeddetail = (props) => {
                                                             features.includes(
                                                               "Support"
                                                             )
-                                                            ? "selected clickable"
-                                                            : "clickable"
+                                                            ? "clickable"
+                                                            : "selected clickable"
                                                         }
                                                       >
                                                         Support
@@ -2875,7 +2875,7 @@ const Feeddetail = (props) => {
                                                     Congrats, you’ve
                                                     successfully purchased{" "}
                                                     {contentPurchasedInContentChat(data?.content)}{" "}
-                                                    content for{" "}
+                                                     for{" "}
                                                     <a className="link">
                                                       £{formatAmountInMillion(Number(curr?.amount) || 0)} (Inc VAT)
                                                     </a>
