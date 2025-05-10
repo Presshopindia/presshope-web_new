@@ -17,6 +17,7 @@ import mailImg from "../assets/images/mail.svg";
 import officeIcon from "../assets/images/office.svg";
 import userIcon from "../assets/images/user.svg";
 import accessCenter from "../assets/images/accessCenter.png";
+import newUserBg from "../assets/images/new_user_bg.svg";
 import addPic from "../assets/images/add-square.svg";
 import { Get, Post } from "../services/user.services";
 import { toast } from "react-toastify";
@@ -57,7 +58,7 @@ const UserOnboadingRequest = () => {
     designation_id: "",
     department_id: "",
     phone: "",
-    country_code: "+44",
+    country_code: "",
     profile_image: "",
     company_number: "",
     company_vat: "",
@@ -122,15 +123,6 @@ const UserOnboadingRequest = () => {
       });
     }
   };
-
-  function getCountryCodeFromCallingCode(callingCode) {
-    try {
-      const phoneNumber = parsePhoneNumber(`${callingCode}`);
-      return phoneNumber?.country;
-    } catch (error) {
-      return
-    }
-  }
 
   const getDesignation = async () => {
     const list = await Get(`mediaHouse/getCategoryType?type=designation`);
@@ -217,6 +209,12 @@ const UserOnboadingRequest = () => {
       setLoading(false);
     }
   };
+
+    // Phone input ref-
+    const phoneInputRef = useRef(null);
+    const handleCountryCodeChange = (e) => {
+      phoneInputRef.current?.focus();
+    };
 
   useEffect(() => {
     getDesignation();
@@ -321,10 +319,10 @@ const UserOnboadingRequest = () => {
                     <Col lg="6" className="pos_stick position-relative">
                       <div className="right-side position-relative">
                         <div className="left-side text-center news-img">
-                          <img src={accessCenter} alt="" />
+                          <img src={newUserBg} alt="" />
                           <h2>
-                            Let's start delivering{" "}
-                            <span className="txt_bld">news</span>
+                            Building {" "}
+                            <span className="txt_bld">our tribe together</span> { " "} one step at a time
                           </h2>
                         </div>
                       </div>
@@ -704,7 +702,7 @@ const UserOnboadingRequest = () => {
                                             }))
                                             : ""
                                         }
-                                        ref={phoneInputRef2}
+                                        ref={phoneInputRef}
                                       />
                                       <PhoneInput
                                         className="f_1 cntry_code p_2"
@@ -712,13 +710,13 @@ const UserOnboadingRequest = () => {
                                         countryCallingCodeEditable={true}
                                         required
                                         name="country_code"
-                                        value={details?.country_code}
-                                        defaultCountry={`${getCountryCodeFromCallingCode(details?.country_code + details?.phone) || "IN"}`}
+                                        value={details?.country_code || ""}
                                         onChange={(e) => {
                                           setDetails((pre) => ({
                                             ...pre,
                                             country_code: e,
                                           }));
+                                          handleCountryCodeChange(e);
                                         }}
                                       />
                                     </div>

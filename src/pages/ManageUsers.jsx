@@ -107,7 +107,7 @@ const ManageUsers = () => {
           setOfficeDetails(list.data.data[index]);
           setUserDetails((prev) => ({
             ...prev,
-            full_name: list.data.data[index].name,
+            full_name: list.data.data[index]?.name,
             type: list.data.data[index].office_type_id?._id,
             address: list.data.data[index].address.complete_address,
             pincode: list.data.data[index].address.pincode,
