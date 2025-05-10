@@ -23,6 +23,7 @@ const Login = () => {
   const queryParams = new URLSearchParams(location.search);
   const email = queryParams.get("email") || "";
   const fullName = queryParams.get("fullName") || "";
+  const type = atob(queryParams.get("type")) || "";
 
   const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState({
@@ -137,7 +138,7 @@ const Login = () => {
                       <h1 className="mb-0 position-relative">Welcome{fullName ? `, ${fullName}` : " to PressHop"}
                         {
                           fullName ? (<Badge className='admin_badge' text="dark">
-                            Admin
+                            {type === "user" ? "User" : "Admin"}
                           </Badge>
                         ) : null
                       }
@@ -226,20 +227,6 @@ const Login = () => {
                               </div>
                             )}
                           </Form.Group>
-
-                          {/* <Form.Control type="password" required className="rnd grey" placeholder="Password" value={credentials.password} name='password' onChange={Credentials} /> */}
-
-                          {/* <Form>
-                                                    <div className="inputs_wrap d-flex justify-content-between log_inputs">
-                                                        <Form.Group className="position-relative" controlId="formBasicEmail">
-                                                            <img className="frnt_ic" src={user} alt="user icon" />
-                                                            <Form.Control type="email" className="rnd grey" placeholder="Enter email" />
-                                                        </Form.Group>
-                                                        <Form.Group className="position-relative" controlId="formBasicPassword">
-                                                            <img src={lock} className="frnt_ic" alt="" />
-                                                            <Form.Control type="password" className="rnd grey" placeholder="Password" />
-                                                            <img className='view_pass' src={eye} alt="" />
-                                            </Form.Group> */}
                         </div>
                         <Form.Group
                           className="mb-4 mt-1 d-flex justify-content-end"

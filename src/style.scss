@@ -1363,6 +1363,15 @@ button.round {
   background: $bg-grey;
 }
 
+.invite-user-disable-field {
+  background-color: $bg-grey !important;
+  color: $bg-color-dark !important;
+}
+
+.country_code_container {
+  background: transparent !important;
+}
+
 .invite-user-disable-field:disabled {
   background-color: $bg-grey !important;
   color: $bg-color-dark !important;
@@ -13102,4 +13111,14 @@ audio {
   display: flex;
   align-items: flex-start;
   gap: 2px;
+}
+
+.pb-30 {
+  padding-bottom: 30px !important;
+}
+
+.txt-success-link a {
+  color: #ec4e54 !important;
+  font-weight: 900;
+  letter-spacing: 0.2px;
 }

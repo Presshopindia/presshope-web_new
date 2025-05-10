@@ -45,11 +45,11 @@ const Success = () => {
                     <div className="onboardIntro sign_section border-bottom-0">
                       <h1 className="mb-0 position-relative">Hi {AdminDetails?.AdminName ? AdminDetails?.AdminName : ""}
                         <Badge className='admin_badge' text="dark">
-                          Admin
+                          {AdminDetails?.AdminEmail ? "Admin" : "User"}
                         </Badge>{' '}</h1>
 
                       <div className="onboardStep b_border top_txt">
-                        <p>Thank you for completing your onboarding as an administrator with <span className='txt-success'>PressHop.</span> Please check your official inbox for our verification email sent on <span className='txt-success-link'><Link>{AdminDetails?.AdminEmail ? AdminDetails?.AdminEmail : ""}.</Link></span></p>
+                        <p>Thank you for completing your onboarding {AdminDetails?.AdminEmail ? " as an administrator " : ""} with <span className='txt-success'>PressHop.</span> Please check your official inbox for our verification email sent on <span className='txt-success-link'><Link>{AdminDetails?.AdminEmail ? AdminDetails?.AdminEmail : ""}.</Link></span></p>
                         <p>If you still haven't received our activation email, please <span className='txt-success-link'><Link to={"/all-tutorials"}>click here</Link></span> to resend another mail, if you continue facing any further problems, please contact us, and we will take care of this right away for you.</p>
                         <p>Meanwhile, you can view our <span className='txt-success-link'><Link to={"/all-tutorials"}>online tutorials</Link></span> to experience the amazing features of our marketplace, or check out our <span className='txt-success-link'><Link to={"/faq-post"}>FAQs</Link></span> for any questions that you may have. Additionally, you can send an <span className='txt-success-link'><Link to={"mailto:presshop@mailinator.com"}>email</Link></span>  if you have any questions. We are available 24x7 to assist. Cheers!</p>
                       </div>
@@ -88,18 +88,22 @@ const Success = () => {
                         <Link className="view-all" to={'/all-tutorials'}> View all <BsArrowRight className='text-danger ms-1' /> </Link>
                       </div>
                     </Col>
-                    <Col lg="12">
-                      <div className='dashCard-heading'>
-                        <p><span className='txt-success'>You're in control!</span> New users need your invite to join <span className='txt-success'>PressHop. </span>Send an activitation link now and build your team!</p>
-                        <Button
-                          variant=""
-                          className="theme-btn custom-ab mb-4 w-100 sm_btn"
-                          onClick={() => setShowInviteUserModal(true)}
-                        >
-                          <span>Invite New Users</span>
-                        </Button>
-                      </div>
-                    </Col>
+                    {
+                      AdminDetails?.AdminEmail && (
+                        <Col lg="12">
+                          <div className='dashCard-heading'>
+                            <p><span className='txt-success'>You're in control!</span> New users need your invite to join <span className='txt-success'>PressHop. </span>Send an activitation link now and build your team!</p>
+                            <Button
+                              variant=""
+                              className="theme-btn custom-ab mb-4 w-100 sm_btn"
+                              onClick={() => setShowInviteUserModal(true)}
+                            >
+                              <span>Invite New Users</span>
+                            </Button>
+                          </div>
+                        </Col>
+                      )
+                    }
                   </div>
                 </div>
               </Col>
