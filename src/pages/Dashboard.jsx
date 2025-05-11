@@ -58,8 +58,6 @@ const Dashboard = () => {
   const [rat_count, setRatCount] = useState();
   const [recentUploaded, setRecentUploaded] = useState();
   const [pub_content, setPub_Content] = useState([]);
-  const [current_chat, setCurrent_chat] = useState([]);
-  const [current_chat_detais, setCurrent_chatdata] = useState([]);
   const [pending_payment, setPending_payment] = useState([]);
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -68,20 +66,8 @@ const Dashboard = () => {
   // Dark Mode-
   const { profileData } = useDarkMode();
 
-  const [trading, setTrading] = useState([]);
-
-  const [contentUnderOfferSort, setContentUnderOfferSort] = useState("");
   const [recentActivityState, setRecentActivityState] = useState("");
 
-  const Trendingseraches = async () => {
-    // setLoading(true)
-    try {
-      const resp = await Get(`mediahouse/trending_search`);
-      setTrading(resp?.data?.response);
-    } catch (error) {
-      // setLoading(false)
-    }
-  };
   const handleShow = () => {
     setShow(!show);
   };
@@ -100,20 +86,6 @@ const Dashboard = () => {
   const handleRecentActivityValue = (value) => {
     // console.log("handleFavouriteComponentValues", value)
     setRecentActivityValues({ field: value.field, value: value.values });
-  };
-
-  const ChatCount = async () => {
-    setLoading(true);
-    try {
-      const resp = await Get(`mediaHouse/currentchat`);
-      setCurrent_chat(resp.data);
-      setCurrent_chatdata(resp.data.chat);
-      if (resp) {
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading(false);
-    }
   };
 
   const RatingNReview_Count = async () => {
@@ -201,8 +173,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     PendingPayments();
-    ChatCount();
-    Trendingseraches();
     receivedRatingFromHopper();
     RatingNReview_Count();
   }, []);
@@ -307,7 +277,7 @@ const Dashboard = () => {
                             variant="body2"
                             className="card-head-txt mb-2"
                           >
-                            {current_chat?.data || 0}
+                            {dashboardData?.chat?.length ?? 0}
                           </Typography>
                         </div>
                         <Typography
@@ -321,28 +291,25 @@ const Dashboard = () => {
                       </CardContent>
                       <CardActions className="dash-c-foot">
                         <div className="card-imgs-wrap">
-                          {current_chat_detais.slice(0, 3)?.map((curr) => {
-                            let avtartimage = process.env.REACT_APP_AVATAR_IMAGE + curr?.sender_id?.avatar_id?.avatar;
-
-                            const Content = profileData?.hasOwnProperty(
-                              "admin_detail"
-                            )
-                              ? profileData?.admin_detail?.admin_profile
-                              : profileData?.profile_image;
+                          {dashboardData?.chat?.slice(0, 3)?.map((curr) => {
                             return (
                               <img
-                                src={avtartimage ?? Content}
+                                src={curr?.profile_image}
                                 className="card-img"
                               />
                             );
                           })}
-                          <span>
-                            {" "}
-                            <Link to="/chat">
-                              {" "}
-                              <BsArrowRight />{" "}
-                            </Link>
-                          </span>
+                          {
+                            dashboardData?.chat?.length > 0 && (
+                              <span>
+                                {" "}
+                                <Link to="/chat">
+                                  {" "}
+                                  <BsArrowRight />{" "}
+                                </Link>
+                              </span>
+                            )
+                          }
                         </div>
                       </CardActions>
                     </Link>
