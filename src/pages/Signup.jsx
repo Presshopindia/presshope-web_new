@@ -43,6 +43,7 @@ import {
 import { successToasterFun } from "../component/commonFunction";
 import LoginHeader from "../component/LoginHeader";
 import { useDarkMode } from "../context/DarkModeContext";
+import ImageCrop from "../component/ImageCrop";
 
 const Signup = () => {
   const localAdmin = JSON.parse(localStorage.getItem("AdminPopup"));
@@ -240,71 +241,41 @@ const Signup = () => {
     }
   };
 
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [tempImageFile, setTempImageFile] = useState(null);
+  const [isCompanyLogo, setIsCompanyLogo] = useState(true);
+  const companyLogoInputRef = useRef(null);
+  const adminProfileInputRef = useRef(null);
+
+  const handleImageSelect = (e, isCompany = true) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setTempImageFile(e.target.files[0]);
+      setIsCompanyLogo(isCompany);
+      setShowCropModal(true);
+      // Reset the file input value
+      if (isCompany) {
+        companyLogoInputRef.current.value = '';
+      } else {
+        adminProfileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleCropComplete = async (croppedFile) => {
+    if (isCompanyLogo) {
+      await AddCompanyLogo(croppedFile);
+    } else {
+      await AddAdminProfile(croppedFile);
+    }
+    setTempImageFile(null);
+  };
+
   const AddCompanyLogo = async (file) => {
-    // Create a Promise to handle the image processing
-    const processImage = () => {
-      return new Promise((resolve, reject) => {
-        const imageUrl = URL.createObjectURL(file);
-        const img = new Image();
-
-        img.onload = () => {
-          // Create canvas
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-
-          // Determine the size of the square
-          // We'll use the smaller dimension to ensure the image fits
-          const size = Math.min(img.width, img.height);
-
-          // Set canvas size to our desired square dimensions
-          canvas.width = size;
-          canvas.height = size;
-
-          // Calculate centering
-          const offsetX = (img.width - size) / 2;
-          const offsetY = (img.height - size) / 2;
-
-          // Draw the image centered in the canvas
-          ctx.drawImage(
-            img,
-            offsetX,
-            offsetY, // Source offset
-            size,
-            size, // Source dimensions
-            0,
-            0, // Destination offset
-            size,
-            size // Destination dimensions
-          );
-
-          // Convert canvas to Blob
-          canvas.toBlob((blob) => {
-            // Create a new File object from the blob
-            const resizedFile = new File([blob], file.name, {
-              type: file.type,
-              lastModified: Date.now(),
-            });
-
-            resolve(resizedFile);
-          }, file.type);
-        };
-
-        img.onerror = () => {
-          reject(new Error("Failed to load image"));
-        };
-
-        img.src = imageUrl;
-      });
-    };
-
     try {
-      // Process the image first
-      const resizedFile = await processImage();
-
-      // Create FormData with the resized image
+      setLoading(true);
       const formData = new FormData();
       formData.append("path", "user");
-      formData.append("media", resizedFile);
+      formData.append("media", file);
 
       // Upload the resized image
       const filepath = await Post("mediaHouse/uploadUserMedia", formData);
@@ -317,25 +288,35 @@ const Signup = () => {
           profile_image: filepath.data.path,
         },
       }));
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       toast.error("Failed to process image");
     }
   };
 
   // Add admin profile-
   const AddAdminProfile = async (file) => {
-    const Formdata = new FormData();
-    Formdata.append("path", "user");
-    Formdata.append("media", file);
-
-    const filepath = await Post("mediaHouse/uploadUserMedia", Formdata);
-    setAdminDetails((prev) => ({
-      ...prev,
-      administrator_details: {
-        ...prev.administrator_details,
-        admin_profile: filepath.data.path,
-      },
-    }));
+    try{
+      setLoading(true);
+      const Formdata = new FormData();
+      Formdata.append("path", "user");
+      Formdata.append("media", file);
+  
+      const filepath = await Post("mediaHouse/uploadUserMedia", Formdata);
+      setAdminDetails((prev) => ({
+        ...prev,
+        administrator_details: {
+          ...prev.administrator_details,
+          admin_profile: filepath.data.path,
+        },
+      }));
+      setLoading(false);
+    }
+    catch(error) {
+      setLoading(false);
+      toast.error("Failed to process image");
+    }
   };
 
   const [mediahouseType, setMediahouseType] = useState([]);
@@ -927,32 +908,26 @@ const Signup = () => {
                             </Col>
                             <Col lg={3} md={3} sm={12}>
                               <div className="currentPic logo_inp position-relative text-center p-0">
-                                {AdminDetails?.company_details
-                                  ?.profile_image === "" && (
-                                    <img src={addPic} alt="" />
-                                  )}
-                                {AdminDetails?.company_details
-                                  ?.profile_image !== "" && (
-                                    <img
-                                      className="uploaded"
-                                      src={
-                                        AdminDetails?.company_details
-                                          ?.profile_image
-                                      }
-                                      alt=""
-                                    />
-                                  )}
-                                {AdminDetails?.company_details
-                                  ?.profile_image === "" && (
-                                    <span className="mt-2 d-block">
-                                      Add company logo
-                                    </span>
-                                  )}
+                                {AdminDetails?.company_details?.profile_image === "" && (
+                                  <img src={addPic} alt="" />
+                                )}
+                                {AdminDetails?.company_details?.profile_image !== "" && (
+                                  <img
+                                    className="uploaded"
+                                    src={AdminDetails?.company_details?.profile_image}
+                                    alt=""
+                                  />
+                                )}
+                                {AdminDetails?.company_details?.profile_image === "" && (
+                                  <span className="mt-2 d-block">
+                                    Add company logo
+                                  </span>
+                                )}
                                 <input
+                                  ref={companyLogoInputRef}
                                   type="file"
-                                  onChange={(e) => {
-                                    AddCompanyLogo(e.target.files[0]);
-                                  }}
+                                  onChange={(e) => handleImageSelect(e, true)}
+                                  accept="image/*"
                                   style={{ padding: "0px" }}
                                 />
                               </div>
@@ -1335,16 +1310,13 @@ const Signup = () => {
                                         Add current photo
                                       </span>
                                     )}
-                                  {/* {AdminDetails.administrator_details
-                                    .admin_profile === "" && ( */}
+                                  
                                   <input
+                                    ref={adminProfileInputRef}
                                     type="file"
-                                    // required
-                                    onChange={(e) => {
-                                      AddAdminProfile(e.target.files[0]);
-                                    }}
+                                    onChange={(e) => handleImageSelect(e, false)}
+                                    accept="image/*"
                                   />
-                                  {/* // )} */}
                                 </div>
                               </Col>
                               <Col md={6}>
@@ -1676,6 +1648,18 @@ const Signup = () => {
         </Container>
       </div>
       <DbFooter />
+      <ImageCrop
+        show={showCropModal}
+        onHide={() => {
+          setShowCropModal(false);
+          setTempImageFile(null);
+        }}
+        onCropComplete={handleCropComplete}
+        initialImage={tempImageFile}
+        aspectRatio={140/100}
+        maxWidthCm={140}
+        maxHeightCm={100}
+      />
     </>
   );
 };
