@@ -1365,6 +1365,15 @@ button.round {
   background: $bg-grey;
 }
 
+.invite-user-disable-field {
+  background-color: $bg-grey !important;
+  color: $bg-color-dark !important;
+}
+
+.country_code_container {
+  background: transparent !important;
+}
+
 .invite-user-disable-field:disabled {
   background-color: $bg-grey !important;
   color: $bg-color-dark !important;
@@ -3630,6 +3639,7 @@ button.MuiButton-secondary {
 
 .selectPlaceholder {
   font-family: "Airbnb" !important;
+  color: red;
 }
 
 .telIcon {
@@ -13096,18 +13106,179 @@ audio {
   top: 2px;
 }
 
+.discount-button {
+  font-size: 20px !important;
+  margin-left: 4px;
+}
+
 .basket-content {
   display: flex;
   align-items: flex-start;
   gap: 2px;
 }
 
-.login-page .PhoneInput input.PhoneInputInput {
-  border: none;
-  height: 39px;
+.pb-30 {
+  padding-bottom: 30px !important;
 }
 
-.news-w-text {
-  color: #d63c42;
-  font-weight: 600;
+.txt-success-link a {
+  color: #ec4e54 !important;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+
+.image-crop-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.upload-area {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.upload-area:hover {
+  border-color: #666;
+}
+
+.file-input {
+  display: none;
+}
+
+.crop-container {
+  max-height: 400px;
+  overflow: hidden;
+}
+
+.crop-image {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+}
+
+.ReactCrop {
+  position: relative;
+  display: inline-block;
+  cursor: crosshair;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.ReactCrop:focus {
+  outline: none;
+}
+
+.ReactCrop--disabled {
+  cursor: inherit;
+}
+
+.ReactCrop__image {
+  display: block;
+  max-width: 100%;
+  touch-action: none;
+}
+
+.ReactCrop__crop-selection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate3d(0, 0, 0);
+  box-sizing: border-box;
+  cursor: move;
+  box-shadow: 0 0 0 9999em rgba(0, 0, 0, 0.5);
+  border: 1px solid;
+  border-image-source: url('data:image/gif;base64,R0lGODlhCgAKAJECAAAAAP///////wAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQECgAAACwAAAAACgAKAAACFZQjmIAFADs=');
+  border-image-slice: 1;
+}
+
+.ReactCrop--disabled .ReactCrop__crop-selection {
+  cursor: inherit;
+}
+
+.ReactCrop__drag-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-sizing: border-box;
+}
+
+.ReactCrop__drag-handle.ord-nw {
+  top: 0;
+  left: 0;
+  margin-top: -5px;
+  margin-left: -5px;
+  cursor: nw-resize;
+}
+
+.ReactCrop__drag-handle.ord-n {
+  top: 0;
+  left: 50%;
+  margin-top: -5px;
+  margin-left: -5px;
+  cursor: n-resize;
+}
+
+.ReactCrop__drag-handle.ord-ne {
+  top: 0;
+  right: 0;
+  margin-top: -5px;
+  margin-right: -5px;
+  cursor: ne-resize;
+}
+
+.ReactCrop__drag-handle.ord-e {
+  top: 50%;
+  right: 0;
+  margin-top: -5px;
+  margin-right: -5px;
+  cursor: e-resize;
+}
+
+.ReactCrop__drag-handle.ord-se {
+  bottom: 0;
+  right: 0;
+  margin-bottom: -5px;
+  margin-right: -5px;
+  cursor: se-resize;
+}
+
+.ReactCrop__drag-handle.ord-s {
+  bottom: 0;
+  left: 50%;
+  margin-bottom: -5px;
+  margin-left: -5px;
+  cursor: s-resize;
+}
+
+.ReactCrop__drag-handle.ord-sw {
+  bottom: 0;
+  left: 0;
+  margin-bottom: -5px;
+  margin-left: -5px;
+  cursor: sw-resize;
+}
+
+.ReactCrop__drag-handle.ord-w {
+  top: 50%;
+  left: 0;
+  margin-top: -5px;
+  margin-left: -5px;
+  cursor: w-resize;
+}
+
+@media (max-width: 768px) {
+  .crop-container {
+    max-height: 300px;
+  }
+
+  .crop-image {
+    max-height: 300px;
+  }
 }

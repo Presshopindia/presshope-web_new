@@ -12270,10 +12270,11 @@ body .page-wrap {
   font-weight: bold;
 }
 .onboar_success .txt-success-link a {
-  color: #ec4e54;
+  color: #ec4e54 !important;
   font-weight: 900;
   letter-spacing: 0.2px;
 }
+
 .onboar_success .top_txt p {
   font-size: "AirbnbMedium";
 }

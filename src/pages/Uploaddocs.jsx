@@ -252,9 +252,6 @@ const Uploaddocs = () => {
                                   ))}
                               </Select>
                             </Col>
-                            {
-                              console.log("docs", docs, process.env)
-                            }
                             <Col md={12} className="mt-5">
                               <div className="justify-content-start align-items-center d-flex flex-wrap gap-4">
                                 {docs?.map((el) => (

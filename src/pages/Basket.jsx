@@ -58,10 +58,8 @@ const Basket = () => {
     setChecked(event.target.checked);
   };
 
-  console.log("checked", checked);
   const { setCartCount, profileData } = useDarkMode();
   const user = profileData;
-  console.log("userData", user);
   const navigate = useNavigate();
 
   async function getCountOfBasketItems() {
@@ -85,7 +83,6 @@ const Basket = () => {
   };
 
   const paymentintents = async (data) => {
-    console.log("promoCode", promoCode)
     try {
       setLoading(true);
       const resp = await Post("mediaHouse/createPaymentforBasket", {
@@ -127,7 +124,6 @@ const Basket = () => {
     let result = "";
     if (value) {
       const data = value.trim().split("");
-      console.log(data);
       for (let ele of data) {
         // Check if the character is not a number using isNaN()
         if (isNaN(ele) && typeof ele === "string") {
@@ -147,7 +143,6 @@ const Basket = () => {
     setLoading(true);
     try {
       let promocodeValue = capitaliseLetterPromocode(promoCode.value);
-      // console.log("promocodeValue",promocodeValue);
       const resp = await Post("mediahouse/checkPromocode", {
         code: promocodeValue,
       });
@@ -204,7 +199,6 @@ const Basket = () => {
       console.log("Error calculating total amount:", error);
     }
   }
-console.log(promoCode)
   // Add this useEffect to calculate total amount when data changes
   useEffect(() => {
     if (data) {
