@@ -12,13 +12,15 @@ import { Get } from '../services/user.services';
 import LoginHeader from '../component/LoginHeader';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import InviteUsers from '../component/InviteUsers';
+import EmailClientModal from '../component/EmailClientModal';
 
 
 const Success = () => {
   const [showInviteUserModal, setShowInviteUserModal] = useState(false);
-  const [checked, setChecked] = useState(false);
-  const AdminDetails = JSON.parse(localStorage.getItem("OnboardDetails"))
-  const Designation = JSON.parse(localStorage.getItem("designation"))
+  const [isInvitationLinkSend, setIsInvitationLinkSend] = useState(false);
+  const AdminDetails = JSON.parse(localStorage.getItem("OnboardDetails"));
+  const Designation = JSON.parse(localStorage.getItem("designation"));
+  const [showEmailModal, setShowEmailModal] = useState(false);
 
   const [tutorials, setTutorials] = useState()
 
@@ -89,16 +91,40 @@ const Success = () => {
                       </div>
                     </Col>
                     {
-                      AdminDetails?.AdminEmail && (
+                      AdminDetails?.AdminEmail ? (
                         <Col lg="12">
                           <div className='dashCard-heading'>
-                            <p><span className='txt-success'>You're in control!</span> New users need your invite to join <span className='txt-success'>PressHop. </span>Send an activitation link now and build your team!</p>
+                            <p><span className='txt-success'>Time to rally the troops!</span></p>
+                            <p className='mb-4'>New users need your invite to hop aboard <span className='txt-success'>PressHop.</span> Click below to send out invites to your team-mates, and start building your newsroom dream team!</p>
                             <Button
                               variant=""
-                              className="theme-btn custom-ab mb-4 w-100 sm_btn"
+                              className="theme-btn custom-ab w-100 sm_btn mb-4"
                               onClick={() => setShowInviteUserModal(true)}
                             >
                               <span>Invite New Users</span>
+                            </Button>
+                            {
+                              isInvitationLinkSend && (
+                                <Button
+                                  variant=""
+                                  className="theme-btn custom-ab w-100 sm_btn"
+                                  onClick={() => setShowEmailModal(true)}
+                                >
+                                  <span>Go To E-mail</span>
+                                </Button>
+                              )
+                            }
+                          </div>
+                        </Col>
+                      ) : (
+                        <Col lg="12">
+                          <div className='dashCard-heading'>
+                            <Button
+                              variant=""
+                              className="theme-btn custom-ab w-100 sm_btn"
+                              onClick={() => setShowEmailModal(true)}
+                            >
+                              <span>Go To E-mail</span>
                             </Button>
                           </div>
                         </Col>
@@ -125,7 +151,11 @@ const Success = () => {
         company_name={AdminDetails?.CompanyName}
         designation={Designation?.name}
         adminId={AdminDetails?.UserId}
-        activationLink={`${process.env.REACT_APP_FRONTEND_URL}user-onboard-request/${AdminDetails?.UserId}`}
+        setIsInvitationLinkSend={setIsInvitationLinkSend}
+      />
+      <EmailClientModal
+        show={showEmailModal}
+        handleClose={() => setShowEmailModal(false)}
       />
       <Footerlandingpage />
     </>

@@ -13279,3 +13279,41 @@ audio {
     max-height: 300px;
   }
 } 
+
+
+
+.email-client-modal .modal-content {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.email-client-modal h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+.email-client-modal p {
+  color: #666;
+}
+
+.email-option-btn {
+  padding: 10px 15px !important;
+  text-transform: none !important;
+  font-weight: normal !important;
+  border: 1px solid #e0e0e0 !important;
+  color: #333 !important;
+  background-color: white !important;
+  justify-content: flex-start !important;
+  height: 48px;
+}
+
+.email-option-btn:hover {
+  background-color: #f8f9fa !important;
+  border-color: #d0d0d0 !important;
+}
+
+.p-8 {
+  padding: 32px !important;
+}

@@ -29,6 +29,7 @@ import { formatAmountInMillion } from "../component/commonFunction";
 import location from "../assets/images/location.svg";
 import website from "../assets/images/sortIcons/political.svg";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
+import ImageCrop from "../component/ImageCrop";
 
 const UserOnboadingRequest = () => {
   const [loading, setLoading] = useState(false);
@@ -37,10 +38,12 @@ const UserOnboadingRequest = () => {
   const [departmentTypes, setDepartmentTypes] = useState([]);
   const [designations, setDesignation] = useState([]);
   const [office, setOffice] = useState([]);
-  const [officeDetails, setOfficeDetails] = useState([]);
+  const [officeDetails, setOfficeDetails] = useState({});
   const [visibility1, setVisibility1] = useState(false);
   const [visibility2, setVisibility2] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [tempImageFile, setTempImageFile] = useState(null);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -168,6 +171,14 @@ const UserOnboadingRequest = () => {
       if (administratorDetails?.data?.data?.email) {
         const data = await Post("mediaHouse/getOfficeListBasedUponMediahouseEmail", { email: administratorDetails?.data?.data?.email });
         setOffice(data?.data?.data);
+        if (data?.data?.data?.length > 0) {
+          const firstOffice = data.data.data[0];
+          setDetails(prev => ({
+            ...prev,
+            office_id: firstOffice._id
+          }));
+          getOfficeDetails(firstOffice._id);
+        }
         setLoading(false)
       }
     }
@@ -191,7 +202,23 @@ const UserOnboadingRequest = () => {
     };
   }, []);
 
-  // Function to upload user profile
+  const profileImageInputRef = useRef(null);
+
+  const handleImageSelect = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setTempImageFile(e.target.files[0]);
+      setShowCropModal(true);
+      // Reset the file input value
+      profileImageInputRef.current.value = '';
+    }
+  };
+
+  const handleCropComplete = async (croppedFile) => {
+    await UseProfile(croppedFile);
+    setTempImageFile(null);
+  };
+
+  // Modify the existing UseProfile function
   const UseProfile = async (file) => {
     setLoading(true);
     const Formdata = new FormData();
@@ -207,14 +234,15 @@ const UserOnboadingRequest = () => {
     } catch (error) {
       console.log(error)
       setLoading(false);
+      toast.error("Failed to process image");
     }
   };
 
-    // Phone input ref-
-    const phoneInputRef = useRef(null);
-    const handleCountryCodeChange = (e) => {
-      phoneInputRef.current?.focus();
-    };
+  // Phone input ref-
+  const phoneInputRef = useRef(null);
+  const handleCountryCodeChange = (e) => {
+    phoneInputRef.current?.focus();
+  };
 
   useEffect(() => {
     getDesignation();
@@ -297,10 +325,14 @@ const UserOnboadingRequest = () => {
                             </div>
                             <div className="onboardStep b_border top_txt">
                               <p>
-                                Great news! Your administrator has invited you to join <span className='txt-success'>PressHop</span>. Just fill in your details, and send your onboarding request. Once your access is set up, we'll send a new login link to your registered official email --then you're all set to dive in!
+                                Great news! Your administrator has invited you to join <span className='txt-success'>PressHop</span>.
                               </p>
                               <p>
-                                If you need any assitance, please <span className='txt-success-link'><Link to="/contact-us">contact us</Link></span> and speak to our helpful team members who will be glad to assist you. Thanks!
+                                {/* If you need any assitance, please <span className='txt-success-link'><Link to="/contact-us">contact us</Link></span> and speak to our helpful team members who will be glad to assist you. Thanks! */}
+                                Simply enter your details, log in and dive straight into the citizen journalism revolution taking the UK by storm. It's quick, easy, and you're in control!
+                              </p>
+                              <p>
+                                Need a hand? Please <span className='txt-success-link'><Link to="/contact-us">contact</Link></span> our friendly PressHop team who are just a click away and ready to help.
                               </p>
                             </div>
                             <Button
@@ -322,7 +354,7 @@ const UserOnboadingRequest = () => {
                           <img src={newUserBg} alt="" />
                           <h2>
                             Building {" "}
-                            <span className="txt_bld">our tribe together</span> { " "} one step at a time
+                            <span className="txt_bld">our tribe together</span> {" "} one step at a time
                           </h2>
                         </div>
                       </div>
@@ -337,10 +369,7 @@ const UserOnboadingRequest = () => {
                             <h1 className="mb-0">Let's get you onboarded</h1>
                             <div className="onboardStep b_border">
                               <p className="mb_20">
-                                Your administrator has registered you onto the <span>PressHop</span> platform, and assigned user rights. Please see the editable fields below, where if you need to make any changes, or update your details, you can.
-                              </p>
-                              <p className="mb_20">
-                                Please enter a new memorable password which you will henceforth use for logging onto the platform. Thanks!
+                              You're good to go! Your admin has pre-assigned you access and rights — simply pop in your details, log in, and dive into the exciting world of <span className="txt-success">PressHop</span>.
                               </p>
                             </div>
                           </div>
@@ -356,7 +385,7 @@ const UserOnboadingRequest = () => {
                                     <img src={companyNameImg} alt="company" />
                                     <Form.Control
                                       type="text"
-                                      className="rnd grey"
+                                      className="invite-user-disable-field"
                                       disabled
                                       name="company_name"
                                       required
@@ -370,7 +399,7 @@ const UserOnboadingRequest = () => {
                                     <img src={hash} alt="company" />
                                     <Form.Control
                                       type="number"
-                                      className="rnd grey"
+                                      className="invite-user-disable-field"
                                       disabled
                                       name="company_number"
                                       required
@@ -384,7 +413,7 @@ const UserOnboadingRequest = () => {
                                     <img src={Receipt} alt="company" />
                                     <Form.Control
                                       type="text"
-                                      className="rnd grey"
+                                      className="invite-user-disable-field"
                                       disabled
                                       name="company_vat"
                                       required
@@ -419,11 +448,11 @@ const UserOnboadingRequest = () => {
                                   </Col>
                                   <Col md={6}>
                                     <Form.Group className="mb-4 form-group">
-                                      <img src={officeIcon} alt="" />
+                                      <img src={chairImg} alt="" />
                                       <Form.Control
                                         type="text"
                                         className="invite-user-disable-field"
-                                        placeholder="Enter office name *"
+                                        placeholder="Enter office type *"
                                         name="name"
                                         required
                                         disabled
@@ -676,11 +705,10 @@ const UserOnboadingRequest = () => {
                                         </span>
                                       )}
                                       <input
+                                        ref={profileImageInputRef}
                                         type="file"
-                                        required
-                                        onChange={(e) => {
-                                          UseProfile(e.target.files[0]);
-                                        }}
+                                        onChange={handleImageSelect}
+                                        accept="image/*"
                                       />
                                     </div>
                                   </Col>
@@ -945,6 +973,18 @@ const UserOnboadingRequest = () => {
         </Container>
       </div>
       <DbFooter />
+      <ImageCrop
+        show={showCropModal}
+        onHide={() => {
+          setShowCropModal(false);
+          setTempImageFile(null);
+        }}
+        onCropComplete={handleCropComplete}
+        initialImage={tempImageFile}
+        aspectRatio={140/100}
+        maxWidthCm={140}
+        maxHeightCm={100}
+      />
     </>
   );
 };

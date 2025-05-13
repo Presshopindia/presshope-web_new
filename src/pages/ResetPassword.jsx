@@ -50,13 +50,10 @@ const UserForgetPassword = () => {
         // toast.error("Password Doesn't Match")
       }
       else {
-      console.log("all error related to forget password")
-
         const resp = await Post(`auth/media/house/resetPassword`, obj)
-         console.log("all error related to forget password",resp);
 
         if (resp) {
-          // toast.success("Password Updated")
+          toast.success("New password updated successfully")
           localStorage.clear()
           navigate("/login")
           setLoading(false);
@@ -65,7 +62,6 @@ const UserForgetPassword = () => {
     } catch (error) {
       if(error?.response?.data?.errors?.msg){
         let errorMessage = error?.response?.data?.errors?.msg
-        console.log("all error related to forget password error ----?>>>>>",error?.response?.data?.errors?.msg);
             if(Array.isArray(errorMessage)){
               toast.error(errorMessage[1].msg)
 
@@ -82,10 +78,7 @@ const UserForgetPassword = () => {
     e.preventDefault()
     try{
       setLoading(true);
-      console.log("all error related to forget password")
-
       const resp = await Post(`auth/media/house/forgotPassword`, { email: localEmail })
-      console.log("all error related to forget resp",resp)
 
       if (resp) {
         toast.success("New OTP sent again")
@@ -94,9 +87,6 @@ const UserForgetPassword = () => {
       }
     }
     catch(error){
-      console.log("all error related to forget password",error)
-
-      console.log(error);
       setLoading(false);
     }
   }

@@ -260,18 +260,8 @@ const Login = () => {
               </Col>
               <Col lg="6" className="">
                 <div className="left-side">
-                  <div className="tri"></div>
-                  <div className="circle"></div>
-                  <div className="big_circle"></div>
-                  <div className="">
-                    <img src={loginimg} className="rt_bg_img" />
-                  </div>
-                  <div className="right_txt">
-                    <p>
-                      It's <span className="txt_bld">action</span> time, let's
-                      dive straight in
-                    </p>
-                  </div>
+                  <img src={loginimg} className='w-100' alt="" />
+                  <h2 className="mt-3 text-center">It's <span className='txt-success text-bold'>action</span>  time, let's dive <br /> straight in</h2>
                 </div>
               </Col>
             </Row>

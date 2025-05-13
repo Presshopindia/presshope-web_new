@@ -26,7 +26,7 @@ const InviteUserModal = ({
   email = "",
   company_name = "",
   designation = "",
-  activationLink = ""
+  setIsInvitationLinkSend,
 }) => {
   const [emailIds, setEmailIds] = useState("");
   const [loading, setLoading] = useState(false);
@@ -47,6 +47,7 @@ const InviteUserModal = ({
       toast.success("Invitation link sent.");
       setLoading(false);
       handleClose();
+      setIsInvitationLinkSend(true);
     }
     catch (error) {
       console.log(error);
@@ -147,43 +148,14 @@ const InviteUserModal = ({
                   </Col>
                 </Row>
                 <Row className="rw_gp_sml mb-4">
-                  <p className="invite-user-heading">Activation link</p>
-                  <Col lg={12} md={12} xs={12}>
-                    <Form.Group className="form-group">
-                      <img src={mailImg} alt="" />
-                      <Form.Control
-                        type="text"
-                        size="sm"
-                        className="user invite-user-disable-field"
-                        value={activationLink}
-                        disabled
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
-                <Row className="rw_gp_sml mb-4">
                   <p className="invite-user-heading">Message</p>
-                  {/* <Col lg={12} md={12} xs={12}>
-                    <Form.Group
-                      controlId="exampleForm.ControlTextarea1"
-                    >
-                      <Form.Control
-                        className="invite-user-enable-field"
-                        as="textarea"
-                        placeholder="Enter message"
-                        rows={7}
-                        value={ReactDOMServer.renderToString(jsxElement)}
-                        defaultValue={""}
-                      />
-                    </Form.Group>
-                  </Col> */}
                   <Col lg={12} md={12} xs={12}>
                     <Form.Group className="form-message">
                       <img src={mailImg} alt="" />
                       <div className="font-14 invite-user-enable-message">
-                        <p>Dear team-members,</p>
-                        <p>Please use this activation link to commence your onboarding process onto the <span className="txt-success">PressHop</span> platform. This activation link is valid for 5 days from now and will automatically expire.</p>
-                        <p>If you have any questions, you can always contact me by email.</p>
+                        <p>Dear Team Member,</p>
+                        <p>I’ve just sent you an invite to join <span className="txt-success">PressHop</span>, the platform powering the future of citizen journalism! Please check your inbox for instructions to complete your registration and start exploring. It’s free, and easy to use.</p>
+                        <p>If you have any questions, just give me a shout — happy to assist.</p>
                         <p>Thank you,</p>
                         <p><span className='txt-success'>Administrator.</span></p>
                       </div>

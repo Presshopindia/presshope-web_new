@@ -342,7 +342,7 @@ const Signup = () => {
   // Handle change for multi office-
   const handleMultiAddOffice = (index, name, value) => {
     const newOffice = [...multiOffice];
-    if (name === "country" || name === "city" || name === "pincode") {
+    if (name === "country" || name === "city" || name === "pincode" || name === "complete_address") {
       newOffice[index] = {
         ...newOffice[index],
         address: {
@@ -457,7 +457,7 @@ const Signup = () => {
 
           newOffice[index] = {
             ...newOffice[index],
-            // post_code: name,
+            post_code: name,
             address: {
               ...newOffice[index].address,
               complete_address: address,
@@ -496,20 +496,36 @@ const Signup = () => {
       const doc = parser.parseFromString(htmlString, "text/html");
 
       const countryNameElement = doc.querySelector(".country-name");
+      const cityElement = doc.querySelector(".locality");
 
       if (countryNameElement) {
         const name = places[0]?.name;
+        const address = places[0].formatted_address;
+        const country = countryNameElement?.textContent;
+        const city = cityElement?.textContent;
+        const latitude = places[0].geometry.location.lat();
+        const longitude = places[0].geometry.location.lng();
 
         setMultiOffice((prev) => {
           const newOffice = [...prev];
 
           newOffice[index] = {
             ...newOffice[index],
+            post_code: name,
             address: {
               ...newOffice[index].address,
-              pincode: name,
+              complete_address: address,
+              city,
+              country,
+              Pin_Location: {
+                lat: latitude,
+                long: longitude,
+              },
+              location: {
+                type: "Point",
+                coordinates: [latitude, longitude],
+              },
             },
-            post_code: name,
           };
 
           return newOffice;
@@ -517,6 +533,8 @@ const Signup = () => {
       }
     });
   };
+
+  console.log("Multioffice -------------->", multiOffice)
 
   const handleGetAllinformationAndAddAnotherOffice = async () => {
     try {
@@ -1006,18 +1024,19 @@ const Signup = () => {
                                       type="text"
                                       className=""
                                       placeholder="Address *"
-                                      name="address"
+                                      name="complete_address"
                                       required
                                       onFocus={handlePopupOpen}
                                       onClick={handlePopupOpen}
                                       ref={searchBoxRefStreet}
-                                    // onChange={(e) =>
-                                    //   handleMultiAddOffice(
-                                    //     index,
-                                    //     e.target.name,
-                                    //     e.target.value
-                                    //   )
-                                    // }
+                                      value={el?.address?.complete_address}
+                                    onChange={(e) =>
+                                      handleMultiAddOffice(
+                                        index,
+                                        e.target.name,
+                                        e.target.value
+                                      )
+                                    }
                                     />
                                     {showPopup && (
                                       <div className="map-popup">
