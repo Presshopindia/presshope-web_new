@@ -597,11 +597,17 @@ const Signup = () => {
         successToasterFun("Office added. Cheers");
         setShow(true);
 
-        let newOffice = [...multiOffice];
-        newOffice[newOffice.length - 1] = {
-          ...newOffice[newOffice.length - 1],
-          is_another_office_exist: true,
-        };
+        // Update all offices except the last one to have is_another_office_exist as true
+        let newOffice = multiOffice.map((office, index) => {
+          if (index < multiOffice.length) {
+            return {
+              ...office,
+              is_another_office_exist: true
+            };
+          }
+          return office;
+        });
+        
         setMultiOffice(newOffice);
 
         localStorage.setItem("OfficeDetails", JSON.stringify(newOffice));
@@ -616,17 +622,13 @@ const Signup = () => {
 
       // localStorage.getItem("user")
       const userEmailId = localStorage.getItem("UserEmailId");
-      let newOffice1 = [...multiOffice];
-      newOffice1[newOffice1.length - 1] = {
-        ...newOffice1[newOffice1.length - 1],
-        is_another_office_exist: true,
-      };
-
+      
+      // Use the updated newOffice array here as well
       const step2Data = {
         email: userEmailId ?? adminPreRegistrationEmail,
         step2: {
           company_details: AdminDetails?.company_details,
-          office_details: newOffice1,
+          office_details: newOffice,
         },
       };
       const respPreRegistrationData = await Post(
@@ -640,7 +642,6 @@ const Signup = () => {
       }
 
       handleGetAllinformationAndAddAnotherOffice();
-      // setRenderForRegistrationData(old=>old+1)
     } catch (error) {
       setLoading(false);
     }
@@ -967,10 +968,11 @@ const Signup = () => {
                                     <img src={office} alt="" />
                                     <Form.Control
                                       type="text"
-                                      className=""
+                                      className={el.is_another_office_exist ? "invite-user-disable-field" : ""}
                                       placeholder="Enter office name *"
                                       name="name"
                                       required
+                                      disabled={el.is_another_office_exist}
                                       onChange={(e) =>
                                         handleMultiAddOffice(
                                           index,
@@ -986,8 +988,9 @@ const Signup = () => {
                                   <Form.Group className="mb-4 form-group">
                                     <img src={chair} alt="" />
                                     <Select
-                                      className="w-100 slct_sign"
+                                      className={el.is_another_office_exist ? "w-100 slct_sign invite-user-disable-field" : "w-100 slct_sign"}
                                       name="office_type_id"
+                                      disabled={el.is_another_office_exist}
                                       onChange={(e) =>
                                         handleMultiAddOffice(
                                           index,
@@ -1022,21 +1025,22 @@ const Signup = () => {
                                     <img src={location} alt="" />
                                     <Form.Control
                                       type="text"
-                                      className=""
+                                      className={el.is_another_office_exist ? "invite-user-disable-field" : ""}
                                       placeholder="Address *"
                                       name="complete_address"
                                       required
+                                      disabled={el.is_another_office_exist}
                                       onFocus={handlePopupOpen}
                                       onClick={handlePopupOpen}
                                       ref={searchBoxRefStreet}
                                       value={el?.address?.complete_address}
-                                    onChange={(e) =>
-                                      handleMultiAddOffice(
-                                        index,
-                                        e.target.name,
-                                        e.target.value
-                                      )
-                                    }
+                                      onChange={(e) =>
+                                        handleMultiAddOffice(
+                                          index,
+                                          e.target.name,
+                                          e.target.value
+                                        )
+                                      }
                                     />
                                     {showPopup && (
                                       <div className="map-popup">
@@ -1052,9 +1056,10 @@ const Signup = () => {
                                     <img src={location} alt="" />
                                     <Form.Control
                                       placeholder="Post code"
-                                      className="addr_custom_inp w-100"
+                                      className={el.is_another_office_exist ? "invite-user-disable-field addr_custom_inp w-100" : "addr_custom_inp w-100"}
                                       type="textarea"
                                       name="post_code"
+                                      disabled={el.is_another_office_exist}
                                       onFocus={handlePostalCodePopUp}
                                       onClick={handlePostalCodePopUp}
                                       ref={searchBoxRefPostalCode}
@@ -1081,9 +1086,10 @@ const Signup = () => {
                                     <img src={location} alt="" />
                                     <Form.Control
                                       type="text"
-                                      className=""
+                                      className={el.is_another_office_exist ? "invite-user-disable-field" : ""}
                                       placeholder="City"
                                       name="city"
+                                      disabled={el.is_another_office_exist}
                                       onChange={(e) =>
                                         handleMultiAddOffice(
                                           index,
@@ -1100,9 +1106,10 @@ const Signup = () => {
                                     <img src={location} alt="" />
                                     <Form.Control
                                       type="text"
-                                      className=""
+                                      className={el.is_another_office_exist ? "invite-user-disable-field" : ""}
                                       placeholder="Country"
                                       name="country"
+                                      disabled={el.is_another_office_exist}
                                       onChange={(e) =>
                                         handleMultiAddOffice(
                                           index,
@@ -1115,13 +1122,14 @@ const Signup = () => {
                                   </Form.Group>
                                 </Col>
                                 <Col md={6}>
-                                  <div className="number_inp_wrap">
+                                  <div className={`number_inp_wrap ${el.is_another_office_exist ? "invite-user-disable-field" : ""}`}>
                                     {/* Phone start */}
                                     <input
                                       type="number"
-                                      className="input_nmbr"
+                                      className={`input_nmbr ${el.is_another_office_exist ? "invite-user-disable-field" : ""}`}
                                       placeholder="Phone"
                                       name="phone"
+                                      disabled={el.is_another_office_exist}
                                       onChange={(e) => {
                                         if (e.target.value.length <= 10) {
                                           handleMultiAddOffice(
@@ -1143,7 +1151,7 @@ const Signup = () => {
                                       className="f_1 cntry_code"
                                       international
                                       required
-                                      // countryCallingCodeEditable={false}
+                                      // disabled={el.is_another_office_exist}
                                       name="country_code"
                                       value={el?.country_code || ""}
                                       onChange={(e) => {
@@ -1169,9 +1177,10 @@ const Signup = () => {
                                     <img src={website} alt="" />
                                     <Form.Control
                                       type="url"
-                                      className=""
+                                      className={el.is_another_office_exist ? "invite-user-disable-field" : ""}
                                       placeholder="Website"
                                       name="website"
+                                      disabled={el.is_another_office_exist}
                                       onChange={(e) =>
                                         handleMultiAddOffice(
                                           index,
@@ -1187,9 +1196,10 @@ const Signup = () => {
                               {el.is_another_office_exist ? (
                                 <FormControlLabel
                                   className="anthr_office_check"
+                                  // disabled={index !== multiOffice.length - 2}
                                   control={
                                     <Checkbox
-                                      checked={el.checked}
+                                      checked={el.checkbox || false}
                                       onChange={(e) => {
                                         handleMultiAddOffice(
                                           index,
@@ -1204,7 +1214,7 @@ const Signup = () => {
                                 />
                               ) : null}
 
-                              {!el.is_another_office_exist ? (
+                              {index === multiOffice.length - 1 && !el.is_another_office_exist ? (
                                 <Button
                                   className="w-100 theme_btn"
                                   type="submit"
