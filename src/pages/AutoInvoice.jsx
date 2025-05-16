@@ -921,7 +921,13 @@ const AutoInvoice = () => {
                 <Button
                   variant=""
                   className="theme-btn custom-ab mb-4 mt-2 w-100 sm_btn"
-                  onClick={() => toast.error("Buying is disabled in demo mode. This is curated content and not available for sale") }
+                  onClick={() => {
+                    if (profileData?._id === "6825d50ab94e4615313fcabc") {
+                      paymentintents(data)
+                    } else {
+                      toast.error("Buying is disabled in demo mode. This is curated content and not available for sale")
+                    }
+                  }}
                 >
                   <span>
                     Pay £

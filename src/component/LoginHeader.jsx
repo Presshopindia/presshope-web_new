@@ -155,11 +155,11 @@ const HeaderN = ({ scrollToDiv }) => {
                   FAQs
                 </NavLink>
                 <NavLink
-                  to={isRegisterPage ? "/login" : "/register"}
+                  to="/login"
                   className="authbtns header_btn"
                   style={{ fontFamily: "AirbnbBold" }}
                 >
-                  <span className="headAuth">{isRegisterPage ? "Login" : "Register"}</span>
+                  <span className="headAuth">Log In</span>
                 </NavLink>
               </Nav>
             </Navbar.Collapse>

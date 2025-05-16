@@ -13162,3 +13162,72 @@ audio {
 .mb-6 {
   margin-bottom: 2rem !important;
 }
+
+
+.email-client-modal .modal-content {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.email-client-modal h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+.email-client-modal p {
+  color: #666;
+}
+
+.email-option-btn {
+  padding: 10px 15px !important;
+  text-transform: none !important;
+  font-weight: normal !important;
+  border: 1px solid #e0e0e0 !important;
+  color: #333 !important;
+  background-color: white !important;
+  justify-content: flex-start !important;
+  height: 48px;
+}
+
+.email-option-btn:hover {
+  background-color: #f8f9fa !important;
+  border-color: #d0d0d0 !important;
+}
+
+.form-group-wrapper {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.invalid-feedback {
+  position: absolute;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.form-group-wrapper .input-field,
+.form-group-wrapper .form-group {
+  margin-bottom: 0;
+}
+
+.form-group-wrapper .phone-wrapper {
+  position: relative;
+}
+
+.form-group-wrapper .invalid-feedback {
+  position: absolute;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.form-group-wrapper .text-danger {
+  position: absolute;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.mb-5 {
+  margin-bottom: 20px;
+}

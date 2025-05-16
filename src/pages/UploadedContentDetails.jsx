@@ -1844,7 +1844,13 @@ const UploadedContentDetails = (props) => {
                                                       </button>
                                                       <button
                                                         className={curr?.media?.filter((el) => el.paid_status)?.length > 0 ? "light-gray-bg txt_bld" : "theme_btn"}
-                                                        onClick={() => toast.error("Buying is disabled in demo mode. This is curated content and not available for sale") }
+                                                        onClick={() => {
+                                                          if (profileData?._id === "6825d50ab94e4615313fcabc") {
+                                                            stripePayment(curr);
+                                                          } else {
+                                                            toast.error("Buying is disabled in demo mode. This is curated content and not available for sale")
+                                                          }
+                                                        }}
                                                       >
                                                         Buy
                                                       </button>
