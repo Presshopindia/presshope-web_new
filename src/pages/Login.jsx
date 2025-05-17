@@ -29,6 +29,7 @@ const Login = () => {
   const queryParams = new URLSearchParams(location.search);
   const email = queryParams.get("email") || "";
 
+  const phoneInputRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [departments, setDepartments] = useState([]);
@@ -106,6 +107,10 @@ const Login = () => {
       autoLogin();
     }
   }, [email, navigate]);
+
+  const handleCountryCodeChange = (e) => {
+    phoneInputRef.current.focus();
+  };
 
   const Submit = async (e) => {
     e.preventDefault();
@@ -217,12 +222,12 @@ const Login = () => {
   const handlePhoneChange = (value) => {
     setFormData({
       ...formData,
-      phone: value
+      country_code: value,
     });
     if (errors.phone) {
       setErrors({
         ...errors,
-        phone: ""
+        country_code: ""
       });
     }
   };
@@ -276,8 +281,6 @@ const Login = () => {
 
     if (!formData.phone) {
       newErrors.phone = "Phone number is required";
-    } else if (!isValidPhoneNumber(formData.phone)) {
-      newErrors.phone = "Please enter a valid phone number";
     }
 
     setErrors(newErrors);
@@ -286,10 +289,10 @@ const Login = () => {
 
   const handleShare = async () => {
     try {
-      const currentUrl = "https://demo.presshop.news/login";
+      const currentUrl = "https://demo.presshop.news";
       await navigator.clipboard.writeText(currentUrl);
       setIsCopied(true);
-      
+
       // Reset the button text after 5 seconds
       setTimeout(() => {
         setIsCopied(false);
@@ -516,18 +519,35 @@ const Login = () => {
                               {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                             </Form.Group>
                           </Col>
-                          <Col md="6" className={`form-group-wrapper ${errors.phone ? 'mb-5 has-error' : ''}`}>
-                            <div className="phone-wrapper">
-                              <PhoneInput
-                                international
-                                defaultCountry="GB"
-                                value={formData.phone}
-                                placeholder="Phone Number *"
-                                onChange={handlePhoneChange}
-                                className={`form-control phone-field ${errors.phone ? "is-invalid" : ""}`}
+                          <Col md={6}>
+                            <div className="number_inp_wrap">
+                              <input
+                                type="number"
+                                className="input_nmbr"
+                                placeholder="Phone"
+                                name="phone"
+                                onChange={(e) => {
+                                  if (e.target.value.length <= 10) {
+                                    handleChange(e)
+                                  }
+                                }}
+                                maxLength={10}
+                                value={formData.phone || ""}
+                                ref={phoneInputRef}
                               />
-                              {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
+                              <PhoneInput
+                                className="f_1 cntry_code"
+                                international
+                                required
+                                name="country_code"
+                                value={formData?.country_code || ""}
+                                onChange={(e) => {
+                                  handlePhoneChange(e)
+                                  handleCountryCodeChange(e)
+                                }}
+                              />
                             </div>
+                            {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
                           </Col>
                         </Row>
                         <div className="d-flex justify-content-between btm_btns gap-4">
