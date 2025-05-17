@@ -59,55 +59,6 @@ const Login = () => {
     }
   });
 
-  useEffect(() => {
-    // Auto login if email is provided in query params
-    if (email) {
-      const autoLogin = async () => {
-        setLoading(true);
-        try {
-          const obj = {
-            ...formData,
-            password: "test@123456",
-            userType: "demo"
-          };
-
-          const resp = await Post("auth/loginMediaHouse", obj);
-          if (resp) {
-            setLoading(false);
-            navigate("/dashboard/exclusive");
-            localStorage.setItem("token", resp.data.token);
-            localStorage.setItem("id", resp.data.user._id);
-            localStorage.setItem("user", JSON.stringify(resp.data.user));
-
-            // Add Firebase messaging token
-            const formdata = new FormData();
-            formdata.append("device_token", localStorage.getItem("DeviceToken"));
-            formdata.append("type", "web");
-            formdata.append("device_id", storedDeviceId);
-            if (localStorage.getItem("DeviceToken")) {
-              try {
-                await Post("mediaHouse/addFcmToken", formdata);
-              } catch (error) {
-                // Silent error handling for Firebase token
-              }
-            }
-
-            window.location.reload();
-          }
-        } catch (error) {
-          if (error?.response?.data?.msg) {
-            toast.error(error?.response?.data?.msg);
-          } else {
-            toast.error(error?.response?.data?.errors?.msg.split("_").join(" "));
-          }
-          setLoading(false);
-        }
-      };
-
-      autoLogin();
-    }
-  }, [email, navigate]);
-
   const handleCountryCodeChange = (e) => {
     phoneInputRef.current.focus();
   };
