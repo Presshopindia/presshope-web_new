@@ -61,6 +61,7 @@ const multiOffice = {
   company_vat: "",
   profile_image: "",
   name: "",
+  number: "",
   office_type_id: "",
   address: {
     country: "",

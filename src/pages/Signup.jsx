@@ -1020,7 +1020,28 @@ const Signup = () => {
                                     </Select>
                                   </Form.Group>
                                 </Col>
-                                <Col md={12} className="">
+                                <Col md={4}>
+                                  <Form.Group className="mb-4 form-group">
+                                    <img src={office} alt="" />
+                                    <Form.Control
+                                      type="text"
+                                      className={el.is_another_office_exist ? "invite-user-disable-field" : ""}
+                                      placeholder="Enter office number *"
+                                      name="number"
+                                      required
+                                      disabled={el.is_another_office_exist}
+                                      onChange={(e) =>
+                                        handleMultiAddOffice(
+                                          index,
+                                          e.target.name,
+                                          e.target.value
+                                        )
+                                      }
+                                      value={el.number || ""}
+                                    />
+                                  </Form.Group>
+                                </Col>
+                                <Col md={8} className="">
                                   <Form.Group className="mb-4 form-group">
                                     <img src={location} alt="" />
                                     <Form.Control
