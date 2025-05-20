@@ -66,8 +66,6 @@ const AdminDetailsPopup = (props) => {
   const handleChange = (e) => {
     setDetails({ ...details, [e.target.name]: e.target.value });
 
-    console.log("e.target.value", e.target.value);
-
     if (e.target.name == "password") {
       const length = e.target.value.length >= 8;
       const special = /[!@#$%^&*(),.?":{}|<>]/.test(e.target.value);
@@ -78,21 +76,17 @@ const AdminDetailsPopup = (props) => {
       setValidations({ length, special, number, uppercase, lowercase });
     }
     if (e.target.name == "cnfm_password") {
-      console.log("testing");
       if (details.password === e.target.value) {
         setValidations((old) => ({ ...old, isequal: true }));
       }
     }
     if (e.target.name === "cnfm_password") {
-      console.log("miketesting");
       if (details.password != e.target.value) {
         setValidations((old) => ({ ...old, isequal: false }));
-        // setValidations({...validations, isequal: false})
       }
     }
 
     if (e.target.name === "user_email") {
-      console.log("user_email", e.target.value);
       setUserEmail(e.target.value);
     }
   };
@@ -121,7 +115,9 @@ const AdminDetailsPopup = (props) => {
   const checkEmail = debounce(async (email) => {
     try {
       const resp = await Post(`mediaHouse/checkEmailAvailability`, { email });
-      if (resp) setEmailExist(false);
+      if (resp) {
+        setEmailExist(false)
+      };
     } catch (error) {
       setEmailExist(true);
     }
@@ -129,50 +125,28 @@ const AdminDetailsPopup = (props) => {
 
   const preRegistration = async () => {
     try {
-      if (userEmail) {
-        const postData = {
-          email: userEmail || "abhishek@gmail.com",
-          step1: {
-            first_name: details.first_name,
-            last_name: details.last_name,
-            last_name: details.last_name,
-            last_name: details.last_name,
-            designation_id: details.designation_id,
-            password: details.password,
-            cnfm_password: details.cnfm_password,
-            check1: isChecked.check1,
-            check2: isChecked.check2,
-            check3: isChecked.check3,
-            check4: isChecked.check4,
-          },
-        };
-        const result = await Post(
-          `mediaHouse/preRegistration?email=${userEmail}`,
-          postData
-          // [
-          //   {
-          //     step1: {
-          //       first_name: "John doe",
-          //       last_name: "Doe",
-          //       email: "john.doe@example.com",
-          //       password: "hashedPassword123",
-          //       cnfm_password: "hashedPassword123",
-          //     },
-          //   },
-          // ]
-        );
-        localStorage.setItem("UserEmailId", userEmail);
-        setAdminPreRegistrationEmail(userEmail);
-
-        console.log("pre result--------> -------->", result);
-      }
-
-      // const list = await Get(`mediaHouse/getPreRegistrationData`);
-      // const resp = await Get(`mediaHouse/findacceptedtasks?task_id=${props.id && props.id}&receiver_id=${User && User._id}&type=task_content`)
-      // setDesignation(list.data.data);
-      // console.log("pre --------> -------->",list);
+      const postData = {
+        email: userEmail,
+        step1: {
+          first_name: details.first_name,
+          last_name: details.last_name,
+          designation_id: details.designation_id,
+          password: details.password,
+          cnfm_password: details.cnfm_password,
+          check1: isChecked.check1,
+          check2: isChecked.check2,
+          check3: isChecked.check3,
+          check4: isChecked.check4,
+        },
+      };
+      await Post(
+        `mediaHouse/preRegistration?email=${userEmail}`,
+        postData
+      );
+      localStorage.setItem("UserEmailId", userEmail);
+      setAdminPreRegistrationEmail(userEmail);
     } catch (error) {
-      console.log(error);
+      toast.error("Something went wrong");
     }
   };
 
@@ -218,15 +192,9 @@ const AdminDetailsPopup = (props) => {
         });
         // setUserEmail(userEmail)
         localStorage.setItem("UserEmailId", userEmail);
-
-        console.log("Step1 details ------>", list.data.data.step1);
       }
     } catch (error) {}
   };
-
-  // useEffect(()=>{
-  //   preRegistration()
-  // },[])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -234,7 +202,7 @@ const AdminDetailsPopup = (props) => {
     setSubmit(true);
 
     if (!isChecked.check1 || !isChecked.check2 || !isChecked.check3 || !isChecked.check4) {
-      toast.success("Please select all the boxes to confirm your acceptance of our Terms & Conditions.")
+      toast.error("Please select all the boxes to confirm your acceptance of our Terms & Conditions.")
     }
 
     if (emailExist) {
@@ -242,15 +210,13 @@ const AdminDetailsPopup = (props) => {
       return;
     }
     if (details.designation_id === "") {
-      // I have to write something that I will write later.
+      toast.error("Please select Designation");
       return;
     }
     if (details.password !== details.cnfm_password) {
       setValidations((old) => ({ ...old, isequal: false }));
       toast.error("Password does not match");
       return;
-      // I have to write something that I will write later.
-      // return successToasterFun("Password does not match");
     } else if (
       !validations.length ||
       !validations.lowercase ||
@@ -283,9 +249,9 @@ const AdminDetailsPopup = (props) => {
       if (userEmail) {
         handleGetAllinformation();
       }
-    }, 1000); // 1000ms (1 second) delay after the user stops typing
+    }, 1000);
 
-    return () => clearTimeout(timer); // Cleanup the timer on re-render
+    return () => clearTimeout(timer);
   }, [userEmail]);
 
   return (
@@ -413,7 +379,6 @@ const AdminDetailsPopup = (props) => {
                       autoComplete="off"
                       onChange={(e) => {
                         handleChange(e);
-                        // setValidations({...validations, isequal: false})
                       }}
                       value={details?.cnfm_password}
                     />
@@ -497,7 +462,6 @@ const AdminDetailsPopup = (props) => {
                             <MenuItem value={item._id}>{item.name}</MenuItem>
                           );
                         })}
-                      {/* <MenuItem value="option3">Option 3</MenuItem> */}
                     </Select>
                   </Form.Group>
                 </Col>
@@ -616,10 +580,6 @@ const AdminDetailsPopup = (props) => {
               className="w-50 m-auto d-inline-block py-2 text-lowercase mdl_btn"
               variant="primary"
               type="submit"
-              // onClick={() => {
-              //     setSubmit(true)
-              //     Navigate()
-              // }}
             >
               <div className="link_white">Save & Continue</div>
             </Button>

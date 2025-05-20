@@ -11,7 +11,7 @@ export const adminDetailInitState = {
     company_number: JSON.parse(localStorage.getItem("CompanyDetails"))?.company_number || "",
     company_vat: JSON.parse(localStorage.getItem("CompanyDetails"))?.company_vat || "",
     profile_image: JSON.parse(localStorage.getItem("CompanyDetails"))?.profile_image || "",
-    user_type: JSON.parse(localStorage.getItem("CompanyDetails"))?.user_type || "Kind"
+    user_type: JSON.parse(localStorage.getItem("CompanyDetails"))?.user_type || ""
   },
   office_details: {
     name: "",

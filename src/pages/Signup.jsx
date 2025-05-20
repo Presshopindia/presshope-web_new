@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import HeaderN from "../component/HeaderN";
 import DbFooter from "../component/DbFooter";
 import { Container, Row, Col } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
@@ -13,10 +12,8 @@ import location from "../assets/images/location.svg";
 import website from "../assets/images/sortIcons/political.svg";
 import addPic from "../assets/images/add-square.svg";
 import ComputerPic from "../assets/images/computer.svg";
-import user from "../assets/images/user.svg";
 import mail from "../assets/images/mail.svg";
 import "react-phone-number-input/style.css";
-import { Slide } from "react-toastify";
 import PhoneInput from "react-phone-number-input";
 import Loader from "../component/Loader";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
@@ -26,12 +23,9 @@ import {
   Button,
   MenuItem,
   Select,
-  FormControl,
-  InputLabel,
 } from "@mui/material";
 import { debounce } from "lodash";
 
-import { Link } from "react-router-dom";
 import { Get, Post } from "../services/user.services";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -57,10 +51,8 @@ const Signup = () => {
   const [show, setShow] = useState(
     (multiOfficeInitState.length > 1 && true) || false
   );
-  // const [show, setShow] = useState(true);
   const [AdminDetails, setAdminDetails] = useState({ ...adminDetailInitState, office_email: localAdmin?.user_email });
   const [isWindowShowMessage, setIsWindowShowMessage] = useState(false);
-  const [renderForRegistrationData, setRenderForRegistrationData] = useState(0);
   const [errorData, setErrorData] = useState({
     number: "",
     vat: "",
@@ -68,7 +60,7 @@ const Signup = () => {
     company_name: ""
   });
   const [loading, setLoading] = useState(false);
-  const { adminPreRegistrationEmail, setAdminPreRegistrationEmail } =
+  const { adminPreRegistrationEmail } =
     useDarkMode();
 
   const [phoneErrors, setPhoneErrors] = useState([]);
@@ -209,13 +201,21 @@ const Signup = () => {
     //   toast.error("")
     // }
     if (officeNames.length === 0) {
-      successToasterFun("Please add office details");
+      toast.error("Please select office details");
     } else if (AdminDetails.administrator_details.office_name === "") {
-      successToasterFun("Please select office name");
+      toast.error("Please select office name");
+    } else if (AdminDetails.administrator_details.admin_profile === "") {
+      toast.error("Please select profile image");
     } else if (AdminDetails.administrator_details.department === "") {
-      successToasterFun("Please select the department");
+      toast.error("Please select the department");
     } else if (AdminDetails.administrator_details.country_code === "") {
-      successToasterFun("Please select the country code");
+      toast.error("Please select the country code");
+    } else if (errorData.phone ) {
+      toast.error(errorData.phone);
+    } else if (AdminDetails.admin_rights.price_range.minimum_price === "" ) {
+      toast.error("Please enter minimum price");
+    } else if (AdminDetails.admin_rights.price_range.maximum_price === "" ) {
+      toast.error("Please enter maximum price");
     } else {
       localStorage.setItem("Page1", JSON.stringify(AdminDetails));
       localStorage.setItem("designation", JSON.stringify(filteredDesignation[0]));
@@ -224,13 +224,12 @@ const Signup = () => {
       const step2Data = {
         email: userEmailId ?? adminPreRegistrationEmail,
         step2: {
-          // company_details:AdminDetails?.company_details,
-          // office_details:newOffice1,
           administrator_details: AdminDetails?.administrator_details,
           admin_rights: AdminDetails?.admin_rights,
         },
       };
-      const respPreRegistrationData = await Post(
+
+      await Post(
         "mediaHouse/preRegistration",
         step2Data
       );
@@ -394,7 +393,7 @@ const Signup = () => {
   const handleValidation = (index, phone) => {
     const updatedErrors = [...phoneErrors];
     if (phone.length < 10) {
-      updatedErrors[index] = "Phone number must be 10 digits.";
+      updatedErrors[index] = "Mobile number should be 10 digits.";
     } else {
       updatedErrors[index] = ""; // Clear error if valid
     }
@@ -534,8 +533,6 @@ const Signup = () => {
     });
   };
 
-  console.log("Multioffice -------------->", multiOffice)
-
   const handleGetAllinformationAndAddAnotherOffice = async () => {
     try {
       const userEmailId = localStorage.getItem("UserEmailId");
@@ -576,11 +573,28 @@ const Signup = () => {
   // Add office-
   const AddOffice = async (e) => {
     e.preventDefault();
-    if (!AdminDetails?.company_details?.profile_image) {
-      toast.error("Company logo is empty");
-      return;
-    }
+
     try {
+      if (!AdminDetails?.company_details?.user_type || AdminDetails?.company_details?.user_type === "option1") {
+        toast.error("Please select mediahouse type");
+        return;
+      }
+  
+      if (!AdminDetails?.company_details?.profile_image) {
+        toast.error("Please select company logo");
+        return;
+      }
+  
+      if (!AdminDetails?.company_details?.company_number || AdminDetails?.company_details?.company_number?.length !== 8 ) {
+        toast.error("Please enter valid company number");
+        return;
+      }
+  
+      if (!AdminDetails?.company_details?.company_vat || AdminDetails?.company_details?.company_vat?.length !== 9) {
+        toast.error("Please enter valid company VAT");
+        return;
+      }
+
       let payload = multiOffice[multiOffice.length - 1];
       payload = {
         ...payload,
@@ -589,6 +603,17 @@ const Signup = () => {
         company_number: AdminDetails.company_details.company_number,
         profile_image: AdminDetails.company_details.profile_image,
       };
+
+      if (!payload?.office_type_id || payload?.office_type_id === "option1") {
+        toast.error("Please select office type");
+        return;
+      }
+
+      if (!payload?.phone || payload?.phone?.length !== 10) {
+        toast.error("Please enter valid phone number");
+        return;
+      }
+
 
       setLoading(true);
       const resp = await Post("mediaHouse/addOfficeDetail", payload);
@@ -700,7 +725,7 @@ const Signup = () => {
     setTimeout(() => {
       handleGetAllinformation();
     }, 1000);
-  }, [renderForRegistrationData]);
+  }, []);
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -763,12 +788,7 @@ const Signup = () => {
                       </div>
                     </div>
                     <div className="onboardStep">
-                      <form
-                        onSubmit={(e) => {
-                          AddOffice(e);
-                          e.preventDefault();
-                        }}
-                      >
+                      <form onSubmit={AddOffice}>
                         <div className="companyDetails sign_section">
                           <p className="onbrdheading sign_hdng">
                             Company Details
@@ -810,15 +830,16 @@ const Signup = () => {
                                     <img src={ComputerPic} alt="" />
                                     <Select
                                       className="w-100 slct_sign"
+                                      required
                                       onChange={(e) => handleCompanyChange(e)}
                                       value={
-                                        AdminDetails?.company_details?.user_type
+                                        AdminDetails?.company_details?.user_type || "option1"
                                       }
                                       name="user_type"
                                     >
                                       <MenuItem
                                         className="selectPlaceholder"
-                                        value={"Kind"}
+                                        value="option1"
                                       >
                                         Kind
                                       </MenuItem>
@@ -1004,7 +1025,7 @@ const Signup = () => {
                                         className="selectPlaceholder"
                                         value="option1"
                                       >
-                                        Select Office Type{" "}
+                                        Select office type{" "}
                                       </MenuItem>
                                       {officetypes &&
                                         officetypes.map((value, index) => {
@@ -1483,11 +1504,11 @@ const Signup = () => {
                                   {AdminDetails.administrator_details.phone
                                     .length < 10 ? (
                                     <span className="errorInput">
-                                      Mobile number should 10 digit
+                                      Mobile number should be 10 digits
                                     </span>
                                   ) : errorData.phone ? (
                                     <span className="errorInput" >
-                                      This mobile number already exists.
+                                      {errorData.phone}
                                     </span>
                                   ) : (
                                     ""
