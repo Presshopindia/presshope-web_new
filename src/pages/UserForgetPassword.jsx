@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import HeaderN from "../component/HeaderN";
 import DbFooter from "../component/DbFooter";
 import { Container, Row, Col } from "react-bootstrap";
 import { Button } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import usrLoginbg from "../assets/images/usrLoginbg.jpg";
 import Form from "react-bootstrap/Form";
 import Email from "../assets/images/mail.svg";
-// import forgotrtimg from "../assets/images/forgotrtimg.svg";
 import { Post } from "../services/user.services";
 import { toast } from "react-toastify";
 import Loader from "../component/Loader";
@@ -23,18 +20,18 @@ const UserForgetPassword = () => {
     try{
       setLoading(true);
       const resp = await Post(`auth/media/house/forgotPassword`, {
-        email: email,
+        email,
       });
   
       if (resp) {
         localStorage.setItem("Email", email);
-        navigate("/User-reset-Password");
-        // toast.success("OTP sent successfully")
         setLoading(false);
+        toast.success("OTP sent successfully")
+        navigate("/User-reset-Password");
       }
     }
     catch(error){
-      // console.log(error);
+      toast.error(error?.response?.data?.errors?.msg)
       setLoading(false);
     }
   };

@@ -2,20 +2,14 @@ import React, { useEffect, useState } from "react";
 import HeaderN from "../component/HeaderN";
 import DbFooter from "../component/DbFooter";
 import { Container, Row, Col, Form } from "react-bootstrap";
-import accessCenter from "../assets/images/accessCenter.png";
-import addPic from "../assets/images/add-square.svg";
-// import 'react-phone-number-input/style.css';
-import tandcimg from "../assets/images/tandcimg.png";
-import { Checkbox, FormControlLabel, Button, Tooltip } from "@mui/material";
-
+import { Tooltip } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { Get, Post } from "../services/user.services";
 import { toast } from "react-toastify";
 import Loader from "../component/Loader";
-import axios from "axios";
 import { successToasterFun } from "../component/commonFunction";
 import moment from "moment";
-import { FaRegArrowAltCircleDown, FaRegArrowAltCircleUp, FaChevronCircleDown, FaChevronCircleUp } from "react-icons/fa";
+import { FaChevronCircleDown, FaChevronCircleUp } from "react-icons/fa";
 
 const TandcPre = () => {
   const navigate = useNavigate();
@@ -23,32 +17,10 @@ const TandcPre = () => {
   const CompanyDetails = JSON.parse(localStorage.getItem("CompanyDetails"));
   const adminPopup = JSON.parse(localStorage.getItem("AdminPopup"));
   const page1 = JSON.parse(localStorage.getItem("Page1"));
-  const page2 = JSON.parse(localStorage.getItem("Page2"));
   const page3 = JSON.parse(localStorage.getItem("Page3"));
+  const docs = JSON.parse(localStorage.getItem("docs"));
   const [loading, setLoading] = useState(false);
   const [cmsData, setCmsData] = useState("");
-
-  useEffect(() => {
-    window?.scrollTo(0, 0);
-  }, []);
-
-  const [isChecked, setIsChecked] = useState({
-    sign_leagel_terms: {
-      is_condition_one: false,
-      is_condition_two: false,
-      is_condition_three: false,
-    },
-  });
-
-  const handleChange = (e) => {
-    setIsChecked((prev) => ({
-      ...prev,
-      sign_leagel_terms: {
-        ...prev.sign_leagel_terms,
-        [e.target.name]: e.target.checked,
-      },
-    }));
-  };
 
   const SignUp = async (e) => {
     e.preventDefault();
@@ -69,8 +41,7 @@ const TandcPre = () => {
         company_number: CompanyDetails?.company_number,
         company_vat: CompanyDetails?.company_vat,
         profile_image: CompanyDetails?.profile_image,
-        docs: JSON.parse(localStorage.getItem("docs")),
-        office_details: officeDetails,
+        docs,
         admin_detail: {
           full_name: page1?.administrator_details?.full_name,
           first_name: page1?.administrator_details?.first_name,
@@ -121,10 +92,6 @@ const TandcPre = () => {
         },
       };
 
-      if (!obj?.first_name || !obj?.last_name || !obj?.full_name) {
-
-      }
-
       const onboardDetails = {
         AdminName: `${adminPopup?.first_name} ${adminPopup?.last_name}`,
         AdminEmail: page1?.office_email,
@@ -138,20 +105,21 @@ const TandcPre = () => {
         localStorage.removeItem("OfficeDetails");
         localStorage.removeItem("AdminPopup");
         localStorage.removeItem("Page1");
-        localStorage.removeItem("Page2");
         localStorage.removeItem("Page3");
         localStorage.removeItem("CompanyDetails");
+        localStorage.removeItem("docs");
+        localStorage.removeItem("designation");
+        localStorage.removeItem("UserEmailId");
 
-        // toast.success("Registered Successfully")
+        successToasterFun("Registered Successfully")
         navigate("/Success");
       }
     } catch (error) {
       setLoading(false);
-      successToasterFun(error.message)
+      toast.error(error.message)
       setLoading(false);
     }
   };
-
 
   const getCMS = async () => {
     try {
@@ -167,6 +135,7 @@ const TandcPre = () => {
 
   useEffect(() => {
     getCMS();
+    window?.scrollTo(0, 0);
   }, [])
 
   return (

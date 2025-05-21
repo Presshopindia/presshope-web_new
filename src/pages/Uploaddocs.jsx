@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from "react";
 import HeaderN from "../component/HeaderN";
 import DbFooter from "../component/DbFooter";
-import { Container, Row, Col, Modal } from "react-bootstrap";
-import accessCenter from "../assets/images/accessCenter.png";
-import addPic from "../assets/images/add-square.svg";
-import attachmentic from "../assets/images/attachmentic.svg";
-import docicon from "../assets/images/docicon.png";
+import { Container, Row, Col } from "react-bootstrap";
 import pdficon from "../assets/images/pdficon.png";
-import { Slide } from "react-toastify";
-// import 'react-phone-number-input/style.css';
-import docupld from "../assets/images/img-upld.svg";
 import {
   Checkbox,
   FormControlLabel,
@@ -18,60 +11,29 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import { Link, useNavigate } from "react-router-dom";
-import { Get, Patch, Post } from "../services/user.services";
-// import uplddocimg from "../assets/images/login-images/upload_docs.png";
+import { useNavigate } from "react-router-dom";
+import { Get, Post } from "../services/user.services";
 import uplddocimg from "../assets/images/login-images/upload_docs.jpg";
 import closeic from "../assets/images/close.svg";
 import Header from "../component/Header";
-import { BsCircleFill, BsFillCheckCircleFill } from "react-icons/bs";
-import { toast } from "react-toastify";
 import Loader from "../component/Loader";
 
 const Uploaddocs = () => {
   const token = localStorage.getItem("token");
-  const [show, setShow] = useState(false);
-  const [fileName, setfileName] = useState(null);
-  const [type, setType] = useState(false);
   const navigate = useNavigate();
   const [docs, setDocs] = useState([]);
-  const [isChecked, setIsChecked] = useState(true);
   const [docList, setDocList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [upload_docs, setUpload_docs] = useState({
-    delete_doc_when_onboading_completed: isChecked,
-    govt_id: "",
-    photography_licence: "",
-    comp_incorporation_cert: "",
-  });
-
-  // console.log("docs------->", docs)
-
-  const handleShow = () => {
-    setShow(!show);
-  };
-
-  const handleClose = () => {
-    setShow(false);
-  };
 
   const AddDocuments = async (file, extraData) => {
     setLoading(true);
-    setfileName(file);
-    // console.log("extraData1312312312", extraData, file)
     const Formdata = new FormData();
     Formdata.append("image", file);
     const filepath = await Post("mediaHouse/uploadMedia", Formdata);
     setLoading(false);
     if (filepath) {
-      setUpload_docs((prev) => ({
-        ...prev,
-        [type]:
-          `${process.env.REACT_APP_CDN_URL}docToBecomePro/` +
-          filepath.data.image,
-      }));
       setDocs((prev) => [
-        ...docs,
+        ...prev,
         {
           url:
             `${process.env.REACT_APP_CDN_URL}docToBecomePro/` +
@@ -84,39 +46,9 @@ const Uploaddocs = () => {
     setLoading(false);
   };
 
-  // console.log("docs131231231", docs)
-
-  const UploadDocs = async () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      // toast.success("Uploaded", { hideProgressBar: true });
-      toast.success("All done. Thanks", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Slide,
-      });
-    }, 1000);
-    // const resp = await Patch(`mediaHouse/uploadDocToBecomePro`, upload_docs);
-    // if (resp) {
-    //
-    //   setLoading(false);
-    // }
-  };
-
   const NextPage = () => {
-    localStorage.setItem("Page2", JSON.stringify(upload_docs));
     localStorage.setItem("docs", JSON.stringify(docs));
-    if (localStorage.getItem("Page2")) {
-      // navigate("/add-payment-details");
-      navigate("/terms-and-conditions");
-    }
+    navigate("/terms-and-conditions");
   };
 
   const getDocuments = async () => {
@@ -126,20 +58,16 @@ const Uploaddocs = () => {
         setDocList(res?.data?.data);
       }
     } catch (error) {
-      // console.log(error);
     }
   };
   useEffect(() => {
     getDocuments();
   }, []);
 
-  // console.log("docList31312312312", docList)
-
   const handleToggleSelect = (itemId) => {
-    // console.log(itemId, `<<<<<<what is this`)
     const updatedData = docList.map((item) => {
       if (item._id === itemId) {
-        return { ...item, selected: !item.selected }; // Toggle the "selected" key
+        return { ...item, selected: !item.selected };
       }
       return item;
     });
@@ -152,7 +80,6 @@ const Uploaddocs = () => {
       return filterredData;
     });
   };
-  // console.log("filename --->  --->",fileName.name);
   return (
     <>
       {token ? <Header /> : <HeaderN />}
@@ -177,10 +104,7 @@ const Uploaddocs = () => {
                           <FormControlLabel
                             className="check_label me-0"
                             control={<Checkbox />}
-                            checked={isChecked}
-                            onChange={(e) => {
-                              setIsChecked(e.target.checked);
-                            }}
+                            checked={true}
                           />
                           <p className="mb-0">
                             Please delete the docs from your system once the
@@ -224,7 +148,6 @@ const Uploaddocs = () => {
                               <Select
                                 className="w-100 slct_sign doc_slct_wrp"
                                 placeholder="Select Documents"
-                                onChange={(e) => setType(e.target.value)}
                               >
                                 {docList?.map((curr) => (
                                     <MenuItem value={curr._id} key={curr._id}>
@@ -279,7 +202,6 @@ const Uploaddocs = () => {
                                       />
                                     )}
                                     <div>
-                                      {/* <p>{el?.name}</p> */}
                                       <p>{el?.url?.replace(/^.*[\\/]/, "")}</p>
                                     </div>
                                   </div>

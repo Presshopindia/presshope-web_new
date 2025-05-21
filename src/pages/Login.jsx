@@ -51,40 +51,46 @@ const Login = () => {
 
   const Submit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     try {
-      const auth = getAuth();
-      const obj = {
-        email: credentials.email,
-        password: credentials.password,
-      };
+      if (credentials.email === "") {
+        toast.error("Please enter the email");
+      } else if (credentials.password === "") {
+        toast.error("Please enter the password");
+      } else {
+        setLoading(true);
+        const auth = getAuth();
+        const obj = {
+          email: credentials.email,
+          password: credentials.password,
+        };
 
-      const resp = await Post("auth/loginMediaHouse", obj);
-      // return
-      if (resp) {
-        setLoading(false);
-        navigate("/dashboard/exclusive");
-        // toast.success("Login Successfully")
+        const resp = await Post("auth/loginMediaHouse", obj);
+        // return
+        if (resp) {
+          setLoading(false);
+          navigate("/dashboard/exclusive");
+          // toast.success("Login Successfully")
 
-        localStorage.setItem("token", resp.data.token);
-        localStorage.setItem("id", resp.data.user._id);
-        localStorage.setItem("user", JSON.stringify(resp.data.user));
+          localStorage.setItem("token", resp.data.token);
+          localStorage.setItem("id", resp.data.user._id);
+          localStorage.setItem("user", JSON.stringify(resp.data.user));
 
-        window.location.reload();
+          window.location.reload();
 
-        signInWithEmailAndPassword(
-          auth,
-          credentials.email,
-          credentials.password
-        )
-          .then((userCredential) => {
-            // Signed in successfully
-            const user = userCredential.user;
-          })
+          signInWithEmailAndPassword(
+            auth,
+            credentials.email,
+            credentials.password
+          )
+            .then((userCredential) => {
+              // Signed in successfully
+              const user = userCredential.user;
+            })
 
-          .catch((error) => {
-            // Handle errors here
-          });
+            .catch((error) => {
+              // Handle errors here
+            });
+        }
       }
     } catch (error) {
       if (error?.response?.data?.msg) {
@@ -96,8 +102,6 @@ const Login = () => {
     }
   };
 
-  // console.log(localStorage.getItem("DeviceToken"), "token")
-
   const AddFirebaseMessaging = async () => {
     const formdata = new FormData();
     formdata.append("device_token", localStorage.getItem("DeviceToken"));
@@ -105,10 +109,8 @@ const Login = () => {
     formdata.append("device_id", deviceId);
     if (localStorage.getItem("DeviceToken")) {
       try {
-        const resp = await Post("mediaHouse/addFcmToken", formdata);
-        // console.log("resp", resp);
+        await Post("mediaHouse/addFcmToken", formdata);
       } catch (error) {
-        // console.log(error);
       }
     }
   };
@@ -140,8 +142,8 @@ const Login = () => {
                           fullName ? (<Badge className='admin_badge' text="dark">
                             {type === "user" ? "User" : "Admin"}
                           </Badge>
-                        ) : null
-                      }
+                          ) : null
+                        }
                       </h1>
 
                       <div className="onboardStep b_border top_txt">

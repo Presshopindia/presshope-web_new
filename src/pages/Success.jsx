@@ -8,11 +8,13 @@ import ReactPlayer from 'react-player';
 import videothum from "../assets/images/vthumbnail.png";
 import videothum2 from "../assets/images/vthumnail2.png";
 import Footerlandingpage from '../component/Footerlandingpage';
-import { Get } from '../services/user.services';
+import { Get, Post } from '../services/user.services';
 import LoginHeader from '../component/LoginHeader';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import InviteUsers from '../component/InviteUsers';
 import EmailClientModal from '../component/EmailClientModal';
+import { toast } from 'react-toastify';
+import Loader from '../component/Loader';
 
 
 const Success = () => {
@@ -21,6 +23,7 @@ const Success = () => {
   const AdminDetails = JSON.parse(localStorage.getItem("OnboardDetails"));
   const Designation = JSON.parse(localStorage.getItem("designation"));
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [tutorials, setTutorials] = useState()
 
@@ -29,12 +32,30 @@ const Success = () => {
     setTutorials(resp.data.status)
   }
 
+  const ResendEmail = async () => {
+    try{
+      setLoading(true);
+      const resp = await Post(`auth/resendEmail`, {
+        email: AdminDetails?.AdminEmail,
+      })
+      if (resp) {
+        toast.success(resp?.data?.data)
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log("errors", error)
+      toast.error(error?.response?.data?.errors?.msg) 
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     GetTutorials()
   }, [])
 
   return (
     <>
+    {loading && <Loader />}
       <LoginHeader />
       <div className="page-wrap login-page p-0">
         <Container fluid className="pdng">
@@ -51,9 +72,9 @@ const Success = () => {
                         </Badge>{' '}</h1>
 
                       <div className="onboardStep b_border top_txt">
-                        <p>Thank you for completing your onboarding {AdminDetails?.AdminEmail ? " as an administrator " : ""} with <span className='txt-success'>PressHop.</span> Please check your official inbox for our verification email sent on <span className='txt-success-link'><Link>{AdminDetails?.AdminEmail ? AdminDetails?.AdminEmail : ""}.</Link></span></p>
-                        <p>If you still haven't received our activation email, please <span className='txt-success-link'><Link to={"/all-tutorials"}>click here</Link></span> to resend another mail, if you continue facing any further problems, please contact us, and we will take care of this right away for you.</p>
-                        <p>Meanwhile, you can view our <span className='txt-success-link'><Link to={"/all-tutorials"}>online tutorials</Link></span> to experience the amazing features of our marketplace, or check out our <span className='txt-success-link'><Link to={"/faq-post"}>FAQs</Link></span> for any questions that you may have. Additionally, you can send an <span className='txt-success-link'><Link to={"mailto:presshop@mailinator.com"}>email</Link></span>  if you have any questions. We are available 24x7 to assist. Cheers!</p>
+                        <p>Thank you for completing your onboarding {AdminDetails?.AdminEmail ? " as an administrator " : ""} with <span className='txt-success'>PressHop.</span> Please check your official inbox for our verification email sent on <span className='txt-success-link' onClick={() => setShowEmailModal(true)}><Link>{AdminDetails?.AdminEmail ? AdminDetails?.AdminEmail : ""}.</Link></span></p>
+                        <p>If you still haven't received our activation email, please <span className='txt-success-link' onClick={ResendEmail}><Link>click here</Link></span> to resend another mail, if you continue facing any further problems, please contact us, and we will take care of this right away for you.</p>
+                        <p>Meanwhile, you can view our <span className='txt-success-link'><Link to={"/all-tutorials"}>online tutorials</Link></span> to experience the amazing features of our marketplace, or check out our <span className='txt-success-link'><Link to={"/faq-post"}>FAQs</Link></span> for any questions that you may have. Additionally, you can send an <span className='txt-success-link'><Link to="/contact-us">email</Link></span>  if you have any questions. We are available 24x7 to assist. Cheers!</p>
                       </div>
                     </div>
                     <div className='onboardIntro_success_info border-0'>

@@ -86,35 +86,35 @@ const UserOnboadingRequest = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (details?.password !== details?.confirm_password) {
-      setErrorMessage("Passwords do not match");
-      return;
-    }
-
-    setLoading(true);
-
     const obj = {
       ...details,
-      user_first_name: details?.full_name?.split(" ")?.[0],
-      user_last_name: details?.full_name?.split(" ")?.slice(1)?.join(" "),
       first_name: details?.full_name?.split(" ")?.[0],
       last_name: details?.full_name?.split(" ")?.slice(1)?.join(" "),
-      administator_first_name: details?.administator_full_name?.split(" ")?.[1],
-      administator_last_name: details?.administator_full_name?.split(" ")?.[1],
     };
 
     try {
-      const list = await Post(`mediaHouse/userRegisteration`, obj);
-      if (list) {
-        toast.success("Successfully registered");
-        setLoading(false);
-
-        const onboardDetails = {
-          AdminName: details?.full_name,
-        };
-        localStorage.setItem("OnboardDetails", JSON.stringify(onboardDetails));
-
-        navigate("/Success");
+      if (obj.designation_id === "") {
+        toast.error("Please select the designation");
+      } else if (obj.department_id === "") {
+        toast.error("Please select the department");
+      } else if (obj.phone.length !== 10) {
+        toast.error("Please enter valid phone number");
+      } else if (details?.password !== details?.confirm_password) {
+        setErrorMessage("Passwords do not match");
+      } else {
+        setLoading(true);
+        const list = await Post(`mediaHouse/userRegisteration`, obj);
+        if (list) {
+          toast.success("Successfully registered");
+          
+          const onboardDetails = {
+            AdminName: details?.full_name,
+          };
+          localStorage.setItem("OnboardDetails", JSON.stringify(onboardDetails));
+          
+          setLoading(false);
+          navigate("/Success");
+        }
       }
     } catch (error) {
       setLoading(false);
@@ -134,7 +134,6 @@ const UserOnboadingRequest = () => {
 
   // Function to fetch office details
   const getOfficeDetails = async (id) => {
-    console.log(id)
     setLoading(true);
     try {
       const data = await Get(`mediaHouse/getOfficeDetail?office_id=${id}`);
@@ -145,7 +144,6 @@ const UserOnboadingRequest = () => {
     }
     catch (error) {
       setLoading(false);
-      console.log(error)
     }
   };
 
@@ -232,7 +230,6 @@ const UserOnboadingRequest = () => {
       }));
       setLoading(false);
     } catch (error) {
-      console.log(error)
       setLoading(false);
       toast.error("Failed to process image");
     }
@@ -369,7 +366,7 @@ const UserOnboadingRequest = () => {
                             <h1 className="mb-0">Let's get you onboarded</h1>
                             <div className="onboardStep b_border">
                               <p className="mb_20">
-                              You're good to go! Your admin has pre-assigned you access and rights — simply pop in your details, log in, and dive into the exciting world of <span className="txt-success">PressHop</span>.
+                                You're good to go! Your admin has pre-assigned you access and rights — simply pop in your details, log in, and dive into the exciting world of <span className="txt-success">PressHop</span>.
                               </p>
                             </div>
                           </div>
@@ -553,8 +550,9 @@ const UserOnboadingRequest = () => {
                             </div>
 
                             {/* Admin Details */}
-                            <div className="adminDetails sign_section">
-                              <Form>
+                            <Form onSubmit={handleSubmit}>
+                              <div className="adminDetails sign_section">
+                                {/* <Form> */}
                                 <p className="onbrdheading sign_hdng">
                                   New user details
                                 </p>
@@ -568,8 +566,9 @@ const UserOnboadingRequest = () => {
                                             type="text"
                                             className=""
                                             value={details?.full_name}
-                                            placeholder="Enter Full name"
+                                            placeholder="Enter Full name *"
                                             name="first_name"
+                                            required
                                             onChange={(e) =>
                                               setDetails((pre) => ({
                                                 ...pre,
@@ -771,14 +770,6 @@ const UserOnboadingRequest = () => {
                                           }));
                                         }}
                                       />
-                                      {/* {emailExist && (
-                                        <span
-                                          style={{ color: "red" }}
-                                          className="eml_txt_dngr"
-                                        >
-                                          This email already exists
-                                        </span>
-                                      )} */}
                                     </Form.Group>
                                   </Col>
 
@@ -847,11 +838,8 @@ const UserOnboadingRequest = () => {
                                     </Form.Group>
                                   </Col>
                                 </Row>
-                              </Form>
-                            </div>
-
-                            {/* Rights */}
-                            <Form onSubmit={handleSubmit}>
+                                {/* </Form> */}
+                              </div>
                               <div className="adminDetails sign_section">
                                 <p className="onbrdheading sign_hdng">Pre-approved user rights</p>
                                 <Row>
@@ -981,7 +969,7 @@ const UserOnboadingRequest = () => {
         }}
         onCropComplete={handleCropComplete}
         initialImage={tempImageFile}
-        aspectRatio={140/100}
+        aspectRatio={140 / 100}
         maxWidthCm={140}
         maxHeightCm={100}
       />
