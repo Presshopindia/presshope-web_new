@@ -99,7 +99,7 @@
 .form-select,
 .MuiInputBase-root {
   border-radius: 6px;
-  border: 1px solid #ced4da;
+  /* border: 1px solid #ced4da; */
   font-size: 16px;
 }
 
@@ -183,6 +183,11 @@
   z-index: 5;
   display: flex;
   align-items: center;
+}
+
+.number_inp_wrap.forloginpage .PhoneInputCountry {
+  left: 0;
+  top: 19px;
 }
 
 .PhoneInputCountryIcon {
@@ -310,4 +315,8 @@
 /* This styles the placeholder text in the Material-UI Select component */
 .MuiSelect-root.MuiSelect-select.placeholder-showing {
   color: #6c757d !important;
+}
+
+.officename .MuiSelect-select {
+  padding-left: 6px !important;
 }

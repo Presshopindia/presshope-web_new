@@ -302,7 +302,7 @@ const Myprofilemdl = (props) => {
                 {props.profileType == "My" ? (
                   <Col xs={12} md={6} sm={6} className="rw_inn_flex mb-0">
                     <label>Office name</label>
-                    <Form.Group className="mb-4 form-group">
+                    <Form.Group className="mb-4 form-group officename">
                       <img
                         className="privacy inp_icn"
                         src={officeic}
@@ -317,7 +317,7 @@ const Myprofilemdl = (props) => {
                     </Form.Group>
                   </Col>
                 ) : (
-                  <Col xs={12} md={6} sm={6} className="rw_inn_flex mb-0">
+                  <Col xs={12} md={6} sm={6} className="rw_inn_flex mb-0 officename">
                     <label>Office name</label>
                     {
                       profile?.role == "User_mediaHouse" || profile?.role == "Adduser"
@@ -408,10 +408,10 @@ const Myprofilemdl = (props) => {
                           Select department
                         </MenuItem>
                         {department?.map((item) => {
-                            return (
-                              <MenuItem value={item._id}>{item.name}</MenuItem>
-                            );
-                          })}
+                          return (
+                            <MenuItem value={item._id}>{item.name}</MenuItem>
+                          );
+                        })}
                       </Select>
                     </Form.Group>
                   </Col>
@@ -467,7 +467,7 @@ const Myprofilemdl = (props) => {
                       disabled
                       value={profile?.email}
                       onChange={handleChange}
-                      className={props.profileType == "My"? "" : "invite-user-disable-field"}
+                      className={props.profileType == "My" ? "" : "invite-user-disable-field"}
                     />
                   </Form.Group>
                 </Col>

@@ -2985,6 +2985,7 @@ button.MuiButton-secondary {
     height: 293px;
     object-fit: contain;
   }
+
   img.marketTempLaptop {
     margin-top: -140px;
     position: relative;
@@ -3610,7 +3611,7 @@ button.MuiButton-secondary {
 
     img {
       position: absolute;
-      top: 10px;
+      top: 6px;
       left: 10px;
     }
 
@@ -10224,6 +10225,8 @@ button.sort_btn.small_sort_btn {
     .PhoneInputCountry {
       position: relative;
       margin-right: 0px;
+      left: -3px;
+      top: 19px;
     }
 
     .PhoneInputCountrySelect {
@@ -13157,6 +13160,7 @@ audio {
 .onboardStep .regit-newfrom .form-group fieldset {
   border: 1px solid #858585 !important;
   border-radius: 8px;
+  height: 40px;
 }
 
 .mb-6 {
@@ -13230,4 +13234,12 @@ audio {
 
 .mb-5 {
   margin-bottom: 20px;
+}
+
+.onboardStep .regit-newfrom .form-group svg {
+  top: calc(50% - .7em) !important;
+}
+
+.onboardStep .regit-newfrom .form-group .MuiSelect-select {
+  margin-top: -6px !important;
 }

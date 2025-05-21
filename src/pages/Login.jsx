@@ -279,7 +279,7 @@ const Login = () => {
                           By logging into the <span className="txt-success">PressHop</span> demo, you're registering your interest. We'll keep you in the loop with launch updates and all the good stuff coming your way. Fancy a look at the fine print? You can read our <span className="txt-success-link"><Link to="/pre-login-tandc">T&Cs</Link></span> here.
                         </p>
                         <p>
-                          This access lasts for 30 days, so feel free to pass it along to your colleagues while it's live. Need a bit more time? No bother — just drop us a line at <span className="txt-success-link"><Link to="/contact-us">hello@presshop.co.uk</Link></span> and we'll happily sort you out with an extension
+                          This access lasts for 30 days, so feel free to pass it along to your colleagues while it's live. Need a bit more time? No bother — just drop us a line at <span className="txt-success-link"><Link to="/contact-us">Contact Us</Link></span> and we'll happily sort you out with an extension
                         </p>
                       </div>
                     </div>
@@ -471,7 +471,7 @@ const Login = () => {
                             </Form.Group>
                           </Col>
                           <Col md={6}>
-                            <div className="number_inp_wrap">
+                            <div className="number_inp_wrap forloginpage">
                               <input
                                 type="number"
                                 className="input_nmbr"
