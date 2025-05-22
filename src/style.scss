@@ -10229,6 +10229,8 @@ button.sort_btn.small_sort_btn {
       top: 19px;
     }
 
+
+
     .PhoneInputCountrySelect {
       font-size: 14px;
       font-family: $txt-light;
@@ -13242,4 +13244,13 @@ audio {
 
 .onboardStep .regit-newfrom .form-group .MuiSelect-select {
   margin-top: -6px !important;
+}
+
+.number_inp_wrap.fornumber-input-phone .PhoneInputCountry {
+  left: 0 !important;
+  top: 20px !important;
+}
+
+.number_inp_wrap.fornumber-input-phone .input_nmbr {
+  // left: 72px !important;
 }

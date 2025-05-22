@@ -91,7 +91,7 @@ const ContactusPre = () => {
                   </div>
                   <div className="log_txt">
                     <Typography variant="body2">
-                      Our helpful teams are available 24x7 to assist, and answer
+                      Our helpful teams are available 24x7   to assist, and answer
                       your questions. You can choose to send us a{" "}
                       <a className="link">message</a>, an{" "}
                       <a className="link">email</a>, or simply{" "}
@@ -125,7 +125,7 @@ const ContactusPre = () => {
                             required
                             className="rnd grey"
                             value={details.first_name}
-                            placeholder="Enter First Name"
+                            placeholder="Enter first name"
                             name="first_name"
                             onChange={handleChange}
                           />
@@ -143,7 +143,7 @@ const ContactusPre = () => {
                             required
                             className="rnd grey"
                             value={details.last_name}
-                            placeholder="Enter Last Name"
+                            placeholder="Enter last name"
                             name="last_name"
                             onChange={handleChange}
                           />
@@ -153,13 +153,13 @@ const ContactusPre = () => {
                     <div className="cnt_mb inputs_wrap d-flex justify-content-between log_inputs">
                       <div className="d-flex flex-column">
                         <label className="cmn_lbl">Mobile number</label>
-                        <div className="number_inp_wrap">
+                        <div className="number_inp_wrap fornumber-input-phone">
                           <input
                             type="number"
                             required
                             className="input_nmbr"
                             value={details.contact_number}
-                            placeholder=" phone"
+                            placeholder="Phone numnber"
                             name="contact_number"
                             onChange={handleChange}
                             ref={phoneInputRef}
