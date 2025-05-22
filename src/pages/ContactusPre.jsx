@@ -87,7 +87,7 @@ const ContactusPre = () => {
                     <BsArrowLeft className="text-pink" /> Back{" "}
                   </Link>
                   <div className="pg_heading">
-                    <h1>Contact Us</h1>
+                    <h1>Contact us</h1>
                   </div>
                   <div className="log_txt">
                     <Typography variant="body2">
@@ -159,7 +159,7 @@ const ContactusPre = () => {
                             required
                             className="input_nmbr"
                             value={details.contact_number}
-                            placeholder=" phone"
+                            placeholder="Phone"
                             name="contact_number"
                             onChange={handleChange}
                             ref={phoneInputRef}

@@ -544,7 +544,7 @@ const ManageUsers = () => {
                                   </Form.Group>
                                 </Col>
                               </Row>
-                              <Row className="rw_gp_sml mb-4">
+                              {/* <Row className="rw_gp_sml mb-4">
                                 <p className="invite-user-heading">Activation link</p>
                                 <Col lg={12} md={12} xs={12}>
                                   <Form.Group className="form-group">
@@ -558,7 +558,7 @@ const ManageUsers = () => {
                                     />
                                   </Form.Group>
                                 </Col>
-                              </Row>
+                              </Row> */}
                               <Row className="rw_gp_sml mb-4">
                                 <p className="invite-user-heading">Message</p>
                                 <Col lg={12} md={12} xs={12}>
@@ -566,8 +566,8 @@ const ManageUsers = () => {
                                     <img src={mail} alt="" />
                                     <div className="font-14 invite-user-enable-message">
                                       <p>Dear team-members,</p>
-                                      <p>Please use this activation link to commence your onboarding process onto the <span className="txt-success">PressHop</span> platform. This activation link is valid for 5 days from now and will automatically expire.</p>
-                                      <p>If you have any questions, you can always contact me by email.</p>
+                                      <p>I’ve just sent you an invite to join <span className="txt-success">PressHop</span> , the platform powering the future of citizen journalism! Please check your inbox for instructions to complete your registration and start exploring. It’s free, and easy to use.</p>
+                                      <p>If you have any questions, just give me a shout — happy to assist.</p>
                                       <p>Thank you,</p>
                                       <p><span className='txt-success'>Administrator.</span></p>
                                     </div>
@@ -630,7 +630,7 @@ const ManageUsers = () => {
                                   </Form.Group>
                                 </Col>
                                 <Col md={3} className="">
-                                {console.log("officeDetail", officeDetails)}
+                                  {console.log("officeDetail", officeDetails)}
                                   <Form.Group className="mb-4 form-group">
                                     <img src={location} alt="" />
                                     <Form.Control

@@ -33,7 +33,7 @@ const Success = () => {
   }
 
   const ResendEmail = async () => {
-    try{
+    try {
       setLoading(true);
       const resp = await Post(`auth/resendEmail`, {
         email: AdminDetails?.AdminEmail,
@@ -44,7 +44,7 @@ const Success = () => {
       }
     } catch (error) {
       console.log("errors", error)
-      toast.error(error?.response?.data?.errors?.msg) 
+      toast.error(error?.response?.data?.errors?.msg)
       setLoading(false);
     }
   }
@@ -55,7 +55,7 @@ const Success = () => {
 
   return (
     <>
-    {loading && <Loader />}
+      {loading && <Loader />}
       <LoginHeader />
       <div className="page-wrap login-page p-0">
         <Container fluid className="pdng">
@@ -131,7 +131,7 @@ const Success = () => {
                                   className="theme-btn custom-ab w-100 sm_btn"
                                   onClick={() => setShowEmailModal(true)}
                                 >
-                                  <span>Go To E-mail</span>
+                                  <span>Verify Your Email</span>
                                 </Button>
                               )
                             }
@@ -145,7 +145,7 @@ const Success = () => {
                               className="theme-btn custom-ab w-100 sm_btn"
                               onClick={() => setShowEmailModal(true)}
                             >
-                              <span>Go To E-mail</span>
+                              <span>Verify Your Email</span>
                             </Button>
                           </div>
                         </Col>

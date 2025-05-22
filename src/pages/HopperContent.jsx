@@ -93,7 +93,7 @@ const HopperContent = () => {
               <div className="feedsMain_wrap">
                 <div className="feedsContainer feedUploadedContent mb-0">
                   <div className="feedContent_header">
-                    <h1 className="rw_hdng">Published Content</h1>
+                    <h1 className="rw_hdng">Published content</h1>
                   </div>
                   <Row className="">
                     {pub_content?.map((curr, index) => {
@@ -123,28 +123,28 @@ const HopperContent = () => {
                             feedImg={
                               curr?.content[0]?.media_type === "video"
                                 ? curr?.content[0]?.watermark ||
-                                  process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr.content[0]?.thumbnail
+                                process.env.REACT_APP_CONTENT_MEDIA +
+                                curr.content[0]?.thumbnail
                                 : curr?.content[0]?.media_type === "image"
-                                ? curr?.content[0]?.watermark ||
+                                  ? curr?.content[0]?.watermark ||
                                   process.env.REACT_APP_CONTENT_MEDIA +
-                                    curr?.content?.[0]?.media
-                                : curr?.content[0]?.media_type === "audio"
-                                ? audioic
-                                : curr?.content[0]?.media_type === "doc" ||
-                                  "pdf"
-                                ? docsic
-                                : ""
+                                  curr?.content?.[0]?.media
+                                  : curr?.content[0]?.media_type === "audio"
+                                    ? audioic
+                                    : curr?.content[0]?.media_type === "doc" ||
+                                      "pdf"
+                                      ? docsic
+                                      : ""
                             }
                             feedType={contentCamera}
                             feedTag={
                               curr?.sales_prefix
                                 ? `${curr?.sales_prefix} ${curr?.discount_percent}% Off`
                                 : curr?.content_view_type == "mostpopular"
-                                ? "Most Popular"
-                                : curr?.content_view_type == "mostviewed"
-                                ? "Most viewed"
-                                : null
+                                  ? "Most Popular"
+                                  : curr?.content_view_type == "mostviewed"
+                                    ? "Most viewed"
+                                    : null
                             }
                             user_avatar={
                               process.env.REACT_APP_AVATAR_IMAGE +
@@ -159,16 +159,16 @@ const HopperContent = () => {
                             }
                             // content_id={curr._id}
                             content_id={curr._id}
-                            basket={() =>{
+                            basket={() => {
 
                               //  handleBasket(index, i)
                               // getTransactionDetails();
-                                //  PublishedContent();
-                                setPub_Content((old)=>{
-                                  let alldata=[...old]
-                                  alldata[index].basket_status=alldata[index].basket_status=="true"?"false":"true";
-                                   return alldata ;
-                                 });
+                              //  PublishedContent();
+                              setPub_Content((old) => {
+                                let alldata = [...old]
+                                alldata[index].basket_status = alldata[index].basket_status == "true" ? "false" : "true";
+                                return alldata;
+                              });
 
                             }
 
