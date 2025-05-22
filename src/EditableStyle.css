@@ -320,3 +320,46 @@
 .officename .MuiSelect-select {
   padding-left: 6px !important;
 }
+
+.existing-user-login-box {
+  border: 2px solid #ccc;
+  padding: 16px;
+  margin-top: 24px;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.existing-user-login-message {
+  color: #222;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.existing-user-login-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.existing-user-login-input {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+  flex: 1;
+  width: 100%;
+}
+
+.existing-user-login-input:focus {
+  border-color: #ccc;
+  box-shadow: none;
+}
+.existing-user-login-button {
+  background: #ec4e54;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+} 

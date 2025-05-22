@@ -37,6 +37,8 @@ const Login = () => {
   const searchBoxRefPostalCode = useRef(null);
   const [showPostalCodePopUp, setPostalCodePopUp] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [existingEmail, setExistingEmail] = useState("");
+  const [existingEmailError, setExistingEmailError] = useState("");
 
   const libraries = ["places"];
   const { isLoaded, loadError } = useLoadScript({
@@ -250,6 +252,44 @@ const Login = () => {
       }, 5000);
     } catch (err) {
       toast.error("Failed to copy URL");
+    }
+  };
+
+  const handleExistingUserLogin = async (e) => {
+    e.preventDefault();
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!existingEmail) {
+      setExistingEmailError("Email is required");
+      return;
+    } else if (!emailRegex.test(existingEmail)) {
+      setExistingEmailError("Please enter a valid email address");
+      return;
+    } else {
+      setExistingEmailError("");
+    }
+    setLoading(true);
+    try {
+      const resp = await Post("auth/loginMediaHouse", {
+        email: existingEmail,
+        password: "test@123456",
+        userType: "demo"
+      });
+      if (resp) {
+        setLoading(false);
+        navigate("/dashboard/exclusive");
+        localStorage.setItem("token", resp.data.token);
+        localStorage.setItem("id", resp.data.user._id);
+        localStorage.setItem("user", JSON.stringify(resp.data.user));
+        window.location.reload();
+      }
+    } catch (error) {
+      if (error?.response?.data?.msg) {
+        toast.error(error?.response?.data?.msg);
+      } else {
+        toast.error(error?.response?.data?.errors?.msg.split("_").join(" "));
+      }
+      setLoading(false);
     }
   };
 
@@ -519,6 +559,39 @@ const Login = () => {
                         </div>
                       </Form>
                     </Col>
+                    {/* Highlighted Login for Existing Users */}
+                    <div className="existing-user-login-box">
+                      <div className="existing-user-login-message">
+                      Already on board? Let’s not waste time — pop in your email and away you go
+                      </div>
+                      <form
+                        onSubmit={handleExistingUserLogin}
+                        className="existing-user-login-form"
+                        autoComplete="off"
+                      >
+                        <div style={{ position: 'relative', flex: 1 }}>
+                          <img className="frnt_ic" src={mail} alt="mail icon" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', width: 20, height: 20, pointerEvents: 'none' }} />
+                          <input
+                            type="email"
+                            placeholder="Email *"
+                            value={existingEmail}
+                            onChange={e => { setExistingEmail(e.target.value); setExistingEmailError(""); }}
+                            className="existing-user-login-input"
+                            style={{ paddingLeft: 38 }}
+                            required
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          className="existing-user-login-button"
+                        >
+                          Let's Go
+                        </button>
+                      </form>
+                      {existingEmailError && (
+                        <div style={{ color: '#ec4e54', fontSize: 13, marginTop: 6, marginLeft: 2 }}>{existingEmailError}</div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </Col>
