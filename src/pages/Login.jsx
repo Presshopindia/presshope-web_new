@@ -244,6 +244,7 @@ const Login = () => {
     try {
       const currentUrl = "https://demo.presshop.news";
       await navigator.clipboard.writeText(currentUrl);
+      toast.success("Link copied! Now pop it over to your colleagues by email, text, Whatsapp and spread the PressHop magic");
       setIsCopied(true);
 
       // Reset the button text after 5 seconds

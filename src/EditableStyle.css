@@ -355,11 +355,11 @@
   box-shadow: none;
 }
 .existing-user-login-button {
-  background: #ec4e54;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-weight: 600;
-  cursor: pointer;
+  background: #ec4e54 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  padding: 8px 20px !important;
+  transition: all 0.3s ease !important;
 } 
