@@ -410,13 +410,13 @@ const AddBroadcastTask = (props) => {
 
         // Perform calculations
         broadCasted_task.photo_price = details?.photo_price
-          ? details.photo_price * (80 / 100)
+          ? details.photo_price * 3/4
           : "";
         broadCasted_task.videos_price = details?.videos_price
-          ? details.videos_price * (80 / 100)
+          ? details.videos_price * 3/4
           : "";
         broadCasted_task.interview_price = details?.interview_price
-          ? details.interview_price * (80 / 100)
+          ? details.interview_price * 3/4
           : "";
 
         console.log("all details about task ---->", broadCasted_task);

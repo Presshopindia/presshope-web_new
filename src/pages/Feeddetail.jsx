@@ -2358,7 +2358,7 @@ const Feeddetail = (props) => {
                                                         <a className="link">
                                                           £
                                                           {
-                                                            data?.original_ask_price
+                                                            curr?.reconsider_amount
                                                           }
                                                         </a>{" "}
                                                       </Typography>
@@ -2369,10 +2369,10 @@ const Feeddetail = (props) => {
                                                       className="theme_btn"
                                                       onClick={() => {
                                                         Payment(
-                                                          +data?.original_ask_price,
+                                                          +curr?.reconsider_amount,
                                                           data?._id,
                                                           true,
-                                                          data?.original_ask_price,
+                                                          curr?.reconsider_amount,
                                                           roomDetails
                                                         );
                                                       }}

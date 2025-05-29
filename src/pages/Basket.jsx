@@ -601,7 +601,7 @@ const Basket = () => {
                                       </div>
                                     )}
 
-                                    {promoCode.show ? (
+                                    {promoCode.show && !checked ? (
                                       <>
                                         <form
                                           className="add-coupon"

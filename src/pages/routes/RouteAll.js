@@ -13,7 +13,6 @@ import BroadcastedTasks from "../BroadcastedTasks";
 import SignupSuccess from "../SignupSuccess";
 // import Forgotpassword from '../Forgotpassword';
 // import Resetpassword from '../Resetpassword';
-// import Feeddetail from "../Feeddetail";
 //import Contentunderofferdetail from '../contentunderofferdetail';
 
 import TransactionDetail from "../TransactionDetail";
@@ -87,7 +86,6 @@ import RelatedContentTask from "../RelatedContentForTask";
 import NewPublishedContent from "../NewPublishedContent";
 import Feeddetail from "../Feeddetail";
 import Basket from "../Basket";
-import FeeddetailCopy from "../FeeddetailCopy";
 import BroadcastedTasksSoon from "../BroadcastedTasksSoon";
 import UploadDocPost from "../UploadDocPost";
 import TandcPre from "../TandcPre";
@@ -150,10 +148,6 @@ function RouteAll() {
         <Route
           path="/Feeddetail/:type/:id"
           element={<PrivateRoute Component={Feeddetail} />}
-        />
-        <Route
-          path="/FeeddetailCopy/:type/:id"
-          element={<PrivateRoute Component={FeeddetailCopy} />}
         />
 
         <Route
