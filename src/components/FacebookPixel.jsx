@@ -34,7 +34,7 @@ const FacebookPixel = () => {
       <img 
         height="1" 
         width="1" 
-        src="https://www.facebook.com/tr?id=PIXEL_ID&ev=PageView&noscript=1"
+        src={`https://www.facebook.com/tr?id=${PIXEL_ID}&ev=PageView&noscript=1`}
         alt="Facebook Pixel"
       />
     </noscript>
