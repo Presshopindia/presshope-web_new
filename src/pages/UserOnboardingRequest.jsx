@@ -118,11 +118,15 @@ const UserOnboadingRequest = () => {
       }
     } catch (error) {
       setLoading(false);
-      toast.error(error?.response?.data?.errors?.msg);
+      if(error?.response?.data?.errors?.msg.includes("email_1")){
+        toast.error("This email id already exists. Please enter a new email id.");
+      }else{
+        toast.error("This mobile number already exists. Please enter a new number");
+      }
       setError({
-        email: error?.response?.data?.errors?.msg.includes("E11000")
-          ? "This email already exists"
-          : "",
+        email: error?.response?.data?.errors?.msg.includes("phone_1")
+          ? "This mobile number already exists. Please enter a new number"
+          : "This email id already exists. Please enter a new email id.",
       });
     }
   };
@@ -329,7 +333,7 @@ const UserOnboadingRequest = () => {
                                 Simply enter your details, log in and dive straight into the citizen journalism revolution taking the UK by storm. It's quick, easy, and you're in control!
                               </p>
                               <p>
-                                Need a hand? Please <span className='txt-success-link'><Link to="/contact-us">contact</Link></span> our friendly PressHop team who are just a click away and ready to help.
+                                Need a hand? Please <span className='txt-success-link' variant="body2"><Link to="/contact-us">contact</Link></span> our friendly PressHop team who are just a click away and ready to help.
                               </p>
                             </div>
                             <Button

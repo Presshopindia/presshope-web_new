@@ -126,7 +126,7 @@ const UserDetailsPopup = (props) => {
       setLoading(false);
       setError({
         email: error?.response?.data?.errors?.msg.includes("E11000")
-          ? "This email already exists"
+          ? "This email id already exists. Please enter a new email id."
           : "",
       });
     }

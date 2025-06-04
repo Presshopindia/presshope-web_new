@@ -909,7 +909,7 @@ const SignupUserN = () => {
                                     style={{ color: "red" }}
                                     className="eml_txt_dngr"
                                   >
-                                    This email already exists
+                                    This email id already exists. Please enter a new email id.
                                   </span>
                                 )}
                               </Form.Group>

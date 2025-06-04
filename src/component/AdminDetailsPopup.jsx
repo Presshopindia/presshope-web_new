@@ -206,7 +206,7 @@ const AdminDetailsPopup = (props) => {
     }
 
     if (emailExist) {
-      toast.error("Email already exist");
+      toast.error("This email id already exists. Please enter a new email id.");
       return;
     }
     if (details.designation_id === "") {
@@ -486,7 +486,7 @@ const AdminDetailsPopup = (props) => {
                     />
                     {emailExist && (
                       <span style={{ color: "red" }} className="eml_txt_dngr">
-                        This email already exists.
+                        This email id already exists. Please enter a new email id.
                       </span>
                     )}
                   </Form.Group>

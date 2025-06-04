@@ -211,7 +211,7 @@ const Signup = () => {
     } else if (AdminDetails.administrator_details.country_code === "") {
       toast.error("Please select the country code");
     } else if (errorData.phone ) {
-      toast.error(errorData.phone);
+      toast.error("This mobile number already exists. Please enter a new number.");
     } else if (AdminDetails.admin_rights.price_range.minimum_price === "" ) {
       toast.error("Please enter minimum price");
     } else if (AdminDetails.admin_rights.price_range.maximum_price === "" ) {
@@ -1047,7 +1047,7 @@ const Signup = () => {
                                     <Form.Control
                                       type="text"
                                       className={el.is_another_office_exist ? "invite-user-disable-field" : ""}
-                                      placeholder="Enter office number *"
+                                      placeholder="Apartment, suite/unit, floor, etc. *"
                                       name="number"
                                       required
                                       disabled={el.is_another_office_exist}
@@ -1449,7 +1449,7 @@ const Signup = () => {
                                       style={{ color: "red" }}
                                       className="eml_txt_dngr"
                                     >
-                                      This email already exists.
+                                      This email id already exists. Please enter a new email id.
                                     </span>
                                   )}
                                 </Form.Group>

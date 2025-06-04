@@ -5,6 +5,7 @@ import gmailLogo from "../assets/images/gmail.svg";
 import yahoo from "../assets/images/yahooMail.svg";
 import outlook from "../assets/images/outlook.svg";
 import appleMail from "../assets/images/apple_mail.svg";
+import { CloseButton } from 'react-bootstrap';
 
 
 const EmailClientModal = ({ show, handleClose }) => {
@@ -39,8 +40,9 @@ const EmailClientModal = ({ show, handleClose }) => {
       centered
       className="email-client-modal"
     >
-      <Modal.Body className="text-center p-8">
-        <h2 className="mb-10">Welcome, please verify your email.</h2>
+      <Modal.Body className="text-center p-8 position-relative">
+        <CloseButton onClick={handleClose} style={{ position: 'absolute', top: '10px', right: '10px' }} />
+        <h2 className="mb-10">Please verify your email.</h2>
         
         <div className="email-options">
           <div className="row mb-3">
