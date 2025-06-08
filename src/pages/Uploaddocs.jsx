@@ -120,7 +120,7 @@ const Uploaddocs = () => {
                             {
                               docList?.map((curr) => {
                                 return (
-                                  <li key={curr?._id}  style={{display:"flex", alignItems:"center"}}>
+                                  <li key={curr?._id} style={{ display: "flex", alignItems: "center" }}>
                                     {curr?.selected !== true ? (
                                       <span className="doc_items_ic doc_uplded doc-check circular_red_dot">
                                       </span>
@@ -150,57 +150,59 @@ const Uploaddocs = () => {
                                 placeholder="Select Documents"
                               >
                                 {docList?.map((curr) => (
-                                    <MenuItem value={curr._id} key={curr._id}>
-                                      <input
-                                        type="file"
-                                        id={`sngl_doc_up_${curr._id}`}
-                                        className="sngl_doc_inp"
-                                        name={curr.document_name}
-                                        onChange={(e) => {
-                                          AddDocuments(
-                                            e.target.files[0],
-                                            curr.document_name
-                                          );
-                                        }}
-                                      />
-                                      <label
-                                        htmlFor={`sngl_doc_up_${curr._id}`}
-                                        onClick={() =>
-                                          handleToggleSelect(curr._id)
-                                        }
-                                      >
-                                        {curr.document_name}
-                                      </label>
-                                    </MenuItem>
-                                  ))}
+                                  <MenuItem value={curr._id} key={curr._id}>
+                                    <input
+                                      type="file"
+                                      id={`sngl_doc_up_${curr._id}`}
+                                      className="sngl_doc_inp"
+                                      name={curr.document_name}
+                                      onChange={(e) => {
+                                        AddDocuments(
+                                          e.target.files[0],
+                                          curr.document_name
+                                        );
+                                      }}
+                                    />
+                                    <label
+                                      htmlFor={`sngl_doc_up_${curr._id}`}
+                                      onClick={() =>
+                                        handleToggleSelect(curr._id)
+                                      }
+                                    >
+                                      {curr.document_name}
+                                    </label>
+                                  </MenuItem>
+                                ))}
                               </Select>
                             </Col>
                             <Col md={12} className="mt-5">
                               <div className="justify-content-start align-items-center d-flex flex-wrap gap-4">
                                 {docs?.map((el) => (
-                                  <div className="vw_doc position-relative docs-upld">
-                                    <div className="cls_icn">
-                                      <img
-                                        src={closeic}
-                                        className="close_ic"
-                                        alt="close"
-                                        onClick={() => deleteDocHandler(el.url)}
-                                        style={{ cursor: "pointer" }}
-                                      />
+                                  <div className="doc-wrapper">
+                                    <div className="vw_doc position-relative docs-upld">
+                                      <div className="cls_icn">
+                                        <img
+                                          src={closeic}
+                                          className="close_ic"
+                                          alt="close"
+                                          onClick={() => deleteDocHandler(el.url)}
+                                          style={{ cursor: "pointer" }}
+                                        />
+                                      </div>
+                                      {el.type.includes("image") ? (
+                                        <img
+                                          src={el.url}
+                                          className="doc_uploaded"
+                                          alt="document"
+                                        />
+                                      ) : (
+                                        <img
+                                          src={pdficon}
+                                          className="doc_uploaded docIcon"
+                                          alt="document"
+                                        />
+                                      )}
                                     </div>
-                                    {el.type.includes("image") ? (
-                                      <img
-                                        src={el.url}
-                                        className="doc_uploaded"
-                                        alt="document"
-                                      />
-                                    ) : (
-                                      <img
-                                        src={pdficon}
-                                        className="doc_uploaded docIcon"
-                                        alt="document"
-                                      />
-                                    )}
                                     <div>
                                       <p>{el?.url?.replace(/^.*[\\/]/, "")}</p>
                                     </div>

@@ -7231,6 +7231,7 @@ button {
 .vw_doc {
   display: flex;
   justify-content: center;
+  width: fit-content;
   // width: 50%;
   // padding-left: 40px;
 }
@@ -7270,7 +7271,7 @@ button {
   height: 24px;
   width: 24px;
   padding: 0px 2px;
-  display: none;
+  display: block;
 
   img.close_ic {
     height: 18px;
@@ -7278,10 +7279,10 @@ button {
   }
 }
 
-.vw_doc:hover .cls_icn {
-  display: block;
-  transition: all 0.5s linear 0s;
-}
+// .vw_doc:hover .cls_icn {
+//   display: block;
+//   transition: all 0.5s linear 0s;
+// }
 
 .number_inp_wrap.contct>input {
   padding: 9px 16px 10px 40px;
@@ -7574,6 +7575,10 @@ button {
   width: 70%;
 }
 
+.doc-wrapper {
+  display: flex;
+  flex-direction: column;
+}
 .cht_tsk_rw.d-flex {
   gap: 20px;
 }
