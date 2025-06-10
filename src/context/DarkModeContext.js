@@ -2,6 +2,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Get } from "../services/user.services";
 import { useParams } from "react-router-dom";
+import socketServer from "../socket.config";
 
 const DarkModeContext = createContext();
 
@@ -11,6 +12,7 @@ export const DarkModeProvider = ({ children }) => {
     localStorage.getItem("darkMode") === "enabled"
   );
 
+  const [onlineUsers, setOnlineUsers] = useState({ online: [] })
   const [profileData, setProfileData] = useState({});
   const [navColor, setNavColor] = useState("");
   const [profileChange, setProfileChange] = useState(false);
@@ -55,6 +57,18 @@ export const DarkModeProvider = ({ children }) => {
     setNavColor(window.location.pathname);
   }, [window.location.pathname]);
 
+  useEffect(() => {
+    socketServer?.emit("addAdmin", (profileData?._id));
+    socketServer?.on("getAdmins", (user) => {
+      setOnlineUsers((prev) => ({
+        ...prev,
+        online: user
+      }))
+    })
+  }, [socketServer, profileData]);
+
+  console.log("onlineUsers", onlineUsers)
+
   return (
     <DarkModeContext.Provider
       value={{
@@ -70,9 +84,8 @@ export const DarkModeProvider = ({ children }) => {
         adminPreRegistrationEmail,
         setAdminPreRegistrationEmail,
         navColor,
-        setNavColor
-        // onBoardData,
-        // setOnBoardData,
+        setNavColor,
+        onlineUsers
       }}
     >
       {children}

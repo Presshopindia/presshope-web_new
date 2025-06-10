@@ -65,7 +65,7 @@ import { toast } from "react-toastify";
 
 const UploadedContentDetails = (props) => {
   const [isRecording, setIsRecording] = useState(false);
-  const { profileData, setCartCount } = useDarkMode();
+  const { profileData, setCartCount, onlineUsers } = useDarkMode();
 
   const userImage = profileData?.hasOwnProperty("admin_detail")
     ? profileData?.admin_detail?.admin_profile
@@ -1522,6 +1522,7 @@ const UploadedContentDetails = (props) => {
                                               <img
                                                 src={curr?.profile_image}
                                                 alt="user"
+                                                style={{border:`3px solid ${onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? "green" : "red"}`}}
                                               />
                                               <span> {curr?.full_name}</span>
                                             </div>

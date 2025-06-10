@@ -139,7 +139,7 @@ const Feeddetail = (props) => {
     }
   };
 
-  const { profileData, setCartCount } = useDarkMode();
+  const { profileData, setCartCount, onlineUsers } = useDarkMode();
   const user = profileData;
   const userImage = profileData?.hasOwnProperty("admin_detail")
     ? profileData?.admin_detail?.admin_profile
@@ -1505,7 +1505,7 @@ const Feeddetail = (props) => {
                             </div>
                             <div className="sub-content">
                               <div className="item d-flex justify-content-between align-items-center">
-                                <span className="fnt-bold">License</span>
+                                <span className="fnt-bold">Licence</span>
                                 <div className="">
                                   <img
                                     src={
@@ -1955,6 +1955,9 @@ const Feeddetail = (props) => {
                                         <h4>Participants</h4>
                                       </div>
                                     </Link>
+                                    {
+                                      console.log("userList", userList)
+                                    }
                                     <div className="scrollHtPnts">
                                       {userList?.map((curr) => {
                                         return (
@@ -2014,6 +2017,7 @@ const Feeddetail = (props) => {
                                               <img
                                                 src={curr?.profile_image}
                                                 alt="user"
+                                                style={{border:`3px solid ${onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? "green" : "red"}`}}
                                               />
                                               <span> {curr?.full_name}</span>
                                             </div>

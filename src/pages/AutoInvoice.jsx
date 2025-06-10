@@ -346,7 +346,7 @@ const AutoInvoice = () => {
                                         Time & date
                                       </th>
                                       <th className="text-center">Type</th>
-                                      <th className="text-center">License</th>
+                                      <th className="text-center">Licence</th>
                                       <th className="text-center">Category</th>
                                       <th style={{ textAlign: "right" }}>
                                         Amount

@@ -9,7 +9,7 @@ import ContentFeedCard from "../component/card/ContentFeedCard";
 import audioic from "../assets/images/audimg.svg";
 import interviewic from "../assets/images/interview.svg";
 import videoic from "../assets/images/video.svg";
-
+import contentVideo from "../assets/images/contentVideo.svg";
 
 import moment from "moment/moment";
 import { Col, Container, Row } from "react-bootstrap";
@@ -34,7 +34,7 @@ const ArchieveItems = () => {
             const allContent = [...prev];
             allContent[i]["favourite_status"] = allContent[i]["favourite_status"] === "true" ? "false" : "true";
             return allContent
-          })
+        })
     };
 
     const PublishedContent = async () => {
@@ -73,6 +73,34 @@ const ArchieveItems = () => {
         amount?.toLocaleString('en-US', {
             maximumFractionDigits: 0,
         });
+
+    // Add this function near your other state management functions
+    const handleBasket = (index, section) => {
+        if (section === "archieve") {
+            const allContent = [...archieveContent];
+            const updatedContent = allContent.map((ele, indx) => {
+                if (index === indx) {
+                    return {
+                        ...ele,
+                        basket_status: ele.basket_status === "true" ? "false" : "true",
+                    };
+                }
+                return ele;
+            });
+            setArchieveContent(updatedContent);
+        }
+    };
+
+    const favContentHandler = (i, type) => {
+        if (type == "archieve") {
+            setArchieveContent((prev) => {
+                const allContent = [...prev];
+                allContent[i]["favourite_status"] =
+                    allContent[i]["favourite_status"] === "true" ? "false" : "true";
+                return allContent;
+            });
+        }
+    };
 
     return (
         <>
@@ -113,38 +141,66 @@ const ArchieveItems = () => {
                                 return (
                                     <Col lg={3} md={4} sm={6} key={index}>
                                         <ContentFeedCard
-                                            feedImg={
-                                                curr?.content[0]?.media_type === "video" ?
-                                                    curr?.content[0]?.watermark || process.env.REACT_APP_CONTENT_MEDIA + curr.content[0]?.thumbnail
-                                                    : curr?.content[0]?.media_type === "image" ?
-                                                        curr?.content[0]?.watermark || process.env.REACT_APP_CONTENT_MEDIA + curr?.content?.[0]?.media
-                                                        : curr?.content[0]?.media_type === "audio" ?
-                                                            audioic
-                                                            : curr?.content[0]?.media_type === "doc" || 'pdf' ? docsic : ''}
-                                            feedType={contentCamera}
-                                            feedTag={curr?.sales_prefix ? `${curr?.sales_prefix} ${curr?.discount_percent}% Off` : curr?.content_view_type == "mostpopular" ? "Most Popular" : curr?.content_view_type == "mostviewed" ? "Most viewed" :  null}
-                                            user_avatar={process.env.REACT_APP_AVATAR_IMAGE + curr?.hopper_id?.avatar_id?.avatar}
-                                            author_Name={curr?.hopper_id?.user_name}
                                             lnkto={`/Feeddetail/content/${curr._id}`}
-                                            fvticns={curr?.favourite_status === "true" ? favouritedic : favic}
-                                            content_id={curr._id}
-                                            bool_fav={curr.favourite_status === "true" ? "false" : "true"}
-                                            favourite={()=> handleFavourite(index)}
-                                            type_img={curr?.type === "shared" ? shared : exclusive}
-                                            type_tag={curr.type}
-                                            feedHead={curr.heading}
-                                            feedTime={moment(curr.createdAt).format("h:mm A, DD MMMM YYYY")}
-                                            feedLocation={curr.location}
-                                            contentPrice={`${formatAmountInMillion(curr.ask_price || 0)}`}
                                             viewTransaction={"View details"}
                                             viewDetail={`/Feeddetail/content/${curr._id}`}
+                                            feedImg={
+                                                curr?.content[0]?.media_type === "image" ? process.env.REACT_APP_CONTENT_MEDIA + curr?.content[0]?.media
+                                                    : curr?.content[0]?.media_type === "video" ? process.env.REACT_APP_THUMBNAIL + curr?.content[0]?.media
+                                                        : curr.content[0]?.media_type === "audio" ? audioic
+                                                            : curr?.content[0]?.media_type === "doc" ? pdfic
+                                                                : ""
+                                            }
+                                            feedType={contentVideo}
+                                            feedTag={
+                                                curr?.sales_prefix
+                                                    ? `${curr?.sales_prefix} ${curr?.discount_percent}% Off`
+                                                    : curr?.content_view_type == "mostpopular"
+                                                        ? "Most Popular"
+                                                        : curr?.content_view_type == "mostviewed"
+                                                            ? "Most viewed"
+                                                            : null
+                                            }
+                                            user_avatar={
+                                                process.env.REACT_APP_AVATAR_IMAGE +
+                                                curr?.hopper_id?.avatar_id?.avatar || authorimg
+                                            }
+                                            basketValue={curr?.basket_status}
+                                            basket={() => handleBasket(index, "archieve")}
+                                            allContent={curr?.content}
+                                            author_Name={curr.hopper_id?.user_name}
+                                            hopper_id={curr?.hopper_id?._id}
+                                            type="content"
+                                            hopper_stripe_account_id={curr?.hopper_id?.stripe_account_id}
+                                            type_img={
+                                                curr?.type === "shared" ? shared : exclusive
+                                            }
+                                            type_tag={curr?.type}
+                                            feedHead={curr.heading}
+                                            feedTime={moment(curr?.createdAt).format(
+                                                "hh:mm A, DD MMM YYYY"
+                                            )}
+                                            feedLocation={curr.location}
+                                            contentPrice={formatAmountInMillion(curr.ask_price)}
+                                            content_id={curr?._id}
+                                            fvticns={
+                                                curr?.favourite_status == "true"
+                                                    ? favouritedic
+                                                    : favic
+                                            }
+                                            bool_fav={
+                                                curr.favourite_status === "true"
+                                                    ? "false"
+                                                    : "true"
+                                            }
+                                            favourite={() => favContentHandler(index, "archieve")}
                                             feedTypeImg1={imageCount > 0 ? cameraic : null}
                                             postcount={imageCount > 0 ? imageCount : null}
                                             feedTypeImg2={videoCount > 0 ? videoic : null}
                                             postcount2={videoCount > 0 ? videoCount : null}
                                             feedTypeImg3={audioCount > 0 ? interviewic : null}
                                             postcount3={audioCount > 0 ? audioCount : null}
-                                            feedTypeImg4={pdfCount > 0 ? pdfic : null}
+                                            feedTypeImg4={pdfCount > 0 ? docsic : null}
                                             postcount4={pdfCount > 0 ? pdfCount : null}
                                             feedTypeImg5={docCount > 0 ? docsic : null}
                                             postcount5={docCount > 0 ? docCount : null}

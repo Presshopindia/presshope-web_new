@@ -41,6 +41,7 @@ import usric from "../assets/images/menu-icons/user.svg";
 import audioic from "../assets/images/audimg.svg";
 import { toast } from "react-toastify";
 import socketServer from "../socket.config";
+import { useDarkMode } from "../context/DarkModeContext";
 
 const GroupContentDtlChat = (props) => {
   const [data, setData] = useState();
@@ -55,6 +56,9 @@ const GroupContentDtlChat = (props) => {
   const [message, setMessage] = useState([]);
   const [removeUserId, setRemoveUserId] = useState(null);
   const [addchatuser, setaddChatuser] = useState(null);
+
+  const { onlineUsers } = useDarkMode();
+
   // setRemoveUserId
   const getUserProfile = async () => {
     try {
@@ -437,7 +441,7 @@ const GroupContentDtlChat = (props) => {
                       {props?.params?.type === "content" && (
                         <div className="sub-content">
                           <div className="item d-flex justify-content-between align-items-center">
-                            <span className="fnt-bold">License</span>
+                            <span className="fnt-bold">Licence</span>
                             <div className="">
                               <img
                                 src={
@@ -567,6 +571,7 @@ const GroupContentDtlChat = (props) => {
                               <img
                                 src={curr?.profile_image || usric}
                                 alt="user"
+                                style={{border:`3px solid ${onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? "green" : "red"}`}}
                               />
                               <span>
                                 {" "}

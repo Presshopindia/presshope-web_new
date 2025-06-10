@@ -366,7 +366,7 @@ const ContentDtlChat = (props) => {
                       </div>
                       <div className="sub-content">
                         <div className="item d-flex justify-content-between align-items-center">
-                          <span className="fnt-bold">License</span>
+                          <span className="fnt-bold">Licence</span>
                           <div className="">
                             <img
                               src={
