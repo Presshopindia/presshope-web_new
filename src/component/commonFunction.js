@@ -189,6 +189,10 @@ export const formatAmountInMillion = (amount) => {
     }) + receiveLastTwoDigits(amount) || "")
 };
 
+export const parseFormattedAmount = (formattedAmount) => {
+    if (!formattedAmount) return 0;
+    return Number(String(formattedAmount)?.replace(/,/g, ''));
+};
 
 // Applied promocode value - 
 export const appliedPromoodeValue = (amount, off) => {

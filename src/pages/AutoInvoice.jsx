@@ -54,7 +54,6 @@ const AutoInvoice = () => {
     off: "",
   });
 
-  console.log("promoCode", promoCode)
   const { profileData } = useDarkMode();
   const user = profileData;
 
@@ -67,7 +66,6 @@ const AutoInvoice = () => {
       setLoading(false);
       setData(resp.data);
     } catch (error) {
-      // console.log(error);
       setLoading(false);
     }
   };
@@ -76,16 +74,7 @@ const AutoInvoice = () => {
     ContentByID();
   }, []);
 
-  const claculatedFun = (amount) => {
-    // let val = (20 * (+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price))) / 100;
-    let val = +amount / 5;
-    return val;
-  };
-
   const paymentintents = async (curr) => {
-    console.log(UserDetails, "hello payment  ", UserDetails);
-    console.log(UserDetails, "hello payment data ", data);
-    console.log("payment_content", curr);
     const obj1 = {
       image_id: curr?.content?._id,
       customer_id: UserDetails.stripe_customer_id,
@@ -147,7 +136,6 @@ const AutoInvoice = () => {
     let result = "";
     if (value) {
       const data = value.trim().split("");
-      console.log(data);
       for (let ele of data) {
         // Check if the character is not a number using isNaN()
         if (isNaN(ele) && typeof ele === "string") {
@@ -167,7 +155,6 @@ const AutoInvoice = () => {
     setLoading(true);
     try {
       let promocodeValue = capitaliseLetterPromocode(promoCode.value);
-      // console.log("promocodeValue",promocodeValue);
       const resp = await Post("mediahouse/checkPromocode", {
         code: promocodeValue,
       });
@@ -208,7 +195,7 @@ const AutoInvoice = () => {
         ContentByID();
       });
   }, []);
-  
+
   const getMediaType = (type) => {
     const mediaType = data?.content?.content?.filter(
       (item) =>
@@ -366,7 +353,7 @@ const AutoInvoice = () => {
                                               {data?.content?.content[0]
                                                 ?.media_type === "image" ? (
                                                 <img
-                                                  src={process.env.REACT_APP_CONTENT_MEDIA + 
+                                                  src={process.env.REACT_APP_CONTENT_MEDIA +
                                                     data?.content?.content[0]
                                                       ?.media
                                                   }
@@ -642,8 +629,7 @@ const AutoInvoice = () => {
                                         )}
                                       </span>
                                     </div>
-
-                                    {!promoCode?.code ? (
+                                    {(data && !promoCode?.code && !data?.content?.sales_prefix && !data?.chatdata?.amount) && (
                                       <div
                                         className="sub-items justify-content-end"
                                         onClick={() =>
@@ -657,7 +643,6 @@ const AutoInvoice = () => {
                                         }
                                       >
                                         <span className="promo-cde">
-                                          {/* Promo Code */}
                                           <b>
                                             {" "}
                                             Unlock savings! Enter your Promo
@@ -665,15 +650,19 @@ const AutoInvoice = () => {
                                           </b>
                                         </span>
                                       </div>
-                                    ) : (
-                                      <div className="sub-items">
-                                        <span>
-                                          {" "}
-                                          <b>PromoCode discount </b>{" "}
-                                        </span>
-                                        <span>£{promoCode?.off}</span>
-                                      </div>
                                     )}
+                                    {
+                                      promoCode?.code && (
+                                        <div className="sub-items">
+                                          <span>
+                                            {" "}
+                                            <b>PromoCode discount </b>{" "}
+                                          </span>
+                                          <span>£{promoCode?.off}</span>
+                                        </div>
+
+                                      )
+                                    }
 
                                     {promoCode.show ? (
                                       <>

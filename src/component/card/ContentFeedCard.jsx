@@ -18,6 +18,7 @@ import { UserDetails } from "./../Utils";
 import { SlMagnifierAdd } from "react-icons/sl";
 import ViewContent from "../ViewContent";
 import { useDarkMode } from "../../context/DarkModeContext";
+import { parseFormattedAmount } from "../commonFunction";
 
 function ContentFeedCard(props) {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -75,13 +76,15 @@ function ContentFeedCard(props) {
         content_id: [props.content_id],
         type: props.type,
         hopper_id: props?.hopper_id,
-        amount: Number(props?.contentPrice),
+        amount: parseFormattedAmount(props?.contentPrice),
         stripe_account_id: props?.hopper_stripe_account_id,
         offer: false,
         application_fee: 15,
         hopper_charge_ac_category: 5,
         room_id: ""
       };
+
+      console.log("object -------------->", object, props)
 
       const res = await Post(`mediaHouse/addToBasket`, object);
       if (res) {

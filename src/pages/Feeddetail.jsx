@@ -910,12 +910,13 @@ const Feeddetail = (props) => {
         basket_status: data?.basket_status == "true" ? "false" : "true",
       });
 
+      const acceptedAmount = messages?.find((el) => el?.message_type === "accept_mediaHouse_offer")?.amount
       let object = {
         content_id: [element._id],
         type: "content",
         hopper_id: element?.hopper_id?._id,
         stripe_account_id: element?.hopper_id?.stripe_account_id,
-        amount: Number(element?.ask_price),
+        amount: Number(acceptedAmount || element?.ask_price),
         offer: false,
         application_fee: 15,
         hopper_charge_ac_category: 5,
@@ -1537,7 +1538,7 @@ const Feeddetail = (props) => {
                               {messages && messages.length === 0 ? (
                                 data?.sales_prefix ? (
                                   <Button className="newbtndesign" variant="secondary">
-                                    <small>Original Price</small>£ 
+                                    <small>Original Price</small>£
                                     <span className={data?.sales_prefix ? "text-decoration-line-through discount-button" : ""}>{formatAmountInMillion(Number(data?.before_discount_value))}</span>
                                   </Button>
                                 ) : (
@@ -2017,7 +2018,7 @@ const Feeddetail = (props) => {
                                               <img
                                                 src={curr?.profile_image}
                                                 alt="user"
-                                                style={{border:`3px solid ${onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? "green" : "red"}`}}
+                                                style={{ border: `3px solid ${onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? "green" : "red"}` }}
                                               />
                                               <span> {curr?.full_name}</span>
                                             </div>
@@ -2060,8 +2061,46 @@ const Feeddetail = (props) => {
                             </div>
                           </Tab>
 
-                          <Tab eventKey="external" title="Hopper Chat">
-                            <a href="lorem"></a>
+                          <Tab eventKey="presshop" title="PressHop Chat">
+                            <div className="tab-data active">
+                              <Row>
+                                <Col md={12}>
+                                  <div className="feed_dtl_msgs presshopChatDetail dp">
+                                    <div className="externalText">
+                                      <h6 className="txt_light">
+                                        Welcome{" "}<span className="txt_bld">{fullName}</span>{" to "}<span className="txt_bold">PressHop</span> support
+                                      </h6>
+                                    </div>
+                                    {tabSelect === "presshop" ? (
+                                      <ChatCard />
+                                    ) : null}
+                                  </div>
+                                </Col>
+                                {/* <Col md={3}>
+                                  <div className="tab_in_card">
+                                    <div className="scrollHtPnts presshopChat">
+                                      <div className="tab_in_card_items">
+                                        <div className="img">
+                                          <img
+                                            src={presshopchatic}
+                                            alt="emily"
+                                          />
+                                          <span className="activeUsr">
+                                            Emily
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </Col> */}
+                              </Row>
+                            </div>
+                          </Tab>
+
+                          <Tab
+                            eventKey="external"
+                            title="Make an Offer"
+                          >
                             <div className="tab-data active">
                               <Row>
                                 <Col md={12}>
@@ -2213,29 +2252,7 @@ const Feeddetail = (props) => {
                                                   <>
                                                     <div className="img">
                                                       <img
-                                                        src={
-                                                          data
-                                                            ? data?.hopper_id
-                                                              ?.avatar_id
-                                                              ?.avatar
-                                                              ? process.env
-                                                                .REACT_APP_AVATAR_IMAGE +
-                                                              data?.hopper_id
-                                                                ?.avatar_id
-                                                                ?.avatar
-                                                              : null
-                                                            : fav?.content_id
-                                                              ?.hopper_id
-                                                              ?.avatar_id
-                                                              ?.avatar
-                                                              ? process.env
-                                                                .REACT_APP_AVATAR_IMAGE +
-                                                              fav?.content_id
-                                                                ?.hopper_id
-                                                                ?.avatar_id
-                                                                ?.avatar
-                                                              : null
-                                                        }
+                                                        src={presshopchatic}
                                                         alt="User"
                                                         className="usr_img"
                                                       />
@@ -2243,10 +2260,7 @@ const Feeddetail = (props) => {
                                                     <div className="cht_txt postedcmnt_info">
                                                       <div className="d-flex align-items-center">
                                                         <h5 className="usr_name mb-0">
-                                                          {
-                                                            data?.hopper_id
-                                                              ?.user_name
-                                                          }
+                                                          PressHop
                                                           <span className="text-secondary time">
                                                             {moment(
                                                               curr?.createdAt
@@ -2257,7 +2271,7 @@ const Feeddetail = (props) => {
                                                         </h5>
                                                       </div>
                                                       <p className="mb-0 msg auto_press_msg">
-                                                        Has accepted your offer
+                                                        PressHop has accepted your offer
                                                         of{" "}
                                                         <a className="link">
                                                           £{curr?.amount}
@@ -2408,29 +2422,7 @@ const Feeddetail = (props) => {
                                                   <div className=" d-flex align-items-start msg-worries">
                                                     <div className="img">
                                                       <img
-                                                        src={
-                                                          data
-                                                            ? data?.hopper_id
-                                                              ?.avatar_id
-                                                              ?.avatar
-                                                              ? process.env
-                                                                .REACT_APP_AVATAR_IMAGE +
-                                                              data?.hopper_id
-                                                                ?.avatar_id
-                                                                ?.avatar
-                                                              : null
-                                                            : fav?.content_id
-                                                              ?.hopper_id
-                                                              ?.avatar_id
-                                                              ?.avatar
-                                                              ? process.env
-                                                                .REACT_APP_AVATAR_IMAGE +
-                                                              fav?.content_id
-                                                                ?.hopper_id
-                                                                ?.avatar_id
-                                                                ?.avatar
-                                                              : null
-                                                        }
+                                                        src={presshopchatic}
                                                         alt="User"
                                                         className="usr_img"
                                                       />
@@ -2438,10 +2430,7 @@ const Feeddetail = (props) => {
                                                     <div className="cht_txt postedcmnt_info">
                                                       <div className="d-flex align-items-center msg-worries">
                                                         <h5 className="usr_name">
-                                                          {
-                                                            data?.hopper_id
-                                                              ?.user_name
-                                                          }
+                                                          PressHop
                                                           <span className="text-secondary time">
                                                             {moment(
                                                               curr?.createdAt
@@ -2452,7 +2441,7 @@ const Feeddetail = (props) => {
                                                         </h5>
                                                       </div>
                                                       <p className="mb-0 msg">
-                                                        Has rejected your offer
+                                                        PressHop has rejected your offer
                                                         of{" "}
                                                         <a className="link">
                                                           £{curr?.amount}
@@ -2879,7 +2868,7 @@ const Feeddetail = (props) => {
                                                     Congrats, you’ve
                                                     successfully purchased{" "}
                                                     {contentPurchasedInContentChat(data?.content)}{" "}
-                                                     for{" "}
+                                                    for{" "}
                                                     <a className="link">
                                                       £{formatAmountInMillion(Number(curr?.amount) || 0)} (Inc VAT)
                                                     </a>
@@ -2962,42 +2951,6 @@ const Feeddetail = (props) => {
                                     </div>
                                   </div>
                                 </Col>
-                              </Row>
-                            </div>
-                          </Tab>
-
-                          <Tab eventKey="presshop" title="PressHop Chat">
-                            <div className="tab-data active">
-                              <Row>
-                                <Col md={12}>
-                                  <div className="feed_dtl_msgs presshopChatDetail dp">
-                                    <div className="externalText">
-                                      <h6 className="txt_light">
-                                        Welcome{" "}<span className="txt_bld">{fullName}</span>{" to "}<span className="txt_bold">PressHop</span> support
-                                      </h6>
-                                    </div>
-                                    {tabSelect === "presshop" ? (
-                                      <ChatCard />
-                                    ) : null}
-                                  </div>
-                                </Col>
-                                {/* <Col md={3}>
-                                  <div className="tab_in_card">
-                                    <div className="scrollHtPnts presshopChat">
-                                      <div className="tab_in_card_items">
-                                        <div className="img">
-                                          <img
-                                            src={presshopchatic}
-                                            alt="emily"
-                                          />
-                                          <span className="activeUsr">
-                                            Emily
-                                          </span>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </Col> */}
                               </Row>
                             </div>
                           </Tab>
