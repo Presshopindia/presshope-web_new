@@ -300,6 +300,7 @@ const Feeddetail = (props) => {
         offer: true,
         is_charity: data?.is_charity,
         description: data?.heading,
+        discount_type: 'offered'
       };
       const obj2 = {
         type: "content",
@@ -920,7 +921,7 @@ const Feeddetail = (props) => {
         offer: false,
         application_fee: 15,
         hopper_charge_ac_category: 5,
-        room_id: ""
+        room_id: "",
       };
       const res = await Post(`mediaHouse/addToBasket`, object);
       if (res) {

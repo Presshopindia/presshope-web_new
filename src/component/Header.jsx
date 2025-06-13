@@ -61,11 +61,9 @@ const Header = () => {
   const [profileType, setProfileType] = useState("");
   const [show, setShow] = useState(false);
   const [filter, setFilter] = useState([]);
-  const [profile, setProfile] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [sidebar, setSidebar] = useState(false);
-  const [basketItemsCount, setBasketItemsCount] = useState(0);
   const showSidebar = () => setSidebar(!sidebar);
 
   const handleShow = () => setModalShow(!modalShow);
@@ -83,42 +81,13 @@ const Header = () => {
     .pipe(debounceTime(1000))
     .subscribe((data) => { });
 
-  let debounceTimeout;
-
-  // Define the debounced version of the event handler
-  const onKeyUp = async (event) => {
-    // Clear the previous timeout if it exists
-    clearTimeout(debounceTimeout);
-
-    // Set a new timeout to debounce the event
-    debounceTimeout = setTimeout(async () => {
-      let a = event.target.value;
-      if (a) {
-        // Get the current pathname
-        const currentPath = window.location.pathname;
-        // Check if the current route is the search route
-        if (currentPath.startsWith("/content-search")) {
-          // Update the search results without navigating
-          addTrendingSearch(a);
-        } else {
-          // Perform regular search functionality and navigate
-          const resp = await Get(`users/getTags?type=mediahouse&tagName=${a}`);
-          setFilter(resp?.data?.tags);
-          navigate(`/content-search/${encodeURIComponent(a)}`);
-        }
-      } else {
-        setFilter([]);
-      }
-    }, 1000); // Adjust the debounce delay as needed
-  };
-
   const addTrendingSearch = async (tagName) => {
     // Remove '#' character if it exists at the beginning of the tagName string
     const normalizedTagName = tagName.startsWith("#")
       ? tagName.slice(1)
       : tagName;
 
-    const result = await Post("mediahouse/addTrendingSearch", {
+    await Post("mediahouse/addTrendingSearch", {
       tagName: normalizedTagName,
     });
   };
@@ -463,7 +432,7 @@ const Header = () => {
                     fullWidth
                     className="inputDark"
                     placeholder="Search content"
-                    onChange={onKeyUp}
+                    // onChange={onKeyUp}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         const inputValue = e.target.value.startsWith("#")

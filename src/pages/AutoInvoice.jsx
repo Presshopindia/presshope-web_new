@@ -90,7 +90,8 @@ const AutoInvoice = () => {
       offer: data?.chatdata?.amount || promoCode?.code ? true : false,
       is_charity: data?.content?.is_charity,
       charity: data?.content?.charity,
-      description: data?.content?.heading
+      description: data?.content?.heading,
+      discount_type: promoCode.code ? 'promocode' : data?.content?.sales_prefix ? 'discounted' : data?.chatdata ? 'offered' : 'normal'
     };
 
     setLoading(true);

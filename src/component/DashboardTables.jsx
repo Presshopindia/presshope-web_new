@@ -1054,6 +1054,7 @@ const DashboardTables = () => {
                             <th>Published by</th>
                             <th>Published price</th>
                             <th>Discounted Price</th>
+                            <th>Negotiated Price</th>
                             <th>Purchased price</th>
                           </tr>
                         </thead>
@@ -1219,7 +1220,10 @@ const DashboardTables = () => {
                                   £{formatAmountInMillion(curr?.published_price || 0)}
                                 </td>
                                 <td>
-                                  £{formatAmountInMillion(curr?.discounted_price || 0)}
+                                  £{curr?.discount_type !== "discounted" ? formatAmountInMillion(curr?.discounted_price || 0) : 0}
+                                </td>
+                                <td>
+                                  £{curr?.discount_type === "discounted" ? formatAmountInMillion(curr?.discounted_price || 0) : 0}
                                 </td>
                                 <td>
                                   £{formatAmountInMillion(curr?.amount)}

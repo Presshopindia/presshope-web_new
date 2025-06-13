@@ -33,6 +33,9 @@ const AddBroadcastTask = (props) => {
   const minTime = dayjs()
     .set("hour", new Date().getHours())
     .set("minute", new Date().getMinutes() + 30);
+  const maxTime = dayjs()
+    .set("hour", new Date().getHours() + 24)
+    .set("minute", new Date().getMinutes());
   const [loading, setLoading] = useState(false);
 
   const [street_address, setstreet_address] = useState("");
@@ -45,18 +48,25 @@ const AddBroadcastTask = (props) => {
   const [selectedTime, setSelectedTime] = useState("");
   const [timeError, setTimeError] = useState(null);
 
-  // const handleTimeChange = (time) => {
-  //   setTimeError(null);
-  //   const selected = moment(time.$d);
-  //   const nowPlus30 = moment().add(30, 'minute');
+  // Calculate the minimum allowed date/time (24 hours from now)
+  const minAllowedDateTime = moment().add(24, 'hours');
 
-  //   if (selected.isBefore(nowPlus30)) {
-  //     setTimeError('Please select a time at least 30 minutes from now');
-  //   } else {
-  //     setSelectedTime(time);
-  //     setEnd_time(selected.format('HH:mm'));
-  //   }
-  // };
+  // Helper to get minTime for TimePicker
+  const getMinTime = () => {
+    if (!end_date) return null;
+    const selectedDate = moment(end_date, 'YYYY-MM-DD');
+    const minDate = minAllowedDateTime.clone().startOf('day');
+    if (selectedDate.isSame(minAllowedDateTime, 'day')) {
+      // If selected date is the first available date, set minTime to 24h from now
+      return dayjs(minAllowedDateTime.format('YYYY-MM-DDTHH:mm'));
+    } else if (selectedDate.isAfter(minAllowedDateTime, 'day')) {
+      // For later dates, allow all times
+      return dayjs().startOf('day');
+    } else {
+      // For earlier dates, disable time selection
+      return null;
+    }
+  };
 
   const handleTimeChange = (time) => {
     setTimeError(null); // Reset error initially
@@ -103,64 +113,6 @@ const AddBroadcastTask = (props) => {
   const [show, setShow] = useState(props.isOpen);
   const [value, setValue] = React.useState(dayjs(new Date()));
 
-  // const [markerPosition, setMarkerPosition] = useState(null);
-
-  // const handleMapClick = (event) => {
-  //   // console.log(event, `<-----what is here`)
-  //   const lat = event.latLng.lat();
-  //   const lng = event.latLng.lng();
-
-  //   const geocoder = new window.google.maps.Geocoder();
-  //   geocoder.geocode({ location: { lat, lng } }, (place, status) => {
-  //     if (status === "OK") {
-  //       setDetails((prev) => ({
-  //         ...prev,
-  //         location: place[0].formatted_address,
-  //       }));
-  //       setDetails((prev) => ({
-  //         ...prev,
-  //         address_location: {
-  //           coordinates: [
-  //             place[0].geometry.location.lat(),
-  //             place[0].geometry.location.lng(),
-  //           ],
-  //         },
-  //       }));
-  //     } else {
-  //       // console.log(`Geocoder failed due to: ${status}`);
-  //     }
-  //   });
-  //   setMarkerPosition({ lat, lng });
-  // };
-
-  // const handleMarkerDragEnd = (event) => {
-  //   const lat = event.latLng.lat();
-  //   const lng = event.latLng.lng();
-
-  //   const geocoder = new window.google.maps.Geocoder();
-  //   geocoder.geocode({ location: { lat, lng } }, (place, status) => {
-  //     if (status === "OK") {
-  //       setDetails((prev) => ({
-  //         ...prev,
-  //         location: place[0].formatted_address,
-  //       }));
-  //       setDetails((prev) => ({
-  //         ...prev,
-  //         address_location: {
-  //           coordinates: [
-  //             place[0].geometry.location.lat(),
-  //             place[0].geometry.location.lng(),
-  //           ],
-  //         },
-  //       }));
-  //     } else {
-  //       // console.log(`Geocoder failed due to: ${status}`);
-  //     }
-  //   });
-
-  //   setMarkerPosition({ lat, lng });
-  // };
-
   const handleClose = () => {
     setShow(false);
     props.show();
@@ -183,10 +135,6 @@ const AddBroadcastTask = (props) => {
   const handlePopupOpen = () => {
     setShowPopup(true);
   };
-
-  // const handlePopupClose = () => {
-  //   setShowPopup(false);
-  // };
 
   const onMapLoadStreet = (map) => {
     const searchBox = new window.google.maps.places.SearchBox(
@@ -235,123 +183,6 @@ const AddBroadcastTask = (props) => {
     return diffInMs < hours24;
   }
 
-  // Example usage:
-  // Will return true or false
-
-  // const PostTask = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     details.deadline_date = new Date(`${end_date}T${end_time}`);
-  //     console.log("check 123 ---->1", end_date, end_time, selectedTime.$d);
-  //     const date = new Date(selectedTime.$d);
-  //     console.log(
-  //       "deadline date ----> --->",
-  //       new Date(`${end_date}T${end_time}`)
-  //     );
-  //     // Option 1: Use toLocaleTimeString (easiest)
-  //     const time = date.toLocaleTimeString("en-US", {
-  //       hour: "2-digit",
-  //       minute: "2-digit",
-  //       second: "2-digit",
-  //     });
-  //     console.log("Time:", time);
-
-  //     const inputDateTimeStr = end_date + " " + time;
-  //     console.log(isWithin24Hours(inputDateTimeStr));
-  //     if (isWithin24Hours(inputDateTimeStr)) {
-  //       toast.error(
-  //         "Scheduling a task?Please allow 24 hours for proper planning and execution. Thank you"
-  //       );
-  //       return;
-  //     }
-  //     // if (end_date === moment().format('YYYY-MM-DD') && selected.isBefore(nowPlus30)) {
-  //     //   console.log("check 123 ---->2")
-  //     //   setTimeError('Please select a time at least 30 minutes from now');
-  //     //   return
-  //     // }
-  //     // console.log("check 123 ---->3")
-
-  //     if (
-  //       !details.need_interview &&
-  //       !details.need_videos &&
-  //       !details.need_photos
-  //     ) {
-  //       toast.error("Select Atleast One Task");
-  //     } else if (details.category_id === "option1") {
-  //       toast.error("Select Category");
-  //     } else if (end_date === "") {
-  //       console.log("check 123 ---->4");
-
-  //       toast.error("Select Date");
-  //     } else if (end_time === "") {
-  //       console.log("check 123 ---->5");
-
-  //       toast.error("Select Time");
-  //     } else if (details.location === "") {
-  //       toast.error("Select Location");
-  //     } else if (details.apartment == "") {
-  //       return setError({ ...error, apartment: "Required" });
-  //     } else if (timeError) {
-  //       return successToasterFun(timeError);
-  //     } else {
-  //       console.log("success login");
-  //       setLoading(true);
-  //       details.hopper_photo_price = details?.photo_price
-  //         ? details.photo_price
-  //         : "";
-  //       details.hopper_videos_price = details?.videos_price
-  //         ? details.videos_price
-  //         : "";
-  //       details.hopper_interview_price = details?.interview_price
-  //         ? details.interview_price
-  //         : "";
-
-  //       let broadCasted_task = details;
-
-  //       broadCasted_task.photo_price = details?.photo_price
-  //         ? details.photo_price * (80 / 100)
-  //         : "";
-  //       broadCasted_task.videos_price = details?.videos_price
-  //         ? details.videos_price * (80 / 100)
-  //         : "";
-  //       broadCasted_task.interview_price = details?.interview_price
-  //         ? details.interview_price * (80 / 100)
-  //         : "";
-
-  //       console.log("all details abot task ----> --->", broadCasted_task);
-  //       const resp = await Post("mediaHouse/createTask", broadCasted_task);
-  //       if (resp) {
-  //         handleClose();
-  //         successToasterFun("Your task is successfully broadcasted. Cheers");
-  //         props.show();
-  //         setLoading(false);
-  //         setDetails({
-  //           mediahouse_id: Local_ID,
-  //           deadline_date: "",
-  //           task_description: "",
-  //           any_spcl_req: "",
-  //           location: "",
-  //           latitude: "",
-  //           longitude: "",
-  //           need_photos: false,
-  //           photo_price: "",
-  //           need_videos: false,
-  //           videos_price: "",
-  //           need_interview: false,
-  //           interview_price: "",
-  //           category_id: "option1",
-  //           heading: "",
-  //         });
-  //         setEnd_date("");
-  //         setEnd_time("");
-  //         setTimeError(null);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     setLoading(false);
-  //     console.log(error, "error.message");
-  //   }
-  // };
   const PostTask = async (e) => {
     e.preventDefault();
     try {
@@ -520,31 +351,37 @@ const AddBroadcastTask = (props) => {
                         }
                       }}
                       ampm={true}
-                      minTime={
-                        end_date === moment(new Date()).format("YYYY-MM-DD") &&
-                        minTime
-                      }
-                      // disabled={!end_date}
-                      // renderInput={(params) => (
-                      //   <TextField
-                      //     {...params}
-                      //     error={false}
-                      //     placeholder="HH:MM"
-                      //     readonly
-                      //   />
-                      // )}
+                      minTime={getMinTime()}
+                      disabled={(() => {
+                        if (!end_date) return true;
+                        const selectedDate = moment(end_date, 'YYYY-MM-DD');
+                        return selectedDate.isBefore(minAllowedDateTime, 'day');
+                      })()}
                       renderInput={(params) => (
                         <TextField
                           {...params}
                           error={false}
                           inputProps={{
                             ...params.inputProps,
-                            placeholder: "HH:MM", // Override the placeholder
-                            readOnly: true, // Ensure the input is read-only
+                            placeholder: "HH:MM",
+                            readOnly: true,
                           }}
                         />
                       )}
                     />
+                    {(() => {
+                      if (end_date) {
+                        const selectedDate = moment(end_date, 'YYYY-MM-DD');
+                        if (selectedDate.isBefore(minAllowedDateTime, 'day')) {
+                          return (
+                            <span style={{ color: 'red' }}>
+                              You must select a time at least 24 hours from now.
+                            </span>
+                          );
+                        }
+                      }
+                      return null;
+                    })()}
                   </LocalizationProvider>
                   <span className="task_noti_color">
                     Tasks need at least 24 hours' notice
