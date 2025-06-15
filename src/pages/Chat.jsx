@@ -197,6 +197,10 @@ const Chat = () => {
       setContentlist(resp.data.response);
       if (resp) {
         setLoading(false);
+        console.log("resp.data.response" , resp.data.response)
+        if(resp.data.response?.[0]?._id) {
+          localStorage.setItem("contentId", JSON.stringify(resp.data.response?.[0]?._id))
+        }
       }
     } catch (error) {
       setLoading(false);
@@ -290,6 +294,7 @@ const Chat = () => {
                                       ...groupIds,
                                       contentId: curr._id,
                                     });
+                                    localStorage.setItem("hopperid", curr?._id)
                                   }}
                                 >
                                   <div className="cht_inn w-100 d-flex align-items-center">
@@ -632,6 +637,9 @@ const Chat = () => {
                 {show.content && (
                   <ContentDtlChat contents={contentList} users={userList} />
                 )}
+                {
+                  console.log("SHow ------------------------------>", show)
+                }
               </div>
             </div>
           </div>
