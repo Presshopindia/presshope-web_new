@@ -52,6 +52,7 @@ $dark-mode-bg: #dbdcdc;
 .input-border {
   background-color: $input-border !important;
 }
+
 @font-face {
   font-family: "Airbnb";
   src: local("AirbnbCereal_W_Lt"),
@@ -3602,6 +3603,7 @@ button.MuiButton-secondary {
     left: 10px;
   }
 }
+
 // onboarding update css
 .onboardStep {
   .form-group {
@@ -7579,6 +7581,7 @@ button {
   display: flex;
   flex-direction: column;
 }
+
 .cht_tsk_rw.d-flex {
   gap: 20px;
 }
@@ -12764,6 +12767,7 @@ audio {
 .mb-10 {
   margin-bottom: 40px;
 }
+
 .feedTrendingSearchWrap>.topSearches_tipsCard>.row>.p-0.col-lg-12 {
   padding: calc(var(--bs-gutter-x) * .5) !important;
 }
@@ -13101,8 +13105,7 @@ audio {
   padding: 0 12px !important;
 }
 
-.page-wrap
-.newbtndesign small {
+.page-wrap .newbtndesign small {
   position: absolute;
   font-size: 12px;
   top: 2px;
@@ -13279,13 +13282,31 @@ audio {
   .crop-container {
     max-height: 300px;
   }
-  
+
   .crop-image {
     max-height: 300px;
   }
-} 
+}
 
+span.red-dot {
+  position: absolute;
+  top: 0;
+  width: 12px;
+  height: 12px;
+  background: red;
+  left: 26px;
+  border-radius: 50%;
+}
 
+span.green-dot {
+  position: absolute;
+  top: 0;
+  width: 12px;
+  height: 12px;
+  background: green;
+  left: 26px;
+  border-radius: 50%;
+}
 
 .email-client-modal .modal-content {
   border-radius: 8px;

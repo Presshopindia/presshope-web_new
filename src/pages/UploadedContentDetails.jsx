@@ -1522,7 +1522,7 @@ const UploadedContentDetails = (props) => {
                                               <img
                                                 src={curr?.profile_image}
                                                 alt="user"
-                                                style={{border:`3px solid ${onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? "green" : "red"}`}}
+                                                style={{ border: `3px solid ${onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? "green" : "red"}` }}
                                               />
                                               <span> {curr?.full_name}</span>
                                             </div>

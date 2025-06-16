@@ -1579,7 +1579,10 @@ const Feeddetail = (props) => {
                                   </Button>
                                 ) : (
                                   <Button className="newbtndesign" variant="secondary">
-                                    <small>{messages?.filter((el) => el?.message_type === "decline_mediaHouse_offer")?.length > 0 ? "Offer Rejected" : messages?.filter((el) => el?.message_type === "accept_mediaHouse_offer")?.length > 0 ? "Offer Accepted" : "Offered"}</small>£ {Number(
+                                    {/* <small> */}
+
+                                    {messages?.filter((el) => el?.message_type === "decline_mediaHouse_offer")?.length > 0 ? "Rejected" : messages?.filter((el) => el?.message_type === "accept_mediaHouse_offer")?.length > 0 ? "Accepted" : "Offered"}
+                                    {/* </small>£ {Number(
                                       messages?.find(
                                         (el) =>
                                           el.message_type ===
@@ -1589,7 +1592,7 @@ const Feeddetail = (props) => {
                                       )?.amount || 0
                                     )?.toLocaleString("en-US", {
                                       maximumFractionDigits: 2,
-                                    })}
+                                    })} */}
                                   </Button>
                                 )}
 
@@ -1608,7 +1611,7 @@ const Feeddetail = (props) => {
                                       ?._id
                                 )) && (
                                   <Button onClick={() => navigate(`/auto-invoice/${param.id}`)} variant="primary newbtndesign">
-                                    <small>{data?.sales_prefix ? "Discounted Price" : "Buy"}</small>£ {data?.sales_prefix ? formatAmountInMillion(Number(data?.ask_price)) : messages?.find((el) => el?.message_type === "accept_mediaHouse_offer")?.amount ? formatAmountInMillion(Number(messages?.find((el) => el?.message_type === "accept_mediaHouse_offer")?.amount)) : formatAmountInMillion(Number(data?.ask_price ?? 0))}
+                                    <small>{data?.sales_prefix ? "Discounted Price" : ""} </small>£ {data?.sales_prefix ? formatAmountInMillion(Number(data?.ask_price)) : messages?.find((el) => el?.message_type === "accept_mediaHouse_offer")?.amount ? formatAmountInMillion(Number(messages?.find((el) => el?.message_type === "accept_mediaHouse_offer")?.amount)) : formatAmountInMillion(Number(data?.ask_price ?? 0))}
                                   </Button>
                                 )}
 
@@ -2005,7 +2008,7 @@ const Feeddetail = (props) => {
                                               />
                                             </div>
                                             <div
-                                              className="img"
+                                              className="img position-relative"
                                               onClick={() => {
                                                 setSenderId(curr._id);
                                                 setShow({
@@ -2021,6 +2024,7 @@ const Feeddetail = (props) => {
                                                 alt="user"
                                                 style={{ border: `3px solid ${onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? "green" : "red"}` }}
                                               />
+                                              {onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? <span className="green-dot"></span> : <span className="red-dot"></span>}
                                               <span> {curr?.full_name}</span>
                                             </div>
                                             {/* <div className="dots">
@@ -2527,7 +2531,7 @@ const Feeddetail = (props) => {
                                                     }
                                                   >
                                                     <button className="theme_btn">
-                                                      Show me the Offers
+                                                      Show Me The Offers
                                                     </button>
                                                   </div>
                                                   <p className="buy_btn_txt mb-0">

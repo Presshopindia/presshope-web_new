@@ -17,12 +17,12 @@ const UserForgetPassword = () => {
 
   const ForgotPassword = async (e) => {
     e.preventDefault();
-    try{
+    try {
       setLoading(true);
       const resp = await Post(`auth/media/house/forgotPassword`, {
         email,
       });
-  
+
       if (resp) {
         localStorage.setItem("Email", email);
         setLoading(false);
@@ -30,7 +30,7 @@ const UserForgetPassword = () => {
         navigate("/User-reset-Password");
       }
     }
-    catch(error){
+    catch (error) {
       toast.error(error?.response?.data?.errors?.msg)
       setLoading(false);
     }
@@ -42,7 +42,7 @@ const UserForgetPassword = () => {
       <LoginHeader />
 
       {
-        loading && <Loader/>
+        loading && <Loader />
       }
       <div className="page-wrap login-page p-0">
         <Container fluid className="pdng">
@@ -132,7 +132,7 @@ const UserForgetPassword = () => {
                 </Col>
                 <Col lg={6} md={6} sm={12} xs={12} className="rt_col">
                   <div className="left-side right-side position-relative">
-                    <img src={"https://uat-presshope.s3.eu-west-2.amazonaws.com/public/user/1721378348137forgotrtimg.svg"} className="w-100" alt="" />
+                    <img src={"https://dev-cdn.presshop.news/emailTemplateImage/WhatsAppsmallImage2025-06-1622.55.07_8f8d7a64.jpg"} className="w-100" alt="" />
                     <div className="tri"></div>
                     <div className="circle"></div>
                     <div className="big_circle"></div>

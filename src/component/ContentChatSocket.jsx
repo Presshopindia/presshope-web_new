@@ -500,7 +500,7 @@ function ContentChatSocket(props) {
                           </p>
                           <div className="usr_upld_opts">
                             <button className="theme_btn">
-                              Show me the Offers
+                              Show Me The Offers
                             </button>
                           </div>
                           <p className="buy_btn_txt mb-0">
