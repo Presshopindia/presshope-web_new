@@ -21,7 +21,7 @@ import { PaginationComp } from "../component/Pagination";
 import TopFilterComn from "../component/Sortfilters/Content/TopFilterComn";
 import Fundsinvested from "../component/Sortfilters/Dashboard/Fundsinvested";
 import ContentFeedCard from "../component/card/ContentFeedCard";
-import { formatAmountInMillion, getDeepModifiedTaskContent, getTaskContent } from "../component/commonFunction";
+import { formatAmountInMillion, getDeepModifiedTaskContent, getPurchasedTaskContent, getTaskContent } from "../component/commonFunction";
 import { Get, Post } from "../services/user.services";
 import { DashboardCardInfo } from "../component/DashboardCardInfo";
 
@@ -70,10 +70,10 @@ const BroadcastedTask = () => {
   // New Uploaded Content -
   const [newUploadedContent, setNewUploadedContent] = useState(null);
 
-  const TaskDetails = async (id) => {
+  const TaskDetails = async (id = "") => {
     setLoading(true);
     try {
-      let resp = await Get(`mediaHouse/getuploadedContentbyHoppers?limit=${limit}&offet=${+(page - 1) * limit}`)
+      let resp = await Get(`mediaHouse/getuploadedContentbyHoppers?task_id=${id}&limit=${limit}&offet=${+(page - 1) * limit}`)
       setNewUploadedContent(resp?.data);
       setLoading(false);
       setTotalPage(Math.ceil(resp.data?.totalUploadedContent / limit));
@@ -184,7 +184,7 @@ const BroadcastedTask = () => {
                 title="Content purchased from tasks"
                 type="content_purchased_from_task"
                 total={dashboardData?.task?.contentPurchasedFromTask?.totalCount}
-                data={getTaskContent(dashboardData?.task?.contentPurchasedFromTask?.data)}
+                data={getPurchasedTaskContent(dashboardData?.task?.contentPurchasedFromTask?.data)}
                 dashboardSort={dashboardSort}
                 setDashboardSort={setDashboardSort}
                 sort={dashboardPayload?.requestedFilter?.content_purchased_from_task}
@@ -203,7 +203,7 @@ const BroadcastedTask = () => {
                 title="Total funds invested"
                 type="total_fund_invested_in_task"
                 total={"£" + formatAmountInMillion(dashboardData?.task?.totalFundInvested?.totalAmount || 0)}
-                data={getTaskContent(dashboardData?.task?.totalFundInvested?.data)}
+                data={getPurchasedTaskContent(dashboardData?.task?.totalFundInvested?.data)}
                 dashboardSort={dashboardSort}
                 setDashboardSort={setDashboardSort}
                 sort={dashboardPayload?.requestedFilter?.total_fund_invested_in_task}
@@ -259,7 +259,7 @@ const BroadcastedTask = () => {
 
           <Row className="tracker-task">
             <Col md={4} className="mb-0">
-              <BroadcastedTrackings show={show} setViewTask={setViewTask} viewTask={viewTask} />
+              <BroadcastedTrackings show={show} setViewTask={setViewTask} viewTask={viewTask} TaskDetails={TaskDetails} />
             </Col>
             <Col md={8} className="pe-0">
               <div className="top-bar">

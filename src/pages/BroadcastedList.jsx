@@ -88,7 +88,7 @@ const BroadcastedTrackings = (props) => {
     setOpenSortComponent(values);
   };
 
-  const [timeRemaining, setTimeRemaining] = useState({ hours: 0, minutes: 0 });
+  const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [deadlineTime, setDeadlineTime] = useState("");
   
   useEffect(() => {
@@ -102,22 +102,24 @@ const BroadcastedTrackings = (props) => {
         const deadline = moment(taskDetails.deadline_date);
         
         if (deadline.isBefore(now)) {
-          setTimeRemaining({ hours: 0, minutes: 0 });
+          setTimeRemaining({ days: 0, hours: 0, minutes: 0, seconds: 0 });
           return;
         }
         
         const duration = moment.duration(deadline.diff(now));
-        const hours = Math.floor(duration.asHours());
+        const days = Math.floor(duration.asDays());
+        const hours = Math.floor(duration.asHours()) % 24;
         const minutes = Math.floor(duration.asMinutes()) % 60;
+        const seconds = Math.floor(duration.asSeconds()) % 60;
         
-        setTimeRemaining({ hours, minutes });
+        setTimeRemaining({ days, hours, minutes, seconds });
       };
       
       // Initial calculation
       calculateTimeRemaining();
       
-      // Update every minute
-      const timer = setInterval(calculateTimeRemaining, 60000);
+      // Update every second
+      const timer = setInterval(calculateTimeRemaining, 1000);
       
       return () => clearInterval(timer);
     }
@@ -149,6 +151,7 @@ const BroadcastedTrackings = (props) => {
                       window.history.back();
                     } else {
                       props?.setViewTask({ ...props?.viewTask, open: false })
+                      props?.TaskDetails("")
                     }
                   }}><BsArrowLeft className="text-pink " /> <span>Back</span></div> : null
                 }
@@ -303,7 +306,10 @@ const BroadcastedTrackings = (props) => {
                                   <Button
                                     variant="primary"
                                     className="sm-btn"
-                                    onClick={() => props?.setViewTask({ open: true, taskDetails: curr })}
+                                    onClick={() => {
+                                      props?.setViewTask({ open: true, taskDetails: curr })
+                                      props?.TaskDetails(curr?._id)
+                                    }}
                                   >
                                     View
                                   </Button>
@@ -317,227 +323,9 @@ const BroadcastedTrackings = (props) => {
                     </div>
                   )
                 }
-                {/* <div className="listView_task_wrap">
-                  {liveTasks &&
-                    liveTasks.map((curr) => {
-                      return (
-                        <div className="listView_task">
-                          <div className="mapInput">
-                          </div>
-                          <div className="listTask-detail w-100">
-                            <h6 className="tsk_lft_desc">
-                              {curr.task_description}
-                            </h6>
-                            <div className="listTask_action d-flex justify-content-between">
-                              <div className="d-flex flex-column">
-                                <span className="time_info d-flex align-items-center lft_tme">
-                                  <BiTimeFive />
-                                  <Typography className="font-12">
-                                    {moment(curr.deadline_date).format(
-                                      "hh:mm A, DD.MM.YYYY"
-                                    )}
-                                  </Typography>
-                                </span>
-                                <span className="time_info d-flex align-items-center lft_tme">
-                                  <img src={bullseye} alt="Hoppers" />
-                                  <Typography className="font-12">
-                                    {curr?.accepted_by?.length || 0} Hoppers
-                                    tasked
-                                  </Typography>
-                                </span>
-                              </div>
-                              <Link>
-                                <Button
-                                  variant="primary"
-                                  className="sm-btn"
-                                  onClick={() => TaskDetails(curr?._id)}
-                                >
-                                  View
-                                </Button>
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div> */}
               </div>
             </div>
           </Col>
-          {/* <Col md={6} className="ps-0 pe-1">
-            <div className="taskDetail_wrap pe-1">
-              <h2 className="dashCard-heading">Task details</h2>
-              <div className="singleTask_detail sngl_wrp">
-                <div className="taskInfo_card">
-                  <label>Task</label>
-                  <div className="taskSingle_info">
-                    <svg
-                      width="17"
-                      height="17"
-                      viewBox="0 0 17 17"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M9.58901 0.693055L14.6514 2.94108C16.11 3.5846 16.11 4.64855 14.6514 5.29206L9.58901 7.54009C9.01414 7.79749 8.07031 7.79749 7.49543 7.54009L2.43309 5.29206C0.974451 4.64855 0.974451 3.5846 2.43309 2.94108L7.49543 0.693055C8.07031 0.435648 9.01414 0.435648 9.58901 0.693055Z"
-                        stroke="#7D8D8B"
-                        stroke-width="0.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M1 7.62598C1 8.34672 1.54056 9.179 2.20123 9.47073L8.02722 12.062C8.47339 12.2593 8.97962 12.2593 9.41721 12.062L15.2432 9.47073C15.9039 9.179 16.4444 8.34672 16.4444 7.62598"
-                        stroke="#7D8D8B"
-                        stroke-width="0.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M1 11.916C1 12.714 1.47191 13.4347 2.20123 13.7608L8.02722 16.352C8.47339 16.5493 8.97962 16.5493 9.41721 16.352L15.2432 13.7608C15.9725 13.4347 16.4444 12.714 16.4444 11.916"
-                        stroke="#7D8D8B"
-                        stroke-width="0.8"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                    <p>{taskDetails?.task_description}</p>
-                  </div>
-                </div>
-                <div className="taskInfo_card">
-                  <Row className="justify-content-between price-wrapper">
-                    <Col md={6} >
-                      <div className="timeSlots_tiles">
-                        <label>Date</label>
-                        <span className="sm-tiles">
-                          <img
-                            className="tsk_dlt_icns"
-                            src={calendaric}
-                            alt="date"
-                          />
-                          {moment(taskDetails?.deadline_date).format(
-                            "DD/MM/YYYY"
-                          ) !== "Invalid date"
-                            ? " " +
-                            moment(taskDetails?.deadline_date).format(
-                              "DD/MM/YYYY"
-                            )
-                            : "dd/mm/yyyy"}
-                        </span>
-                      </div>
-                    </Col>
-                    <Col md={6} >
-                      <div className="timeSlots_tiles">
-                        <label>Deadline</label>
-                        <span className="sm-tiles">
-                          <img
-                            className="tsk_dlt_icns"
-                            src={timeic}
-                            alt="time"
-                          />
-                          {moment(taskDetails?.deadline_date).format(
-                            "hh:mm A"
-                          ) !== "Invalid date"
-                            ? " " +
-                            moment(taskDetails?.deadline_date).format(
-                              "hh:mm A"
-                            )
-                            : " 00:00 AM"}
-                        </span>
-                      </div>
-                    </Col>
-                    <Col md={4} className="timer_lft">
-                      <Timer className="tsk_dlt_icns" deadline={deadline} />
-                    </Col>
-                  </Row>
-                </div>
-                <div className="taskInfo_card">
-                  <div className="row d-flex justify-content-between price-wrapper">
-                    <div className="col-md-6">
-                      <label>Price offered</label>
-                    </div>
-                    <div className="col-md-6">
-                      <label>Chat</label>
-                    </div>
-                  </div>
-                  <Row className="mt-2">
-                    <Col md={6}>
-                      <div className="priceOffer_wrap">
-                        <div className="type_price justify-content-start gap-3">
-                          <label className="txt_lt">Photo</label>
-                          <span
-                            className={
-                              taskDetails?.need_photos === true
-                                ? "sm-tiles prc_cstm"
-                                : "sm-tiles"
-                            }
-                          >
-                            {taskDetails?.need_photos === true
-                              ? "£" +
-                              formatAmountInMillion(
-                                taskDetails?.hopper_photo_price
-                              )
-                              : "-"}
-                          </span>
-                        </div>
-                        <div className="type_price justify-content-start gap-3">
-                          <label className="txt_lt">Interview</label>
-                          <span
-                            className={
-                              taskDetails?.need_interview === true
-                                ? "sm-tiles prc_cstm"
-                                : "sm-tiles"
-                            }
-                          >
-                            {taskDetails?.need_interview === true
-                              ? "£" +
-                              formatAmountInMillion(
-                                taskDetails?.hopper_interview_price
-                              )
-                              : "-"}
-                          </span>
-                        </div>
-                        <div className="type_price justify-content-start gap-3">
-                          <label className="txt_lt">Video</label>
-                          <span
-                            className={
-                              taskDetails?.need_videos === true
-                                ? "sm-tiles prc_cstm"
-                                : "sm-tiles"
-                            }
-                          >
-                            {taskDetails?.need_videos === true
-                              ? "£ " +
-                              formatAmountInMillion(
-                                taskDetails?.hopper_videos_price
-                              )
-                              : "-"}
-                          </span>
-                        </div>
-                      </div>
-                    </Col>
-                    <Col md={6} className="d-flex justify-content-end mt-4">
-                      <div
-                        className="taskUploads_media clickable"
-                        onClick={() =>
-                          navigate(`/hopper-task-content/${taskDetails?._id}`)
-                        }
-                      >
-                        <Link
-                          className="text-dark"
-                          to={`/hopper-task-content/${taskDetails?._id}`}
-                        >
-                          <small className="font-bold">
-                            View all uploaded content{" "}
-                          </small>
-                          <BsArrowRight className="text-pink float-end me-2 mt-1" />
-                        </Link>
-                      </div>
-                    </Col>
-                  </Row>
-                </div>
-              </div>
-            </div>
-          </Col> */}
 
           <Col md={6} className="ps-0 pe-1">
             <div className="taskDetail_wrap pe-1">
@@ -575,10 +363,10 @@ const BroadcastedTrackings = (props) => {
                         stroke-linejoin="round"
                       />
                     </svg>
-                    <p>
+                    {/* <p>
                       Take pics, videos and interviews of Rishi Sunak's budget speech at Number 10...
-                    </p>
-                    {/* <p>{taskDetails?.task_description}</p> */}
+                    </p> */}
+                    <p>{taskDetails?.task_description}</p>
                   </div>
                 </div>
 
@@ -586,8 +374,8 @@ const BroadcastedTrackings = (props) => {
                   <label>Location</label>
                   <div className="taskSingle_info taskInfo_card_gray addnewdesign_location">
                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke-width="2" d="M12,22 C12,22 4,16 4,10 C4,5 8,2 12,2 C16,2 20,5 20,10 C20,16 12,22 12,22 Z M12,13 C13.657,13 15,11.657 15,10 C15,8.343 13.657,7 12,7 C10.343,7 9,8.343 9,10 C9,11.657 10.343,13 12,13 L12,13 Z"></path></svg>
-                    <p>167-169, Great Portland Street, London, W1W 5PF</p>
-                    {/* <p>{taskDetails?.task_description}</p> */}
+                    {/* <p>167-169, Great Portland Street, London, W1W 5PF</p> */}
+                    <p>{taskDetails?.location}</p>
                   </div>
                 </div>
                 <div className="taskInfo_card mb-1">
@@ -704,17 +492,19 @@ const BroadcastedTrackings = (props) => {
                             </span>
                           </div>
                         </div>
-                        {
-                          console.log("taskDetails", taskDetails)
-                        }
                         <div className="w-50 ps-3">
-                          <div className="Deadline-card ">
+                          <div className="Deadline-card">
                             <div className="Deadline-card-top py-4">
                               <p className="mb-2">
                                 Time remaining
                               </p>
                               <h5>
-                              {timeRemaining.hours.toString().padStart(2, '0')}:{timeRemaining.minutes.toString().padStart(2, '0')}
+                              {timeRemaining.days > 0 
+                                ? `${timeRemaining.days}d:${timeRemaining.hours.toString().padStart(2, '0')}h:${timeRemaining.minutes.toString().padStart(2, '0')}m`
+                                : timeRemaining.hours > 0 
+                                  ? `${timeRemaining.hours.toString().padStart(2, '0')}h:${timeRemaining.minutes.toString().padStart(2, '0')}m`
+                                  : `${timeRemaining.minutes.toString().padStart(2, '0')}m:${timeRemaining.seconds.toString().padStart(2, '0')}s`
+                              }
                               </h5>
                             </div>
                             <div className="Deadline-card-bottom p-2">

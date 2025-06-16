@@ -291,6 +291,20 @@ export const getTaskContent = (data) => {
     });
 };
 
+export const getPurchasedTaskContent = (data) => {
+    return data?.map((curr) => {
+        const media = curr?.contentDetails;
+
+        if (media?.type === "video") {
+            return { media: media?.videothubnail, mediaValue: media?.videothubnail };
+        } else if (media?.type === "audio") {
+            return { mediaValue:audioicsm, media: audioicsm };
+        } else {
+            return { media: process.env.REACT_APP_UPLOADED_CONTENT + media?.imageAndVideo, mediaValue: process.env.REACT_APP_UPLOADED_CONTENT + media?.imageAndVideo};
+        }
+    });
+};
+
 
 export const getDeepModifiedTaskContent = (data) => {
     return data?.map((curr) => {

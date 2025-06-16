@@ -67,8 +67,6 @@ export const DarkModeProvider = ({ children }) => {
     })
   }, [socketServer, profileData]);
 
-  console.log("onlineUsers", onlineUsers)
-
   return (
     <DarkModeContext.Provider
       value={{
