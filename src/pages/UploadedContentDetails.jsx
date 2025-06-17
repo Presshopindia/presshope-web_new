@@ -405,6 +405,8 @@ const UploadedContentDetails = (props) => {
     });
   };
 
+  console.log("selectedImtems", selectedItems)
+
 
   const Audio = data?.filter((item) => item.type === "audio")
   const Video = data?.filter((item) => item.type === "video")
@@ -1508,7 +1510,7 @@ const UploadedContentDetails = (props) => {
                                               />
                                             </div>
                                             <div
-                                              className="img"
+                                              className="img position-relative"
                                               onClick={() => {
                                                 setSenderId(curr._id);
                                                 setShow({
@@ -1522,13 +1524,10 @@ const UploadedContentDetails = (props) => {
                                               <img
                                                 src={curr?.profile_image}
                                                 alt="user"
-                                                style={{ border: `3px solid ${onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? "green" : "red"}` }}
                                               />
+                                              {onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? <span className="green-dot"></span> : <span className="red-dot"></span>}
                                               <span> {curr?.full_name}</span>
                                             </div>
-                                            {/* <div className="dots">
-                                                                                    <Link className="view_chat">View</Link>
-                                                                                  </div> */}
                                             {message?.some(
                                               (item) =>
                                                 `${curr?.first_name} ${curr?.last_name}` ==
@@ -1588,10 +1587,10 @@ const UploadedContentDetails = (props) => {
                                             className="usr_img"
                                           />
                                           <div className="cht_txt">
-                                            <div className="d-flex align-items-center">
-                                              <p className="usr_name mb-0">
+                                            <div className="d-flex align-items-center cht_txt postedcmnt_info">
+                                              <h5>
                                                 PressHop
-                                              </p>
+                                              </h5>
                                               <p className="cht_time mb-0">
                                                 {moment(
                                                   roomDetails?.createdAt
@@ -1695,9 +1694,9 @@ const UploadedContentDetails = (props) => {
                                                 />
                                                 <div className="cht_txt">
                                                   <div className="d-flex align-items-center">
-                                                    <p className="usr_name mb-0">
+                                                    <h5 className="usr_name mb-0 cht_txt postedcmnt_info">
                                                       {curr?.sender_id?.user_name}
-                                                    </p>
+                                                    </h5>
                                                     <p className="cht_time mb-0">
                                                       {moment(curr?.createdAt).format("h:mm A, D MMM YYYY")}
                                                     </p>
@@ -1717,13 +1716,18 @@ const UploadedContentDetails = (props) => {
                                                               }
                                                               className="media-item"
                                                             >
-                                                              <label className="checkbox-label">
+                                                              {/* <label className="checkbox-label">
                                                                 <input
                                                                   type="checkbox"
                                                                   className="media-checkbox z-1000"
                                                                   onChange={(e) => handleSelectionChange(item, e.target.checked)}
                                                                 />
-                                                              </label>
+                                                              </label> */}
+                                                              <FormControlLabel
+                                                                className="check_label me-0 media-checkbox z-1000"
+                                                                control={<Checkbox />}
+                                                                onChange={(e) => handleSelectionChange(item, e.target.checked)}
+                                                              />
 
                                                               {item?.mime ===
                                                                 "image" ? (

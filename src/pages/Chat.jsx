@@ -455,8 +455,8 @@ const Chat = () => {
                       {group
                         ?.sort(
                           (a, b) =>
-                            new Date(b?.latest_messege[0]?.createdAt) -
-                            new Date(a?.latest_messege[0]?.createdAt)
+                            new Date(b?.latest_messege[0]?.createdAt || 0) -
+                            new Date(a?.latest_messege[0]?.createdAt || 0)
                         )
                         ?.map((curr, index) => {
                           return (
@@ -479,12 +479,7 @@ const Chat = () => {
                                   _id: index,
                                   type: curr?.room_type,
                                 }));
-                                // localStorage.setItem(
-                                //   "contentId",
-                                //   curr?.content_id
-                                // );
                                 localStorage.setItem("type", curr?.room_type);
-
                                 handleUnseenMsg(curr);
                               }}
                             >
@@ -493,13 +488,13 @@ const Chat = () => {
                                   <a>
                                     {" "}
                                     <img
-                                      src={userImage}
+                                      src={curr?.profile_image}
                                       alt="user image"
                                     />{" "}
                                   </a>
-                                  <div className="status">
+                                  {/* <div className="status">
                                     <span className="active"></span>
-                                  </div>
+                                  </div> */}
                                 </div>
                                 <div className="cht_dtl d-flex justify-content-between w-100">
                                   <div className="cht_txt d-flex flex-column auto-width">
@@ -637,9 +632,6 @@ const Chat = () => {
                 {show.content && (
                   <ContentDtlChat contents={contentList} users={userList} />
                 )}
-                {
-                  console.log("SHow ------------------------------>", show)
-                }
               </div>
             </div>
           </div>

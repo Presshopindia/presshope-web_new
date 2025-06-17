@@ -557,7 +557,7 @@ const GroupContentDtlChat = (props) => {
                               />
                             </div>
                             <div
-                              className="img"
+                              className="img position-relative"
                               onClick={() => {
                                 setSenderId(curr._id);
                                 setShow({
@@ -571,8 +571,8 @@ const GroupContentDtlChat = (props) => {
                               <img
                                 src={curr?.profile_image || usric}
                                 alt="user"
-                                style={{border:`3px solid ${onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? "green" : "red"}`}}
                               />
+                              {onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? <span className="green-dot"></span> : <span className="red-dot"></span>}
                               <span>
                                 {" "}
                                 {curr.first_name + " " + curr?.last_name}

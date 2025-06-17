@@ -42,7 +42,6 @@ import "swiper/css";
 import socketServer from "../socket.config";
 
 const ContentDtlChat = (props) => {
-  console.log("props", props);
   const [data, setData] = useState();
   const [room_details, setRoom_Details] = useState();
   const [loading, setLoading] = useState(false);
@@ -97,12 +96,11 @@ const ContentDtlChat = (props) => {
   };
 
   const getMessages = async (room_id = localStorage.getItem("roomId2")) => {
-    if(!room_id) {
+    if (!room_id) {
       return;
     }
     const resp = await Post(`mediaHouse/getAllchat`, { room_id });
     if (resp) {
-      console.log("This message", resp.data.response);
       setMessages(resp.data.response);
     }
   };
@@ -131,7 +129,6 @@ const ContentDtlChat = (props) => {
   const JoinRoom = (room_id) => {
     socketServer.emit("room join", { room_id: room_id });
     socketServer.on("room join", (obj) => {
-      // console.log("room join:", obj);
     });
     getMessages(room_id);
   };
@@ -212,7 +209,7 @@ const ContentDtlChat = (props) => {
                           src={
                             data.paid_status === "paid"
                               ? process.env.REACT_APP_CONTENT_MEDIA +
-                                data?.content[0]?.media
+                              data?.content[0]?.media
                               : data?.content[0]?.media
                           }
                           alt={null}
@@ -247,10 +244,9 @@ const ContentDtlChat = (props) => {
                                   />
                                 ) : item?.media_type === "pdf" ? (
                                   <embed
-                                    src={`${
-                                      process.env.REACT_APP_CONTENT_MEDIA +
+                                    src={`${process.env.REACT_APP_CONTENT_MEDIA +
                                       item?.media
-                                    }`}
+                                      }`}
                                     type="application/pdf"
                                     width="100%"
                                     height="500"
@@ -299,7 +295,7 @@ const ContentDtlChat = (props) => {
                                 !data
                                   ? usric
                                   : process.env.REACT_APP_AVATAR_IMAGE +
-                                    data?.hopper_id?.avatar_id?.avatar
+                                  data?.hopper_id?.avatar_id?.avatar
                               }
                               alt=""
                             />
@@ -403,66 +399,54 @@ const ContentDtlChat = (props) => {
                             </Button>
                           ) : (
                             <Button
-                              className="offeredPrice_btn bigBtn"
-                              disabled={true}
+                              className="greyBtn"
                             >
-                              £
-                              {Number(
-                                messages?.find(
-                                  (el) =>
-                                    el.message_type ===
-                                      "accept_mediaHouse_offer" ||
-                                    el.message_type ===
-                                      "decline_mediaHouse_offer"
-                                )?.amount
-                              )?.toLocaleString("en-US", {
-                                maximumFractionDigits: 2,
-                              })}
+                              {messages?.filter((el) => el?.message_type === "decline_mediaHouse_offer")?.length > 0 ? "Rejected" : messages?.filter((el) => el?.message_type === "accept_mediaHouse_offer")?.length > 0 ? "Accepted" : "Offered"}
                             </Button>
                           )}
 
                           {(data
                             ? !data?.purchased_mediahouse?.find(
-                                (el) =>
-                                  el ==
-                                  JSON.parse(localStorage.getItem("user"))?._id
-                              )
+                              (el) =>
+                                el ==
+                                JSON.parse(localStorage.getItem("user"))?._id
+                            )
                             : !fav?.content_id?.purchased_mediahouse?.find(
-                                (el) =>
-                                  el ==
-                                  JSON.parse(localStorage.getItem("user"))?._id
-                              )) && (
-                            <Link to={`/auto-invoice/${data._id}`}>
-                              {" "}
-                              <Button variant="primary">
-                                £
-                                {data
-                                  ? data?.ask_price?.toLocaleString("en-US", {
+                              (el) =>
+                                el ==
+                                JSON.parse(localStorage.getItem("user"))?._id
+                            )) && (
+                              <Link to={`/auto-invoice/${data._id}`}>
+                                {" "}
+                                <Button variant="primary">
+                                  £
+                                  {data
+                                    ? data?.ask_price?.toLocaleString("en-US", {
                                       maximumFractionDigits: 2,
                                     }) || 0
-                                  : fav?.content_id?.ask_price?.toLocaleString(
+                                    : fav?.content_id?.ask_price?.toLocaleString(
                                       "en-US",
                                       { maximumFractionDigits: 2 }
                                     ) || 0}
-                              </Button>
-                            </Link>
-                          )}
+                                </Button>
+                              </Link>
+                            )}
                           {(data
                             ? data?.purchased_mediahouse?.find(
-                                (el) =>
-                                  el ===
-                                  JSON.parse(localStorage.getItem("user"))?._id
-                              )
+                              (el) =>
+                                el ===
+                                JSON.parse(localStorage.getItem("user"))?._id
+                            )
                             : fav?.content_id?.purchased_mediahouse?.find(
-                                (el) =>
-                                  el ===
-                                  JSON.parse(localStorage.getItem(user))?._id
-                              )) && (
-                            <Link className="w-100">
-                              {" "}
-                              <Button className="greyBtn">Paid</Button>
-                            </Link>
-                          )}
+                              (el) =>
+                                el ===
+                                JSON.parse(localStorage.getItem(user))?._id
+                            )) && (
+                              <Link className="w-100">
+                                {" "}
+                                <Button className="greyBtn">Paid</Button>
+                              </Link>
+                            )}
                         </div>
                       )}
                     </div>
@@ -485,7 +469,7 @@ const ContentDtlChat = (props) => {
                   <div className="chatting_header d-flex align-items-start justify-content-start">
                     <p className="mb-0">Content</p>
                   </div>
-                  <div className="chat_content_list" style={{maxHeight: "423px"}}>
+                  <div className="chat_content_list" style={{ maxHeight: "423px" }}>
                     {props.contents &&
                       props.contents.map((curr) => {
                         return (
@@ -515,14 +499,14 @@ const ContentDtlChat = (props) => {
                                     src={
                                       curr?.content[0]?.media_type === "video"
                                         ? process.env.REACT_APP_THUMBNAIL +
-                                          curr?.content[0]?.media
+                                        curr?.content[0]?.media
                                         : curr?.content[0]?.media_type ===
                                           "audio"
-                                        ? audioic
-                                        : curr?.content[0]?.media_type === "pdf"
-                                        ? docsic
-                                        : process.env
-                                        .REACT_APP_CONTENT_MEDIA + curr?.content?.[0]?.media
+                                          ? audioic
+                                          : curr?.content[0]?.media_type === "pdf"
+                                            ? docsic
+                                            : process.env
+                                              .REACT_APP_CONTENT_MEDIA + curr?.content?.[0]?.media
                                     }
                                     alt="1"
                                   />

@@ -1532,13 +1532,10 @@ const Feeddetail = (props) => {
                                 </div>
                               </div>
                             </div>
-                            {
-                              console.log("messages --------------------->", messages)
-                            }
                             <div className="foot cont-info-actions d-flex gap-5 justify-content-between align-items-center">
                               {messages && messages.length === 0 ? (
                                 data?.sales_prefix ? (
-                                  <Button className="newbtndesign" variant="secondary">
+                                  <Button className="newbtndesign discount-button-color">
                                     <small>Original Price</small>£
                                     <span className={data?.sales_prefix ? "text-decoration-line-through discount-button" : ""}>{formatAmountInMillion(Number(data?.before_discount_value))}</span>
                                   </Button>
@@ -1557,9 +1554,6 @@ const Feeddetail = (props) => {
                                         setMessages((old) => [...old]);
                                       }
                                     }}
-                                    // className={
-                                    //   data?.sales_prefix ? "greyBtn" : ""
-                                    // }
                                     disabled={
                                       data?.sales_prefix ? true : loading
                                     }
@@ -1578,21 +1572,10 @@ const Feeddetail = (props) => {
                                     Offer
                                   </Button>
                                 ) : (
-                                  <Button className="newbtndesign" variant="secondary">
-                                    {/* <small> */}
-
+                                  <Button
+                                    className="greyBtn"
+                                  >
                                     {messages?.filter((el) => el?.message_type === "decline_mediaHouse_offer")?.length > 0 ? "Rejected" : messages?.filter((el) => el?.message_type === "accept_mediaHouse_offer")?.length > 0 ? "Accepted" : "Offered"}
-                                    {/* </small>£ {Number(
-                                      messages?.find(
-                                        (el) =>
-                                          el.message_type ===
-                                          "accept_mediaHouse_offer" ||
-                                          el.message_type ===
-                                          "decline_mediaHouse_offer"
-                                      )?.amount || 0
-                                    )?.toLocaleString("en-US", {
-                                      maximumFractionDigits: 2,
-                                    })} */}
                                   </Button>
                                 )}
 
@@ -2022,7 +2005,6 @@ const Feeddetail = (props) => {
                                               <img
                                                 src={curr?.profile_image}
                                                 alt="user"
-                                                style={{ border: `3px solid ${onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? "green" : "red"}` }}
                                               />
                                               {onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? <span className="green-dot"></span> : <span className="red-dot"></span>}
                                               <span> {curr?.full_name}</span>
