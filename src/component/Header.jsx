@@ -109,8 +109,32 @@ const Header = () => {
       const res = await Get(`mediaHouse/notificationlisting`);
       setData(res?.data?.data || []);
       setCount(res?.data?.count);
-    } catch (err) { }
+    } catch (err) {
+      console.error('Error fetching notifications:', err);
+    }
   };
+
+  // Handle push notification event
+  const handlePushNotification = (event) => {
+    // Check if the push notification is for this application
+    if (event && event.data) {
+      getNotification();
+    }
+  };
+
+  // Set up push notification listener
+  useEffect(() => {
+    // Check if the browser supports service workers and push notifications
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+      // Add event listener for push notifications
+      navigator.serviceWorker.addEventListener('message', handlePushNotification);
+
+      // Clean up the event listener when component unmounts
+      return () => {
+        navigator.serviceWorker.removeEventListener('message', handlePushNotification);
+      };
+    }
+  }, []);
 
   const handelDeleteNotification = async () => {
     try {
@@ -145,6 +169,19 @@ const Header = () => {
     navColor,
     setNavColor,
   } = useDarkMode();
+  useEffect(() => {
+    // Initial fetch of notifications
+    getNotification();
+    
+    // Set up interval to periodically check for new notifications (every 5 minutes)
+    const notificationInterval = setInterval(() => {
+      getNotification();
+    }, 5 * 60 * 1000); // 5 minutes in milliseconds
+
+    // Clean up interval on component unmount
+    return () => clearInterval(notificationInterval);
+  }, []);
+
   useEffect(() => {
     const allDivs = document.querySelectorAll("div");
 
