@@ -187,9 +187,6 @@ const Purchasedcontent = () => {
                       Purchased content | {capitalizeFirstLetter(type.type)}
                     </h1>
                   </div>
-                  {
-                    console.log("purchaseContent", purchaseContent)
-                  }
                   <Row className="">
                     {purchaseContent?.data?.map((item, index) => {
                         const Audio = item?.contentDetails?.content?.filter(

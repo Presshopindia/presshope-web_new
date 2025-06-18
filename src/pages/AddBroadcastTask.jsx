@@ -188,7 +188,6 @@ const AddBroadcastTask = (props) => {
     try {
       // Set deadline date and validate inputs
       details.deadline_date = new Date(`${end_date}T${end_time}`);
-      console.log("check 123 ---->1", end_date, end_time, selectedTime.$d);
 
       const date = new Date(selectedTime.$d);
       const time = date.toLocaleTimeString("en-US", {
@@ -198,7 +197,6 @@ const AddBroadcastTask = (props) => {
       });
 
       const inputDateTimeStr = end_date + " " + time;
-      console.log(isWithin24Hours(inputDateTimeStr));
 
       if (isWithin24Hours(inputDateTimeStr)) {
         toast.error(
@@ -285,13 +283,11 @@ const AddBroadcastTask = (props) => {
       }
     } catch (error) {
       setLoading(false);
-      console.log(error, "error.message");
     }
   };
 
   const Categories = async () => {
     const resp = await Get(`mediaHouse/getCategoryType?type=content`);
-    // console.log(resp, ",------resp");
     setCategories(resp.data.data);
   };
 
@@ -321,8 +317,6 @@ const AddBroadcastTask = (props) => {
                     <DesktopDatePicker
                       className="tsk_time_inp"
                       inputFormat="DD/MM/YYYY"
-                      // value={value}
-                      // minDate={new Date()}
                       minDate={dayjs().add(1, "day")}
                       value={end_date}
                       onChange={(e) => {
@@ -720,7 +714,6 @@ const AddBroadcastTask = (props) => {
               </span>
             </Form.Group>
             <div className="text-center mb-4">
-              {/* <Link to="/SignupSuccess"> */}
               <Button
                 variant=""
                 type="submit"
@@ -730,7 +723,6 @@ const AddBroadcastTask = (props) => {
               >
                 Post task
               </Button>
-              {/* </Link> */}
             </div>
             <Form.Group
               className="mb-4 d-flex justify-content-between align-items-center check-box"

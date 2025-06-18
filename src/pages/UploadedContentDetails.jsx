@@ -1903,7 +1903,7 @@ const UploadedContentDetails = (props) => {
                                                     </p>
                                                   </div>
                                                   <p className="mb-0 msg auto_press_msg">
-                                                    Congrats, you’ve purchased the content for £{formatAmountInMillion(+(curr?.amount_paid))}.{" "}
+                                                    Congrats, you've purchased the content for £{formatAmountInMillion(+(curr?.amount_paid))}.{" "}
                                                     Please download the water-mark free, and high definition content, by clicking below.
                                                   </p>
                                                   <div className="usr_upld_opts">

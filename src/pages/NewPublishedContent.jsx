@@ -56,8 +56,6 @@ const NewPublishedContent = (props) => {
     setCartCount,
   } = useDarkMode();
 
-  console.log("publishedContent", publishedContent);
-
   const MultiData = async () => {
     setLoading(true);
     try {
@@ -69,7 +67,6 @@ const NewPublishedContent = (props) => {
         ...publishedContent?.filter?.category,
       ]?.filter((el) => el && el != "false");
 
-      console.log("newArray123", newArray)
       const multiPromise = newArray?.map((el) => {
         return Post("mediaHouse/view/published/content", {
           [el == "latest"
@@ -101,7 +98,6 @@ const NewPublishedContent = (props) => {
 
       const category = await Get("mediaHouse/getCategoryType?type=content");
       const results = await Promise.all(multiPromise);
-      // console.log("allresult123",results)
       setLoading(false);
       setPublishedContent({
         ...publishedContent,
@@ -111,7 +107,6 @@ const NewPublishedContent = (props) => {
       });
     } catch (error) {
       setLoading(false);
-      console.error("Error fetching data:", error);
     }
   };
   useEffect(() => {

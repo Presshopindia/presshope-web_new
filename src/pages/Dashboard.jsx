@@ -216,7 +216,7 @@ const Dashboard = () => {
     DashboardData(payload)
     setDashboardPayload(payload);
     setDashboardSort({ ...dashboardSort, type: "" });
-  }
+  } 
 
   return (
     <>

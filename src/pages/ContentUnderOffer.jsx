@@ -44,10 +44,6 @@ const ContentUnderOffer = () => {
   const offeredContent = async () => {
     setLoading(true);
     try {
-      console.log(
-        "contentUnderOffer.sort.hopper_location,",
-        contentUnderOffer.sort.hopper_location
-      );
       const payload = {
         limit: 20,
         sort_for_under_offer: contentUnderOffer.sort.field,
@@ -74,7 +70,6 @@ const ContentUnderOffer = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log(error);
     }
   };
 
@@ -97,7 +92,6 @@ const ContentUnderOffer = () => {
       const allContent = { ...prev };
       allContent.data[i]["basket_status"] =
         allContent.data[i]["basket_status"] === "true" ? "false" : "true";
-      console.log("allcontentexmaple", allContent);
       return allContent;
     });
   };

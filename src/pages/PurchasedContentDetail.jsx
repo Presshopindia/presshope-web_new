@@ -179,7 +179,7 @@ const PurchasedContentDetail = () => {
         // console.log("response 1902", response)
       }
     } catch (err) {
-      console.error(err); // Use "err" instead of "er"
+      // console.error(err); // Use "err" instead of "er"
     }
   };
 
@@ -193,7 +193,7 @@ const PurchasedContentDetail = () => {
     const audio = audioRef.current;
     if (audio.paused) {
       audio.play().catch((error) => {
-        console.error("Error playing audio:", error);
+        // console.error("Error playing audio:", error);
       });
     } else {
       audio.pause();
