@@ -211,7 +211,6 @@ const TaskReports = ({
       } else {
         resp = await Get(`mediahouse/reportgraphoftask`);
       }
-      console.log(resp.data.data, "<--------resp.data.data task name is task");
       if (resp) {
         setTaskSummary((prevTaskSummary) => ({
           ...prevTaskSummary,
@@ -554,7 +553,7 @@ const TaskReports = ({
             <DashboardCardInfo
               showSort={false}
               title="Broadcasted tasks today"
-              path="/reports-tables-task/task_broadcasted_today"
+              path="/dashboard-tables/broadcasted_task_today"
               trend={dashboardData?.broadcastedTaskToday?.trend}
               total={dashboardData?.broadcastedTaskToday?.totalCount}
             />

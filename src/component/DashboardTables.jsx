@@ -142,11 +142,11 @@ const DashboardTables = () => {
         ...(month ? { monthly: month } : {}),
         ...(month ? { type: "content_purchased_online" } : {}),
         ...(year ? { year: year } : {}),
-
         type: "content_purchased_online",
         limit: contentOnlineLimit,
         offset: (contentOnlinePage - 1) * contentOnlineLimit,
         allQuery: allFilterData,
+        broadcasted_task_today: param?.type === "broadcasted_task_today" ? true : false,
       });
       const category = await Get("mediaHouse/getCategoryType?type=content");
       setAllFilterData({
@@ -593,7 +593,7 @@ const DashboardTables = () => {
                       </div>
                     </div>
                   </Card>
-                ) : param.type === "broadcasted_task" ? (
+                ) : param.type === "broadcasted_task" || param.type === "broadcasted_task_today" ? (
                   <Card className="tbl_crd">
                     <div className="">
                       <div
@@ -602,7 +602,7 @@ const DashboardTables = () => {
                         mb="10px"
                       >
                         <Typography className="tbl_hdng">
-                          Broadcasted tasks
+                          {param.type === "broadcasted_task_today" ? "Broadcasted tasks today" : "Broadcasted tasks"}
                         </Typography>
                         <div className="sorting_wrap d-flex">
                           <div className="feedSorting me-4">

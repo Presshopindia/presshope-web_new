@@ -19,6 +19,7 @@ import task from "../assets/images/task.svg";
 import watchic from "../assets/images/watch.svg";
 import Header from "../component/Header";
 import deleteIcon from "../assets/images/delete-icon.svg";
+import interviewic from "../assets/images/interview.svg";
 const moment = require("moment");
 
 import { Button, Col, Container, Row } from "react-bootstrap";

@@ -87,6 +87,7 @@ export const requestForToken = async () => {
     }
 
     const permission = await Notification.requestPermission();
+    console.log(permission);
     
     if (permission === 'granted') {
       try {
@@ -105,9 +106,11 @@ export const requestForToken = async () => {
     } else if (permission === 'denied') {
       toast.error('Notification permission denied. You may not receive important updates.');
     } else {
+      console.log(permission);
       toast.error('Notification permission not granted');
     }
   } catch (error) {
+    console.log(error);
     toast.error(`Error setting up notifications: ${error.message}`);
   }
 };

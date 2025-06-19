@@ -95,7 +95,7 @@ const Reports = () => {
                     className="reports_tabs_opts"
                     onSelect={(e) => {
                       navigate(`/reports/${e}`);
-                      // window.location.reload();
+                      window.location.reload();
                     }}
                     activeKey={params?.type}
                   >

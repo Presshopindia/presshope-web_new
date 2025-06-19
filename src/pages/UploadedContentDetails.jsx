@@ -391,6 +391,28 @@ const UploadedContentDetails = (props) => {
     GetUserList();
   }, [param?.id, taskHopperId]);
 
+  // Handle push notification event
+  const handlePushNotification = (event) => {
+    if (event && event.data) {
+      ContentByID();
+      console.log("ContentByID");
+    }
+  };
+
+  // Set up push notification listener
+  useEffect(() => {
+    // Check if the browser supports service workers and push notifications
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+      // Add event listener for push notifications
+      navigator.serviceWorker.addEventListener('message', handlePushNotification);
+
+      // Clean up the event listener when component unmounts
+      return () => {
+        navigator.serviceWorker.removeEventListener('message', handlePushNotification);
+      };
+    }
+  }, []);
+
   const [selectedItems, setSelectedItems] = useState([]);
 
   const handleSelectionChange = (item, isChecked) => {
