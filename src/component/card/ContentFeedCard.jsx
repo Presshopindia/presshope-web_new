@@ -84,7 +84,6 @@ function ContentFeedCard(props) {
         room_id: ""
       };
 
-      console.log("object -------------->", object, props)
 
       const res = await Post(`mediaHouse/addToBasket`, object);
       if (res) {

@@ -922,6 +922,7 @@ const Feeddetail = (props) => {
         application_fee: 15,
         hopper_charge_ac_category: 5,
         room_id: "",
+        discount_type: acceptedAmount ? "offered" : "normal",
       };
       const res = await Post(`mediaHouse/addToBasket`, object);
       if (res) {

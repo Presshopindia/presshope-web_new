@@ -41,6 +41,21 @@ const InviteUserModal = ({
       if (!emailIds) {
         return;
       }
+      if (emailIds) {
+        const [, adminDomain] = email.split("@");
+        const emailList = emailIds.split(",").map(e => e.trim());
+      
+        const isSameDomain = emailList.every(emailId => {
+          const [, domain] = emailId.split("@");
+          return domain === adminDomain;
+        });
+      
+        if (!isSameDomain) {
+          toast.error("Please enter email IDs with the same domain as the administrator's email.");
+          return;
+        }
+      }
+      
       setLoading(true);
       await Post("auth/sendInvitationLink", { emailIds, _id: adminId });
       setEmailIds("");

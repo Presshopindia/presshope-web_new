@@ -400,5 +400,5 @@ export const feedDynamicRoute = (data1, data2) => {
 
 // Manage user heading-
 export const manageUserTopHeading = (a, b) => {
-  return `Hi ${a + " " + b}, please enter your adminstrator password to add new users, or remove existing users.`
+  return `Hi ${a + " " + b}, please enter your adminstrator password to add new users, or block existing users.`
 }

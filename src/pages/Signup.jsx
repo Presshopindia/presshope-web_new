@@ -470,6 +470,7 @@ const Signup = () => {
                 type: "Point",
                 coordinates: [latitude, longitude],
               },
+              pincode: name,
             },
           };
 
@@ -524,6 +525,7 @@ const Signup = () => {
                 type: "Point",
                 coordinates: [latitude, longitude],
               },
+              pincode: name,
             },
           };
 

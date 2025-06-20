@@ -250,13 +250,13 @@ const ManageUsers = () => {
       if (isDeletedUser?.length > 0) {
         await Post(`mediaHouse/updateMultipleUser`, { user_data: getUsers });
         setLoading(false);
-        successToasterFun("Blocked successfully.");
+        successToasterFun("Saved successfully.");
         setGetUserProfile(null)
       }
       else {
         await Post(`mediaHouse/updateMultipleUser`, { user_data: getUsers });
         setLoading(false);
-        successToasterFun("Activated successfully.")
+        successToasterFun("Saved successfully.")
       }
     }
     catch (error) {
@@ -414,6 +414,20 @@ const ManageUsers = () => {
       if (!emailIds) {
         return;
       }
+      if (emailIds) {
+        const [, adminDomain] = user?.email?.split("@");
+        const emailList = emailIds.split(",").map(e => e.trim());
+      
+        const isSameDomain = emailList.every(emailId => {
+          const [, domain] = emailId.split("@");
+          return domain === adminDomain;
+        });
+      
+        if (!isSameDomain) {
+          toast.error("Please enter email IDs with the same domain as the administrator's email.");
+          return;
+        }
+      }
       setLoading(true);
       await Post("auth/sendInvitationLink", { emailIds, _id: user?._id });
       setEmailIds("");
@@ -566,7 +580,7 @@ const ManageUsers = () => {
                                     <img src={mail} alt="" />
                                     <div className="font-14 invite-user-enable-message">
                                       <p>Dear team-members,</p>
-                                      <p>I’ve just sent you an invite to join <span className="txt-success">PressHop</span> , the platform powering the future of citizen journalism! Please check your inbox for instructions to complete your registration and start exploring. It’s free, and easy to use.</p>
+                                      <p>I've just sent you an invite to join <span className="txt-success">PressHop</span> , the platform powering the future of citizen journalism! Please check your inbox for instructions to complete your registration and start exploring. It's free, and easy to use.</p>
                                       <p>If you have any questions, just give me a shout — happy to assist.</p>
                                       <p>Thank you,</p>
                                       <p><span className='txt-success'>Administrator.</span></p>
@@ -634,7 +648,7 @@ const ManageUsers = () => {
                                   <Form.Group className="mb-4 form-group">
                                     <img src={location} alt="" />
                                     <Form.Control
-                                      type="number"
+                                      type="text"
                                       className=""
                                       disabled
                                       value={officeDetails?.address?.pincode}
@@ -864,15 +878,15 @@ const ManageUsers = () => {
                                                     </div>
                                                   </td>
                                                   <td className="text-center">
-                                                    <FormControlLabel
-                                                      style={{ fontSize: "13px" }}
-                                                      className="check_label"
-                                                      checked={el?.is_deleted}
-                                                      onChange={(e) => handleUpdateUsers("is_deleted", e.target.checked, i, "delete")}
-                                                      control={<Checkbox />}
-                                                      name=""
-                                                      label={el?.is_deleted ? "Blocked" : "Active"}
-                                                    />
+                                                    <Select
+                                                      className="w-100 slct_sign mt-22px"
+                                                      value={el?.is_deleted ? "blocked" : "active"}
+                                                      onChange={(e) => handleUpdateUsers("is_deleted", e.target.value === "blocked", i, "delete")}
+                                                      size="small"
+                                                    >
+                                                      <MenuItem value="active">Active</MenuItem>
+                                                      <MenuItem value="blocked">Blocked</MenuItem>
+                                                    </Select>
                                                   </td>
                                                 </tr>)
                                               }
