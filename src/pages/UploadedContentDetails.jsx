@@ -325,6 +325,16 @@ const UploadedContentDetails = (props) => {
     }
   };
 
+  useEffect(() => {
+    window.addEventListener("focus", () => {
+      ContentByID();
+    });
+    return () =>
+      window.removeEventListener("focus", () => {
+        ContentByID();
+      });
+  }, []);
+
   const Favourite = async (favData) => {
     try {
       let obj = {
