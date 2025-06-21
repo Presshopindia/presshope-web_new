@@ -70,10 +70,11 @@ const Header = () => {
 
   const SignOut = () => {
     localStorage.clear();
-    navigate("/landing-page");
-    window.location.reload();
-    // toast.success("Logged Out")
+    setTimeout(() => {
+      window.location.href = "/landing-page";
+    }, 100);
   };
+  
 
   const subject = new Subject();
   subject
