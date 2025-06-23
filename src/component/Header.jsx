@@ -345,7 +345,6 @@ const Header = () => {
                 </IconContext.Provider>
               </div>
               {/* responsive header end */}
-
               {/* <Navbar.Toggle aria-controls="basic-navbar-nav" /> */}
               <Navbar id="basic-navbar-nav" className="dash_header_links">
                 <Nav className="me-auto center-links nav_inn align-items-center">
@@ -357,6 +356,7 @@ const Header = () => {
                     onClick={() => {
                       // localStorage.removeItem("backBtnVisibility");
                       setNavColor("/dashboard/exclusive");
+                      localStorage.setItem("activeNav", JSON.stringify("/dashboard/exclusive"))
                     }}
                   >
                     Dashboard
@@ -370,6 +370,7 @@ const Header = () => {
                     onClick={() => {
                       localStorage.removeItem("backBtnVisibility");
                       setNavColor("/published-content");
+                      localStorage.setItem("activeNav", JSON.stringify("/published-content"))
                     }}
                   >
                     Feed
@@ -382,6 +383,7 @@ const Header = () => {
                     onClick={() => {
                       localStorage.removeItem("backBtnVisibility");
                       setNavColor("/content/exclusive/published/favourited");
+                      localStorage.setItem("activeNav", JSON.stringify("/content/"))
                     }}
                   >
                     Content
@@ -394,6 +396,7 @@ const Header = () => {
                       }`}
                     onClick={() => {
                       setNavColor("/task");
+                      localStorage.setItem("activeNav", JSON.stringify("/task"))
                     }}
                   >
                     Tasks
@@ -411,6 +414,7 @@ const Header = () => {
                     onClick={() => {
                       setNavColor("/chat");
                       localStorage.removeItem("backBtnVisibility");
+                      localStorage.setItem("activeNav", JSON.stringify("/chat"))
                     }}
                   >
                     Chat
@@ -422,6 +426,7 @@ const Header = () => {
                       }`}
                     onClick={() => {
                       setNavColor("/reports/content");
+                      localStorage.setItem("activeNav", JSON.stringify("/reports/"))
                     }}
                   >
                     Reports
@@ -433,6 +438,7 @@ const Header = () => {
                     onClick={() => {
                       setNavColor("/accounts");
                       localStorage.removeItem("backBtnVisibility");
+                      localStorage.setItem("activeNav", JSON.stringify("/accounts"))
                     }}
                   >
                     Accounts

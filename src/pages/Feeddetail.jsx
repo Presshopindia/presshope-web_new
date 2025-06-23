@@ -81,6 +81,7 @@ const Feeddetail = (props) => {
   const [offer_value, setOffer_value] = useState("");
   const [room_details, setRoom_Details] = useState();
   const [loading, setLoading] = useState(false);
+  const [loader, setLoader] = useState(false);
   const [data, setData] = useState();
   const [fav, setFav] = useState();
   const [hopper, setHopper] = useState();
@@ -252,15 +253,18 @@ const Feeddetail = (props) => {
       type: type,
       initial_offer_price,
     };
+    setLoader(true);
     try {
       await Post("mediahouse/newChatFlow", obj);
       getMessages();
+      setLoader(false);
     } catch (error) {
-      console.log(error);
+      setLoader(false);
     }
   };
 
   const OfferPaymentChat = async (hopperPrice, offerPrice) => {
+    setLoader(true);
     try {
       let markupPrice = (hopperPrice * 20) / 100;
       let hopperAmountWithoutMarkup = offerPrice - markupPrice;
@@ -272,9 +276,10 @@ const Feeddetail = (props) => {
         amount: hopperAmountWithoutMarkup
       };
       await Post("mediahouse/create-offer-payment-chat", payload);
+      setLoader(false);
     }
     catch (error) {
-      console.log(error);
+      setLoader(false);
     }
   }
 
@@ -2189,8 +2194,7 @@ const Feeddetail = (props) => {
                                                     className="cht_prc_inp text-center"
                                                     autoComplete="off"
                                                     disabled={
-                                                      messages.length !== 1 &&
-                                                      true
+                                                      (messages.length !== 1 && true) || loader
                                                     }
                                                     type="number"
                                                     value={
@@ -2221,8 +2225,8 @@ const Feeddetail = (props) => {
                                                     <button
                                                       className="theme_btn"
                                                       disabled={
-                                                        messages.length !== 1 &&
-                                                        true
+                                                        !offer_value || (messages.length !== 1 &&
+                                                        true) || loader
                                                       }
                                                       type="submit"
                                                     >

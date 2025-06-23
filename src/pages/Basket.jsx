@@ -83,6 +83,18 @@ const Basket = () => {
     }
   };
 
+  useEffect(() => {
+    window.addEventListener("focus", () => {
+      getCountOfBasketItems();
+      BasketData();
+    });
+    return () =>
+      window.removeEventListener("focus", () => {
+        getCountOfBasketItems();
+        BasketData();
+      });
+  }, []);
+
   const paymentintents = async (data) => {
     try {
       setLoading(true);

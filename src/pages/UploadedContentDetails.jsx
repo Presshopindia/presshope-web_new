@@ -186,12 +186,14 @@ const UploadedContentDetails = (props) => {
         offer: false,
         application_fee: 15,
         hopper_charge_ac_category: 5,
-        room_id: ""
+        room_id: "",
+        chat_id: element._id
       };
       const res = await Post(`mediaHouse/addToBasket`, object);
       if (res) {
         getCountOfBasketItems();
         setLoading(false);
+        setSelectedItems([]);
         successToasterFun("Content added to Basket");
       }
     } catch (error) {
@@ -1191,23 +1193,6 @@ const UploadedContentDetails = (props) => {
                                 >
                                   Go to Basket
                                 </button>
-                                <button
-                                  className="red-btn"
-                                  onClick={() => {
-                                    navigate(
-                                      `/task-invoice/${data?.[0]?._id}?taskHopperId=${taskHopperId}`
-                                    );
-                                  }}
-                                >
-                                  £{" "}
-                                  {data?.[0]?.type == "image"
-                                    ? data?.[0]?.task_id?.hopper_photo_price
-                                    : data?.[0]?.type == "video"
-                                      ? data?.[0]?.task_id?.hopper_videos_price
-                                      : data?.[0]?.type == "audio"
-                                        ? data?.[0]?.task_id?.hopper_interview_price
-                                        : ""}
-                                </button>
                               </div>
                             </div>
                           </div>
@@ -1876,6 +1861,7 @@ const UploadedContentDetails = (props) => {
                                                             }
                                                           }
                                                         }}
+                                                        disabled={selectedItems?.length === 0}
                                                       >
                                                         Add to basket
                                                       </button>
@@ -1892,6 +1878,7 @@ const UploadedContentDetails = (props) => {
                                                             }
                                                           }
                                                         }}
+                                                        disabled={selectedItems?.length === 0}
                                                       >
                                                         Buy
                                                       </button>

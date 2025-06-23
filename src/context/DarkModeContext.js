@@ -14,7 +14,7 @@ export const DarkModeProvider = ({ children }) => {
 
   const [onlineUsers, setOnlineUsers] = useState({ online: [] })
   const [profileData, setProfileData] = useState({});
-  const [navColor, setNavColor] = useState("");
+  const [navColor, setNavColor] = useState(localStorage.getItem("activeNav") ? JSON.parse(localStorage.getItem("activeNav")) : "/dashboard/");
   const [profileChange, setProfileChange] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [adminPreRegistrationEmail, setAdminPreRegistrationEmail] = useState("")
@@ -53,9 +53,9 @@ export const DarkModeProvider = ({ children }) => {
     getProfileData();
   }, [isDarkMode, profileChange]);
 
-  useEffect(() => {
-    setNavColor(window.location.pathname);
-  }, [window.location.pathname]);
+  // useEffect(() => {
+  //   setNavColor(window.location.pathname);
+  // }, [window.location.pathname]);
 
   useEffect(() => {
     socketServer?.emit("addAdmin", (profileData?._id));
