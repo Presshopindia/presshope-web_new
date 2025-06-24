@@ -1,12 +1,12 @@
 import { Card, Tooltip, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BsArrowLeft } from "react-icons/bs";
 import logo from "../assets/images/presshop_new_logo.png";
+import html2pdf from "html2pdf.js";
 
 // presshopinvoice
 import { Link, useNavigate, useParams } from "react-router-dom";
 import audioic from "../assets/images/audimg.svg";
-import audioicon from "../assets/images/audio-icon.svg";
 import calendericn from "../assets/images/calendarnic.svg";
 import cameraic from "../assets/images/camera.svg";
 import exclusiveic from "../assets/images/exclusive.svg";
@@ -33,6 +33,8 @@ const Invoice = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const navigate = useNavigate();
+  const invoiceRef = useRef();
+  const [b64Image, setB64Image] = useState("");
 
   const getInvoiceDetail = async () => {
     setLoading(true);
@@ -49,21 +51,6 @@ const Invoice = () => {
     getInvoiceDetail();
   }, []);
 
-  const handleInvoiveDownload = async () => {
-    if (!data.invoice_id) {
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const resp = await Get(`mediaHouse/download-invoice?invoiceId=${data.invoice_id}`);
-      setLoading(false);
-      window.open(resp.data.data, "_blank");
-    } catch (error) {
-      setLoading(false);
-    }
-  }
-
   const getMediaType = (type) => {
     const mediaType = data?.type === "content" ? data?.content_id?.content?.filter(
       (item) =>
@@ -74,6 +61,71 @@ const Invoice = () => {
     );
     return mediaType?.length || 0;
   }
+
+  function getPreviewSrc(data) {
+    if (!data) return null;
+
+    if (data.type === "content") {
+      const mediaObj = data?.content_id?.content?.[0];
+      if (!mediaObj) return null;
+
+      switch (mediaObj.media_type) {
+        case "image":
+          return process.env.REACT_APP_CONTENT_MEDIA + mediaObj.media;
+        case "video":
+          return process.env.REACT_APP_THUMBNAIL + mediaObj.media;
+        case "audio":
+          return audioic;
+        case "pdf":
+          return docsic;
+        default:
+          return null;
+      }
+    }
+
+    const purchased = data?.purchased_task_content?.[0];
+    if (!purchased) return null;
+
+    if (["image", "video"].includes(purchased.type)) {
+      return purchased.videothubnail;
+    }
+    return audioic;
+  }
+
+  const previewSrc = useMemo(() => getPreviewSrc(data), [data]);
+
+
+  const handleDownload = () => {
+    const element = invoiceRef.current;
+
+    const opt = {
+      margin: 0,
+      filename: new Date().getTime() + "_invoice.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      pagebreak: { mode: ["avoid-all", "css", "legacy"] }
+    };
+
+    html2pdf().set(opt).from(element).save();
+  };
+
+  const convertToBase64 = async (url) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  useEffect(() => {
+    if (previewSrc) {
+      convertToBase64(previewSrc).then(setB64Image).catch(console.error);
+    }
+  }, [previewSrc]);
 
   return (
     <>
@@ -93,7 +145,7 @@ const Invoice = () => {
             <Col md={12}>
               <Row className="">
                 <Col md={12} className="dash-tabs-wrap pe-0">
-                  <div className="dash-tabs invoice-lft">
+                  <div className="dash-tabs invoice-lft" ref={invoiceRef} id="invoice-section">
                     <Row>
                       <Col md={6}>
                         <div className="ftr-left">
@@ -102,26 +154,12 @@ const Invoice = () => {
                             alt="PressHop"
                             className="footer-logo"
                           />
-                          {/* <img
-                            src={logoDark}
-                            alt="PressHop"
-                            className="footer-logo darkLogo"
-                          /> */}
                         </div>
-
-                        {/* <div className="prs-logo">
-                          <img src={Logo}   style={{ width: '200px', height: '200px' }} alt="" />
-                        </div> */}
                       </Col>
 
                       <Col md={6}>
                         <div className="text-end invce-num">
                           <h1 className="">Invoice</h1>
-                          {/* <p>
-                            <span> <img src={calendericn} alt="" /> </span>
-                            <span>{moment().format('DD MMM YYYY')}</span>
-
-                          </p> */}
                         </div>
                       </Col>
                     </Row>
@@ -257,7 +295,7 @@ const Invoice = () => {
                                         }}>
                                           <div className="tbl_cont_wrp cnt_online_img noGrid">
                                             <div className="paymentToBeMadeImgContent">
-                                              {data?.type === "content" ? (
+                                              {/* {data?.type === "content" ? (
                                                 data?.content_id?.content[0]
                                                   ?.media_type === "image" ? (
                                                   <img
@@ -295,7 +333,12 @@ const Invoice = () => {
                                               ) : <img
                                                 src={audioic}
                                                 className="cntnt-img"
-                                              />}
+                                              />} */}
+                                              <img
+                                                src={previewSrc}
+                                                className="cntnt-img"
+                                                alt="img"
+                                              />
                                             </div>
                                           </div>
                                           <div className="tableContentTypeIcons">
@@ -496,7 +539,7 @@ const Invoice = () => {
               <div className="">
                 <Button
                   className="theme-btn custom-ab mb-4 mt-2 sm_btn download-invoice-btn"
-                  onClick={handleInvoiveDownload}
+                  onClick={handleDownload}
                 >
                   Download Invoice
                 </Button>
