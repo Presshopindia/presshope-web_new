@@ -34,7 +34,7 @@ const Invoice = () => {
   const [data, setData] = useState(null);
   const navigate = useNavigate();
   const invoiceRef = useRef();
-  const [b64Image, setB64Image] = useState("");
+  const [contentImage, setContentImage] = useState("");
 
   const getInvoiceDetail = async () => {
     setLoading(true);
@@ -65,31 +65,35 @@ const Invoice = () => {
   function getPreviewSrc(data) {
     if (!data) return null;
 
+    console.log("data ----------->", data);
+
     if (data.type === "content") {
       const mediaObj = data?.content_id?.content?.[0];
       if (!mediaObj) return null;
 
       switch (mediaObj.media_type) {
         case "image":
-          return process.env.REACT_APP_CONTENT_MEDIA + mediaObj.media;
+          return {media: process.env.REACT_APP_CONTENT_MEDIA + mediaObj.media, mediaVal: mediaObj.media, mediType: mediaObj.media_type};
         case "video":
-          return process.env.REACT_APP_THUMBNAIL + mediaObj.media;
+          return {media: process.env.REACT_APP_THUMBNAIL + mediaObj.media, mediaVal: mediaObj.media, mediType: mediaObj.media_type};
         case "audio":
-          return audioic;
+          return {media: audioic, mediaVal: audioic, mediType: mediaObj.media_type};
         case "pdf":
-          return docsic;
+          return {media: docsic, mediaVal: docsic, mediType: mediaObj.media_type};
         default:
-          return null;
+          return {media: audioic, mediaVal: audioic, mediType: mediaObj.media_type};
       }
     }
 
     const purchased = data?.purchased_task_content?.[0];
     if (!purchased) return null;
 
+    
     if (["image", "video"].includes(purchased.type)) {
-      return purchased.videothubnail;
+      console.log("purchased ----------->", purchased);
+      return {media: purchased.videothubnail, mediaVal: purchased.videothubnail, mediType: purchased.type};
     }
-    return audioic;
+    return {media: audioic, mediaVal: audioic, mediType: "audio"};
   }
 
   const previewSrc = useMemo(() => getPreviewSrc(data), [data]);
@@ -102,7 +106,7 @@ const Invoice = () => {
       margin: 0,
       filename: new Date().getTime() + "_invoice.pdf",
       image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
+      html2canvas: { scale: 2, useCORS: true, allowTaint: false },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
       pagebreak: { mode: ["avoid-all", "css", "legacy"] }
     };
@@ -110,22 +114,16 @@ const Invoice = () => {
     html2pdf().set(opt).from(element).save();
   };
 
-  const convertToBase64 = async (url) => {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  };
+  console.log("previewSrc ----------->", previewSrc);
 
   useEffect(() => {
-    if (previewSrc) {
-      convertToBase64(previewSrc).then(setB64Image).catch(console.error);
+    console.log("previewSrc ----------->", previewSrc);
+    if (previewSrc?.media && (previewSrc?.mediType === "image" || previewSrc?.mediType === "video")) {
+      setContentImage(`${process.env.REACT_APP_BASE_URL}mediaHouse/proxy?path=${previewSrc?.media}`)
+    } else {
+      setContentImage(previewSrc?.media);
     }
-  }, [previewSrc]);
+  }, [previewSrc?.media, contentImage, data]);
 
   return (
     <>
@@ -335,8 +333,9 @@ const Invoice = () => {
                                                 className="cntnt-img"
                                               />} */}
                                               <img
-                                                src={previewSrc}
+                                                src={contentImage}
                                                 className="cntnt-img"
+                                                crossOrigin="anonymous"
                                                 alt="img"
                                               />
                                             </div>
@@ -444,9 +443,9 @@ const Invoice = () => {
                                           >
                                             <img
                                               src={
-                                                data?.type === "content" ? data?.content_id?.category_id
-                                                  ?.icon : data?.task_id?.category_id?.icon
+                                                data?.type === "content" ? `${process.env.REACT_APP_BASE_URL}mediaHouse/proxy?path=${data?.content_id?.category_id?.icon}` : `${process.env.REACT_APP_BASE_URL}mediaHouse/proxy?path=${data?.task_id?.category_id?.icon}`
                                               }
+                                              crossOrigin="anonymous"
                                               className="tbl_ic"
                                               alt="Content category"
                                             />
