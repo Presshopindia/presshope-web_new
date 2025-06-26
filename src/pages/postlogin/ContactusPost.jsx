@@ -133,7 +133,7 @@ const ContactusPost = () => {
                       {" "}
                       {/* <a className="link">message</a>, an{" "} */}
                       an 
-                      <a className="link" href="mailto:hello@presshop.co.uk" target="_blank"> email</a>, or simply{" "}
+                      <a className="link" href="mailto:support@presshop.co.uk" target="_blank"> email</a>, or simply{" "}
                       <Link to={"/chat"} className="link">chat</Link> with one of our live team
                       members. We don't use Bots because we believe in keeping
                       everything real.

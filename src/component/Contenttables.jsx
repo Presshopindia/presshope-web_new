@@ -1487,9 +1487,9 @@ const Contenttables = () => {
                               <th>Location</th>
                               <th>Uploaded by</th>
                               {
-                                param.type == "content_sourced_from_task_funds_invested" && <th>VAT</th>
+                                param.type == "content_sourced_from_task_funds_invested" && <th>VAT paid</th>
                               }
-                              <th>Funds invested</th>
+                              <th>Total funds invested</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -1675,9 +1675,9 @@ const Contenttables = () => {
                               <th>Location</th>
                               <th>Uploaded by</th>
                               {
-                                param.type == "content_sourced_from_task_funds_invested_today" && <th>VAT</th>
+                                param.type == "content_sourced_from_task_funds_invested_today" && <th>VAT paid</th>
                               }
-                              <th>Funds invested</th>
+                              <th>Total funds invested</th>
                             </tr>
                           </thead>
                           <tbody>

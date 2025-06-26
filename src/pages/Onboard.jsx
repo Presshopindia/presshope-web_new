@@ -83,7 +83,7 @@ const Login = () => {
                           helpful team members, or send us an{" "}
                           <a
                             className="link"
-                            href="mailto:hello@presshop.co.uk"
+                            href="mailto:support@presshop.co.uk"
                           >
                             email
                           </a>

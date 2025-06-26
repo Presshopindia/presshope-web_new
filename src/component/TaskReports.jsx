@@ -592,7 +592,7 @@ const TaskReports = ({
           <Col md={2}>
             <DashboardCardInfo
               showSort={false}
-              title="Funds invested today"
+              title="Funds invested today (inc VAT)"
               path="/content-tables/content_sourced_from_task_funds_invested_today"
               trend={dashboardData?.contentPurchasedFromTask?.trend}
               total={"£" + formatAmountInMillion(dashboardData?.totalFundInvestedToday?.totalAmount || 0)}
@@ -602,7 +602,7 @@ const TaskReports = ({
           {/* Total funds today */}
           <Col md={2}>
             <DashboardCardInfo
-              title="Total funds invested"
+              title="Total funds invested (inc VAT)"
               path="/content-tables/content_sourced_from_task_funds_invested"
               trend={dashboardData?.totalFundInvested?.trend}
               total={"£" + formatAmountInMillion(dashboardData?.totalFundInvested?.totalAmount || 0)}

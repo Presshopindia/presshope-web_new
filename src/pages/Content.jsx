@@ -334,7 +334,7 @@ const ContentPage = () => {
                 <Col md={4} className="p-0">
                   <DashboardCardInfo
                     path="/dashboard-tables/fund_invested"
-                    title="Total funds invested"
+                    title="Total funds invested (inc VAT)"
                     type="total_fund_invested"
                     total={"£" + formatAmountInMillion(dashboardData?.content?.totalFundInvested?.totalAmount + dashboardData?.content?.totalFundInvested?.totalVat || 0)}
                     data={getDeepModifiedContent(dashboardData?.content?.totalFundInvested?.data)}

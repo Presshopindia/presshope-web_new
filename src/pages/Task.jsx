@@ -200,7 +200,7 @@ const BroadcastedTask = () => {
             <Col md={3} className="p-0 task-card">
               <DashboardCardInfo
                 path="/content-tables/content_sourced_from_task_funds_invested"
-                title="Total funds invested"
+                title="Total funds invested (inc VAT)"
                 type="total_fund_invested_in_task"
                 total={"£" + formatAmountInMillion(dashboardData?.task?.totalFundInvested?.totalAmount || 0)}
                 data={getPurchasedTaskContent(dashboardData?.task?.totalFundInvested?.data)}
