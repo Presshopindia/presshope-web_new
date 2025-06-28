@@ -6,20 +6,14 @@ import {
   Button,
 } from '@mui/material';
 import { Link, useNavigate } from "react-router-dom";
-// import usrLoginbg from "../assets/images/usrLoginbg.jpg"
 import Form from 'react-bootstrap/Form';
-// import Email from "../assets/images/mail.svg"
-// import forgotrtimg from "../assets/images/forgotrtimg.svg";
 import OtpInput from 'react-otp-input';
 import timeout from "../assets/images/timeout.svg";
-import user from "../assets/images/user.svg"
 import lock from "../assets/images/sortIcons/lock.svg"
-import eye from "../assets/images/sortIcons/custom.svg";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 import { Post } from '../services/user.services';
 import { toast } from 'react-toastify';
 import Loader from '../component/Loader';
-import { isArray } from 'lodash';
 
 const UserForgetPassword = () => {
 
@@ -27,7 +21,7 @@ const UserForgetPassword = () => {
   const navigate = useNavigate()
   const [otp, setOtp] = useState('')
   const [password, setPassword] = useState("")
-  const [confirm_password, setConfirm_Password] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [visibility1, setVisibility1] = useState(false)
   const [visibility2, setVisibility2] = useState(false)
   const [loading, setLoading] = useState(false);
@@ -37,7 +31,7 @@ const UserForgetPassword = () => {
   const seconds = timeRemaining % 60;
 
   const ResetPassword = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const obj = {
       otp: otp,
       email: localEmail,
@@ -45,35 +39,24 @@ const UserForgetPassword = () => {
     }
 
     try {
-      setLoading(true);
-      if (password !== confirm_password) {
-        // toast.error("Password Doesn't Match")
+      if (password !== confirmPassword) {
+        toast.error("Password doesn't match")
+      } else  if (obj.otp.length !== 5) {
+        toast.error("Please enter valid OTP")
       }
       else {
-      console.log("all error related to forget password")
-
+        setLoading(true);
         const resp = await Post(`auth/media/house/resetPassword`, obj)
-         console.log("all error related to forget password",resp);
 
         if (resp) {
-          // toast.success("Password Updated")
+          toast.success("New password updated successfully")
           localStorage.clear()
           navigate("/login")
           setLoading(false);
         }
       }
     } catch (error) {
-      if(error?.response?.data?.errors?.msg){
-        let errorMessage = error?.response?.data?.errors?.msg
-        console.log("all error related to forget password error ----?>>>>>",error?.response?.data?.errors?.msg);
-            if(Array.isArray(errorMessage)){
-              toast.error(errorMessage[1].msg)
-
-            }else{
-
-              toast.error(error?.response?.data?.errors?.msg)
-            }
-      }
+      toast.error(error?.response?.data?.errors?.msg);
       setLoading(false);
     }
   }
@@ -82,10 +65,7 @@ const UserForgetPassword = () => {
     e.preventDefault()
     try{
       setLoading(true);
-      console.log("all error related to forget password")
-
       const resp = await Post(`auth/media/house/forgotPassword`, { email: localEmail })
-      console.log("all error related to forget resp",resp)
 
       if (resp) {
         toast.success("New OTP sent again")
@@ -94,9 +74,6 @@ const UserForgetPassword = () => {
       }
     }
     catch(error){
-      console.log("all error related to forget password",error)
-
-      console.log(error);
       setLoading(false);
     }
   }
@@ -165,7 +142,7 @@ const UserForgetPassword = () => {
                           </Form.Group>
                           <Form.Group className="position-relative" controlId="formBasicPassword">
                             <img src={lock} className="frnt_ic" alt="" />
-                            <Form.Control type={!visibility2 ? 'password' : 'text'} className="rnd grey" placeholder="Confirm password" autoComplete="off" onChange={(e) => setConfirm_Password(e.target.value)} required />
+                            <Form.Control type={!visibility2 ? 'password' : 'text'} className="rnd grey" placeholder="Confirm password" autoComplete="off" onChange={(e) => setConfirmPassword(e.target.value)} required />
                             {!visibility2 && <div color='#000' className="pass_ic_wrap" onClick={() => { setVisibility2(true) }}><BsEyeSlash /></div>}
                             {visibility2 && <div color='#000' className="pass_ic_wrap" onClick={() => { setVisibility2(false) }}><BsEye /></div>}
                             {/* <img className='view_pass' src={eye} alt="" /> */}

@@ -211,7 +211,6 @@ const TaskReports = ({
       } else {
         resp = await Get(`mediahouse/reportgraphoftask`);
       }
-      console.log(resp.data.data, "<--------resp.data.data task name is task");
       if (resp) {
         setTaskSummary((prevTaskSummary) => ({
           ...prevTaskSummary,
@@ -554,7 +553,7 @@ const TaskReports = ({
             <DashboardCardInfo
               showSort={false}
               title="Broadcasted tasks today"
-              path="/reports-tables-task/task_broadcasted_today"
+              path="/dashboard-tables/broadcasted_task_today"
               trend={dashboardData?.broadcastedTaskToday?.trend}
               total={dashboardData?.broadcastedTaskToday?.totalCount}
             />
@@ -593,7 +592,7 @@ const TaskReports = ({
           <Col md={2}>
             <DashboardCardInfo
               showSort={false}
-              title="Funds invested today"
+              title="Funds invested today (inc VAT)"
               path="/content-tables/content_sourced_from_task_funds_invested_today"
               trend={dashboardData?.contentPurchasedFromTask?.trend}
               total={"£" + formatAmountInMillion(dashboardData?.totalFundInvestedToday?.totalAmount || 0)}
@@ -603,7 +602,7 @@ const TaskReports = ({
           {/* Total funds today */}
           <Col md={2}>
             <DashboardCardInfo
-              title="Total funds invested"
+              title="Total funds invested (inc VAT)"
               path="/content-tables/content_sourced_from_task_funds_invested"
               trend={dashboardData?.totalFundInvested?.trend}
               total={"£" + formatAmountInMillion(dashboardData?.totalFundInvested?.totalAmount || 0)}

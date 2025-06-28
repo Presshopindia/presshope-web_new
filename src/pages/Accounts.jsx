@@ -213,7 +213,7 @@ const Accounts = () => {
   };
 
   const FundInvested = async () => {
-    setLoading(true);
+    // setLoading(true);
 
     try {
       const resp = await Get(
@@ -283,17 +283,17 @@ const Accounts = () => {
             },
           ],
         }));
-        setLoading(false);
+        // setLoading(false);
         setChartName({ ...chartName, task: "" });
       }
     } catch (error) {
-      setLoading(false);
+      // setLoading(false);
       setChartName({ ...chartName, task: "" });
     }
   };
 
   const VatSummary = async () => {
-    setLoading(true);
+    // setLoading(true);
 
     try {
       const resp = await Get(
@@ -363,10 +363,10 @@ const Accounts = () => {
             },
           ],
         }));
-        setLoading(false);
+        // setLoading(false);
       }
     } catch (error) {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -1290,13 +1290,18 @@ const Accounts = () => {
                             )}
                           </div>
                           <Tabs
-                            // defaultActiveKey="tasks"
                             activeKey={activeKeygraph || activeKey}
                             id="uncontrolled-tab-example"
                             className="mb-3"
                             onSelect={(k) => {
                               navigate(`/accounts?activekey=${k}`);
                               setActiveKey(k);
+                              // Fetch data for the selected tab
+                              if (k === "tasks") {
+                                FundInvested();
+                              } else if (k === "funds") {
+                                VatSummary();
+                              }
                             }}
                           >
                             <Tab
@@ -1304,12 +1309,16 @@ const Accounts = () => {
                               title="Funds invested summary"
                             >
                               <Link to="/reports-tables-content/fund_invested_summary">
-                                <ReactApexChart
-                                  options={fundInvested.options}
-                                  series={fundInvested.series}
-                                  type="bar"
-                                  height={350}
-                                />
+                                {fundInvested?.options && Array.isArray(fundInvested?.series) && fundInvested.series.length > 0 ? (
+                                  <ReactApexChart
+                                    options={fundInvested.options}
+                                    series={fundInvested.series}
+                                    type="bar"
+                                    height={350}
+                                  />
+                                ) : (
+                                  <div>No data available</div>
+                                )}
                               </Link>
                             </Tab>
                             <Tab
@@ -1322,27 +1331,31 @@ const Accounts = () => {
                                     "/reports-tables-content/content_purchased_summary"
                                   );
                                 }}
-                              // to={
-                              //   "/reports-tables-content/content_purchased_summary"
-                              // }
                               >
-                                <ReactApexChart
-                                  options={contentSummary.options}
-                                  series={contentSummary.series}
-                                  type="bar"
-                                  height={350}
-                                />
+                                {contentSummary?.options && Array.isArray(contentSummary?.series) && contentSummary.series.length > 0 ? (
+                                  <ReactApexChart
+                                    options={contentSummary.options}
+                                    series={contentSummary.series}
+                                    type="bar"
+                                    height={350}
+                                  />
+                                ) : (
+                                  <div>No data available</div>
+                                )}
                               </div>
                             </Tab>
                             <Tab eventKey="funds" title="VAT summary">
-                              <Link to="/reports-tables-content/vat_invested_details"
-                              >
-                                <ReactApexChart
-                                  options={vatSummary.options}
-                                  series={vatSummary.series}
-                                  type="bar"
-                                  height={350}
-                                />
+                              <Link to="/reports-tables-content/vat_invested_details">
+                                {vatSummary?.options && Array.isArray(vatSummary?.series) && vatSummary.series.length > 0 ? (
+                                  <ReactApexChart
+                                    options={vatSummary.options}
+                                    series={vatSummary.series}
+                                    type="bar"
+                                    height={350}
+                                  />
+                                ) : (
+                                  <div>No data available</div>
+                                )}
                               </Link>
                             </Tab>
                           </Tabs>

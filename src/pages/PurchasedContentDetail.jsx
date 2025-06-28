@@ -179,7 +179,7 @@ const PurchasedContentDetail = () => {
         // console.log("response 1902", response)
       }
     } catch (err) {
-      console.error(err); // Use "err" instead of "er"
+      // console.error(err); // Use "err" instead of "er"
     }
   };
 
@@ -193,7 +193,7 @@ const PurchasedContentDetail = () => {
     const audio = audioRef.current;
     if (audio.paused) {
       audio.play().catch((error) => {
-        console.error("Error playing audio:", error);
+        // console.error("Error playing audio:", error);
       });
     } else {
       audio.pause();
@@ -600,7 +600,7 @@ const PurchasedContentDetail = () => {
                             </div>
                             <div className="sub-content">
                               <div className="item d-flex justify-content-between align-items-center">
-                                <span className="fnt-bold">License</span>
+                                <span className="fnt-bold">Licence</span>
                                 <div className="">
                                   <img
                                     src={transactionDetails?.payment_content_type === "shared" ? sharedic : exclusive}

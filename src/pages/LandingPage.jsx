@@ -67,7 +67,6 @@ const LandingPage = () => {
   const mylocation = useLocation();
 
   // const params = new URLSearchParams(mylocation?.search);
-  console.log("myLocation", queryObject);
   const targetRefs = {
     div1: useRef(null),
     div2: useRef(null),
@@ -77,7 +76,6 @@ const LandingPage = () => {
   };
 
   const scrollToDiv = (divName) => {
-    console.log("divname", divName);
     setActiveHeader(divName);
     targetRefs[divName].current.scrollIntoView({ behavior: "smooth" });
   };
@@ -85,27 +83,23 @@ const LandingPage = () => {
   useEffect(() => {
     const params = new URLSearchParams(mylocation.search);
     const queryObject1 = {};
-    console.log("keyVal", params.name);
     for (const [key, value] of params.entries()) {
       queryObject1[key] = value;
     }
     // Object.keys(object1).length
     if (Object.keys(queryObject1).length > 0) {
       setActiveHeader(queryObject1?.q);
-      console.log("queryObject1?.q", (queryObject1?.q).toString());
       scrollToDiv((queryObject1?.q).toString());
     }
 
     setqueryObject(queryObject1);
   }, [mylocation]);
-  // console.log("queryObject123",queryObject)
   useEffect(() => {
     if (queryObject?.q) {
       scrollToDiv(queryObject?.q);
     }
   }, [queryObject]);
   const FAQ = async () => {
-    // console.log(faqSearch);
     const resp = await Get(
       `mediaHouse/getGenralMgmt?faq=faq&search=${faqSearch}`
     );
@@ -190,22 +184,20 @@ const LandingPage = () => {
                     modules={[Navigation]}
                     slidesPerView={4}
                     navigation
-                    // onSlideChange={() => console.log("slide change")}
                     from={1}
-                    minDistanceForAction={0.1}
-                    controlsProps={{
-                      dotsTouchable: true,
-                      prevPos: "left",
-                      nextPos: "right",
-                      nextTitle: "",
-                      prevTitle: "",
-                      dotsWrapperStyle: {},
-                      nextTitleStyle: {
-                        color: "#AAAAAA",
-                        fontSize: 20,
-                        fontWeight: "500",
-                      },
-                    }}
+                    // controlsProps={{
+                    //   dotsTouchable: true,
+                    //   prevPos: "left",
+                    //   nextPos: "right",
+                    //   nextTitle: "",
+                    //   prevTitle: "",
+                    //   dotsWrapperStyle: {},
+                    //   nextTitleStyle: {
+                    //     color: "#AAAAAA",
+                    //     fontSize: 20,
+                    //     fontWeight: "500",
+                    //   },
+                    // }}
                   >
                     <SwiperSlide>
                       <img src={dailymail} alt="" />

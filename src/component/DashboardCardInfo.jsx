@@ -127,7 +127,7 @@ export const DashboardCardInfo = ({
                                     data?.map((el) => {
                                         return el?.mediaValue ? (
                                             <img src={el?.media} key={el?.media} alt={el?.media} className="card-img" />
-                                        ) : (!el?.mediaValue && (type === "broadcasted_task")) ? (
+                                        ) : (!el?.mediaValue && (type === "broadcasted_task" || type === "live_task")) ? (
                                             <div className="mapInput2">
                                                 <style>
                                                     {`

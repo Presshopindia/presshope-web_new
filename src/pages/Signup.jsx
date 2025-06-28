@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import HeaderN from "../component/HeaderN";
 import DbFooter from "../component/DbFooter";
 import { Container, Row, Col } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
@@ -13,10 +12,8 @@ import location from "../assets/images/location.svg";
 import website from "../assets/images/sortIcons/political.svg";
 import addPic from "../assets/images/add-square.svg";
 import ComputerPic from "../assets/images/computer.svg";
-import user from "../assets/images/user.svg";
 import mail from "../assets/images/mail.svg";
 import "react-phone-number-input/style.css";
-import { Slide } from "react-toastify";
 import PhoneInput from "react-phone-number-input";
 import Loader from "../component/Loader";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
@@ -26,12 +23,9 @@ import {
   Button,
   MenuItem,
   Select,
-  FormControl,
-  InputLabel,
 } from "@mui/material";
 import { debounce } from "lodash";
 
-import { Link } from "react-router-dom";
 import { Get, Post } from "../services/user.services";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -43,6 +37,7 @@ import {
 import { successToasterFun } from "../component/commonFunction";
 import LoginHeader from "../component/LoginHeader";
 import { useDarkMode } from "../context/DarkModeContext";
+import ImageCrop from "../component/ImageCrop";
 
 const Signup = () => {
   const localAdmin = JSON.parse(localStorage.getItem("AdminPopup"));
@@ -56,10 +51,8 @@ const Signup = () => {
   const [show, setShow] = useState(
     (multiOfficeInitState.length > 1 && true) || false
   );
-  // const [show, setShow] = useState(true);
   const [AdminDetails, setAdminDetails] = useState({ ...adminDetailInitState, office_email: localAdmin?.user_email });
   const [isWindowShowMessage, setIsWindowShowMessage] = useState(false);
-  const [renderForRegistrationData, setRenderForRegistrationData] = useState(0);
   const [errorData, setErrorData] = useState({
     number: "",
     vat: "",
@@ -67,7 +60,7 @@ const Signup = () => {
     company_name: ""
   });
   const [loading, setLoading] = useState(false);
-  const { adminPreRegistrationEmail, setAdminPreRegistrationEmail } =
+  const { adminPreRegistrationEmail } =
     useDarkMode();
 
   const [phoneErrors, setPhoneErrors] = useState([]);
@@ -208,13 +201,21 @@ const Signup = () => {
     //   toast.error("")
     // }
     if (officeNames.length === 0) {
-      successToasterFun("Please add office details");
+      toast.error("Please select office details");
     } else if (AdminDetails.administrator_details.office_name === "") {
-      successToasterFun("Please select office name");
+      toast.error("Please select office name");
+    } else if (AdminDetails.administrator_details.admin_profile === "") {
+      toast.error("Please select profile image");
     } else if (AdminDetails.administrator_details.department === "") {
-      successToasterFun("Please select the department");
+      toast.error("Please select the department");
     } else if (AdminDetails.administrator_details.country_code === "") {
-      successToasterFun("Please select the country code");
+      toast.error("Please select the country code");
+    } else if (errorData.phone ) {
+      toast.error("This mobile number already exists. Please enter a new number.");
+    } else if (AdminDetails.admin_rights.price_range.minimum_price === "" ) {
+      toast.error("Please enter minimum price");
+    } else if (AdminDetails.admin_rights.price_range.maximum_price === "" ) {
+      toast.error("Please enter maximum price");
     } else {
       localStorage.setItem("Page1", JSON.stringify(AdminDetails));
       localStorage.setItem("designation", JSON.stringify(filteredDesignation[0]));
@@ -223,13 +224,12 @@ const Signup = () => {
       const step2Data = {
         email: userEmailId ?? adminPreRegistrationEmail,
         step2: {
-          // company_details:AdminDetails?.company_details,
-          // office_details:newOffice1,
           administrator_details: AdminDetails?.administrator_details,
           admin_rights: AdminDetails?.admin_rights,
         },
       };
-      const respPreRegistrationData = await Post(
+
+      await Post(
         "mediaHouse/preRegistration",
         step2Data
       );
@@ -240,71 +240,41 @@ const Signup = () => {
     }
   };
 
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [tempImageFile, setTempImageFile] = useState(null);
+  const [isCompanyLogo, setIsCompanyLogo] = useState(true);
+  const companyLogoInputRef = useRef(null);
+  const adminProfileInputRef = useRef(null);
+
+  const handleImageSelect = (e, isCompany = true) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setTempImageFile(e.target.files[0]);
+      setIsCompanyLogo(isCompany);
+      setShowCropModal(true);
+      // Reset the file input value
+      if (isCompany) {
+        companyLogoInputRef.current.value = '';
+      } else {
+        adminProfileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleCropComplete = async (croppedFile) => {
+    if (isCompanyLogo) {
+      await AddCompanyLogo(croppedFile);
+    } else {
+      await AddAdminProfile(croppedFile);
+    }
+    setTempImageFile(null);
+  };
+
   const AddCompanyLogo = async (file) => {
-    // Create a Promise to handle the image processing
-    const processImage = () => {
-      return new Promise((resolve, reject) => {
-        const imageUrl = URL.createObjectURL(file);
-        const img = new Image();
-
-        img.onload = () => {
-          // Create canvas
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-
-          // Determine the size of the square
-          // We'll use the smaller dimension to ensure the image fits
-          const size = Math.min(img.width, img.height);
-
-          // Set canvas size to our desired square dimensions
-          canvas.width = size;
-          canvas.height = size;
-
-          // Calculate centering
-          const offsetX = (img.width - size) / 2;
-          const offsetY = (img.height - size) / 2;
-
-          // Draw the image centered in the canvas
-          ctx.drawImage(
-            img,
-            offsetX,
-            offsetY, // Source offset
-            size,
-            size, // Source dimensions
-            0,
-            0, // Destination offset
-            size,
-            size // Destination dimensions
-          );
-
-          // Convert canvas to Blob
-          canvas.toBlob((blob) => {
-            // Create a new File object from the blob
-            const resizedFile = new File([blob], file.name, {
-              type: file.type,
-              lastModified: Date.now(),
-            });
-
-            resolve(resizedFile);
-          }, file.type);
-        };
-
-        img.onerror = () => {
-          reject(new Error("Failed to load image"));
-        };
-
-        img.src = imageUrl;
-      });
-    };
-
     try {
-      // Process the image first
-      const resizedFile = await processImage();
-
-      // Create FormData with the resized image
+      setLoading(true);
       const formData = new FormData();
       formData.append("path", "user");
-      formData.append("media", resizedFile);
+      formData.append("media", file);
 
       // Upload the resized image
       const filepath = await Post("mediaHouse/uploadUserMedia", formData);
@@ -317,25 +287,35 @@ const Signup = () => {
           profile_image: filepath.data.path,
         },
       }));
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       toast.error("Failed to process image");
     }
   };
 
   // Add admin profile-
   const AddAdminProfile = async (file) => {
-    const Formdata = new FormData();
-    Formdata.append("path", "user");
-    Formdata.append("media", file);
-
-    const filepath = await Post("mediaHouse/uploadUserMedia", Formdata);
-    setAdminDetails((prev) => ({
-      ...prev,
-      administrator_details: {
-        ...prev.administrator_details,
-        admin_profile: filepath.data.path,
-      },
-    }));
+    try{
+      setLoading(true);
+      const Formdata = new FormData();
+      Formdata.append("path", "user");
+      Formdata.append("media", file);
+  
+      const filepath = await Post("mediaHouse/uploadUserMedia", Formdata);
+      setAdminDetails((prev) => ({
+        ...prev,
+        administrator_details: {
+          ...prev.administrator_details,
+          admin_profile: filepath.data.path,
+        },
+      }));
+      setLoading(false);
+    }
+    catch(error) {
+      setLoading(false);
+      toast.error("Failed to process image");
+    }
   };
 
   const [mediahouseType, setMediahouseType] = useState([]);
@@ -361,7 +341,7 @@ const Signup = () => {
   // Handle change for multi office-
   const handleMultiAddOffice = (index, name, value) => {
     const newOffice = [...multiOffice];
-    if (name === "country" || name === "city" || name === "pincode") {
+    if (name === "country" || name === "city" || name === "pincode" || name === "complete_address") {
       newOffice[index] = {
         ...newOffice[index],
         address: {
@@ -413,7 +393,7 @@ const Signup = () => {
   const handleValidation = (index, phone) => {
     const updatedErrors = [...phoneErrors];
     if (phone.length < 10) {
-      updatedErrors[index] = "Phone number must be 10 digits.";
+      updatedErrors[index] = "Mobile number should be 10 digits.";
     } else {
       updatedErrors[index] = ""; // Clear error if valid
     }
@@ -476,7 +456,7 @@ const Signup = () => {
 
           newOffice[index] = {
             ...newOffice[index],
-            // post_code: name,
+            post_code: name,
             address: {
               ...newOffice[index].address,
               complete_address: address,
@@ -490,6 +470,7 @@ const Signup = () => {
                 type: "Point",
                 coordinates: [latitude, longitude],
               },
+              pincode: name,
             },
           };
 
@@ -515,9 +496,15 @@ const Signup = () => {
       const doc = parser.parseFromString(htmlString, "text/html");
 
       const countryNameElement = doc.querySelector(".country-name");
+      const cityElement = doc.querySelector(".locality");
 
       if (countryNameElement) {
         const name = places[0]?.name;
+        const address = places[0].formatted_address;
+        const country = countryNameElement?.textContent;
+        const city = cityElement?.textContent;
+        const latitude = places[0].geometry.location.lat();
+        const longitude = places[0].geometry.location.lng();
 
         setMultiOffice((prev) => {
           const newOffice = [...prev];
@@ -525,6 +512,21 @@ const Signup = () => {
           newOffice[index] = {
             ...newOffice[index],
             post_code: name,
+            address: {
+              ...newOffice[index].address,
+              complete_address: address,
+              city,
+              country,
+              Pin_Location: {
+                lat: latitude,
+                long: longitude,
+              },
+              location: {
+                type: "Point",
+                coordinates: [latitude, longitude],
+              },
+              pincode: name,
+            },
           };
 
           return newOffice;
@@ -573,11 +575,28 @@ const Signup = () => {
   // Add office-
   const AddOffice = async (e) => {
     e.preventDefault();
-    if (!AdminDetails?.company_details?.profile_image) {
-      toast.error("Company logo is empty");
-      return;
-    }
+
     try {
+      if (!AdminDetails?.company_details?.user_type || AdminDetails?.company_details?.user_type === "option1") {
+        toast.error("Please select mediahouse type");
+        return;
+      }
+  
+      if (!AdminDetails?.company_details?.profile_image) {
+        toast.error("Please select company logo");
+        return;
+      }
+  
+      if (!AdminDetails?.company_details?.company_number || AdminDetails?.company_details?.company_number?.length !== 8 ) {
+        toast.error("Please enter valid company number");
+        return;
+      }
+  
+      if (!AdminDetails?.company_details?.company_vat || AdminDetails?.company_details?.company_vat?.length !== 9) {
+        toast.error("Please enter valid company VAT");
+        return;
+      }
+
       let payload = multiOffice[multiOffice.length - 1];
       payload = {
         ...payload,
@@ -587,6 +606,17 @@ const Signup = () => {
         profile_image: AdminDetails.company_details.profile_image,
       };
 
+      if (!payload?.office_type_id || payload?.office_type_id === "option1") {
+        toast.error("Please select office type");
+        return;
+      }
+
+      if (!payload?.phone || payload?.phone?.length !== 10) {
+        toast.error("Please enter valid phone number");
+        return;
+      }
+
+
       setLoading(true);
       const resp = await Post("mediaHouse/addOfficeDetail", payload);
       if (resp) {
@@ -594,11 +624,17 @@ const Signup = () => {
         successToasterFun("Office added. Cheers");
         setShow(true);
 
-        let newOffice = [...multiOffice];
-        newOffice[newOffice.length - 1] = {
-          ...newOffice[newOffice.length - 1],
-          is_another_office_exist: true,
-        };
+        // Update all offices except the last one to have is_another_office_exist as true
+        let newOffice = multiOffice.map((office, index) => {
+          if (index < multiOffice.length) {
+            return {
+              ...office,
+              is_another_office_exist: true
+            };
+          }
+          return office;
+        });
+        
         setMultiOffice(newOffice);
 
         localStorage.setItem("OfficeDetails", JSON.stringify(newOffice));
@@ -613,17 +649,13 @@ const Signup = () => {
 
       // localStorage.getItem("user")
       const userEmailId = localStorage.getItem("UserEmailId");
-      let newOffice1 = [...multiOffice];
-      newOffice1[newOffice1.length - 1] = {
-        ...newOffice1[newOffice1.length - 1],
-        is_another_office_exist: true,
-      };
-
+      
+      // Use the updated newOffice array here as well
       const step2Data = {
         email: userEmailId ?? adminPreRegistrationEmail,
         step2: {
           company_details: AdminDetails?.company_details,
-          office_details: newOffice1,
+          office_details: newOffice,
         },
       };
       const respPreRegistrationData = await Post(
@@ -637,7 +669,6 @@ const Signup = () => {
       }
 
       handleGetAllinformationAndAddAnotherOffice();
-      // setRenderForRegistrationData(old=>old+1)
     } catch (error) {
       setLoading(false);
     }
@@ -696,7 +727,7 @@ const Signup = () => {
     setTimeout(() => {
       handleGetAllinformation();
     }, 1000);
-  }, [renderForRegistrationData]);
+  }, []);
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -759,12 +790,7 @@ const Signup = () => {
                       </div>
                     </div>
                     <div className="onboardStep">
-                      <form
-                        onSubmit={(e) => {
-                          AddOffice(e);
-                          e.preventDefault();
-                        }}
-                      >
+                      <form onSubmit={AddOffice}>
                         <div className="companyDetails sign_section">
                           <p className="onbrdheading sign_hdng">
                             Company Details
@@ -806,15 +832,16 @@ const Signup = () => {
                                     <img src={ComputerPic} alt="" />
                                     <Select
                                       className="w-100 slct_sign"
+                                      required
                                       onChange={(e) => handleCompanyChange(e)}
                                       value={
-                                        AdminDetails?.company_details?.user_type
+                                        AdminDetails?.company_details?.user_type || "option1"
                                       }
                                       name="user_type"
                                     >
                                       <MenuItem
                                         className="selectPlaceholder"
-                                        value={"Kind"}
+                                        value="option1"
                                       >
                                         Kind
                                       </MenuItem>
@@ -923,32 +950,26 @@ const Signup = () => {
                             </Col>
                             <Col lg={3} md={3} sm={12}>
                               <div className="currentPic logo_inp position-relative text-center p-0">
-                                {AdminDetails?.company_details
-                                  ?.profile_image === "" && (
-                                    <img src={addPic} alt="" />
-                                  )}
-                                {AdminDetails?.company_details
-                                  ?.profile_image !== "" && (
-                                    <img
-                                      className="uploaded"
-                                      src={
-                                        AdminDetails?.company_details
-                                          ?.profile_image
-                                      }
-                                      alt=""
-                                    />
-                                  )}
-                                {AdminDetails?.company_details
-                                  ?.profile_image === "" && (
-                                    <span className="mt-2 d-block">
-                                      Add company logo
-                                    </span>
-                                  )}
+                                {AdminDetails?.company_details?.profile_image === "" && (
+                                  <img src={addPic} alt="" />
+                                )}
+                                {AdminDetails?.company_details?.profile_image !== "" && (
+                                  <img
+                                    className="uploaded"
+                                    src={AdminDetails?.company_details?.profile_image}
+                                    alt=""
+                                  />
+                                )}
+                                {AdminDetails?.company_details?.profile_image === "" && (
+                                  <span className="mt-2 d-block">
+                                    Add company logo
+                                  </span>
+                                )}
                                 <input
+                                  ref={companyLogoInputRef}
                                   type="file"
-                                  onChange={(e) => {
-                                    AddCompanyLogo(e.target.files[0]);
-                                  }}
+                                  onChange={(e) => handleImageSelect(e, true)}
+                                  accept="image/*"
                                   style={{ padding: "0px" }}
                                 />
                               </div>
@@ -970,10 +991,11 @@ const Signup = () => {
                                     <img src={office} alt="" />
                                     <Form.Control
                                       type="text"
-                                      className=""
+                                      className={el.is_another_office_exist ? "invite-user-disable-field" : ""}
                                       placeholder="Enter office name *"
                                       name="name"
                                       required
+                                      disabled={el.is_another_office_exist}
                                       onChange={(e) =>
                                         handleMultiAddOffice(
                                           index,
@@ -989,8 +1011,9 @@ const Signup = () => {
                                   <Form.Group className="mb-4 form-group">
                                     <img src={chair} alt="" />
                                     <Select
-                                      className="w-100 slct_sign"
+                                      className={el.is_another_office_exist ? "w-100 slct_sign invite-user-disable-field" : "w-100 slct_sign"}
                                       name="office_type_id"
+                                      disabled={el.is_another_office_exist}
                                       onChange={(e) =>
                                         handleMultiAddOffice(
                                           index,
@@ -1004,7 +1027,7 @@ const Signup = () => {
                                         className="selectPlaceholder"
                                         value="option1"
                                       >
-                                        Select Office Type{" "}
+                                        Select office type{" "}
                                       </MenuItem>
                                       {officetypes &&
                                         officetypes.map((value, index) => {
@@ -1020,25 +1043,48 @@ const Signup = () => {
                                     </Select>
                                   </Form.Group>
                                 </Col>
-                                <Col md={12} className="">
+                                <Col md={4}>
+                                  <Form.Group className="mb-4 form-group">
+                                    <img src={office} alt="" />
+                                    <Form.Control
+                                      type="text"
+                                      className={el.is_another_office_exist ? "invite-user-disable-field" : ""}
+                                      placeholder="Apartment, suite/unit, floor, etc. *"
+                                      name="number"
+                                      required
+                                      disabled={el.is_another_office_exist}
+                                      onChange={(e) =>
+                                        handleMultiAddOffice(
+                                          index,
+                                          e.target.name,
+                                          e.target.value
+                                        )
+                                      }
+                                      value={el.number || ""}
+                                    />
+                                  </Form.Group>
+                                </Col>
+                                <Col md={8} className="">
                                   <Form.Group className="mb-4 form-group">
                                     <img src={location} alt="" />
                                     <Form.Control
                                       type="text"
-                                      className=""
+                                      className={el.is_another_office_exist ? "invite-user-disable-field" : ""}
                                       placeholder="Address *"
-                                      name="address"
+                                      name="complete_address"
                                       required
+                                      disabled={el.is_another_office_exist}
                                       onFocus={handlePopupOpen}
                                       onClick={handlePopupOpen}
                                       ref={searchBoxRefStreet}
-                                    // onChange={(e) =>
-                                    //   handleMultiAddOffice(
-                                    //     index,
-                                    //     e.target.name,
-                                    //     e.target.value
-                                    //   )
-                                    // }
+                                      value={el?.address?.complete_address}
+                                      onChange={(e) =>
+                                        handleMultiAddOffice(
+                                          index,
+                                          e.target.name,
+                                          e.target.value
+                                        )
+                                      }
                                     />
                                     {showPopup && (
                                       <div className="map-popup">
@@ -1054,9 +1100,10 @@ const Signup = () => {
                                     <img src={location} alt="" />
                                     <Form.Control
                                       placeholder="Post code"
-                                      className="addr_custom_inp w-100"
+                                      className={el.is_another_office_exist ? "invite-user-disable-field addr_custom_inp w-100" : "addr_custom_inp w-100"}
                                       type="textarea"
                                       name="post_code"
+                                      disabled={el.is_another_office_exist}
                                       onFocus={handlePostalCodePopUp}
                                       onClick={handlePostalCodePopUp}
                                       ref={searchBoxRefPostalCode}
@@ -1083,9 +1130,10 @@ const Signup = () => {
                                     <img src={location} alt="" />
                                     <Form.Control
                                       type="text"
-                                      className=""
+                                      className={el.is_another_office_exist ? "invite-user-disable-field" : ""}
                                       placeholder="City"
                                       name="city"
+                                      disabled={el.is_another_office_exist}
                                       onChange={(e) =>
                                         handleMultiAddOffice(
                                           index,
@@ -1102,9 +1150,10 @@ const Signup = () => {
                                     <img src={location} alt="" />
                                     <Form.Control
                                       type="text"
-                                      className=""
+                                      className={el.is_another_office_exist ? "invite-user-disable-field" : ""}
                                       placeholder="Country"
                                       name="country"
+                                      disabled={el.is_another_office_exist}
                                       onChange={(e) =>
                                         handleMultiAddOffice(
                                           index,
@@ -1117,13 +1166,14 @@ const Signup = () => {
                                   </Form.Group>
                                 </Col>
                                 <Col md={6}>
-                                  <div className="number_inp_wrap">
+                                  <div className={`number_inp_wrap ${el.is_another_office_exist ? "invite-user-disable-field" : ""}`}>
                                     {/* Phone start */}
                                     <input
                                       type="number"
-                                      className="input_nmbr"
+                                      className={`input_nmbr ${el.is_another_office_exist ? "invite-user-disable-field" : ""}`}
                                       placeholder="Phone"
                                       name="phone"
+                                      disabled={el.is_another_office_exist}
                                       onChange={(e) => {
                                         if (e.target.value.length <= 10) {
                                           handleMultiAddOffice(
@@ -1145,7 +1195,7 @@ const Signup = () => {
                                       className="f_1 cntry_code"
                                       international
                                       required
-                                      // countryCallingCodeEditable={false}
+                                      // disabled={el.is_another_office_exist}
                                       name="country_code"
                                       value={el?.country_code || ""}
                                       onChange={(e) => {
@@ -1171,9 +1221,10 @@ const Signup = () => {
                                     <img src={website} alt="" />
                                     <Form.Control
                                       type="url"
-                                      className=""
+                                      className={el.is_another_office_exist ? "invite-user-disable-field" : ""}
                                       placeholder="Website"
                                       name="website"
+                                      disabled={el.is_another_office_exist}
                                       onChange={(e) =>
                                         handleMultiAddOffice(
                                           index,
@@ -1189,9 +1240,10 @@ const Signup = () => {
                               {el.is_another_office_exist ? (
                                 <FormControlLabel
                                   className="anthr_office_check"
+                                  // disabled={index !== multiOffice.length - 2}
                                   control={
                                     <Checkbox
-                                      checked={el.checked}
+                                      checked={el.checkbox || false}
                                       onChange={(e) => {
                                         handleMultiAddOffice(
                                           index,
@@ -1206,7 +1258,7 @@ const Signup = () => {
                                 />
                               ) : null}
 
-                              {!el.is_another_office_exist ? (
+                              {index === multiOffice.length - 1 && !el.is_another_office_exist ? (
                                 <Button
                                   className="w-100 theme_btn"
                                   type="submit"
@@ -1331,16 +1383,13 @@ const Signup = () => {
                                         Add current photo
                                       </span>
                                     )}
-                                  {/* {AdminDetails.administrator_details
-                                    .admin_profile === "" && ( */}
+                                  
                                   <input
+                                    ref={adminProfileInputRef}
                                     type="file"
-                                    // required
-                                    onChange={(e) => {
-                                      AddAdminProfile(e.target.files[0]);
-                                    }}
+                                    onChange={(e) => handleImageSelect(e, false)}
+                                    accept="image/*"
                                   />
-                                  {/* // )} */}
                                 </div>
                               </Col>
                               <Col md={6}>
@@ -1402,7 +1451,7 @@ const Signup = () => {
                                       style={{ color: "red" }}
                                       className="eml_txt_dngr"
                                     >
-                                      This email already exists.
+                                      This email id already exists. Please enter a new email id.
                                     </span>
                                   )}
                                 </Form.Group>
@@ -1457,11 +1506,11 @@ const Signup = () => {
                                   {AdminDetails.administrator_details.phone
                                     .length < 10 ? (
                                     <span className="errorInput">
-                                      Mobile number should 10 digit
+                                      Mobile number should be 10 digits
                                     </span>
                                   ) : errorData.phone ? (
                                     <span className="errorInput" >
-                                      This mobile number already exists.
+                                      {errorData.phone}
                                     </span>
                                   ) : (
                                     ""
@@ -1672,6 +1721,18 @@ const Signup = () => {
         </Container>
       </div>
       <DbFooter />
+      <ImageCrop
+        show={showCropModal}
+        onHide={() => {
+          setShowCropModal(false);
+          setTempImageFile(null);
+        }}
+        onCropComplete={handleCropComplete}
+        initialImage={tempImageFile}
+        aspectRatio={140/100}
+        maxWidthCm={140}
+        maxHeightCm={100}
+      />
     </>
   );
 };

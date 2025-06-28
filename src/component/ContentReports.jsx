@@ -742,7 +742,7 @@ const ContentReports = ({
           <Col>
             <DashboardCardInfo
               showSort={false}
-              title="Funds invested today"
+              title="Funds invested today (inc VAT)"
               type="total_fund_invested_today"
               path="/content-tables/fund_invested_today"
               trend={dashboardData?.totalFundInvestedToday?.trend}
@@ -753,7 +753,7 @@ const ContentReports = ({
           {/* Total fund invested */}
           <Col>
             <DashboardCardInfo
-              title="Total funds invested"
+              title="Total funds invested (inc VAT)"
               type="total_fund_invested"
               path="/dashboard-tables/fund_invested"
               trend={dashboardData?.totalFundInvested?.trend}

@@ -24127,3 +24127,23 @@ a.txtBlack svg {
 .three {
   animation-delay: 0.8s;
 }
+
+span.red-dot {
+  position: absolute;
+  top: 0;
+  width: 12px;
+  height: 12px;
+  background: red;
+  left: 26px;
+  border-radius: 50%;
+}
+
+span.green-dot {
+  position: absolute;
+  top: 0;
+  width: 12px;
+  height: 12px;
+  background: green;
+  left: 26px;
+  border-radius: 50%;
+}

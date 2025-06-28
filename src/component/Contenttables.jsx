@@ -507,7 +507,7 @@ const Contenttables = () => {
                               <th>Time & date</th>
                               <th className="tsk_dlts">Task Details</th>
                               <th>Type</th>
-                              <th>License</th>
+                              <th>Licence</th>
                               <th>Category</th>
                               <th>Location</th>
                               <th>Uploaded by</th>
@@ -672,7 +672,7 @@ const Contenttables = () => {
                               <th>Time & date</th>
                               <th className="tsk_dlts">Heading</th>
                               <th className="tbl_icn_th">Type</th>
-                              <th className="tbl_icn_th licnc">License</th>
+                              <th className="tbl_icn_th licnc">Licence</th>
                               <th className="tbl_icn_th catgr">Category</th>
                               <th className="tsk_dlts">Location</th>
                               {param.type === "content_purchased_online_today" && <th>Purchased by</th>}
@@ -919,7 +919,7 @@ const Contenttables = () => {
                               <th>Time & date</th>
                               <th className="tsk_dlts">Heading</th>
                               <th>Type</th>
-                              <th>License</th>
+                              <th>Licence</th>
                               <th>Category</th>
                               <th>Location</th>
                               <th>Uploaded by</th>
@@ -1159,7 +1159,7 @@ const Contenttables = () => {
                               <th>Time & date</th>
                               <th className="tsk_dlts">Heading</th>
                               <th>Type</th>
-                              <th>License</th>
+                              <th>Licence</th>
                               <th>Category</th>
                               <th>Location</th>
                               <th>Uploaded by</th>
@@ -1487,9 +1487,9 @@ const Contenttables = () => {
                               <th>Location</th>
                               <th>Uploaded by</th>
                               {
-                                param.type == "content_sourced_from_task_funds_invested" && <th>VAT</th>
+                                param.type == "content_sourced_from_task_funds_invested" && <th>VAT paid</th>
                               }
-                              <th>Funds invested</th>
+                              <th>Total funds invested</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -1675,9 +1675,9 @@ const Contenttables = () => {
                               <th>Location</th>
                               <th>Uploaded by</th>
                               {
-                                param.type == "content_sourced_from_task_funds_invested_today" && <th>VAT</th>
+                                param.type == "content_sourced_from_task_funds_invested_today" && <th>VAT paid</th>
                               }
-                              <th>Funds invested</th>
+                              <th>Total funds invested</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -1857,7 +1857,7 @@ const Contenttables = () => {
                               <th>Time & date</th>
                               <th className="tsk_dlts">Heading</th>
                               <th>Type</th>
-                              <th>License</th>
+                              <th>Licence</th>
                               <th>Category</th>
                               <th>Location</th>
                               <th>Uploaded by</th>

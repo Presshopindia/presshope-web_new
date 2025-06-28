@@ -11,7 +11,7 @@ export const adminDetailInitState = {
     company_number: JSON.parse(localStorage.getItem("CompanyDetails"))?.company_number || "",
     company_vat: JSON.parse(localStorage.getItem("CompanyDetails"))?.company_vat || "",
     profile_image: JSON.parse(localStorage.getItem("CompanyDetails"))?.profile_image || "",
-    user_type: JSON.parse(localStorage.getItem("CompanyDetails"))?.user_type || "Kind"
+    user_type: JSON.parse(localStorage.getItem("CompanyDetails"))?.user_type || ""
   },
   office_details: {
     name: "",
@@ -61,6 +61,7 @@ const multiOffice = {
   company_vat: "",
   profile_image: "",
   name: "",
+  number: "",
   office_type_id: "",
   address: {
     country: "",
@@ -399,5 +400,5 @@ export const feedDynamicRoute = (data1, data2) => {
 
 // Manage user heading-
 export const manageUserTopHeading = (a, b) => {
-  return `Hi ${a + " " + b}, please enter your adminstrator password to add new users, or remove existing users.`
+  return `Hi ${a + " " + b}, please enter your adminstrator password to add new users, or block existing users.`
 }

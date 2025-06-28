@@ -61,56 +61,26 @@ const Header = () => {
   const [profileType, setProfileType] = useState("");
   const [show, setShow] = useState(false);
   const [filter, setFilter] = useState([]);
-  const [profile, setProfile] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [sidebar, setSidebar] = useState(false);
-  const [basketItemsCount, setBasketItemsCount] = useState(0);
   const showSidebar = () => setSidebar(!sidebar);
 
   const handleShow = () => setModalShow(!modalShow);
 
   const SignOut = () => {
     localStorage.clear();
-    navigate("/landing-page");
-    window.location.reload();
-    // toast.success("Logged Out")
+    setTimeout(() => {
+      window.location.href = "/landing-page";
+    }, 100);
   };
+  
 
   const subject = new Subject();
   subject
     .asObservable()
     .pipe(debounceTime(1000))
-    .subscribe((data) => {});
-
-  let debounceTimeout;
-
-  // Define the debounced version of the event handler
-  const onKeyUp = async (event) => {
-    // Clear the previous timeout if it exists
-    clearTimeout(debounceTimeout);
-
-    // Set a new timeout to debounce the event
-    debounceTimeout = setTimeout(async () => {
-      let a = event.target.value;
-      if (a) {
-        // Get the current pathname
-        const currentPath = window.location.pathname;
-        // Check if the current route is the search route
-        if (currentPath.startsWith("/content-search")) {
-          // Update the search results without navigating
-          addTrendingSearch(a);
-        } else {
-          // Perform regular search functionality and navigate
-          const resp = await Get(`users/getTags?type=mediahouse&tagName=${a}`);
-          setFilter(resp?.data?.tags);
-          navigate(`/content-search/${encodeURIComponent(a)}`);
-        }
-      } else {
-        setFilter([]);
-      }
-    }, 1000); // Adjust the debounce delay as needed
-  };
+    .subscribe((data) => { });
 
   const addTrendingSearch = async (tagName) => {
     // Remove '#' character if it exists at the beginning of the tagName string
@@ -118,7 +88,7 @@ const Header = () => {
       ? tagName.slice(1)
       : tagName;
 
-    const result = await Post("mediahouse/addTrendingSearch", {
+    await Post("mediahouse/addTrendingSearch", {
       tagName: normalizedTagName,
     });
   };
@@ -140,8 +110,32 @@ const Header = () => {
       const res = await Get(`mediaHouse/notificationlisting`);
       setData(res?.data?.data || []);
       setCount(res?.data?.count);
-    } catch (err) {}
+    } catch (err) {
+      console.error('Error fetching notifications:', err);
+    }
   };
+
+  // Handle push notification event
+  const handlePushNotification = (event) => {
+    // Check if the push notification is for this application
+    if (event && event.data) {
+      getNotification();
+    }
+  };
+
+  // Set up push notification listener
+  useEffect(() => {
+    // Check if the browser supports service workers and push notifications
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+      // Add event listener for push notifications
+      navigator.serviceWorker.addEventListener('message', handlePushNotification);
+
+      // Clean up the event listener when component unmounts
+      return () => {
+        navigator.serviceWorker.removeEventListener('message', handlePushNotification);
+      };
+    }
+  }, []);
 
   const handelDeleteNotification = async () => {
     try {
@@ -162,7 +156,7 @@ const Header = () => {
       if (res) {
         getNotification();
       }
-    } catch (err) {}
+    } catch (err) { }
   };
 
   // Dark Mode-
@@ -176,6 +170,19 @@ const Header = () => {
     navColor,
     setNavColor,
   } = useDarkMode();
+  useEffect(() => {
+    // Initial fetch of notifications
+    getNotification();
+    
+    // Set up interval to periodically check for new notifications (every 5 minutes)
+    const notificationInterval = setInterval(() => {
+      getNotification();
+    }, 5 * 60 * 1000); // 5 minutes in milliseconds
+
+    // Clean up interval on component unmount
+    return () => clearInterval(notificationInterval);
+  }, []);
+
   useEffect(() => {
     const allDivs = document.querySelectorAll("div");
 
@@ -338,19 +345,18 @@ const Header = () => {
                 </IconContext.Provider>
               </div>
               {/* responsive header end */}
-
               {/* <Navbar.Toggle aria-controls="basic-navbar-nav" /> */}
               <Navbar id="basic-navbar-nav" className="dash_header_links">
                 <Nav className="me-auto center-links nav_inn align-items-center">
                   <NavLink
                     to={"/dashboard/exclusive"}
                     // className="nav-link dashboard"
-                    className={`nav-link ${
-                      navColor.startsWith("/dashboard/") ? "nav-active" : ""
-                    }`}
+                    className={`nav-link ${navColor.startsWith("/dashboard/") ? "nav-active" : ""
+                      }`}
                     onClick={() => {
                       // localStorage.removeItem("backBtnVisibility");
                       setNavColor("/dashboard/exclusive");
+                      localStorage.setItem("activeNav", JSON.stringify("/dashboard/exclusive"))
                     }}
                   >
                     Dashboard
@@ -359,12 +365,12 @@ const Header = () => {
                     to={"/published-content"}
                     // className="nav-link"
                     // onClick={() => localStorage.removeItem("backBtnVisibility")}
-                    className={`nav-link ${
-                      navColor == "/published-content" ? "nav-active" : ""
-                    }`}
+                    className={`nav-link ${navColor == "/published-content" ? "nav-active" : ""
+                      }`}
                     onClick={() => {
                       localStorage.removeItem("backBtnVisibility");
                       setNavColor("/published-content");
+                      localStorage.setItem("activeNav", JSON.stringify("/published-content"))
                     }}
                   >
                     Feed
@@ -372,12 +378,12 @@ const Header = () => {
                   <NavLink
                     to={"/content/exclusive/published/favourited"}
                     // className="nav-link"
-                    className={`nav-link ${
-                      navColor.startsWith("/content/") ? "nav-active" : ""
-                    }`}
+                    className={`nav-link ${navColor.startsWith("/content/") ? "nav-active" : ""
+                      }`}
                     onClick={() => {
                       localStorage.removeItem("backBtnVisibility");
                       setNavColor("/content/exclusive/published/favourited");
+                      localStorage.setItem("activeNav", JSON.stringify("/content/"))
                     }}
                   >
                     Content
@@ -386,11 +392,11 @@ const Header = () => {
                   <NavLink
                     to={`/task`}
                     //  className="nav-link"
-                    className={`nav-link ${
-                      navColor == "/task" ? "nav-active" : ""
-                    }`}
+                    className={`nav-link ${navColor == "/task" ? "nav-active" : ""
+                      }`}
                     onClick={() => {
                       setNavColor("/task");
+                      localStorage.setItem("activeNav", JSON.stringify("/task"))
                     }}
                   >
                     Tasks
@@ -403,12 +409,12 @@ const Header = () => {
                   <NavLink
                     to={"/chat"}
                     // className="position-relative nav-link messages_countWrap"
-                    className={`position-relative nav-link messages_countWrap ${
-                      navColor == "/chat" ? "nav-active" : ""
-                    }`}
+                    className={`position-relative nav-link messages_countWrap ${navColor == "/chat" ? "nav-active" : ""
+                      }`}
                     onClick={() => {
                       setNavColor("/chat");
                       localStorage.removeItem("backBtnVisibility");
+                      localStorage.setItem("activeNav", JSON.stringify("/chat"))
                     }}
                   >
                     Chat
@@ -416,23 +422,23 @@ const Header = () => {
                   <NavLink
                     to={"/reports/content"}
                     //  className="nav-link"
-                    className={`nav-link ${
-                      navColor.startsWith("/reports/") ? "nav-active" : ""
-                    }`}
+                    className={`nav-link ${navColor.startsWith("/reports/") ? "nav-active" : ""
+                      }`}
                     onClick={() => {
                       setNavColor("/reports/content");
+                      localStorage.setItem("activeNav", JSON.stringify("/reports/"))
                     }}
                   >
                     Reports
                   </NavLink>
                   <NavLink
                     to={"/accounts"}
-                    className={`nav-link ${
-                      navColor == "/accounts" ? "nav-active" : ""
-                    }`}
+                    className={`nav-link ${navColor == "/accounts" ? "nav-active" : ""
+                      }`}
                     onClick={() => {
                       setNavColor("/accounts");
                       localStorage.removeItem("backBtnVisibility");
+                      localStorage.setItem("activeNav", JSON.stringify("/accounts"))
                     }}
                   >
                     Accounts
@@ -470,7 +476,7 @@ const Header = () => {
                     fullWidth
                     className="inputDark"
                     placeholder="Search content"
-                    onChange={onKeyUp}
+                    // onChange={onKeyUp}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         const inputValue = e.target.value.startsWith("#")
@@ -565,180 +571,33 @@ const Header = () => {
                         <div className="notfs_list">
                           {searchQuery
                             ? data
-                                ?.filter(
-                                  (el) =>
-                                    el?.body
-                                      ?.toLowerCase()
-                                      .includes(searchQuery) ||
-                                    el?.sender_id?.user_name
-                                      ?.toLowerCase()
-                                      .includes(searchQuery) ||
-                                    el?.sender_id?.name
-                                      ?.toLowerCase()
-                                      .includes(searchQuery)
-                                )
-                                ?.map((curr) => {
-                                  return (
-                                    <div
-                                      className="notf_wrp"
-                                      onClick={() => read(curr?._id)}
-                                    >
-                                      <div
-                                        className={`notf_item ${
-                                          !curr?.is_read ? "active" : null
-                                        }`}
-                                      >
-                                        {curr?.sender_id?.role === "Hopper" ? (
-                                          <img
-                                            src={
-                                              process.env
-                                                .REACT_APP_AVATAR_IMAGE +
-                                              curr?.sender_id?.avatar_ids?.[0]
-                                                ?.avatar
-                                            }
-                                            className="notf_img"
-                                            alt=""
-                                          />
-                                        ) : curr?.sender_id?.role ==
-                                          "MediaHouse" ? (
-                                          <img
-                                            src={curr?.sender_id?.profile_image}
-                                            className="notf_img"
-                                            alt=""
-                                          />
-                                        ) : (
-                                          <img
-                                            src={
-                                              process.env
-                                                .REACT_APP_ADMIN_IMAGE +
-                                              curr?.sender_id?.profile_image
-                                            }
-                                            className="notf_img"
-                                            alt=""
-                                          />
-                                        )}
-                                        <div className="notf_cont_rt">
-                                          <p className="notf_usr d-flex align-items-center justify-content-between">
-                                            {curr?.sender_id?.role === "Hopper"
-                                              ? curr?.sender_id?.user_name
-                                              : curr?.sender_id?.name}
-                                            <span className="notf_time_txt">
-                                              {/* {moment(curr?.createdAt).format("hh:mm A DD MMMM YYYY")} */}
-                                              {moment(curr?.createdAt).format(
-                                                "hh:mm A, DD MMM YYYY"
-                                              )}
-
-                                              {/* , {" "} */}
-                                              {/* {moment(curr?.createdAt).format(
-                                          `hh:mm A`
-                                        )} */}
-                                            </span>
-                                          </p>
-                                          <p className="notf_txt">
-                                            {curr?.title}
-                                          </p>
-                                          <p className="notf_txt">
-                                            {curr?.body
-                                              .split(
-                                                "(here has to be a hyperlink)"
-                                              )
-                                              .map((part, index) => {
-                                                if (index === 1) {
-                                                  return (
-                                                    <>
-                                                      <Link
-                                                        to={`/Feeddetail/content/${curr?.content_id}`}
-                                                      >
-                                                        Click here
-                                                      </Link>
-                                                      {part}
-                                                    </>
-                                                  );
-                                                }
-                                                return part;
-                                              })}
-                                          </p>
-
-                                          {curr?.promo_code_link ? (
-                                            <button
-                                              className="notify_clear clear-btn"
-                                              onClick={() => {
-                                                let promoCode =
-                                                  curr?.promo_code_link;
-                                                if (promoCode) {
-                                                  navigator.clipboard
-                                                    .writeText(promoCode)
-                                                    .then(() => {
-                                                      alert(
-                                                        "Promo code copied to clipboard!"
-                                                      );
-                                                    })
-                                                    .catch((err) => {
-                                                      console.error(
-                                                        "Failed to copy promo code:",
-                                                        err
-                                                      );
-                                                    });
-                                                } else {
-                                                  console.error(
-                                                    "Promo code is undefined"
-                                                  );
-                                                }
-                                              }}
-                                            >
-                                              Copy Promo Code
-                                            </button>
-                                          ) : (
-                                            ""
-                                          )}
-
-                                          {curr?.content_link ? (
-                                            <button
-                                              // className="notf_txt"
-                                              className=" notify_clear clear-btn"
-                                              onClick={() => {
-                                                let itemLink =
-                                                  curr?.content_link;
-                                                console.log(
-                                                  "itemLink",
-                                                  itemLink
-                                                );
-
-                                                if (itemLink) {
-                                                  window.location.href =
-                                                    itemLink;
-                                                } else {
-                                                  console.error(
-                                                    "itemLink is undefined"
-                                                  );
-                                                }
-                                              }}
-                                            >
-                                              Link
-                                            </button>
-                                          ) : (
-                                            ""
-                                          )}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  );
-                                })
-                            : data?.map((curr) => {
+                              ?.filter(
+                                (el) =>
+                                  el?.body
+                                    ?.toLowerCase()
+                                    .includes(searchQuery) ||
+                                  el?.sender_id?.user_name
+                                    ?.toLowerCase()
+                                    .includes(searchQuery) ||
+                                  el?.sender_id?.name
+                                    ?.toLowerCase()
+                                    .includes(searchQuery)
+                              )
+                              ?.map((curr) => {
                                 return (
                                   <div
                                     className="notf_wrp"
                                     onClick={() => read(curr?._id)}
                                   >
                                     <div
-                                      className={`notf_item ${
-                                        !curr?.is_read ? "active" : null
-                                      }`}
+                                      className={`notf_item ${!curr?.is_read ? "active" : null
+                                        }`}
                                     >
                                       {curr?.sender_id?.role === "Hopper" ? (
                                         <img
                                           src={
-                                            process.env.REACT_APP_AVATAR_IMAGE +
+                                            process.env
+                                              .REACT_APP_AVATAR_IMAGE +
                                             curr?.sender_id?.avatar_ids?.[0]
                                               ?.avatar
                                           }
@@ -755,7 +614,8 @@ const Header = () => {
                                       ) : (
                                         <img
                                           src={
-                                            process.env.REACT_APP_ADMIN_IMAGE +
+                                            process.env
+                                              .REACT_APP_ADMIN_IMAGE +
                                             curr?.sender_id?.profile_image
                                           }
                                           className="notf_img"
@@ -768,16 +628,17 @@ const Header = () => {
                                             ? curr?.sender_id?.user_name
                                             : curr?.sender_id?.name}
                                           <span className="notf_time_txt">
-                                            {/* {moment(curr?.createdAt).format("DD MMMM YYYY")}, {" "}
-                                        {moment(curr?.createdAt).format(
-                                          `hh:mm A`
-                                        )} */}
+                                            {/* {moment(curr?.createdAt).format("hh:mm A DD MMMM YYYY")} */}
                                             {moment(curr?.createdAt).format(
                                               "hh:mm A, DD MMM YYYY"
                                             )}
+
+                                            {/* , {" "} */}
+                                            {/* {moment(curr?.createdAt).format(
+                                          `hh:mm A`
+                                        )} */}
                                           </span>
                                         </p>
-
                                         <p className="notf_txt">
                                           {curr?.title}
                                         </p>
@@ -802,26 +663,19 @@ const Header = () => {
                                               return part;
                                             })}
                                         </p>
+
                                         {curr?.promo_code_link ? (
                                           <button
                                             className="notify_clear clear-btn"
                                             onClick={() => {
                                               let promoCode =
                                                 curr?.promo_code_link;
-                                              console.log(
-                                                "Promo Code:",
-                                                promoCode
-                                              );
-
                                               if (promoCode) {
                                                 navigator.clipboard
                                                   .writeText(promoCode)
                                                   .then(() => {
-                                                    console.log(
-                                                      "Promo code copied !"
-                                                    );
                                                     toast.success(
-                                                      "Promo code copied !"
+                                                      "Promo code copied to clipboard!"
                                                     );
                                                   })
                                                   .catch((err) => {
@@ -837,22 +691,27 @@ const Header = () => {
                                               }
                                             }}
                                           >
-                                            {/* {curr?.promo_code_link} */}
-                                            Copy Promo Code link
+                                            Copy Promo Code
                                           </button>
                                         ) : (
                                           ""
                                         )}
+
                                         {curr?.content_link ? (
                                           <button
                                             // className="notf_txt"
-                                            className="notify_clear clear-btn"
+                                            className=" notify_clear clear-btn"
                                             onClick={() => {
-                                              let itemLink = curr?.content_link;
-                                              console.log("itemLink", itemLink);
-                                              // Navigate(`/${itemLink}`);
+                                              let itemLink =
+                                                curr?.content_link;
+                                              console.log(
+                                                "itemLink",
+                                                itemLink
+                                              );
+
                                               if (itemLink) {
-                                                window.location.href = itemLink;
+                                                window.location.href =
+                                                  itemLink;
                                               } else {
                                                 console.error(
                                                   "itemLink is undefined"
@@ -869,7 +728,152 @@ const Header = () => {
                                     </div>
                                   </div>
                                 );
-                              })}
+                              })
+                            : data?.map((curr) => {
+                              return (
+                                <div
+                                  className="notf_wrp"
+                                  onClick={() => read(curr?._id)}
+                                >
+                                  <div
+                                    className={`notf_item ${!curr?.is_read ? "active" : null
+                                      }`}
+                                  >
+                                    {curr?.sender_id?.role === "Hopper" ? (
+                                      <img
+                                        src={
+                                          process.env.REACT_APP_AVATAR_IMAGE +
+                                          curr?.sender_id?.avatar_ids?.[0]
+                                            ?.avatar
+                                        }
+                                        className="notf_img"
+                                        alt=""
+                                      />
+                                    ) : curr?.sender_id?.role ==
+                                      "MediaHouse" ? (
+                                      <img
+                                        src={curr?.sender_id?.profile_image}
+                                        className="notf_img"
+                                        alt=""
+                                      />
+                                    ) : (
+                                      <img
+                                        src={
+                                          process.env.REACT_APP_ADMIN_IMAGE +
+                                          curr?.sender_id?.profile_image
+                                        }
+                                        className="notf_img"
+                                        alt=""
+                                      />
+                                    )}
+                                    <div className="notf_cont_rt">
+                                      <p className="notf_usr d-flex align-items-center justify-content-between">
+                                        {curr?.sender_id?.role === "Hopper"
+                                          ? curr?.sender_id?.user_name
+                                          : curr?.sender_id?.name}
+                                        <span className="notf_time_txt">
+                                          {/* {moment(curr?.createdAt).format("DD MMMM YYYY")}, {" "}
+                                        {moment(curr?.createdAt).format(
+                                          `hh:mm A`
+                                        )} */}
+                                          {moment(curr?.createdAt).format(
+                                            "hh:mm A, DD MMM YYYY"
+                                          )}
+                                        </span>
+                                      </p>
+
+                                      <p className="notf_txt">
+                                        {curr?.title}
+                                      </p>
+                                      <p className="notf_txt">
+                                        {curr?.body
+                                          .split(
+                                            "(here has to be a hyperlink)"
+                                          )
+                                          .map((part, index) => {
+                                            if (index === 1) {
+                                              return (
+                                                <>
+                                                  <Link
+                                                    to={`/Feeddetail/content/${curr?.content_id}`}
+                                                  >
+                                                    Click here
+                                                  </Link>
+                                                  {part}
+                                                </>
+                                              );
+                                            }
+                                            return part;
+                                          })}
+                                      </p>
+                                      {curr?.content_link ? (
+                                        <button
+                                          className="notify_clear clear-btn"
+                                          onClick={() => {
+                                            let promoCode =
+                                              curr?.content_link;
+                                            console.log(
+                                              "Promo Code:",
+                                              promoCode
+                                            );
+
+                                            if (promoCode) {
+                                              navigator.clipboard
+                                                .writeText(promoCode)
+                                                .then(() => {
+                                                  console.log(
+                                                    "Promo code copied !"
+                                                  );
+                                                  toast.success(
+                                                    "Promo code copied !"
+                                                  );
+                                                })
+                                                .catch((err) => {
+                                                  console.error(
+                                                    "Failed to copy promo code:",
+                                                    err
+                                                  );
+                                                });
+                                            } else {
+                                              console.error(
+                                                "Promo code is undefined"
+                                              );
+                                            }
+                                          }}
+                                        >
+                                          {/* {curr?.promo_code_link} */}
+                                          Copy Promo Code link
+                                        </button>
+                                      ) : (
+                                        ""
+                                      )}
+                                      {curr?.content_link ? (
+                                        <button
+                                          // className="notf_txt"
+                                          className="notify_clear clear-btn"
+                                          onClick={() => {
+                                            let itemLink = curr?.content_link;
+                                            console.log("itemLink", itemLink);
+                                            // Navigate(`/${itemLink}`);
+                                            if (itemLink) {
+                                              window.location.href = itemLink;
+                                            } else {
+                                              console.error(
+                                                "itemLink is undefined"
+                                              );
+                                            }
+                                          }}
+                                        >
+                                          Link
+                                        </button>
+                                      ) : (
+                                        ""
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
                         </div>
                       </div>
                     )}
@@ -956,34 +960,40 @@ const Header = () => {
                         </div>
                         <MdKeyboardArrowRight />
                       </Dropdown.Item>
-                      <Dropdown.Item
-                        className="d-flex justify-content-between align-items-center"
-                        onClick={() => Navigate("/manage-users")}
-                      >
-                        <div className="menu_itm_wrp d-flex align-items-center">
-                          <img
-                            src={usric}
-                            alt="my profile"
-                            className="menu_img"
-                          />
-                          Manage users
-                        </div>
-                        <MdKeyboardArrowRight />
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        className="d-flex justify-content-between align-items-center"
-                        onClick={() => Navigate("/upload-doc-post")}
-                      >
-                        <div className="menu_itm_wrp d-flex align-items-center">
-                          <img
-                            src={uploadicdocsic}
-                            alt="my profile"
-                            className="menu_img"
-                          />
-                          Upload documents
-                        </div>
-                        <MdKeyboardArrowRight />
-                      </Dropdown.Item>
+                      {
+                        profileData?.role === "MediaHouse" && (
+                          <>
+                            <Dropdown.Item
+                              className="d-flex justify-content-between align-items-center"
+                              onClick={() => Navigate("/manage-users")}
+                            >
+                              <div className="menu_itm_wrp d-flex align-items-center">
+                                <img
+                                  src={usric}
+                                  alt="my profile"
+                                  className="menu_img"
+                                />
+                                Manage users
+                              </div>
+                              <MdKeyboardArrowRight />
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              className="d-flex justify-content-between align-items-center"
+                              onClick={() => Navigate("/upload-doc-post")}
+                            >
+                              <div className="menu_itm_wrp d-flex align-items-center">
+                                <img
+                                  src={uploadicdocsic}
+                                  alt="my profile"
+                                  className="menu_img"
+                                />
+                                Upload documents
+                              </div>
+                              <MdKeyboardArrowRight />
+                            </Dropdown.Item>
+                          </>
+                        )
+                      }
                       <Dropdown.Item className="d-flex justify-content-between align-items-center">
                         <div
                           className="menu_itm_wrp d-flex align-items-center"

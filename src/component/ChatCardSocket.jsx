@@ -264,7 +264,7 @@ function ChatCardSocket(props) {
 
   const RatingNReview = (curr) => {
     if (!roomDetails?.roomsdetails?._id) {
-      alert("Room id is important")
+      // alert("Room id is important")
     }
     const obj = {
       room_id: curr?.room_id,
@@ -516,7 +516,7 @@ function ChatCardSocket(props) {
                                 className={curr?.media?.filter((el) => el.paid_status)?.length > 0 ? "light-gray-bg txt_bld" : "theme_btn"}
                                 onClick={() => {
                                   if (taskExpireDiff >= 1) {
-                                    successToasterFun("This task has been expired");
+                                    // successToasterFun("This task has been expired");
                                   } else {
                                     if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
                                       return;
@@ -532,7 +532,7 @@ function ChatCardSocket(props) {
                                 className={curr?.media?.filter((el) => el.paid_status)?.length > 0 ? "light-gray-bg txt_bld" : "theme_btn"}
                                 onClick={() => {
                                   if (taskExpireDiff >= 1) {
-                                    successToasterFun("This task has been expired");
+                                    // successToasterFun("This task has been expired");
                                   } else {
                                     if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
                                       return;
@@ -550,7 +550,7 @@ function ChatCardSocket(props) {
                               className={curr?.request_sent ? "light-gray-bg txt_bld" : "secondary_btn"}
                               onClick={() => {
                                 if (taskExpireDiff >= 1) {
-                                  successToasterFun("This task has been expired");
+                                  // successToasterFun("This task has been expired");
                                 } else {
                                   if (curr?.request_sent) {
                                     return;
@@ -584,7 +584,7 @@ function ChatCardSocket(props) {
                             </p>
                           </div>
                           <p className="mb-0 msg auto_press_msg">
-                            Congrats, you’ve purchased the content for £{formatAmountInMillion(+(curr?.amount_paid))}.{" "}
+                            Congrats, you've purchased the content for £{formatAmountInMillion(+(curr?.amount_paid))}.{" "}
                             Please download the water-mark free, and high definition content, by clicking below.
                           </p>
                           <div className="usr_upld_opts">

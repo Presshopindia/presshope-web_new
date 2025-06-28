@@ -2,6 +2,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Get } from "../services/user.services";
 import { useParams } from "react-router-dom";
+import socketServer from "../socket.config";
 
 const DarkModeContext = createContext();
 
@@ -11,8 +12,9 @@ export const DarkModeProvider = ({ children }) => {
     localStorage.getItem("darkMode") === "enabled"
   );
 
+  const [onlineUsers, setOnlineUsers] = useState({ online: [] })
   const [profileData, setProfileData] = useState({});
-  const [navColor, setNavColor] = useState("");
+  const [navColor, setNavColor] = useState(localStorage.getItem("activeNav") ? JSON.parse(localStorage.getItem("activeNav")) : "/dashboard/");
   const [profileChange, setProfileChange] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [adminPreRegistrationEmail, setAdminPreRegistrationEmail] = useState("")
@@ -48,12 +50,24 @@ export const DarkModeProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    getProfileData();
+    if(localStorage.getItem("token")) {
+      getProfileData();
+    }
   }, [isDarkMode, profileChange]);
 
+  // useEffect(() => {
+  //   setNavColor(window.location.pathname);
+  // }, [window.location.pathname]);
+
   useEffect(() => {
-    setNavColor(window.location.pathname);
-  }, [window.location.pathname]);
+    socketServer?.emit("addAdmin", (profileData?._id));
+    socketServer?.on("getAdmins", (user) => {
+      setOnlineUsers((prev) => ({
+        ...prev,
+        online: user
+      }))
+    })
+  }, [socketServer, profileData]);
 
   return (
     <DarkModeContext.Provider
@@ -70,9 +84,8 @@ export const DarkModeProvider = ({ children }) => {
         adminPreRegistrationEmail,
         setAdminPreRegistrationEmail,
         navColor,
-        setNavColor
-        // onBoardData,
-        // setOnBoardData,
+        setNavColor,
+        onlineUsers
       }}
     >
       {children}

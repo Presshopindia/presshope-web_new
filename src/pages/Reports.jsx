@@ -41,8 +41,9 @@ const Reports = () => {
       total_fund_invested: "monthly",
       content_average_price: "monthly",
       content_purchased_online: "monthly",
-      content_purchased_from_task: "",
-      total_fund_invested_in_task: "monthly"
+      content_purchased_from_task: "monthly",
+      total_fund_invested_in_task: "monthly",
+      content_purchased_from_task_today: "daily"
     }
   });
 
@@ -94,7 +95,7 @@ const Reports = () => {
                     className="reports_tabs_opts"
                     onSelect={(e) => {
                       navigate(`/reports/${e}`);
-                      // window.location.reload();
+                      window.location.reload();
                     }}
                     activeKey={params?.type}
                   >

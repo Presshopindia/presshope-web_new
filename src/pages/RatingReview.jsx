@@ -152,10 +152,6 @@ const RatingReview = () => {
     }
   };
 
-  const onPointerEnter = () => console.log("Enter");
-  const onPointerLeave = () => console.log("Leave");
-  const onPointerMove = (value, index) => console.log(value, index);
-
   const receivedRatingFromHopper = async () => {
     setLoading(true);
     try {
@@ -1215,38 +1211,24 @@ const RatingReview = () => {
                                 el.purchased_mediahouse_id ===
                                 JSON.parse(localStorage.getItem("user"))?._id
                             );
-                            if (indx == 108) {
-                              console.log("hopperImagevalue", curr);
-                            }
                             let hopperImage = "";
                             let ides = [];
                             if (curr.sender_type == "hopper") {
                               if (!curr.from) {
                                 ides.push(curr._id);
-                                console.log("allids", curr._id);
                               }
                               if (!curr?.from?.avatar_id?.avatar) {
                                 ides.push(curr._id);
-                                console.log("allidshasnoimage", curr._id);
                               }
 
                               hopperImage = `${process.env.REACT_APP_AVATAR_IMAGE}${curr?.from?.avatar_id?.avatar}`;
-                              console.log("hopperImage", hopperImage);
-                              console.log("hopperImage", indx);
                             }
 
                             if (curr.sender_type == "Mediahouse") {
                               if (!curr?.from?.admin_detail?.admin_profile) {
-                                console.log(
-                                  "allidshasnoprofileimage",
-                                  curr._id
-                                );
-                                console.log("allidshasnoprofileimage", indx);
                               }
 
                               hopperImage = `${process.env.REACT_APP_AVATAR_IMAGE}${curr?.from?.avatar_id?.avatar}`;
-                              console.log("hopperImage", hopperImage);
-                              console.log("hopperImage", indx);
                             }
 
                             return (
@@ -1254,54 +1236,6 @@ const RatingReview = () => {
                                 <CardContent className="dash-c-body">
                                   <div className="list-in d-flex align-items-start gap-2">
                                     <div className="rateReview_content list-crd rating-pic">
-                                      {/* {curr?.content_id?.content[0]
-                                        ?.media_type === "image" ? (
-                                        <img
-                                          className="list-card-img"
-                                          src={
-                                            curr?.content_id?.content[0]
-                                              ?.watermark
-                                          }
-                                          alt="content"
-                                        />
-                                      ) : curr?.content_id?.content[0]
-                                        ?.media_type === "video" ? (
-                                        <img
-                                          className="list-card-img"
-                                          src={
-                                            curr?.content_id?.content[0]
-                                              ?.watermark ||
-                                            process.env
-                                              .REACT_APP_CONTENT_MEDIA +
-                                            curr?.content_id?.content[0]
-                                              ?.thumbnail
-                                          }
-                                          alt="content"
-                                        />
-                                      ) : curr?.content_id?.content[0]
-                                        ?.media_type === "audio" ? (
-                                        <img
-                                          className="list-card-img"
-                                          src={audioic}
-                                          alt="content"
-                                        />
-                                      ) : (
-                                        <img
-                                          className="list-card-img"
-                                          src={
-                                            curr?.content_id?.content[0]
-                                              ?.watermark
-                                          }
-                                          alt="content"
-                                        />
-                                      )} */}
-                                      {/* <button className="rating-btn">
-                                        Paid <br />
-                                        <strong>
-                                          £{vatProduct?.amount || 0}
-                                        </strong>{" "}
-                                        (inc VAT)
-                                      </button> */}
                                       <img
                                         className="list-card-img"
                                         src={

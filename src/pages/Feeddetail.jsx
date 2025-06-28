@@ -81,6 +81,7 @@ const Feeddetail = (props) => {
   const [offer_value, setOffer_value] = useState("");
   const [room_details, setRoom_Details] = useState();
   const [loading, setLoading] = useState(false);
+  const [loader, setLoader] = useState(false);
   const [data, setData] = useState();
   const [fav, setFav] = useState();
   const [hopper, setHopper] = useState();
@@ -139,7 +140,7 @@ const Feeddetail = (props) => {
     }
   };
 
-  const { profileData, setCartCount } = useDarkMode();
+  const { profileData, setCartCount, onlineUsers } = useDarkMode();
   const user = profileData;
   const userImage = profileData?.hasOwnProperty("admin_detail")
     ? profileData?.admin_detail?.admin_profile
@@ -252,15 +253,18 @@ const Feeddetail = (props) => {
       type: type,
       initial_offer_price,
     };
+    setLoader(true);
     try {
       await Post("mediahouse/newChatFlow", obj);
       getMessages();
+      setLoader(false);
     } catch (error) {
-      console.log(error);
+      setLoader(false);
     }
   };
 
   const OfferPaymentChat = async (hopperPrice, offerPrice) => {
+    setLoader(true);
     try {
       let markupPrice = (hopperPrice * 20) / 100;
       let hopperAmountWithoutMarkup = offerPrice - markupPrice;
@@ -272,9 +276,10 @@ const Feeddetail = (props) => {
         amount: hopperAmountWithoutMarkup
       };
       await Post("mediahouse/create-offer-payment-chat", payload);
+      setLoader(false);
     }
     catch (error) {
-      console.log(error);
+      setLoader(false);
     }
   }
 
@@ -300,6 +305,7 @@ const Feeddetail = (props) => {
         offer: true,
         is_charity: data?.is_charity,
         description: data?.heading,
+        discount_type: 'offered'
       };
       const obj2 = {
         type: "content",
@@ -873,10 +879,10 @@ const Feeddetail = (props) => {
     ) {
       setTimeout(() => {
         setIsShowBuyMessage(true);
-      }, 11000);
+      }, 2000);
       setTimeout(() => {
         setIsShowOffer(true);
-      }, 21000);
+      }, 3000);
       // setIsShowOffer
     }
   }, [messages]);
@@ -910,16 +916,18 @@ const Feeddetail = (props) => {
         basket_status: data?.basket_status == "true" ? "false" : "true",
       });
 
+      const acceptedAmount = messages?.find((el) => el?.message_type === "accept_mediaHouse_offer")?.amount
       let object = {
         content_id: [element._id],
         type: "content",
         hopper_id: element?.hopper_id?._id,
         stripe_account_id: element?.hopper_id?.stripe_account_id,
-        amount: Number(element?.ask_price),
+        amount: Number(acceptedAmount || element?.ask_price),
         offer: false,
         application_fee: 15,
         hopper_charge_ac_category: 5,
-        room_id: ""
+        room_id: "",
+        discount_type: acceptedAmount ? "offered" : "normal",
       };
       const res = await Post(`mediaHouse/addToBasket`, object);
       if (res) {
@@ -928,50 +936,28 @@ const Feeddetail = (props) => {
     } catch (error) { }
   };
 
-    // Add this function near your other state management functions
-    const handleBasket = (index, section) => {
-      console.log(index, section)
-      if (section === "related") {
-        const allContent = [...content];
-        const updatedContent = allContent.map((ele, indx) => {
-          if (index === indx) {
-            return {
-              ...ele,
-              basket_status: ele.basket_status === "true" ? "false" : "true",
-            };
-          }
-          return ele;
-        });
-        setRelatedContent(updatedContent);
-        
-        // Update the same content in moreContent if it exists there
-        const contentId = content[index]?._id;
-        if (contentId) {
-          const allMoreContent = [...moreContent];
-          const updatedMoreContent = allMoreContent.map((ele) => {
-            if (contentId === ele._id) {
-              return {
-                ...ele,
-                basket_status: ele.basket_status === "true" ? "false" : "true",
-              };
-            }
-            return ele;
-          });
-          setMoreContent(updatedMoreContent);
-          
-          // Also update main data if it's the same content
-          if (contentId === data?._id) {
-            setData({
-              ...data,
-              basket_status: data.basket_status === "true" ? "false" : "true",
-            });
-          }
+  // Add this function near your other state management functions
+  const handleBasket = (index, section) => {
+    console.log(index, section)
+    if (section === "related") {
+      const allContent = [...content];
+      const updatedContent = allContent.map((ele, indx) => {
+        if (index === indx) {
+          return {
+            ...ele,
+            basket_status: ele.basket_status === "true" ? "false" : "true",
+          };
         }
-      } else if (section === "more") {
-        const allContent = [...moreContent];
-        console.log(allContent, "moreContent");
-        const updatedContent = allContent.map((ele, indx) => {
-          if (index === indx) {
+        return ele;
+      });
+      setRelatedContent(updatedContent);
+
+      // Update the same content in moreContent if it exists there
+      const contentId = content[index]?._id;
+      if (contentId) {
+        const allMoreContent = [...moreContent];
+        const updatedMoreContent = allMoreContent.map((ele) => {
+          if (contentId === ele._id) {
             return {
               ...ele,
               basket_status: ele.basket_status === "true" ? "false" : "true",
@@ -979,34 +965,56 @@ const Feeddetail = (props) => {
           }
           return ele;
         });
-        console.log(updatedContent, "updatedContent");
-        setMoreContent(updatedContent);
-        
-        // Update the same content in relatedContent if it exists there
-        const contentId = moreContent[index]?._id;
-        if (contentId) {
-          const allRelatedContent = [...content];
-          const updatedRelatedContent = allRelatedContent.map((ele) => {
-            if (contentId === ele._id) {
-              return {
-                ...ele,
-                basket_status: ele.basket_status === "true" ? "false" : "true",
-              };
-            }
-            return ele;
+        setMoreContent(updatedMoreContent);
+
+        // Also update main data if it's the same content
+        if (contentId === data?._id) {
+          setData({
+            ...data,
+            basket_status: data.basket_status === "true" ? "false" : "true",
           });
-          setRelatedContent(updatedRelatedContent);
-          
-          // Also update main data if it's the same content
-          if (contentId === data?._id) {
-            setData({
-              ...data,
-              basket_status: data.basket_status === "true" ? "false" : "true",
-            });
-          }
         }
       }
-    };
+    } else if (section === "more") {
+      const allContent = [...moreContent];
+      console.log(allContent, "moreContent");
+      const updatedContent = allContent.map((ele, indx) => {
+        if (index === indx) {
+          return {
+            ...ele,
+            basket_status: ele.basket_status === "true" ? "false" : "true",
+          };
+        }
+        return ele;
+      });
+      console.log(updatedContent, "updatedContent");
+      setMoreContent(updatedContent);
+
+      // Update the same content in relatedContent if it exists there
+      const contentId = moreContent[index]?._id;
+      if (contentId) {
+        const allRelatedContent = [...content];
+        const updatedRelatedContent = allRelatedContent.map((ele) => {
+          if (contentId === ele._id) {
+            return {
+              ...ele,
+              basket_status: ele.basket_status === "true" ? "false" : "true",
+            };
+          }
+          return ele;
+        });
+        setRelatedContent(updatedRelatedContent);
+
+        // Also update main data if it's the same content
+        if (contentId === data?._id) {
+          setData({
+            ...data,
+            basket_status: data.basket_status === "true" ? "false" : "true",
+          });
+        }
+      }
+    }
+  };
 
   return (
     <>
@@ -1505,7 +1513,7 @@ const Feeddetail = (props) => {
                             </div>
                             <div className="sub-content">
                               <div className="item d-flex justify-content-between align-items-center">
-                                <span className="fnt-bold">License</span>
+                                <span className="fnt-bold">Licence</span>
                                 <div className="">
                                   <img
                                     src={
@@ -1533,20 +1541,9 @@ const Feeddetail = (props) => {
                             <div className="foot cont-info-actions d-flex gap-5 justify-content-between align-items-center">
                               {messages && messages.length === 0 ? (
                                 data?.sales_prefix ? (
-                                  <Button
-                                    variant={
-                                      data?.sales_prefix ? "" : "secondary"
-                                    }
-                                    className={
-                                      data?.sales_prefix ? "greyBtn" : ""
-                                    }
-                                    onClick={() => {
-                                      setTabSelect("external");
-
-                                    }}
-                                  // disabled={data?.sales_prefix ? true : loading}
-                                  >
-                                    Offer
+                                  <Button className="newbtndesign discount-button-color">
+                                    <small>Original Price</small>£
+                                    <span className={data?.sales_prefix ? "text-decoration-line-through discount-button" : ""}>{formatAmountInMillion(Number(data?.before_discount_value))}</span>
                                   </Button>
                                 ) : (
                                   <Button
@@ -1563,9 +1560,6 @@ const Feeddetail = (props) => {
                                         setMessages((old) => [...old]);
                                       }
                                     }}
-                                    // className={
-                                    //   data?.sales_prefix ? "greyBtn" : ""
-                                    // }
                                     disabled={
                                       data?.sales_prefix ? true : loading
                                     }
@@ -1574,31 +1568,6 @@ const Feeddetail = (props) => {
                                   </Button>
                                 )
                               )
-
-                                //   <Button
-                                //       variant={
-                                //         data?.sales_prefix ? "" : "secondary"
-                                //       }
-                                //       onClick={() => {
-                                //         if (
-                                //           messages[0]?.message_type !==
-                                //           "offer_started"
-                                //         ) {
-                                //           setTabSelect("external");
-                                //           // Start_Offer();
-                                //           // setMessages((old) => [...old]);
-                                //         }
-                                //       }}
-                                //       className={
-                                //         data?.sales_prefix ? "greyBtn" : ""
-                                //       }
-                                //       // disabled={
-                                //       //   data?.sales_prefix ? true : loading
-                                //       // }
-                                //     >
-                                //       Offer
-                                //     </Button>
-                                // ) 
                                 : messages?.length === 1 ? (
                                   <Button
                                     onClick={() => {
@@ -1610,27 +1579,13 @@ const Feeddetail = (props) => {
                                   </Button>
                                 ) : (
                                   <Button
-                                    className="offeredPrice_btn bigBtn"
-                                    onClick={() => {
-                                      setTabSelect("external");
-                                    }}
-                                  // disabled={true}
+                                    className="greyBtn"
                                   >
-                                    £
-                                    {Number(
-                                      messages?.find(
-                                        (el) =>
-                                          el.message_type ===
-                                          "accept_mediaHouse_offer" ||
-                                          el.message_type ===
-                                          "decline_mediaHouse_offer"
-                                      )?.amount || 0
-                                    )?.toLocaleString("en-US", {
-                                      maximumFractionDigits: 2,
-                                    })}
+                                    {messages?.filter((el) => el?.message_type === "decline_mediaHouse_offer")?.length > 0 ? "Rejected" : messages?.filter((el) => el?.message_type === "accept_mediaHouse_offer")?.length > 0 ? "Accepted" : "Offered"}
                                   </Button>
                                 )}
 
+                              {/* Auto invoice button */}
                               {(data
                                 ? !data?.purchased_mediahouse.find(
                                   (el) =>
@@ -1644,22 +1599,12 @@ const Feeddetail = (props) => {
                                     JSON.parse(localStorage.getItem("user"))
                                       ?._id
                                 )) && (
-                                  <Link to={`/auto-invoice/${param.id}`}>
-                                    {" "}
-                                    <Button variant="primary">
-                                      £
-                                      {data
-                                        ? data?.ask_price?.toLocaleString(
-                                          "en-US",
-                                          { maximumFractionDigits: 2 }
-                                        ) || 0
-                                        : fav?.content_id?.ask_price?.toLocaleString(
-                                          "en-US",
-                                          { maximumFractionDigits: 2 }
-                                        ) || 0}
-                                    </Button>
-                                  </Link>
+                                  <Button onClick={() => navigate(`/auto-invoice/${param.id}`)} variant="primary newbtndesign">
+                                    <small>{data?.sales_prefix ? "Discounted Price" : ""} </small>£ {data?.sales_prefix ? formatAmountInMillion(Number(data?.ask_price)) : messages?.find((el) => el?.message_type === "accept_mediaHouse_offer")?.amount ? formatAmountInMillion(Number(messages?.find((el) => el?.message_type === "accept_mediaHouse_offer")?.amount)) : formatAmountInMillion(Number(data?.ask_price ?? 0))}
+                                  </Button>
                                 )}
+
+                              {/* Paid */}
                               {(data
                                 ? data?.purchased_mediahouse.find(
                                   (el) =>
@@ -1678,20 +1623,6 @@ const Feeddetail = (props) => {
                                     <Button className="greyBtn">Paid</Button>
                                   </Link>
                                 )}
-                                {/* Sandeep work */}
-                              {/* <Button
-                                className="newbtndesign" variant="secondary"
-
-                              ><small>Offered</small>
-                                £ 100
-                              </Button>
-                              <Button
-
-                                variant="primary newbtndesign"
-                              >
-                                <small>Buy</small>
-                                £ 100
-                              </Button> */}
                             </div>
                           </div>
                         </CardContent>
@@ -2018,6 +1949,9 @@ const Feeddetail = (props) => {
                                         <h4>Participants</h4>
                                       </div>
                                     </Link>
+                                    {
+                                      console.log("userList", userList)
+                                    }
                                     <div className="scrollHtPnts">
                                       {userList?.map((curr) => {
                                         return (
@@ -2063,7 +1997,7 @@ const Feeddetail = (props) => {
                                               />
                                             </div>
                                             <div
-                                              className="img"
+                                              className="img position-relative"
                                               onClick={() => {
                                                 setSenderId(curr._id);
                                                 setShow({
@@ -2078,6 +2012,7 @@ const Feeddetail = (props) => {
                                                 src={curr?.profile_image}
                                                 alt="user"
                                               />
+                                              {onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? <span className="green-dot"></span> : <span className="red-dot"></span>}
                                               <span> {curr?.full_name}</span>
                                             </div>
                                             {/* <div className="dots">
@@ -2119,8 +2054,46 @@ const Feeddetail = (props) => {
                             </div>
                           </Tab>
 
-                          <Tab eventKey="external" title="Hopper Chat">
-                            <a href="lorem"></a>
+                          <Tab eventKey="presshop" title="PressHop Chat">
+                            <div className="tab-data active">
+                              <Row>
+                                <Col md={12}>
+                                  <div className="feed_dtl_msgs presshopChatDetail dp">
+                                    <div className="externalText">
+                                      <h6 className="txt_light">
+                                        Welcome{" "}<span className="txt_bld">{fullName}</span>{" to "}<span className="txt_bold">PressHop</span> support
+                                      </h6>
+                                    </div>
+                                    {tabSelect === "presshop" ? (
+                                      <ChatCard />
+                                    ) : null}
+                                  </div>
+                                </Col>
+                                {/* <Col md={3}>
+                                  <div className="tab_in_card">
+                                    <div className="scrollHtPnts presshopChat">
+                                      <div className="tab_in_card_items">
+                                        <div className="img">
+                                          <img
+                                            src={presshopchatic}
+                                            alt="emily"
+                                          />
+                                          <span className="activeUsr">
+                                            Emily
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </Col> */}
+                              </Row>
+                            </div>
+                          </Tab>
+
+                          <Tab
+                            eventKey="external"
+                            title="Make an Offer"
+                          >
                             <div className="tab-data active">
                               <Row>
                                 <Col md={12}>
@@ -2221,8 +2194,7 @@ const Feeddetail = (props) => {
                                                     className="cht_prc_inp text-center"
                                                     autoComplete="off"
                                                     disabled={
-                                                      messages.length !== 1 &&
-                                                      true
+                                                      (messages.length !== 1 && true) || loader
                                                     }
                                                     type="number"
                                                     value={
@@ -2253,8 +2225,8 @@ const Feeddetail = (props) => {
                                                     <button
                                                       className="theme_btn"
                                                       disabled={
-                                                        messages.length !== 1 &&
-                                                        true
+                                                        !offer_value || (messages.length !== 1 &&
+                                                        true) || loader
                                                       }
                                                       type="submit"
                                                     >
@@ -2272,29 +2244,7 @@ const Feeddetail = (props) => {
                                                   <>
                                                     <div className="img">
                                                       <img
-                                                        src={
-                                                          data
-                                                            ? data?.hopper_id
-                                                              ?.avatar_id
-                                                              ?.avatar
-                                                              ? process.env
-                                                                .REACT_APP_AVATAR_IMAGE +
-                                                              data?.hopper_id
-                                                                ?.avatar_id
-                                                                ?.avatar
-                                                              : null
-                                                            : fav?.content_id
-                                                              ?.hopper_id
-                                                              ?.avatar_id
-                                                              ?.avatar
-                                                              ? process.env
-                                                                .REACT_APP_AVATAR_IMAGE +
-                                                              fav?.content_id
-                                                                ?.hopper_id
-                                                                ?.avatar_id
-                                                                ?.avatar
-                                                              : null
-                                                        }
+                                                        src={presshopchatic}
                                                         alt="User"
                                                         className="usr_img"
                                                       />
@@ -2302,10 +2252,7 @@ const Feeddetail = (props) => {
                                                     <div className="cht_txt postedcmnt_info">
                                                       <div className="d-flex align-items-center">
                                                         <h5 className="usr_name mb-0">
-                                                          {
-                                                            data?.hopper_id
-                                                              ?.user_name
-                                                          }
+                                                          PressHop
                                                           <span className="text-secondary time">
                                                             {moment(
                                                               curr?.createdAt
@@ -2316,7 +2263,7 @@ const Feeddetail = (props) => {
                                                         </h5>
                                                       </div>
                                                       <p className="mb-0 msg auto_press_msg">
-                                                        Has accepted your offer
+                                                        PressHop has accepted your offer
                                                         of{" "}
                                                         <a className="link">
                                                           £{curr?.amount}
@@ -2421,7 +2368,7 @@ const Feeddetail = (props) => {
                                                         <a className="link">
                                                           £
                                                           {
-                                                            data?.original_ask_price
+                                                            curr?.reconsider_amount
                                                           }
                                                         </a>{" "}
                                                       </Typography>
@@ -2432,10 +2379,10 @@ const Feeddetail = (props) => {
                                                       className="theme_btn"
                                                       onClick={() => {
                                                         Payment(
-                                                          +data?.original_ask_price,
+                                                          +curr?.reconsider_amount,
                                                           data?._id,
                                                           true,
-                                                          data?.original_ask_price,
+                                                          curr?.reconsider_amount,
                                                           roomDetails
                                                         );
                                                       }}
@@ -2467,29 +2414,7 @@ const Feeddetail = (props) => {
                                                   <div className=" d-flex align-items-start msg-worries">
                                                     <div className="img">
                                                       <img
-                                                        src={
-                                                          data
-                                                            ? data?.hopper_id
-                                                              ?.avatar_id
-                                                              ?.avatar
-                                                              ? process.env
-                                                                .REACT_APP_AVATAR_IMAGE +
-                                                              data?.hopper_id
-                                                                ?.avatar_id
-                                                                ?.avatar
-                                                              : null
-                                                            : fav?.content_id
-                                                              ?.hopper_id
-                                                              ?.avatar_id
-                                                              ?.avatar
-                                                              ? process.env
-                                                                .REACT_APP_AVATAR_IMAGE +
-                                                              fav?.content_id
-                                                                ?.hopper_id
-                                                                ?.avatar_id
-                                                                ?.avatar
-                                                              : null
-                                                        }
+                                                        src={presshopchatic}
                                                         alt="User"
                                                         className="usr_img"
                                                       />
@@ -2497,10 +2422,7 @@ const Feeddetail = (props) => {
                                                     <div className="cht_txt postedcmnt_info">
                                                       <div className="d-flex align-items-center msg-worries">
                                                         <h5 className="usr_name">
-                                                          {
-                                                            data?.hopper_id
-                                                              ?.user_name
-                                                          }
+                                                          PressHop
                                                           <span className="text-secondary time">
                                                             {moment(
                                                               curr?.createdAt
@@ -2511,7 +2433,7 @@ const Feeddetail = (props) => {
                                                         </h5>
                                                       </div>
                                                       <p className="mb-0 msg">
-                                                        Has rejected your offer
+                                                        PressHop has rejected your offer
                                                         of{" "}
                                                         <a className="link">
                                                           £{curr?.amount}
@@ -2596,7 +2518,7 @@ const Feeddetail = (props) => {
                                                     }
                                                   >
                                                     <button className="theme_btn">
-                                                      Show me the Offers
+                                                      Show Me The Offers
                                                     </button>
                                                   </div>
                                                   <p className="buy_btn_txt mb-0">
@@ -2688,8 +2610,8 @@ const Feeddetail = (props) => {
                                                             features.includes(
                                                               "Experience"
                                                             )
-                                                            ? "selected clickable"
-                                                            : "clickable"
+                                                            ? "clickable"
+                                                            : "selected clickable"
                                                         }
                                                       >
                                                         Experience
@@ -2713,8 +2635,8 @@ const Feeddetail = (props) => {
                                                             features.includes(
                                                               "Easy to use"
                                                             )
-                                                            ? "selected clickable"
-                                                            : "clickable"
+                                                            ? "clickable"
+                                                            : "selected clickable"
                                                         }
                                                       >
                                                         Easy to use
@@ -2738,8 +2660,8 @@ const Feeddetail = (props) => {
                                                             features.includes(
                                                               "Connectivity with Hoppers"
                                                             )
-                                                            ? "selected clickable"
-                                                            : "clickable"
+                                                            ? "clickable"
+                                                            : "selected clickable"
                                                         }
                                                       >
                                                         Connectivity with
@@ -2764,8 +2686,8 @@ const Feeddetail = (props) => {
                                                             features.includes(
                                                               "Pricing"
                                                             )
-                                                            ? "selected clickable"
-                                                            : "clickable"
+                                                            ? "clickable"
+                                                            : "selected clickable"
                                                         }
                                                       >
                                                         Pricing
@@ -2789,8 +2711,8 @@ const Feeddetail = (props) => {
                                                             features.includes(
                                                               "Secure payment"
                                                             )
-                                                            ? "selected clickable"
-                                                            : "clickable"
+                                                            ? "clickable"
+                                                            : "selected clickable"
                                                         }
                                                       >
                                                         Secure payment
@@ -2814,8 +2736,8 @@ const Feeddetail = (props) => {
                                                             features.includes(
                                                               "Support"
                                                             )
-                                                            ? "selected clickable"
-                                                            : "clickable"
+                                                            ? "clickable"
+                                                            : "selected clickable"
                                                         }
                                                       >
                                                         Support
@@ -2935,10 +2857,10 @@ const Feeddetail = (props) => {
                                                     </h5>
                                                   </div>
                                                   <p className="mb-0 msg auto_press_msg">
-                                                    Congrats, you’ve
+                                                    Congrats, you've
                                                     successfully purchased{" "}
                                                     {contentPurchasedInContentChat(data?.content)}{" "}
-                                                    content for{" "}
+                                                    for{" "}
                                                     <a className="link">
                                                       £{formatAmountInMillion(Number(curr?.amount) || 0)} (Inc VAT)
                                                     </a>
@@ -3021,42 +2943,6 @@ const Feeddetail = (props) => {
                                     </div>
                                   </div>
                                 </Col>
-                              </Row>
-                            </div>
-                          </Tab>
-
-                          <Tab eventKey="presshop" title="PressHop Chat">
-                            <div className="tab-data active">
-                              <Row>
-                                <Col md={12}>
-                                  <div className="feed_dtl_msgs presshopChatDetail dp">
-                                    <div className="externalText">
-                                      <h6 className="txt_light">
-                                        Welcome{" "}<span className="txt_bld">{fullName}</span>{" to "}<span className="txt_bold">PressHop</span> support
-                                      </h6>
-                                    </div>
-                                    {tabSelect === "presshop" ? (
-                                      <ChatCard />
-                                    ) : null}
-                                  </div>
-                                </Col>
-                                {/* <Col md={3}>
-                                  <div className="tab_in_card">
-                                    <div className="scrollHtPnts presshopChat">
-                                      <div className="tab_in_card_items">
-                                        <div className="img">
-                                          <img
-                                            src={presshopchatic}
-                                            alt="emily"
-                                          />
-                                          <span className="activeUsr">
-                                            Emily
-                                          </span>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </Col> */}
                               </Row>
                             </div>
                           </Tab>

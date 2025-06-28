@@ -93,12 +93,10 @@ const Footerlandingpage = ({ scrollToDiv }) => {
                   </p>
                   <div className="contantUsby">
                     <span>
-                      <MdOutlineEmail />
-                      hello@presshop.co.uk
+                      <a className="link" href="mailto:support@presshop.co.uk" target="_blank"><MdOutlineEmail /> support@presshop.co.uk</a>
                     </span>
                     <span>
-                      <SlGlobe />
-                      www.presshop.news
+                      <a className="link" href="https://www.presshop.co.uk" target="_blank"><SlGlobe /> www.presshop.co.uk</a>
                     </span>
                   </div>
                 </div>

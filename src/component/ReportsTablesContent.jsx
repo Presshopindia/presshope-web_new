@@ -319,7 +319,7 @@ const ReportsTablesContent = () => {
                               <th>Time & date</th>
                               <th className="tsk_dlts">Heading</th>
                               <th className="tbl_icn_th">Type</th>
-                              <th className="tbl_icn_th licnc">License</th>
+                              <th className="tbl_icn_th licnc">Licence</th>
                               <th className="tbl_icn_th catgr">Category</th>
                               <th>Location</th>
                               <th>Published by</th>
@@ -558,7 +558,7 @@ const ReportsTablesContent = () => {
                               <th>Time & date</th>
                               <th className="tsk_dlts">Heading</th>
                               <th className="tbl_icn_th">Type</th>
-                              <th className="tbl_icn_th licnc">License</th>
+                              <th className="tbl_icn_th licnc">Licence</th>
                               <th className="tbl_icn_th catgr">Category</th>
                               <th>Location</th>
                               <th>Published by</th>
@@ -871,7 +871,7 @@ const ReportsTablesContent = () => {
                               <th>Time & date</th>
                               <th className="tsk_dlts">Heading</th>
                               <th className="tbl_icn_th">Type</th>
-                              <th className="tbl_icn_th licnc">License</th>
+                              <th className="tbl_icn_th licnc">Licence</th>
                               <th className="tbl_icn_th catgr">Category</th>
                               <th>Location</th>
                               <th>Published by</th>

@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import HeaderN from "../component/HeaderN";
 import DbFooter from "../component/DbFooter";
 import { Container, Row, Col } from "react-bootstrap";
 import { Button } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import usrLoginbg from "../assets/images/usrLoginbg.jpg";
 import Form from "react-bootstrap/Form";
 import Email from "../assets/images/mail.svg";
-// import forgotrtimg from "../assets/images/forgotrtimg.svg";
 import { Post } from "../services/user.services";
 import { toast } from "react-toastify";
 import Loader from "../component/Loader";
@@ -20,21 +17,21 @@ const UserForgetPassword = () => {
 
   const ForgotPassword = async (e) => {
     e.preventDefault();
-    try{
+    try {
       setLoading(true);
       const resp = await Post(`auth/media/house/forgotPassword`, {
-        email: email,
+        email,
       });
-  
+
       if (resp) {
         localStorage.setItem("Email", email);
-        navigate("/User-reset-Password");
-        // toast.success("OTP sent successfully")
         setLoading(false);
+        toast.success("OTP sent successfully")
+        navigate("/User-reset-Password");
       }
     }
-    catch(error){
-      // console.log(error);
+    catch (error) {
+      toast.error(error?.response?.data?.errors?.msg)
       setLoading(false);
     }
   };
@@ -45,7 +42,7 @@ const UserForgetPassword = () => {
       <LoginHeader />
 
       {
-        loading && <Loader/>
+        loading && <Loader />
       }
       <div className="page-wrap login-page p-0">
         <Container fluid className="pdng">
@@ -135,7 +132,7 @@ const UserForgetPassword = () => {
                 </Col>
                 <Col lg={6} md={6} sm={12} xs={12} className="rt_col">
                   <div className="left-side right-side position-relative">
-                    <img src={"https://uat-presshope.s3.eu-west-2.amazonaws.com/public/user/1721378348137forgotrtimg.svg"} className="w-100" alt="" />
+                    <img src={"https://dev-cdn.presshop.news/emailTemplateImage/WhatsAppsmallImage2025-06-1622.55.07_8f8d7a64.jpg"} className="w-100" alt="" />
                     <div className="tri"></div>
                     <div className="circle"></div>
                     <div className="big_circle"></div>

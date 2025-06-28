@@ -13,7 +13,6 @@ export function axios_interceptor() {
     return request;
   },
     error => {
-      alert(error)
       return Promise.reject(error);
     }
   );
@@ -28,7 +27,6 @@ export function axios_interceptor() {
     if (error?.response?.status == 401 && error?.response?.data == "Unauthorized") {
       // toast.error("Session Expired, Plesse login again");
       // localStorage.clear();
-      console.error("Session expired. Please login again. ------>");
       localStorage.removeItem("token"); // Remove only the token, not all data
       localStorage.removeItem("user");
       sessionStorage.removeItem("sessionData");

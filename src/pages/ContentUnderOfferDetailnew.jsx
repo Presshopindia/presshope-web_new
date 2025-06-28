@@ -232,7 +232,6 @@ const ContentunderofferdetailNew = () => {
 
   // create room
   const CreateRoom = async (content_id, hopper_id) => {
-    alert(content_id, `<---id's`)
     const obj = {
       receiver_id: hopper_id,
       room_type: "MediahousetoAdmin",
@@ -559,7 +558,7 @@ const ContentunderofferdetailNew = () => {
                             </div>
                             <div className="sub-content">
                               <div className="item d-flex justify-content-between align-items-center">
-                                <span className="fnt-bold">License</span>
+                                <span className="fnt-bold">Licence</span>
                                 <div className="">
                                   <img
                                     src={

@@ -55,7 +55,7 @@ const HopperUploadedContent = () => {
 
   const handleFavourite = (i) => {
     setNewUploadedContent((prev) => {
-      const allContent = {...prev};
+      const allContent = { ...prev };
       allContent.uploadedContent[i].content[0]["favourited"] = allContent.uploadedContent[i].content[0]["favourited"] === "true" ? "false" : "true";
       return allContent;
     });
@@ -89,7 +89,7 @@ const HopperUploadedContent = () => {
                 <div className="feedsContainer feedUploadedContent mb-0">
                   <div className="feedContent_header">
                     <h1 className="rw_hdng">
-                      Uploaded Content
+                      Uploaded content
                     </h1>
                   </div>
                   <Row >

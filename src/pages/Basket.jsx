@@ -1,4 +1,4 @@
-import { Card, Switch, Tooltip, Typography } from "@mui/material";
+import { Card, FormControl, FormControlLabel, FormGroup, FormLabel, Switch, Tooltip, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { BsArrowLeft } from "react-icons/bs";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -18,6 +18,8 @@ import stripeLogo from "../assets/images/stripe.png";
 import task from "../assets/images/task.svg";
 import watchic from "../assets/images/watch.svg";
 import Header from "../component/Header";
+import deleteIcon from "../assets/images/delete-icon.svg";
+import interviewic from "../assets/images/interview.svg";
 const moment = require("moment");
 
 import { Button, Col, Container, Row } from "react-bootstrap";
@@ -51,9 +53,14 @@ const Basket = () => {
     off: "",
   });
 
+  const [checked, setChecked] = useState(false);
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  };
+
   const { setCartCount, profileData } = useDarkMode();
   const user = profileData;
-  console.log("userData", user);
   const navigate = useNavigate();
 
   async function getCountOfBasketItems() {
@@ -68,7 +75,7 @@ const Basket = () => {
   const BasketData = async () => {
     setLoading(true);
     try {
-      const resp = await Post(`mediaHouse/getBasketData`, { type: "content" });
+      const resp = await Post(`mediaHouse/getBasketData`, { type: checked ? "task" : "content" });
       setData(resp?.data?.data);
       setLoading(false);
     } catch (error) {
@@ -76,57 +83,60 @@ const Basket = () => {
     }
   };
 
+  useEffect(() => {
+    window.addEventListener("focus", () => {
+      getCountOfBasketItems();
+      BasketData();
+    });
+    return () =>
+      window.removeEventListener("focus", () => {
+        getCountOfBasketItems();
+        BasketData();
+      });
+  }, []);
+
   const paymentintents = async (data) => {
     try {
-      const resp = await Post(
-        "mediaHouse/createPaymentforBasket",
-      );
-
+      setLoading(true);
+      const resp = await Post("mediaHouse/createPaymentforBasket", {
+        type: checked ? "task" : "content",
+        coupon: promoCode.value,
+        promocodePercentOff: promoCode?.off ? promoCode?.off : 0
+      });
+      setLoading(false);
       window.open(resp.data.url, "_blank");
     } catch (error) {
+      setLoading(false);
       successToasterFun(error?.response?.data?.errors?.msg);
     }
   };
 
-  async function handleRemoveBasketItems(element) {
+  const handleRemoveBasketItems = async (element) => {
     try {
-      console.log("element", element);
-      let obj = {};
-
-      if (element?.type == "task") {
-        obj = {
-          type: "uploaded_content",
-          uploaded_content: element.content_id,
-        };
-      } else {
-        obj = {
-          type: element?.type == "task" ? "task" : "content",
-          post_id: element.post_id,
-          content: element?.content?.map((el) => {
-            return {
-              media_type: el?.media_type,
-              media: el?.media,
-              watermark: el?.watermark,
-              content_id: el?._id,
-            };
-          }),
-        };
-      }
-
-      console.log("object", obj);
-      const res = await Post(`mediaHouse/addToBasket`, { order: [obj] });
+      setLoading(true);
+      let object = {
+        content_id: element?.type === "task" ? [element?.contentDetails?._id] : element?.contentDetails?._id,
+        type: element?.type
+      };
+      const res = await Post(`mediaHouse/addToBasket`, object);
       if (res) {
-        BasketData();
         getCountOfBasketItems();
+        setLoading(false);
+        setData((prev) => {
+          const udpatedData = [...prev]?.filter((item) => item?._id !== element?._id);
+          return udpatedData;
+        })
+        successToasterFun("Content removed from Basket");
       }
-    } catch (error) { }
-  }
+    } catch (error) {
+      setLoading(false);
+    }
+  };
 
   function capitaliseLetterPromocode(value) {
     let result = "";
     if (value) {
       const data = value.trim().split("");
-      console.log(data);
       for (let ele of data) {
         // Check if the character is not a number using isNaN()
         if (isNaN(ele) && typeof ele === "string") {
@@ -146,7 +156,6 @@ const Basket = () => {
     setLoading(true);
     try {
       let promocodeValue = capitaliseLetterPromocode(promoCode.value);
-      // console.log("promocodeValue",promocodeValue);
       const resp = await Post("mediahouse/checkPromocode", {
         code: promocodeValue,
       });
@@ -167,7 +176,7 @@ const Basket = () => {
 
   useEffect(() => {
     BasketData();
-  }, []);
+  }, [checked]);
 
   function calculateTotalAmount(data) {
     try {
@@ -203,7 +212,6 @@ const Basket = () => {
       console.log("Error calculating total amount:", error);
     }
   }
-
   // Add this useEffect to calculate total amount when data changes
   useEffect(() => {
     if (data) {
@@ -219,7 +227,7 @@ const Basket = () => {
       if (el.type === "content") {
         // For content type, check the content array
         return el.contentDetails?.content?.filter(item => item.media_type === type).length || 0;
-      } else if (el.type === "uploaded_content") {
+      } else if (el.type === "task") {
         // For uploaded_content type, check if the type matches
         return el.contentDetails?.type === type ? 1 : 0;
       }
@@ -332,17 +340,16 @@ const Basket = () => {
                                 px="20px"
                                 mb="10px"
                               >
-                                {/* <FormControl component="fieldset" variant="standard">
-                                  <FormLabel component="legend">Assign responsibility</FormLabel>
+                                <FormControl component="fieldset" variant="standard">
                                   <FormGroup>
                                     <FormControlLabel
                                       control={
-                                        <Switch checked={state.gilad} onChange={handleChange} name="gilad" />
+                                        <Switch checked={checked} onChange={handleChange} name="gilad" />
                                       }
                                       label="Task"
                                     />
                                   </FormGroup>
-                                </FormControl> */}
+                                </FormControl>
                               </div>
 
                               <div className="fix_ht_table ">
@@ -356,11 +363,9 @@ const Basket = () => {
                                     <tr>
                                       <th className="cnt_prchsd_th">Content</th>
                                       <th>Heading</th>
-                                      <th className="text-nowrap">
-                                        Time & date
-                                      </th>
+                                      <th className="text-nowrap">Time & date</th>
                                       <th className="text-center">Type</th>
-                                      <th className="text-center">License</th>
+                                      <th className="text-center">Licence</th>
                                       <th className="text-center">Category</th>
                                       <th className="text-center">
                                         Sale amount
@@ -371,12 +376,12 @@ const Basket = () => {
                                     {data?.map((el, i) => {
 
                                       return (
-                                        <tr key={i}>
-                                          <td className="content_img_td position-relative add-icons-box clickable" onClick={() => {
-                                            navigate(el?.type === "content" ? `/purchased-content-detail/${el?.contentDetails?._id}` : `/purchased-task-content-detail/${el?.contentDetails?._id}`);
-                                          }}>
+                                        <tr key={i} className="clickable" onClick={() => {
+                                          navigate(el?.type === "content" ? `/Feeddetail/content/${el?.contentDetails?._id}` : `/content-details/${el?.taskDetails?._id}?hopper_id=${el?.hopperDetails?._id}`);
+                                        }}>
+                                          <td className="content_img_td position-relative add-icons-box clickable">
                                             <div className="tbl_cont_wrp cnt_online_img noGrid">
-                                              <div className="paymentToBeMadeImgContent">
+                                              <div className="paymentToBeMadeImgContent basket-content">
                                                 {el?.type === "content" ? (
                                                   el?.contentDetails?.content[0]
                                                     ?.media_type === "image" ? (
@@ -416,6 +421,10 @@ const Basket = () => {
                                                   src={audioic}
                                                   className="cntnt-img"
                                                 />}
+                                                <img onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  handleRemoveBasketItems(el);
+                                                }} src={deleteIcon} alt="delete icon" />
                                               </div>
                                             </div>
                                             <div className="tableContentTypeIcons">
@@ -517,12 +526,12 @@ const Basket = () => {
                                           </td>
 
                                           <td className="text-center">
-                                            {/* content */}+
+                                            {/* content */}
                                             <Tooltip
                                               title={
                                                 el?.categoryDetails
                                                   ?.name
-                                              } s
+                                              }
                                             >
                                               <img
                                                 src={
@@ -605,7 +614,7 @@ const Basket = () => {
                                       </div>
                                     )}
 
-                                    {promoCode.show ? (
+                                    {promoCode.show && !checked ? (
                                       <>
                                         <form
                                           className="add-coupon"

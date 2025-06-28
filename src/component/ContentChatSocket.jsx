@@ -312,14 +312,7 @@ function ContentChatSocket(props) {
                       <div className="crd chatting_itm auto_msg sngl_cht d-flex align-items-start">
                         <div className="img">
                           <img
-                            src={
-                              props?.data
-                                ? props?.data?.hopper_id?.avatar_id?.avatar
-                                  ? process.env.REACT_APP_AVATAR_IMAGE +
-                                  props?.data?.hopper_id?.avatar_id?.avatar
-                                  : null
-                                : null
-                            }
+                            src={presshopchatic}
                             alt="User"
                             className="usr_img"
                           />
@@ -327,7 +320,7 @@ function ContentChatSocket(props) {
                         <div className="cht_txt postedcmnt_info">
                           <div className="d-flex align-items-center msg-worries">
                             <h5 className="usr_name mb-0">
-                              {props?.data?.hopper_id?.user_name}
+                              PressHop
                               <span className="text-secondary time">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -336,7 +329,7 @@ function ContentChatSocket(props) {
                             </h5>
                           </div>
                           <p className="mb-0 msg auto_press_msg">
-                            Has accepted your offer of{" "}
+                            PressHop has accepted your offer of{" "}
                             <a className="link">£{curr?.amount}</a> to sell the
                             content
                           </p>
@@ -393,14 +386,7 @@ function ContentChatSocket(props) {
                       <div className="crd chatting_itm sngl_cht d-flex align-items-start">
                         <div className="img">
                           <img
-                            src={
-                              props?.data
-                                ? props?.data?.hopper_id?.avatar_id?.avatar
-                                  ? process.env.REACT_APP_AVATAR_IMAGE +
-                                  props?.data?.hopper_id?.avatar_id?.avatar
-                                  : null
-                                : null
-                            }
+                            src={presshopchatic}
                             alt="User"
                             className="usr_img"
                           />
@@ -408,7 +394,7 @@ function ContentChatSocket(props) {
                         <div className="cht_txt postedcmnt_info">
                           <div className="d-flex align-items-center msg-worries">
                             <h5 className="usr_name">
-                              {props?.data?.hopper_id?.user_name}
+                              PressHop
                               <span className="text-secondary time">
                                 {moment(curr?.createdAt).format(
                                   "h:mm A, D MMM YYYY"
@@ -417,7 +403,7 @@ function ContentChatSocket(props) {
                             </h5>
                           </div>
                           <p className="mb-0 msg">
-                            Has rejected your offer of{" "}
+                            PressHop has rejected your offer of{" "}
                             <a className="link">£{curr?.amount}</a> to sell the
                             content
                           </p>
@@ -514,7 +500,7 @@ function ContentChatSocket(props) {
                           </p>
                           <div className="usr_upld_opts">
                             <button className="theme_btn">
-                              Show me the Offers
+                              Show Me The Offers
                             </button>
                           </div>
                           <p className="buy_btn_txt mb-0">

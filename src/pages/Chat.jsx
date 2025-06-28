@@ -197,6 +197,9 @@ const Chat = () => {
       setContentlist(resp.data.response);
       if (resp) {
         setLoading(false);
+        if(resp.data.response?.[0]?._id) {
+          localStorage.setItem("contentId", JSON.stringify(resp.data.response?.[0]?._id))
+        }
       }
     } catch (error) {
       setLoading(false);
@@ -290,6 +293,7 @@ const Chat = () => {
                                       ...groupIds,
                                       contentId: curr._id,
                                     });
+                                    localStorage.setItem("hopperid", curr?._id)
                                   }}
                                 >
                                   <div className="cht_inn w-100 d-flex align-items-center">
@@ -450,8 +454,8 @@ const Chat = () => {
                       {group
                         ?.sort(
                           (a, b) =>
-                            new Date(b?.latest_messege[0]?.createdAt) -
-                            new Date(a?.latest_messege[0]?.createdAt)
+                            new Date(b?.latest_messege[0]?.createdAt || 0) -
+                            new Date(a?.latest_messege[0]?.createdAt || 0)
                         )
                         ?.map((curr, index) => {
                           return (
@@ -474,12 +478,7 @@ const Chat = () => {
                                   _id: index,
                                   type: curr?.room_type,
                                 }));
-                                // localStorage.setItem(
-                                //   "contentId",
-                                //   curr?.content_id
-                                // );
                                 localStorage.setItem("type", curr?.room_type);
-
                                 handleUnseenMsg(curr);
                               }}
                             >
@@ -488,13 +487,13 @@ const Chat = () => {
                                   <a>
                                     {" "}
                                     <img
-                                      src={userImage}
+                                      src={curr?.profile_image}
                                       alt="user image"
                                     />{" "}
                                   </a>
-                                  <div className="status">
+                                  {/* <div className="status">
                                     <span className="active"></span>
-                                  </div>
+                                  </div> */}
                                 </div>
                                 <div className="cht_dtl d-flex justify-content-between w-100">
                                   <div className="cht_txt d-flex flex-column auto-width">
@@ -593,13 +592,6 @@ const Chat = () => {
                                 <a>Emily</a>
                               </p>
                             </div>
-                            {/* <div className="cht_time d-flex flex-column align-items-end">
-                              <span className="msg_time">
-                                {moment(curr?.updatedAt).format(
-                                  "h:mm A, D MMM YYYY"
-                                )}
-                              </span>
-                            </div> */}
                             {
                               show.presshop && (
                                 <RxCross1 className="close-chat" onClick={(e) => {

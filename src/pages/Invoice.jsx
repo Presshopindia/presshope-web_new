@@ -1,12 +1,12 @@
 import { Card, Tooltip, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BsArrowLeft } from "react-icons/bs";
 import logo from "../assets/images/presshop_new_logo.png";
+import html2pdf from "html2pdf.js";
 
 // presshopinvoice
 import { Link, useNavigate, useParams } from "react-router-dom";
 import audioic from "../assets/images/audimg.svg";
-import audioicon from "../assets/images/audio-icon.svg";
 import calendericn from "../assets/images/calendarnic.svg";
 import cameraic from "../assets/images/camera.svg";
 import exclusiveic from "../assets/images/exclusive.svg";
@@ -33,6 +33,8 @@ const Invoice = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const navigate = useNavigate();
+  const invoiceRef = useRef();
+  const [contentImage, setContentImage] = useState("");
 
   const getInvoiceDetail = async () => {
     setLoading(true);
@@ -49,21 +51,6 @@ const Invoice = () => {
     getInvoiceDetail();
   }, []);
 
-  const handleInvoiveDownload = async () => {
-    if (!data.invoice_id) {
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const resp = await Get(`mediaHouse/download-invoice?invoiceId=${data.invoice_id}`);
-      setLoading(false);
-      window.open(resp.data.data, "_blank");
-    } catch (error) {
-      setLoading(false);
-    }
-  }
-
   const getMediaType = (type) => {
     const mediaType = data?.type === "content" ? data?.content_id?.content?.filter(
       (item) =>
@@ -74,6 +61,63 @@ const Invoice = () => {
     );
     return mediaType?.length || 0;
   }
+
+  function getPreviewSrc(data) {
+    if (!data) return null;
+
+    if (data.type === "content") {
+      const mediaObj = data?.content_id?.content?.[0];
+      if (!mediaObj) return null;
+
+      switch (mediaObj.media_type) {
+        case "image":
+          return {media: process.env.REACT_APP_CONTENT_MEDIA + mediaObj.media, mediaVal: mediaObj.media, mediType: mediaObj.media_type};
+        case "video":
+          return {media: process.env.REACT_APP_THUMBNAIL + mediaObj.media, mediaVal: mediaObj.media, mediType: mediaObj.media_type};
+        case "audio":
+          return {media: audioic, mediaVal: audioic, mediType: mediaObj.media_type};
+        case "pdf":
+          return {media: docsic, mediaVal: docsic, mediType: mediaObj.media_type};
+        default:
+          return {media: audioic, mediaVal: audioic, mediType: mediaObj.media_type};
+      }
+    }
+
+    const purchased = data?.purchased_task_content?.[0];
+    if (!purchased) return null;
+
+    
+    if (["image", "video"].includes(purchased.type)) {
+      return {media: purchased.videothubnail, mediaVal: purchased.videothubnail, mediType: purchased.type};
+    }
+    return {media: audioic, mediaVal: audioic, mediType: "audio"};
+  }
+
+  const previewSrc = useMemo(() => getPreviewSrc(data), [data]);
+
+
+  const handleDownload = () => {
+    const element = invoiceRef.current;
+
+    const opt = {
+      margin: 0,
+      filename: new Date().getTime() + "_invoice.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, allowTaint: false },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      pagebreak: { mode: ["avoid-all", "css", "legacy"] }
+    };
+
+    html2pdf().set(opt).from(element).save();
+  };
+
+  useEffect(() => {
+    if (previewSrc?.media && (previewSrc?.mediType === "image" || previewSrc?.mediType === "video")) {
+      setContentImage(`${process.env.REACT_APP_BASE_URL}mediaHouse/proxy?path=${previewSrc?.media}`)
+    } else {
+      setContentImage(previewSrc?.media);
+    }
+  }, [previewSrc?.media, contentImage, data]);
 
   return (
     <>
@@ -93,7 +137,7 @@ const Invoice = () => {
             <Col md={12}>
               <Row className="">
                 <Col md={12} className="dash-tabs-wrap pe-0">
-                  <div className="dash-tabs invoice-lft">
+                  <div className="dash-tabs invoice-lft" ref={invoiceRef} id="invoice-section">
                     <Row>
                       <Col md={6}>
                         <div className="ftr-left">
@@ -102,26 +146,12 @@ const Invoice = () => {
                             alt="PressHop"
                             className="footer-logo"
                           />
-                          {/* <img
-                            src={logoDark}
-                            alt="PressHop"
-                            className="footer-logo darkLogo"
-                          /> */}
                         </div>
-
-                        {/* <div className="prs-logo">
-                          <img src={Logo}   style={{ width: '200px', height: '200px' }} alt="" />
-                        </div> */}
                       </Col>
 
                       <Col md={6}>
                         <div className="text-end invce-num">
                           <h1 className="">Invoice</h1>
-                          {/* <p>
-                            <span> <img src={calendericn} alt="" /> </span>
-                            <span>{moment().format('DD MMM YYYY')}</span>
-
-                          </p> */}
                         </div>
                       </Col>
                     </Row>
@@ -240,7 +270,7 @@ const Invoice = () => {
                                       <th className="text-center">Type</th>
                                       {
                                         data?.type === "content" && (
-                                          <th className="text-center">License</th>
+                                          <th className="text-center">Licence</th>
                                         )
                                       }
                                       <th className="text-center">Category</th>
@@ -257,45 +287,12 @@ const Invoice = () => {
                                         }}>
                                           <div className="tbl_cont_wrp cnt_online_img noGrid">
                                             <div className="paymentToBeMadeImgContent">
-                                              {data?.type === "content" ? (
-                                                data?.content_id?.content[0]
-                                                  ?.media_type === "image" ? (
-                                                  <img
-                                                    src={
-                                                      process.env.REACT_APP_CONTENT_MEDIA + data?.content_id?.content[0]?.media
-                                                    }
-                                                    className="cntnt-img"
-                                                    alt="img"
-                                                  />
-                                                ) : data?.content_id?.content[0]?.media_type === "video" ? (
-                                                  <img
-                                                    src={process.env.REACT_APP_THUMBNAIL + data?.content_id?.content[0].media
-                                                    }
-                                                    className="cntnt-img"
-                                                  />
-                                                ) : data?.content_id?.content[0]
-                                                  ?.media_type === "audio" ? (
-                                                  <img
-                                                    src={audioic}
-                                                    className="content_img"
-                                                  />
-                                                ) : data?.content_id?.content[0]
-                                                  ?.media_type === "pdf" ? (
-                                                  <img
-                                                    src={docsic}
-                                                    className="cntnt-img"
-                                                  />
-                                                ) : null
-                                              ) : (data?.purchased_task_content?.[0]?.type === "image" || data?.purchased_task_content?.[0]?.type === "video") ? (
-                                                <img
-                                                  src={data?.purchased_task_content?.[0]?.videothubnail}
-                                                  className="cntnt-img"
-                                                  alt="img"
-                                                />
-                                              ) : <img
-                                                src={audioic}
+                                              <img
+                                                src={contentImage}
                                                 className="cntnt-img"
-                                              />}
+                                                crossOrigin="anonymous"
+                                                alt="img"
+                                              />
                                             </div>
                                           </div>
                                           <div className="tableContentTypeIcons">
@@ -401,9 +398,9 @@ const Invoice = () => {
                                           >
                                             <img
                                               src={
-                                                data?.type === "content" ? data?.content_id?.category_id
-                                                  ?.icon : data?.task_id?.category_id?.icon
+                                                data?.type === "content" ? `${process.env.REACT_APP_BASE_URL}mediaHouse/proxy?path=${data?.content_id?.category_id?.icon}` : `${process.env.REACT_APP_BASE_URL}mediaHouse/proxy?path=${data?.task_id?.category_id?.icon}`
                                               }
+                                              crossOrigin="anonymous"
                                               className="tbl_ic"
                                               alt="Content category"
                                             />
@@ -462,7 +459,6 @@ const Invoice = () => {
                                       </span>
 
                                       <span>{`£${formatAmountInMillion((data?.amount + data?.Vat) || 0)}`}</span>
-                                      {/* <span>£118</span> */}
                                     </div>
 
                                     <div className="sub-items amountBold">
@@ -470,12 +466,6 @@ const Invoice = () => {
                                         {" "}
                                         <b>Balance due</b>{" "}
                                       </span>
-                                      {/* <span>£{
-                                        !promoCode?.off ?
-                                          (+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price)) + ((+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price)) / 5)
-                                          :
-                                          (appliedPromoodeValue((+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price)), promoCode.off) + (appliedPromoodeValue((+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price)), promoCode.off) / 5))
-                                      }</span> */}
                                       <span>£0</span>
                                     </div>
                                   </div>
@@ -496,7 +486,7 @@ const Invoice = () => {
               <div className="">
                 <Button
                   className="theme-btn custom-ab mb-4 mt-2 sm_btn download-invoice-btn"
-                  onClick={handleInvoiveDownload}
+                  onClick={handleDownload}
                 >
                   Download Invoice
                 </Button>

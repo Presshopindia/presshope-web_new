@@ -87,28 +87,22 @@ const ContactusPre = () => {
                     <BsArrowLeft className="text-pink" /> Back{" "}
                   </Link>
                   <div className="pg_heading">
-                    <h1>Contact Us</h1>
+                    <h1>Contact us</h1>
                   </div>
                   <div className="log_txt">
                     <Typography variant="body2">
-                      Our helpful teams are available 24x7 to assist, and answer
-                      your questions. You can choose to send us a{" "}
-                      <a className="link">message</a>, an{" "}
-                      <a className="link">email</a>, or simply{" "}
-                      <a className="link">chat</a> with one of our live team
-                      members. We don't use Bots because we believe in keeping
-                      everything real.
+                      Questions? Let’s Get You Sorted! 
+                    </Typography>
+                    <Typography variant="body2">
+                      Our helpful team is available round the clock to support you. Fill in the form below and we’ll be in touch before you know it.
                     </Typography>
                     <Typography variant="body2" className="mb-0">
-                      Meanwhile, you can also read our{" "}
-                      <Link to={"/faq-post"} className="link">
+                      While you’re here, feel free to browse our <Link to={"/faq-post"} className="link">
                         FAQs
-                      </Link>{" "}
-                      for answers to most common questions, or check our online{" "}
-                      <Link to={"/all-tutorials"} className="link">
+                      </Link>{" "} or check out our <Link to={"/all-tutorials"} className="link">
                         video tutorials
                       </Link>
-                      , for some handy tips on how to better use our platform
+                      {" "}for quick tips on getting the best out of <b>PressHop</b>🤩
                     </Typography>
                   </div>
                   <Form onSubmit={ContactUs}>
@@ -159,7 +153,7 @@ const ContactusPre = () => {
                             required
                             className="input_nmbr"
                             value={details.contact_number}
-                            placeholder=" phone"
+                            placeholder="Phone"
                             name="contact_number"
                             onChange={handleChange}
                             ref={phoneInputRef}
@@ -220,19 +214,8 @@ const ContactusPre = () => {
                       type="submit"
                       className="cntct_btn sm_btn_blk w-100"
                     >
-                      Email us
+                      Email Us
                     </Button>
-                    {/* <div className="or_opt">
-                                            <span>or</span>
-                                        </div>
-                                        <div className="d-flex justify-content-between btm_btns">
-                                            <Button variant="secondary" className="w-100 cntct_btn sm_btn_blk">
-                                                <Link to={'/chat'}>Chat</Link>
-                                            </Button>
-                                            <Button variant="secondary" className="w-100 cntct_btn sm_btn_blk">
-                                                <Link to='mailto:mediahouse@mailinator.com'>Email us</Link>
-                                            </Button>
-                                        </div> */}
                   </Form>
                 </div>
               </Col>

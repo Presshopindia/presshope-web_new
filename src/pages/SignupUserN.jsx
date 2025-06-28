@@ -63,8 +63,6 @@ const SignupUserN = () => {
   const companyName = user?.company_name;
   const companyNumber = user?.company_number;
   const companyVat = user?.company_vat;
-  console.log("all value ---->1111", user);
-  console.log("all value ---->11115profileData", profileData);
 
   const navigate = useNavigate();
   const [addOffice, setAddOffice] = useState({
@@ -285,7 +283,6 @@ const SignupUserN = () => {
     const data = await Post(`mediaHouse/getProfileAccordingUserId`, {
       user_id,
     });
-    console.log("data-->", data?.data?.profile);
     setOnboardingUser({
       ...onboardingUser,
       designation_id: data?.data?.profile?.designation_id?._id,
@@ -909,7 +906,7 @@ const SignupUserN = () => {
                                     style={{ color: "red" }}
                                     className="eml_txt_dngr"
                                   >
-                                    This email already exists
+                                    This email id already exists. Please enter a new email id.
                                   </span>
                                 )}
                               </Form.Group>

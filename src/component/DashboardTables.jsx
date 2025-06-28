@@ -142,11 +142,11 @@ const DashboardTables = () => {
         ...(month ? { monthly: month } : {}),
         ...(month ? { type: "content_purchased_online" } : {}),
         ...(year ? { year: year } : {}),
-
         type: "content_purchased_online",
         limit: contentOnlineLimit,
         offset: (contentOnlinePage - 1) * contentOnlineLimit,
         allQuery: allFilterData,
+        broadcasted_task_today: param?.type === "broadcasted_task_today" ? true : false,
       });
       const category = await Get("mediaHouse/getCategoryType?type=content");
       setAllFilterData({
@@ -389,7 +389,7 @@ const DashboardTables = () => {
                               <th>Time & date</th>
                               <th className="tsk_dlts">Heading</th>
                               <th className="tbl_icn_th">Type</th>
-                              <th className="tbl_icn_th licnc">License</th>
+                              <th className="tbl_icn_th licnc">Licence</th>
                               <th className="tbl_icn_th catgr">Category</th>
                               <th className="tsk_dlts">Location</th>
                               <th>Published by</th>
@@ -593,7 +593,7 @@ const DashboardTables = () => {
                       </div>
                     </div>
                   </Card>
-                ) : param.type === "broadcasted_task" ? (
+                ) : param.type === "broadcasted_task" || param.type === "broadcasted_task_today" ? (
                   <Card className="tbl_crd">
                     <div className="">
                       <div
@@ -602,7 +602,7 @@ const DashboardTables = () => {
                         mb="10px"
                       >
                         <Typography className="tbl_hdng">
-                          Broadcasted tasks
+                          {param.type === "broadcasted_task_today" ? "Broadcasted tasks today" : "Broadcasted tasks"}
                         </Typography>
                         <div className="sorting_wrap d-flex">
                           <div className="feedSorting me-4">
@@ -1047,14 +1047,15 @@ const DashboardTables = () => {
                             <th>Time & date</th>
                             <th className="tsk_dlts">Heading</th>
                             <th className="tbl_icn_th">Type</th>
-                            <th className="tbl_icn_th licnc">License</th>
+                            <th className="tbl_icn_th licnc">Licence</th>
                             <th className="tbl_icn_th catgr">Category</th>
                             <th>Location</th>
                             <th>Purchased by</th>
                             <th>Published by</th>
                             <th>Published price</th>
                             <th>Discounted Price</th>
-                            <th>Purchased price</th>
+                            <th>Negotiated Price</th>
+                            <th>Purchase price</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1219,7 +1220,10 @@ const DashboardTables = () => {
                                   £{formatAmountInMillion(curr?.published_price || 0)}
                                 </td>
                                 <td>
-                                  £{formatAmountInMillion(curr?.discounted_price || 0)}
+                                  £{curr?.discount_type !== "discounted" ? formatAmountInMillion(curr?.discounted_price || 0) : 0}
+                                </td>
+                                <td>
+                                  £{curr?.discount_type === "discounted" ? formatAmountInMillion(curr?.discounted_price || 0) : 0}
                                 </td>
                                 <td>
                                   £{formatAmountInMillion(curr?.amount)}

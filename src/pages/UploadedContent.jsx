@@ -342,8 +342,8 @@ const UploadedContent = () => {
                                   curr.ask_price || 0
                                 )}`}
                                 viewTransaction={"View details"}
-                                // viewDetail={`/Feeddetail/content/${curr._id}`}
-                                viewDetail={`/content-details/${curr?._id}?task_content_id=${curr?.content_id}`}
+                                viewDetail={`/Feeddetail/content/${curr._id}`}
+                                // viewDetail={`/content-details/${curr?._id}?task_content_id=${curr?.content_id}`}
                                 feedTypeImg1={
                                   imageCount > 0 ? cameraic : null
                                 }

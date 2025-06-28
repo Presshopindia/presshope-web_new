@@ -67,30 +67,20 @@ const TaskInvoice = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location?.search);
   const taskContentId = searchParams.get("taskContentId");
-  console.log(taskDataType, "location?.search---->", taskData);
-  console.log("location?.search----price>", data?.hopper_videos_price);
 
   const ContentByID = async () => {
     setLoading(true);
     try {
-      console.log("all data getUpload--->1");
       const resp = await Get(
         `mediaHouse/getuploadedContentbyHoppers?_id=${param.id}&contentId=${taskContentId}`
       );
       setData(resp.data.data[0]);
-      console.log("all data getUpload--->", resp.data);
       setTaskData(resp.data.data[0]);
       setTaskDataType(resp.data.data[0].type);
 
-      // const getHoppers = await Get(`mediaHouse/findacceptedtasks?task_id=${Livetask?.data?.tasks?.find?.((el) => el?._id == resp.data.data[0]?.task_id?._id)?._id}&receiver_id=${User && User._id || User.id}&type=task_content`);
-      // setRoomDetails(resp.data.data[0]);
-
-      // const liveTasks = await Get(`mediaHouse/live/expired/tasks?status=live&id=${Livetask?.data?.tasks?.find?.((el) => el?._id == resp.data.data[0]?.task_id?._id)?._id}`)
       setData(resp.data.data[0]?.task_id);
       setLoading(false);
-      // setData(resp.data);
     } catch (error) {
-      console.log("my error 0890==>", error);
       setLoading(false);
     }
   };
@@ -100,16 +90,11 @@ const TaskInvoice = () => {
   }, []);
 
   const claculatedFun = (amount) => {
-    // let val = (20 * (+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price))) / 100;
     let val = +amount / 5;
     return val;
   };
 
   const paymentintents = async (curr) => {
-    console.log("paymenthello payment  ");
-    console.log(UserDetails, "hello payment  ", UserDetails);
-    console.log(UserDetails, "hello payment data ", data);
-    console.log("payment_content", curr);
     const amount_paid_for_payment =
       (+(taskDataType == "image"
         ? data?.hopper_photo_price
@@ -123,7 +108,6 @@ const TaskInvoice = () => {
     const obj1 = {
       image_id: param.id,
       customer_id: UserDetails.stripe_customer_id,
-      // amount: +(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price),
       amount:
         +data?.chatdata?.amount ||
         data?.content?.original_ask_price ||
@@ -137,15 +121,11 @@ const TaskInvoice = () => {
         : taskDataType == "audio"
         ? data?.hopper_interview_price
         : 0),
-      //  data?.content?.original_ask_price,
       offer: false,
       is_charity: data?.content?.is_charity,
       charity: data?.content?.charity,
       description: data?.heading,
     };
-
-    console.log("all deatails--->", obj1);
-    // return;
 
     setLoading(true);
     try {
@@ -153,19 +133,6 @@ const TaskInvoice = () => {
         type: "uploaded_content",
         task_id: taskData?.task_id?._id,
         product_id: param?.id,
-        // amount_paid:
-        //   +data?.chatdata?.amount ||
-        //   data?.content?.original_ask_price ||
-        //   +(data?.chatdata?.amount
-        //     ? data?.chatdata?.amount
-        //     : data?.content?.ask_price),
-        // amount_paid: +(taskDataType == "image"
-        //   ? data?.hopper_photo_price
-        //   : taskDataType == "video"
-        //   ? data?.hopper_videos_price
-        //   : taskDataType == "audio"
-        //   ? data?.hopper_interview_price
-        //   : 0),
         amount_paid: amount_paid_for_payment,
         commission:
           +(taskDataType == "image"
@@ -175,18 +142,12 @@ const TaskInvoice = () => {
             : taskDataType == "audio"
             ? data?.hopper_interview_price
             : 0) / 5,
-        // commission:
-        //   +(data?.chatdata?.amount || data?.content?.original_ask_price) / 5,
       };
       const resp1 = await Post("mediahouse/applicationfee", obj2);
       obj1.application_fee = resp1?.data?.data;
-      // obj1.stripe_account_id = data?.content?.is_charity
-      //   ? data?.content?.stripe_account_id
-      //   : resp1?.data?.stripe_account_id;
       obj1.stripe_account_id =
         resp1?.data?.stripe_account_id || data?.content?.stripe_account_id;
 
-      // Add coupon code
       if (promoCode.code) {
         obj1.coupon = promoCode?.code;
       }
@@ -204,11 +165,8 @@ const TaskInvoice = () => {
     let result = "";
     if (value) {
       const data = value.trim().split("");
-      console.log(data);
       for (let ele of data) {
-        // Check if the character is not a number using isNaN()
         if (isNaN(ele) && typeof ele === "string") {
-          // Convert non-numeric characters to uppercase
           result += ele.toUpperCase();
         } else {
           result += ele;
@@ -224,7 +182,6 @@ const TaskInvoice = () => {
     setLoading(true);
     try {
       let promocodeValue = capitaliseLetterPromocode(promoCode.value);
-      // console.log("promocodeValue",promocodeValue);
       const resp = await Post("mediahouse/checkPromocode", {
         code: promocodeValue,
       });
@@ -244,16 +201,6 @@ const TaskInvoice = () => {
   };
 
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   if (
-  //     data &&
-  //     data?.content?.purchased_mediahouse.find(
-  //       (el) => el === JSON.parse(localStorage.getItem("user"))?._id
-  //     )
-  //   ) {
-  //     navigate("/");
-  //   }
-  // }, [data, navigate]);
 
   useEffect(() => {
     window.addEventListener("focus", () => {
@@ -264,8 +211,6 @@ const TaskInvoice = () => {
         ContentByID();
       });
   }, []);
-
-  console.log("all autoinvoice data --> --->data", taskDataType);
 
   return (
     <>
@@ -296,11 +241,6 @@ const TaskInvoice = () => {
                       <Col md={6}>
                         <div className="text-end invce-num">
                           <h1 className="">Invoice</h1>
-                          {/* <p>
-                            <span> <img src={calendericn} alt="" /> </span>
-                            <span>{moment().format('DD MMM YYYY')}</span>
-
-                          </p> */}
                         </div>
                       </Col>
                     </Row>
@@ -309,7 +249,6 @@ const TaskInvoice = () => {
                     <Row className="cs-mr">
                       <Col md={6}>
                         <div className="invoice-text">
-                          {/* <p>Invoice # PH 672321</p> */}
                         </div>
                       </Col>
 
@@ -398,7 +337,7 @@ const TaskInvoice = () => {
                                         Time & date
                                       </th>
                                       <th className="text-center">Type</th>
-                                      <th className="text-center">License</th>
+                                      <th className="text-center">Licence</th>
                                       <th className="text-center">Category</th>
                                       <th style={{ textAlign: "right" }}>
                                         Amount
@@ -541,14 +480,12 @@ const TaskInvoice = () => {
                                         <td className="text-center">
                                           <Tooltip
                                             title={
-                                              // taskData?.category_details?.name
                                               taskData?.category_details?.[0]
                                                 ?.name
                                             }
                                           >
                                             <img
                                               src={
-                                                // taskData?.category_details?.icon
                                                 taskData?.category_details?.[0]
                                                   ?.icon
                                               }
@@ -584,60 +521,6 @@ const TaskInvoice = () => {
 
                                 <div className="tble-subtotal">
                                   <div className="subtotal-list">
-                                    {/* <div className="sub-items">
-                                      <span> <b> Subtotal</b> </span>
-                                      <span>£{formatAmountInMillion(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price)}</span>
-                                    </div>
-
-                                    <div className="sub-items">
-                                      <span> <b>VAT @20%</b> </span>
-                                      <span>{`£${formatAmountInMillion(claculatedFun())}`}</span>
-                                    </div>
-
-                                    <div className="sub-items">
-                                      <span> <b>Total</b> </span>
-                                      <span><b>{`£${formatAmountInMillion((+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price)) + claculatedFun())}`}</b></span>
-                                    </div>
-
-                                    <div className="sub-items">
-                                      <span> <b>Paid</b> </span>
-                                      <span>£0</span>
-                                    </div>
-
-                                    <div className="sub-items">
-                                      <span> <b>Balance due</b> </span>
-                                      <span className={`${promoCode.off ? "price-cut" : ""}`}><b>{`£${formatAmountInMillion((+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price)) + claculatedFun())}`}</b></span>
-                                    </div>
-
-                                    <div className="sub-items justify-content-end" onClick={() => setPromoCode({ ...promoCode, show: !promoCode.show, error: "", code: "", off: "" })}>
-                                      <span className="promo-cde">Promo Code</span>
-                                    </div>
-                                    {
-                                      promoCode.show ?
-                                        <>
-                                          <form className="add-coupon" onSubmit={(e) => checkPromoCode(e)}>
-                                            <InputGroup className="input-cupn">
-                                              <Form.Control
-                                                placeholder="Promo Code"
-                                                aria-label="Recipient's username"
-                                                aria-describedby="basic-addon2"
-                                                onChange={(e) => setPromoCode({ ...promoCode, value: e.target.value, error: "", code: "", off: "" })}
-                                              />
-                                              <span className="button-apply clickable" onClick={(e) => checkPromoCode(e)}>
-                                                Apply
-                                              </span>
-                                            </InputGroup>
-                                          </form>
-                                        </>
-                                        :
-                                        null
-                                    }
-                                    {
-                                      promoCode.off && promoCode.show ? <div className="sub-items">
-                                        <span> <b>Total</b> </span>
-                                        <span><b>£{formatAmountInMillion(appliedPromoodeValue(((+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price)) + claculatedFun()), promoCode.off))}</b></span>
-                                      </div> : null
-                                    } */}
                                     <div className="sub-items">
                                       <span>
                                         {" "}
@@ -671,7 +554,6 @@ const TaskInvoice = () => {
                                         }
                                       >
                                         <span className="promo-cde">
-                                          {/* Promo Code */}
                                           <b>
                                             {" "}
                                             Unlock savings! Enter your Promo
@@ -730,9 +612,6 @@ const TaskInvoice = () => {
                                         £
                                         {!promoCode?.off
                                           ? formatAmountInMillion(
-                                              // +(data?.chatdata?.amount
-                                              //   ? data?.chatdata?.amount
-                                              //   : data?.content?.ask_price)
                                               taskDataType == "image"
                                                 ? data?.hopper_photo_price
                                                 : taskDataType == "video"
@@ -793,35 +672,7 @@ const TaskInvoice = () => {
                                         {" "}
                                         <b>Total</b>{" "}
                                       </span>
-                                      {/* {`£${formatAmountInMillion(
-                                        data?.amount
-                                      )}`} */}
                                       <span>
-                                        {/* {!promoCode?.off
-                                          ? formatAmountInMillion(
-                                              +(data?.chatdata?.amount
-                                                ? data?.chatdata?.amount
-                                                : data?.content?.ask_price)
-                                             +
-                                            +(data?.chatdata?.amount
-                                              ? data?.chatdata?.amount
-                                              : data?.content?.ask_price) /
-                                              5)
-                                          : formatAmountInMillion(
-                                              appliedPromoodeValue(
-                                                +(data?.chatdata?.amount
-                                                  ? data?.chatdata?.amount
-                                                  : data?.content?.ask_price),
-                                                promoCode.off
-                                              ) +
-                                                appliedPromoodeValue(
-                                                  +(data?.chatdata?.amount
-                                                    ? data?.chatdata?.amount
-                                                    : data?.content?.ask_price),
-                                                  promoCode.off
-                                                ) /
-                                                  5
-                                            )} */}
                                         £
                                         {!promoCode?.off
                                           ? formatAmountInMillion(
@@ -873,7 +724,6 @@ const TaskInvoice = () => {
                                         <b>Paid</b>{" "}
                                       </span>
                                       <span>£0</span>
-                                      {/* <span>£118</span> */}
                                     </div>
 
                                     <div className="sub-items">
@@ -925,7 +775,6 @@ const TaskInvoice = () => {
                                                   5
                                             )}
                                       </span>
-                                      {/* <span>£0</span> */}
                                     </div>
                                   </div>
                                 </div>
@@ -997,7 +846,6 @@ const TaskInvoice = () => {
               </Col>
 
               <Col md={4}>
-                {/* {paymentRequest && <PaymentRequestButtonElement options={{ paymentRequest }} />} */}
                 <Button
                   variant=""
                   className="theme-btn custom-ab mb-4 mt-2 w-100 sm_btn"

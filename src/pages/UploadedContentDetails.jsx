@@ -65,7 +65,7 @@ import { toast } from "react-toastify";
 
 const UploadedContentDetails = (props) => {
   const [isRecording, setIsRecording] = useState(false);
-  const { profileData, setCartCount } = useDarkMode();
+  const { profileData, setCartCount, onlineUsers } = useDarkMode();
 
   const userImage = profileData?.hasOwnProperty("admin_detail")
     ? profileData?.admin_detail?.admin_profile
@@ -176,11 +176,7 @@ const UploadedContentDetails = (props) => {
   // Add to basket-
   const AddToBasket = async (element) => {
     try {
-      // setData({
-      //   ...data,
-      //   basket_status: data?.basket_status == "true" ? "false" : "true",
-      // });
-
+      setLoading(true);
       let object = {
         content_id: selectedItems,
         type: "task",
@@ -190,13 +186,19 @@ const UploadedContentDetails = (props) => {
         offer: false,
         application_fee: 15,
         hopper_charge_ac_category: 5,
-        room_id: ""
+        room_id: "",
+        chat_id: element._id
       };
       const res = await Post(`mediaHouse/addToBasket`, object);
       if (res) {
         getCountOfBasketItems();
+        setLoading(false);
+        setSelectedItems([]);
+        successToasterFun("Content added to Basket");
       }
-    } catch (error) { }
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   const RatingNReview = (curr) => {
@@ -325,6 +327,16 @@ const UploadedContentDetails = (props) => {
     }
   };
 
+  useEffect(() => {
+    window.addEventListener("focus", () => {
+      ContentByID();
+    });
+    return () =>
+      window.removeEventListener("focus", () => {
+        ContentByID();
+      });
+  }, []);
+
   const Favourite = async (favData) => {
     try {
       let obj = {
@@ -391,6 +403,28 @@ const UploadedContentDetails = (props) => {
     GetUserList();
   }, [param?.id, taskHopperId]);
 
+  // Handle push notification event
+  const handlePushNotification = (event) => {
+    if (event && event.data) {
+      ContentByID();
+      console.log("ContentByID");
+    }
+  };
+
+  // Set up push notification listener
+  useEffect(() => {
+    // Check if the browser supports service workers and push notifications
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+      // Add event listener for push notifications
+      navigator.serviceWorker.addEventListener('message', handlePushNotification);
+
+      // Clean up the event listener when component unmounts
+      return () => {
+        navigator.serviceWorker.removeEventListener('message', handlePushNotification);
+      };
+    }
+  }, []);
+
   const [selectedItems, setSelectedItems] = useState([]);
 
   const handleSelectionChange = (item, isChecked) => {
@@ -404,6 +438,8 @@ const UploadedContentDetails = (props) => {
       }
     });
   };
+
+  console.log("selectedImtems", selectedItems)
 
 
   const Audio = data?.filter((item) => item.type === "audio")
@@ -968,11 +1004,6 @@ const UploadedContentDetails = (props) => {
                                       <video
                                         controls
                                         className="slider-vddo"
-                                        // src={
-                                        //   process.env
-                                        //     .REACT_APP_UPLOADED_CONTENT +
-                                        //   curr?.media
-                                        // }
                                         src={process.env.REACT_APP_UPLOADED_CONTENT + curr?.imageAndVideo}
                                       />
                                     ) : null}
@@ -1157,27 +1188,10 @@ const UploadedContentDetails = (props) => {
 
                               <div className="add-to-basket-btn">
                                 <button
-                                  onClick={() => AddToBasket(data?.[0], "task")}
+                                  onClick={() => navigate("/basket")}
                                   className="red-btn"
                                 >
                                   Go to Basket
-                                </button>
-                                <button
-                                  className="red-btn"
-                                  onClick={() => {
-                                    navigate(
-                                      `/task-invoice/${data?.[0]?._id}?taskHopperId=${taskHopperId}`
-                                    );
-                                  }}
-                                >
-                                  £{" "}
-                                  {data?.[0]?.type == "image"
-                                    ? data?.[0]?.task_id?.hopper_photo_price
-                                    : data?.[0]?.type == "video"
-                                      ? data?.[0]?.task_id?.hopper_videos_price
-                                      : data?.[0]?.type == "audio"
-                                        ? data?.[0]?.task_id?.hopper_interview_price
-                                        : ""}
                                 </button>
                               </div>
                             </div>
@@ -1513,7 +1527,7 @@ const UploadedContentDetails = (props) => {
                                               />
                                             </div>
                                             <div
-                                              className="img"
+                                              className="img position-relative"
                                               onClick={() => {
                                                 setSenderId(curr._id);
                                                 setShow({
@@ -1528,11 +1542,9 @@ const UploadedContentDetails = (props) => {
                                                 src={curr?.profile_image}
                                                 alt="user"
                                               />
+                                              {onlineUsers?.online?.find((el) => el?.userId === curr?._id)?.userId ? <span className="green-dot"></span> : <span className="red-dot"></span>}
                                               <span> {curr?.full_name}</span>
                                             </div>
-                                            {/* <div className="dots">
-                                                                                    <Link className="view_chat">View</Link>
-                                                                                  </div> */}
                                             {message?.some(
                                               (item) =>
                                                 `${curr?.first_name} ${curr?.last_name}` ==
@@ -1592,10 +1604,10 @@ const UploadedContentDetails = (props) => {
                                             className="usr_img"
                                           />
                                           <div className="cht_txt">
-                                            <div className="d-flex align-items-center">
-                                              <p className="usr_name mb-0">
+                                            <div className="d-flex align-items-center cht_txt postedcmnt_info">
+                                              <h5>
                                                 PressHop
-                                              </p>
+                                              </h5>
                                               <p className="cht_time mb-0">
                                                 {moment(
                                                   roomDetails?.createdAt
@@ -1699,9 +1711,9 @@ const UploadedContentDetails = (props) => {
                                                 />
                                                 <div className="cht_txt">
                                                   <div className="d-flex align-items-center">
-                                                    <p className="usr_name mb-0">
+                                                    <h5 className="usr_name mb-0 cht_txt postedcmnt_info">
                                                       {curr?.sender_id?.user_name}
-                                                    </p>
+                                                    </h5>
                                                     <p className="cht_time mb-0">
                                                       {moment(curr?.createdAt).format("h:mm A, D MMM YYYY")}
                                                     </p>
@@ -1721,13 +1733,18 @@ const UploadedContentDetails = (props) => {
                                                               }
                                                               className="media-item"
                                                             >
-                                                              <label className="checkbox-label">
+                                                              {/* <label className="checkbox-label">
                                                                 <input
                                                                   type="checkbox"
                                                                   className="media-checkbox z-1000"
                                                                   onChange={(e) => handleSelectionChange(item, e.target.checked)}
                                                                 />
-                                                              </label>
+                                                              </label> */}
+                                                              <FormControlLabel
+                                                                className="check_label me-0 media-checkbox z-1000"
+                                                                control={<Checkbox />}
+                                                                onChange={(e) => handleSelectionChange(item, e.target.checked)}
+                                                              />
 
                                                               {item?.mime ===
                                                                 "image" ? (
@@ -1844,6 +1861,7 @@ const UploadedContentDetails = (props) => {
                                                             }
                                                           }
                                                         }}
+                                                        disabled={selectedItems?.length === 0}
                                                       >
                                                         Add to basket
                                                       </button>
@@ -1860,6 +1878,7 @@ const UploadedContentDetails = (props) => {
                                                             }
                                                           }
                                                         }}
+                                                        disabled={selectedItems?.length === 0}
                                                       >
                                                         Buy
                                                       </button>
@@ -1903,7 +1922,7 @@ const UploadedContentDetails = (props) => {
                                                     </p>
                                                   </div>
                                                   <p className="mb-0 msg auto_press_msg">
-                                                    Congrats, you’ve purchased the content for £{formatAmountInMillion(+(curr?.amount_paid))}.{" "}
+                                                    Congrats, you've purchased the content for £{formatAmountInMillion(+(curr?.amount_paid))}.{" "}
                                                     Please download the water-mark free, and high definition content, by clicking below.
                                                   </p>
                                                   <div className="usr_upld_opts">
