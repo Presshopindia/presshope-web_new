@@ -102,6 +102,7 @@ const ContactusPre = () => {
                       </Link>{" "} or check out our <Link to={"/all-tutorials"} className="link">
                         video tutorials
                       </Link>
+                      {" "}for quick tips on getting the best out of <b>PressHop</b>🤩
                     </Typography>
                   </div>
                   <Form onSubmit={ContactUs}>

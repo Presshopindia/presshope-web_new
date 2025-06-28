@@ -89,16 +89,23 @@ const Myprofilemdl = (props) => {
     setLoading(true);
     try {
       const response = await Post("mediaHouse/uploadUserMedia", formData);
-      setProfile((prev) => ({
-        ...prev,
-        admin_detail: {
-          ...prev.admin_detail,
-          admin_profile: response.data.path
-        },
-      }));
+      if(profile?.role == "MediaHouse") {
+        setProfile((prev) => ({
+          ...prev,
+          admin_detail: {
+            ...prev.admin_detail,
+            admin_profile: response.data.path
+          },
+        }));
+      }
+      else {
+        setProfile((prev) => ({
+          ...prev,
+          profile_image: response.data.path
+        }));
+      }
       setLoading(false);
     } catch (error) {
-      console.error("Error uploading image:", error);
       setLoading(false);
     }
   };
@@ -189,7 +196,7 @@ const Myprofilemdl = (props) => {
               <div className="profile_img">
                 <img src={profile?.role == "MediaHouse" ? profile?.profile_image : profile?.media_house_id?.profile_image} />
                 {
-                  props.profileType != "My" ?
+                  props.profileType != "My" && profile?.role == "MediaHouse" ?
                     <div className="EditProfileImgWrap">
                       <label htmlFor="profilePicInput" className="editProfilepic">
                         <img src={editProfileIcn} alt="Upload Profile Image" />

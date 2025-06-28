@@ -286,7 +286,7 @@ const Dashboard = () => {
                           gutterBottom
                           className="cardContent_head"
                         >
-                          External chats
+                          Internal chats
                         </Typography>
                       </CardContent>
                       <CardActions className="dash-c-foot">
