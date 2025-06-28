@@ -2857,7 +2857,7 @@ const Feeddetail = (props) => {
                                                     </h5>
                                                   </div>
                                                   <p className="mb-0 msg auto_press_msg">
-                                                    Congrats, you’ve
+                                                    Congrats, you've
                                                     successfully purchased{" "}
                                                     {contentPurchasedInContentChat(data?.content)}{" "}
                                                     for{" "}

@@ -152,10 +152,6 @@ const RatingReview = () => {
     }
   };
 
-  const onPointerEnter = () => console.log("Enter");
-  const onPointerLeave = () => console.log("Leave");
-  const onPointerMove = (value, index) => console.log(value, index);
-
   const receivedRatingFromHopper = async () => {
     setLoading(true);
     try {

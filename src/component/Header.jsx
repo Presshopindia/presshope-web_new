@@ -674,7 +674,7 @@ const Header = () => {
                                                 navigator.clipboard
                                                   .writeText(promoCode)
                                                   .then(() => {
-                                                    alert(
+                                                    toast.success(
                                                       "Promo code copied to clipboard!"
                                                     );
                                                   })

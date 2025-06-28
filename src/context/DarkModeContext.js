@@ -50,7 +50,9 @@ export const DarkModeProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    getProfileData();
+    if(localStorage.getItem("token")) {
+      getProfileData();
+    }
   }, [isDarkMode, profileChange]);
 
   // useEffect(() => {

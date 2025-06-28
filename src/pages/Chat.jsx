@@ -197,7 +197,6 @@ const Chat = () => {
       setContentlist(resp.data.response);
       if (resp) {
         setLoading(false);
-        console.log("resp.data.response" , resp.data.response)
         if(resp.data.response?.[0]?._id) {
           localStorage.setItem("contentId", JSON.stringify(resp.data.response?.[0]?._id))
         }
@@ -593,13 +592,6 @@ const Chat = () => {
                                 <a>Emily</a>
                               </p>
                             </div>
-                            {/* <div className="cht_time d-flex flex-column align-items-end">
-                              <span className="msg_time">
-                                {moment(curr?.updatedAt).format(
-                                  "h:mm A, D MMM YYYY"
-                                )}
-                              </span>
-                            </div> */}
                             {
                               show.presshop && (
                                 <RxCross1 className="close-chat" onClick={(e) => {

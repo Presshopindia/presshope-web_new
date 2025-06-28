@@ -65,8 +65,6 @@ const Invoice = () => {
   function getPreviewSrc(data) {
     if (!data) return null;
 
-    console.log("data ----------->", data);
-
     if (data.type === "content") {
       const mediaObj = data?.content_id?.content?.[0];
       if (!mediaObj) return null;
@@ -90,7 +88,6 @@ const Invoice = () => {
 
     
     if (["image", "video"].includes(purchased.type)) {
-      console.log("purchased ----------->", purchased);
       return {media: purchased.videothubnail, mediaVal: purchased.videothubnail, mediType: purchased.type};
     }
     return {media: audioic, mediaVal: audioic, mediType: "audio"};
@@ -114,10 +111,7 @@ const Invoice = () => {
     html2pdf().set(opt).from(element).save();
   };
 
-  console.log("previewSrc ----------->", previewSrc);
-
   useEffect(() => {
-    console.log("previewSrc ----------->", previewSrc);
     if (previewSrc?.media && (previewSrc?.mediType === "image" || previewSrc?.mediType === "video")) {
       setContentImage(`${process.env.REACT_APP_BASE_URL}mediaHouse/proxy?path=${previewSrc?.media}`)
     } else {
@@ -293,45 +287,6 @@ const Invoice = () => {
                                         }}>
                                           <div className="tbl_cont_wrp cnt_online_img noGrid">
                                             <div className="paymentToBeMadeImgContent">
-                                              {/* {data?.type === "content" ? (
-                                                data?.content_id?.content[0]
-                                                  ?.media_type === "image" ? (
-                                                  <img
-                                                    src={
-                                                      process.env.REACT_APP_CONTENT_MEDIA + data?.content_id?.content[0]?.media
-                                                    }
-                                                    className="cntnt-img"
-                                                    alt="img"
-                                                  />
-                                                ) : data?.content_id?.content[0]?.media_type === "video" ? (
-                                                  <img
-                                                    src={process.env.REACT_APP_THUMBNAIL + data?.content_id?.content[0].media
-                                                    }
-                                                    className="cntnt-img"
-                                                  />
-                                                ) : data?.content_id?.content[0]
-                                                  ?.media_type === "audio" ? (
-                                                  <img
-                                                    src={audioic}
-                                                    className="content_img"
-                                                  />
-                                                ) : data?.content_id?.content[0]
-                                                  ?.media_type === "pdf" ? (
-                                                  <img
-                                                    src={docsic}
-                                                    className="cntnt-img"
-                                                  />
-                                                ) : null
-                                              ) : (data?.purchased_task_content?.[0]?.type === "image" || data?.purchased_task_content?.[0]?.type === "video") ? (
-                                                <img
-                                                  src={data?.purchased_task_content?.[0]?.videothubnail}
-                                                  className="cntnt-img"
-                                                  alt="img"
-                                                />
-                                              ) : <img
-                                                src={audioic}
-                                                className="cntnt-img"
-                                              />} */}
                                               <img
                                                 src={contentImage}
                                                 className="cntnt-img"
@@ -504,7 +459,6 @@ const Invoice = () => {
                                       </span>
 
                                       <span>{`£${formatAmountInMillion((data?.amount + data?.Vat) || 0)}`}</span>
-                                      {/* <span>£118</span> */}
                                     </div>
 
                                     <div className="sub-items amountBold">
@@ -512,12 +466,6 @@ const Invoice = () => {
                                         {" "}
                                         <b>Balance due</b>{" "}
                                       </span>
-                                      {/* <span>£{
-                                        !promoCode?.off ?
-                                          (+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price)) + ((+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price)) / 5)
-                                          :
-                                          (appliedPromoodeValue((+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price)), promoCode.off) + (appliedPromoodeValue((+(data?.chatdata?.amount ? data?.chatdata?.amount : data?.content?.ask_price)), promoCode.off) / 5))
-                                      }</span> */}
                                       <span>£0</span>
                                     </div>
                                   </div>
