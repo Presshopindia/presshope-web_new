@@ -129,7 +129,7 @@ const BroadcastedTrackings = (props) => {
     <>
       {loading && <Loader />}
       {param.id && (
-        <div className="">
+        <div className="bold">
           <Link
             className="back_link mb-3"
             onClick={() => {
@@ -146,7 +146,7 @@ const BroadcastedTrackings = (props) => {
             <div className="bTask_list_card">
               <div className="taskcard_headr d-flex justify-content-between align-items-center mb-13">
                 {
-                  props?.viewTask?.open ? <div className="clickable" onClick={() => {
+                  props?.viewTask?.open ? <div className="clickable bold" onClick={() => {
                     if (props?.viewTask?.taskId) {
                       window.history.back();
                     } else {
@@ -248,6 +248,7 @@ const BroadcastedTrackings = (props) => {
                               onClick={() => {
                                 navigate(`/task?taskId=${curr?._id}`);
                                 props?.setViewTask({ open: true, taskDetails: curr })
+                                props?.TaskDetails(curr?._id)
                               }}
                             >
                               <div className="mapInput">
