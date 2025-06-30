@@ -173,6 +173,7 @@ const UploadedContentDetails = (props) => {
     }
   }
 
+  console.log("messages ----------->", messages)
   // Add to basket-
   const AddToBasket = async (element) => {
     try {
@@ -921,6 +922,7 @@ const UploadedContentDetails = (props) => {
                               </div>
                             )}
                           </div>
+
                           <div
                             className="post_itm_icns right dtl_icns"
                             onClick={() => {
@@ -937,8 +939,52 @@ const UploadedContentDetails = (props) => {
                               alt=""
                             />
                           </div>
+
                           <div
-                            className="post_itm_icns right dtl_icns uploaded-magnifier"
+                            className="post_itm_icns right dtl_icns cart_icn clickable"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              // AddToBasket(data);
+                              console.log("Test --------------->", data?.find((el) => el._id === showContent?._id))
+                            }}
+                          >
+                            {data?.basket_status == "false" ? (
+                              <svg
+                                width="31"
+                                height="30"
+                                viewBox="0 0 31 30"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M3 2.5H7.15316C7.37715 2.5 7.57421 2.64798 7.63667 2.8631L9.13911 8.03819M9.13911 8.03819L11.9571 17.7445C12.0195 17.9597 12.2166 18.1076 12.4406 18.1076H24.7597C24.9907 18.1076 25.1921 17.9504 25.2481 17.7263L27.5137 8.66378C27.5932 8.34601 27.3528 8.03819 27.0253 8.03819H9.13911ZM14.0764 21.1285C15.6057 21.2675 16.7328 22.62 16.5937 24.1493C16.4679 25.5339 15.461 26.5408 14.0764 26.6667C12.5471 26.8057 11.1946 25.6786 11.0556 24.1493C10.9045 22.4878 12.4149 20.9774 14.0764 21.1285ZM23.6424 21.1285C25.1717 21.2675 26.2988 22.62 26.1597 24.1493C26.0338 25.5339 25.027 26.5408 23.6424 26.6667C22.113 26.8057 20.7606 25.6786 20.6215 24.1493C20.4705 22.4878 21.9809 20.9774 23.6424 21.1285Z"
+                                  stroke="white"
+                                  stroke-width="1.96354"
+                                />
+                              </svg>
+                            ) : (
+                              <svg
+                                width="31"
+                                height="30"
+                                viewBox="0 0 31 30"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M3 2.5H7.15316C7.37715 2.5 7.57421 2.64798 7.63667 2.8631L9.13911 8.03819M9.13911 8.03819L11.9571 17.7445C12.0195 17.9597 12.2166 18.1076 12.4406 18.1076H24.7597C24.9907 18.1076 25.1921 17.9504 25.2481 17.7263L27.5137 8.66378C27.5932 8.34601 27.3528 8.03819 27.0253 8.03819H9.13911ZM14.0764 21.1285C15.6057 21.2675 16.7328 22.62 16.5937 24.1493C16.4679 25.5339 15.461 26.5408 14.0764 26.6667C12.5471 26.8057 11.1946 25.6786 11.0556 24.1493C10.9045 22.4878 12.4149 20.9774 14.0764 21.1285ZM23.6424 21.1285C25.1717 21.2675 26.2988 22.62 26.1597 24.1493C26.0338 25.5339 25.027 26.5408 23.6424 26.6667C22.113 26.8057 20.7606 25.6786 20.6215 24.1493C20.4705 22.4878 21.9809 20.9774 23.6424 21.1285Z"
+                                  stroke="white"
+                                  stroke-width="1.96354"
+                                />
+                                <path
+                                  d="M9 8H27.5L25 18H12L9 8Z"
+                                  fill="white"
+                                />
+                              </svg>
+                            )}
+                          </div>
+
+                          <div
+                            className="post_itm_icns right dtl_icns magnifier-icn"
                             onClick={() => {
                               setOpenContent(!openContent);
                             }}
@@ -1192,6 +1238,12 @@ const UploadedContentDetails = (props) => {
                                   className="red-btn"
                                 >
                                   Go to Basket
+                                </button>
+                                <button
+                                  onClick={() => navigate("/basket")}
+                                  className="red-btn"
+                                >
+                                  Amount
                                 </button>
                               </div>
                             </div>

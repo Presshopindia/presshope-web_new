@@ -74,6 +74,7 @@ const Login = () => {
           localStorage.setItem("token", resp.data.token);
           localStorage.setItem("id", resp.data.user._id);
           localStorage.setItem("user", JSON.stringify(resp.data.user));
+          await AddFirebaseMessaging();
 
           window.location.reload();
 
@@ -244,7 +245,6 @@ const Login = () => {
                           className="theme-btn custom-ab mb-4 w-100 sm_btn"
                           onClick={async (e) => {
                             await Submit(e);
-                            await AddFirebaseMessaging();
                           }}
                         >
                           <span>Log In</span>
