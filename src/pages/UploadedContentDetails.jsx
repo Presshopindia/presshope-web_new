@@ -1903,14 +1903,10 @@ const UploadedContentDetails = (props) => {
                                                       <button
                                                         className={curr?.media?.filter((el) => el.paid_status)?.length > 0 ? "light-gray-bg txt_bld" : "theme_btn"}
                                                         onClick={() => {
-                                                          if (taskExpireDiff >= 1) {
-                                                            successToasterFun("This task has been expired");
+                                                          if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
+                                                            return;
                                                           } else {
-                                                            if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
-                                                              return;
-                                                            } else {
-                                                              AddToBasket(curr);
-                                                            }
+                                                            AddToBasket(curr);
                                                           }
                                                         }}
                                                         disabled={selectedItems?.length === 0}
@@ -1920,14 +1916,10 @@ const UploadedContentDetails = (props) => {
                                                       <button
                                                         className={curr?.media?.filter((el) => el.paid_status)?.length > 0 ? "light-gray-bg txt_bld" : "theme_btn"}
                                                         onClick={() => {
-                                                          if (taskExpireDiff >= 1) {
-                                                            successToasterFun("This task has been expired");
+                                                          if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
+                                                            return;
                                                           } else {
-                                                            if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
-                                                              return;
-                                                            } else {
-                                                              stripePayment(curr);
-                                                            }
+                                                            stripePayment(curr);
                                                           }
                                                         }}
                                                         disabled={selectedItems?.length === 0}
@@ -1939,14 +1931,10 @@ const UploadedContentDetails = (props) => {
                                                     <button
                                                       className={curr?.request_sent ? "light-gray-bg txt_bld" : "secondary_btn"}
                                                       onClick={() => {
-                                                        if (taskExpireDiff >= 1) {
-                                                          successToasterFun("This task has been expired");
+                                                        if (curr?.request_sent) {
+                                                          return;
                                                         } else {
-                                                          if (curr?.request_sent) {
-                                                            return;
-                                                          } else {
-                                                            requestMoreContent(curr);
-                                                          }
+                                                          requestMoreContent(curr);
                                                         }
                                                       }}
                                                     >

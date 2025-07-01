@@ -413,22 +413,10 @@ const BroadcastedTrackings = (props) => {
                             src={gps}
                             alt="time"
                           />
-                          {/* {moment(taskDetails?.deadline_date).format(
-                                      "hh:mm A"
-                                    ) !== "Invalid date"
-                                      ? " " +
-                                      moment(taskDetails?.deadline_date).format(
-                                        "hh:mm A"
-                                      )
-                                      : " 00:00 AM"} */}
-
-                          {taskDetails?.accepted_by?.length} Hoppers
+                          {taskDetails?.accepted_by?.length && taskDetails?.accepted_by?.length > 0 ? `${taskDetails?.accepted_by?.length} ${taskDetails?.accepted_by?.length <= 1 ? 'Hopper' : 'Hoppers'}` : '0 Hopper'}
                         </span>
                       </div>
                     </Col>
-                    {/* <Col md={4} className="timer_lft">
-                                <Timer className="tsk_dlt_icns" deadline={deadline} />
-                              </Col> */}
                   </Row>
                 </div>
                 <div className="taskInfo_card">
