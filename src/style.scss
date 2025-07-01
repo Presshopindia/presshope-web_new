@@ -13354,10 +13354,17 @@ span.green-dot {
   padding: 32px !important;
 }
 
-.accept-reject-button {
-  
-}
+.accept-reject-button {}
 
 .mt-22px {
   margin-top: 22px !important;
+}
+
+.darkmode .fud_card .Card_Wrapper {
+  background: transparent !important;
+}
+
+.darkmode .fud_card .list-in.tab-card-wrap {
+  background: #000 !important;
+  border-radius: 14px;
 }

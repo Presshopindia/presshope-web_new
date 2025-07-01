@@ -17192,7 +17192,7 @@ a.link {
 }
 
 a.link {
-  font-size: 14px;
+  font-size: 15px;
   font-family: "AirbnbMedium";
   color: #ec4e54;
 }
@@ -24147,3 +24147,7 @@ span.green-dot {
   left: 26px;
   border-radius: 50%;
 }
+
+
+
+.darkmode .fud_card .Card_Wrapper {}

@@ -33,7 +33,7 @@ const Footerlandingpage = ({ scrollToDiv }) => {
         return;
       }
 
-      await Post(`mediaHouse/addemail`, {email, for: "marketplace"});
+      await Post(`mediaHouse/addemail`, { email, for: "marketplace" });
       setEmail("");
       setLoading(false);
       toast.success('Brilliant! Thank you for subscribing.', {
@@ -93,10 +93,10 @@ const Footerlandingpage = ({ scrollToDiv }) => {
                   </p>
                   <div className="contantUsby">
                     <span>
-                      <a className="link" href="mailto:support@presshop.co.uk" target="_blank"><MdOutlineEmail /> support@presshop.co.uk</a>
+                      <a style={{ color: "#121212" }} className="link" href="mailto:support@presshop.co.uk" target="_blank"><MdOutlineEmail /> support@presshop.co.uk</a>
                     </span>
                     <span>
-                      <a className="link" href="https://www.presshop.co.uk" target="_blank"><SlGlobe /> www.presshop.co.uk</a>
+                      <a style={{ color: "#121212" }} className="link" href="https://www.presshop.co.uk" target="_blank"><SlGlobe /> www.presshop.co.uk</a>
                     </span>
                   </div>
                 </div>
