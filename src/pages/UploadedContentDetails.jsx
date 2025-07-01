@@ -1246,9 +1246,10 @@ const UploadedContentDetails = (props) => {
                                   Go to Basket
                                 </button>
                                 <button
-                                  onClick={() => navigate("/basket")}
+                                  // onClick={() => navigate(`/auto-invoice-task/${param.id}/${searchParams.get("hopper_id")}/${roomDetails?.roomsdetails?.room_id}`)}
                                   className="red-btn"
                                 >
+                                
                                   Amount
                                 </button>
                               </div>
