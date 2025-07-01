@@ -173,13 +173,26 @@ const UploadedContentDetails = (props) => {
     }
   }
 
-  console.log("messages ----------->", messages)
+  const flattedMessages = messages?.flatMap(msg =>
+    msg.media.map(mediaItem => ({
+      image_id: mediaItem?.image_id,
+      chat_id: msg?._id
+    }))
+  )
   // Add to basket-
-  const AddToBasket = async (element) => {
+  const AddToBasket = async (element, selectedContentId = "", type = "section_content") => {
+    setData((prev) => {
+      const updatedData = [...prev];
+      updatedData[taskContentIndex].basket_status = updatedData[taskContentIndex].basket_status === "false" ? "true" : "false";
+      return updatedData;
+    });
+
     try {
-      setLoading(true);
+      if (type === "section_content") {
+        setLoading(false);
+      }
       let object = {
-        content_id: selectedItems,
+        content_id: selectedItems?.length > 0 ? selectedItems?.length : [selectedContentId],
         type: "task",
         hopper_id: taskHopperId,
         task_id: param.id,
@@ -195,7 +208,9 @@ const UploadedContentDetails = (props) => {
         getCountOfBasketItems();
         setLoading(false);
         setSelectedItems([]);
-        successToasterFun("Content added to Basket");
+        if(type !== "section_content") {
+          successToasterFun("Content added to Basket");
+        }
       }
     } catch (error) {
       setLoading(false);
@@ -323,7 +338,6 @@ const UploadedContentDetails = (props) => {
         resp.data.data[0].task_id?._id
       );
     } catch (error) {
-      console.log(error);
       setLoading(false);
     }
   };
@@ -408,7 +422,6 @@ const UploadedContentDetails = (props) => {
   const handlePushNotification = (event) => {
     if (event && event.data) {
       ContentByID();
-      console.log("ContentByID");
     }
   };
 
@@ -439,9 +452,6 @@ const UploadedContentDetails = (props) => {
       }
     });
   };
-
-  console.log("selectedImtems", selectedItems)
-
 
   const Audio = data?.filter((item) => item.type === "audio")
   const Video = data?.filter((item) => item.type === "video")
@@ -608,7 +618,6 @@ const UploadedContentDetails = (props) => {
         room_id: chatContentIds ? chatContentIds?.room_id : "",
         room_type: "task",
       };
-      // console.log("Obj ----->", obj)
       const resp = await Post("mediaHouse/internalGroupChatMH", obj);
       if (resp) {
         setSelectedIds([]);
@@ -623,12 +632,8 @@ const UploadedContentDetails = (props) => {
       }
     } catch (error) {
       toast.error(error?.response?.data?.message);
-      console.log(error, `<<<<<socketServer error`);
-      // Handle errors
     }
   };
-
-  console.log("chatContentIds", chatContentIds);
 
   const handleChange = async (event) => {
     const file = event.target.files[0];
@@ -944,11 +949,12 @@ const UploadedContentDetails = (props) => {
                             className="post_itm_icns right dtl_icns cart_icn clickable"
                             onClick={(event) => {
                               event.stopPropagation();
-                              // AddToBasket(data);
-                              console.log("Test --------------->", data?.find((el) => el._id === showContent?._id))
+                              const selectedContentId = data?.find((el) => el._id === showContent?._id)?._id;
+                              const findChatMessage = flattedMessages?.find((el) => el?.image_id === selectedContentId);
+                              AddToBasket({_id: findChatMessage?.chat_id}, selectedContentId, 'section_content')
                             }}
                           >
-                            {data?.basket_status == "false" ? (
+                            {data?.find((el) => el._id === showContent?._id)?.basket_status == "false" ? (
                               <svg
                                 width="31"
                                 height="30"
