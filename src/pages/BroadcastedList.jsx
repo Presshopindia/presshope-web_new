@@ -90,37 +90,37 @@ const BroadcastedTrackings = (props) => {
 
   const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [deadlineTime, setDeadlineTime] = useState("");
-  
+
   useEffect(() => {
     if (taskDetails?.deadline_date) {
       // Set the deadline time format
       setDeadlineTime(moment(taskDetails.deadline_date).format("hh:mm A"));
-      
+
       // Calculate time remaining
       const calculateTimeRemaining = () => {
         const now = moment();
         const deadline = moment(taskDetails.deadline_date);
-        
+
         if (deadline.isBefore(now)) {
           setTimeRemaining({ days: 0, hours: 0, minutes: 0, seconds: 0 });
           return;
         }
-        
+
         const duration = moment.duration(deadline.diff(now));
         const days = Math.floor(duration.asDays());
         const hours = Math.floor(duration.asHours()) % 24;
         const minutes = Math.floor(duration.asMinutes()) % 60;
         const seconds = Math.floor(duration.asSeconds()) % 60;
-        
+
         setTimeRemaining({ days, hours, minutes, seconds });
       };
-      
+
       // Initial calculation
       calculateTimeRemaining();
-      
+
       // Update every second
       const timer = setInterval(calculateTimeRemaining, 1000);
-      
+
       return () => clearInterval(timer);
     }
   }, [taskDetails?.deadline_date]);
@@ -500,12 +500,12 @@ const BroadcastedTrackings = (props) => {
                                 Time remaining
                               </p>
                               <h5>
-                              {timeRemaining.days > 0 
-                                ? `${timeRemaining.days}d:${timeRemaining.hours.toString().padStart(2, '0')}h:${timeRemaining.minutes.toString().padStart(2, '0')}m`
-                                : timeRemaining.hours > 0 
-                                  ? `${timeRemaining.hours.toString().padStart(2, '0')}h:${timeRemaining.minutes.toString().padStart(2, '0')}m`
-                                  : `${timeRemaining.minutes.toString().padStart(2, '0')}m:${timeRemaining.seconds.toString().padStart(2, '0')}s`
-                              }
+                                {timeRemaining.days > 0
+                                  ? `${timeRemaining.days}d:${timeRemaining.hours.toString().padStart(2, '0')}h:${timeRemaining.minutes.toString().padStart(2, '0')}m`
+                                  : timeRemaining.hours > 0
+                                    ? `${timeRemaining.hours.toString().padStart(2, '0')}h:${timeRemaining.minutes.toString().padStart(2, '0')}m`
+                                    : `${timeRemaining.minutes.toString().padStart(2, '0')}m:${timeRemaining.seconds.toString().padStart(2, '0')}s`
+                                }
                               </h5>
                             </div>
                             <div className="Deadline-card-bottom p-2">
