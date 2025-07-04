@@ -8,7 +8,7 @@ import locationn from "../assets/images/location.svg";
 import { Form, Row, Col } from "react-bootstrap";
 import { Button } from "@mui/material";
 import { BiPlay, BiTimeFive, BiSupport } from "react-icons/bi";
-import { MdMyLocation, MdDateRange } from "react-icons/md";
+import { MdMyLocation, MdDateRange, MdOutlineWatchLater } from "react-icons/md";
 import { BsPeople, BsArrowRight, BsArrowLeft } from "react-icons/bs";
 import { IoChatbubblesOutline } from "react-icons/io5";
 import { Typography } from "@mui/material";
@@ -291,7 +291,7 @@ const BroadcastedTrackings = (props) => {
                                     <span className="time_info d-flex align-items-center lft_tme">
                                       <BiTimeFive />
                                       <Typography className="font-12">
-                                        {moment(curr?.deadline_date).format(
+                                        {moment(curr?.createdAt).format(
                                           "hh:mm A, DD.MM.YYYY"
                                         )}
                                       </Typography>
@@ -383,21 +383,24 @@ const BroadcastedTrackings = (props) => {
                   <Row className="justify-content-between price-wrapper">
                     <Col md={6} >
                       <div className="timeSlots_tiles">
-                        <label>Date</label>
+                        <label>Date and Time</label>
                         <span className="sm-tiles  taskInfo_card_gray addnewdesign_location_input">
-                          <img
+                          {/* <img
                             className="tsk_dlt_icns"
                             src={calendaric}
                             alt="date"
-                          />
-                          {moment(taskDetails?.deadline_date).format(
-                            "DD/MM/YYYY"
-                          ) !== "Invalid date"
-                            ? " " +
-                            moment(taskDetails?.deadline_date).format(
-                              "DD/MM/YYYY"
-                            )
-                            : "dd/mm/yyyy"}
+                          /> */}
+                          <small className="taskFeedTime"><MdOutlineWatchLater /></small>
+                          <span>
+                            {moment(taskDetails?.createdAt).format(
+                              "hh:mm A, DD MMM YYYY"
+                            ) !== "Invalid date"
+                              ? " " +
+                              moment(taskDetails?.createdAt).format(
+                                "hh:mm A, DD MMM YYYY"
+                              )
+                              : "dd/mm/yyyy"}
+                          </span>
                         </span>
                       </div>
                     </Col>
@@ -410,22 +413,10 @@ const BroadcastedTrackings = (props) => {
                             src={gps}
                             alt="time"
                           />
-                          {/* {moment(taskDetails?.deadline_date).format(
-                                      "hh:mm A"
-                                    ) !== "Invalid date"
-                                      ? " " +
-                                      moment(taskDetails?.deadline_date).format(
-                                        "hh:mm A"
-                                      )
-                                      : " 00:00 AM"} */}
-
-                          {taskDetails?.accepted_by?.length} Hoppers
+                          {taskDetails?.accepted_by?.length && taskDetails?.accepted_by?.length > 0 ? `${taskDetails?.accepted_by?.length} ${taskDetails?.accepted_by?.length <= 1 ? 'Hopper' : 'Hoppers'}` : '0 Hopper'}
                         </span>
                       </div>
                     </Col>
-                    {/* <Col md={4} className="timer_lft">
-                                <Timer className="tsk_dlt_icns" deadline={deadline} />
-                              </Col> */}
                   </Row>
                 </div>
                 <div className="taskInfo_card">

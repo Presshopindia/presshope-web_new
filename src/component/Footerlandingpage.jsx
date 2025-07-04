@@ -93,10 +93,10 @@ const Footerlandingpage = ({ scrollToDiv }) => {
                   </p>
                   <div className="contantUsby">
                     <span>
-                      <a style={{ color: "#121212" }} className="link" href="mailto:support@presshop.co.uk" target="_blank"><MdOutlineEmail /> support@presshop.co.uk</a>
+                      <a href="mailto:support@presshop.co.uk" target="_blank"><MdOutlineEmail /> support@presshop.co.uk</a>
                     </span>
                     <span>
-                      <a style={{ color: "#121212" }} className="link" href="https://www.presshop.co.uk" target="_blank"><SlGlobe /> www.presshop.co.uk</a>
+                      <a href="https://www.presshop.co.uk" target="_blank"><SlGlobe /> www.presshop.co.uk</a>
                     </span>
                   </div>
                 </div>
