@@ -809,7 +809,7 @@ const ContentPage = () => {
                         }
                         <Tab eventKey="favourited" title="Favourited">
                           <div
-                            className="DashBoardsort_wrapper d-flex justify-content-start fvt_undr_ofr"
+                            className="DashBoardsort_wrapper d-flex justify-content-start fvt_undr_ofr fud_card"
                             style={{ flexWrap: "wrap" }}
                           >
                             {favouriteContent?.filter((el) => ("content_details" in el || "upload_content_details" in el))?.map((curr, index) => {

@@ -33,7 +33,7 @@ const Footerlandingpage = ({ scrollToDiv }) => {
         return;
       }
 
-      await Post(`mediaHouse/addemail`, {email, for: "marketplace"});
+      await Post(`mediaHouse/addemail`, { email, for: "marketplace" });
       setEmail("");
       setLoading(false);
       toast.success('Brilliant! Thank you for subscribing.', {
