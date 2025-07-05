@@ -283,6 +283,7 @@ const AddBroadcastTask = (props) => {
       }
     } catch (error) {
       setLoading(false);
+      toast.error(error.response.data.message)
     }
   };
 
