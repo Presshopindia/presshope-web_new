@@ -91,6 +91,7 @@ import UploadDocPost from "../UploadDocPost";
 import TandcPre from "../TandcPre";
 import PurchasedTaskContentDetail from "../PurchasedTaskContentDetail";
 import UserOnboadingRequest from "../UserOnboardingRequest";
+import AutoInvoiceTask from "../AutoInvoiceTask";
 function RouteAll() {
   const token = localStorage.getItem("token");
 
@@ -249,6 +250,7 @@ function RouteAll() {
         <Route path="/signup-user-n/:name/:number/:vat/:email/:first_name/:last_name/:user_id" element={<SignupUserN />} />
         {/* <Route path="/login-user-n" element={<LoginUserN />} /> */}
         <Route path="/auto-invoice/:id" element={<AutoInvoice />} />
+        <Route path="/auto-invoice-task/:task_id/:hopper_id/:room_id" element={<AutoInvoiceTask />} />
         <Route path="/task-invoice/:id" element={<TaskInvoice />} />
         <Route path="/basket" element={<Basket />} />
         <Route path="/invoice/:id" element={<Invoice />} />

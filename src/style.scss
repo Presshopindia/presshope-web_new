@@ -2858,6 +2858,10 @@ button.MuiButton-secondary {
       margin-right: 4px;
     }
   }
+  
+  a {
+    color: #000;
+  }
 }
 
 .presshopInfo {
@@ -11801,7 +11805,7 @@ p.text_light {
 .add-to-basket-btn {
   margin-top: 40px;
   display: flex;
-  gap: 15px;
+  justify-content: space-between;
 }
 
 .right-content-wrap {
@@ -13072,6 +13076,7 @@ audio {
   .Deadline-card-top {
     p {
       color: #fff;
+      font-weight: 600;
     }
 
     h5 {
@@ -13354,10 +13359,17 @@ span.green-dot {
   padding: 32px !important;
 }
 
-.accept-reject-button {
-  
-}
+.accept-reject-button {}
 
 .mt-22px {
   margin-top: 22px !important;
+}
+
+.darkmode .fud_card .Card_Wrapper {
+  background: transparent !important;
+}
+
+.darkmode .fud_card .list-in.tab-card-wrap {
+  background: #000 !important;
+  border-radius: 14px;
 }

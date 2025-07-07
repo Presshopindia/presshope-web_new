@@ -225,7 +225,7 @@ const AddBroadcastTask = (props) => {
       } else if (timeError) {
         successToasterFun(timeError);
       } else {
-        console.log("success login");
+        // console.log("success login");
         setLoading(true);
 
         // Start with broadCasted_task as a copy of details
@@ -248,7 +248,7 @@ const AddBroadcastTask = (props) => {
           ? details.interview_price * 3/4
           : "";
 
-        console.log("all details about task ---->", broadCasted_task);
+        // console.log("all details about task ---->", broadCasted_task);
 
         // Post the task
         const resp = await Post("mediaHouse/createTask", broadCasted_task);
@@ -283,6 +283,7 @@ const AddBroadcastTask = (props) => {
       }
     } catch (error) {
       setLoading(false);
+      toast.error(error.response.data.message)
     }
   };
 
@@ -602,7 +603,7 @@ const AddBroadcastTask = (props) => {
                       </div>
                     )}
                     <span className="task_noti_color">
-                      Tasks available within Greater London only
+                      Tasks available within Central London only
                     </span>
                   </div>
                 </Form.Group>

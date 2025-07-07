@@ -173,12 +173,26 @@ const UploadedContentDetails = (props) => {
     }
   }
 
+  const flattedMessages = messages?.flatMap(msg =>
+    msg.media.map(mediaItem => ({
+      image_id: mediaItem?.image_id,
+      chat_id: msg?._id
+    }))
+  )
   // Add to basket-
-  const AddToBasket = async (element) => {
+  const AddToBasket = async (element, selectedContentId = "", type = "section_content") => {
+    setData((prev) => {
+      const updatedData = [...prev];
+      updatedData[taskContentIndex].basket_status = updatedData[taskContentIndex].basket_status === "false" ? "true" : "false";
+      return updatedData;
+    });
+
     try {
-      setLoading(true);
+      if (type === "section_content") {
+        setLoading(false);
+      }
       let object = {
-        content_id: selectedItems,
+        content_id: selectedItems?.length > 0 ? selectedItems?.length : [selectedContentId],
         type: "task",
         hopper_id: taskHopperId,
         task_id: param.id,
@@ -194,7 +208,9 @@ const UploadedContentDetails = (props) => {
         getCountOfBasketItems();
         setLoading(false);
         setSelectedItems([]);
-        successToasterFun("Content added to Basket");
+        if(type !== "section_content") {
+          successToasterFun("Content added to Basket");
+        }
       }
     } catch (error) {
       setLoading(false);
@@ -322,7 +338,6 @@ const UploadedContentDetails = (props) => {
         resp.data.data[0].task_id?._id
       );
     } catch (error) {
-      console.log(error);
       setLoading(false);
     }
   };
@@ -407,7 +422,6 @@ const UploadedContentDetails = (props) => {
   const handlePushNotification = (event) => {
     if (event && event.data) {
       ContentByID();
-      console.log("ContentByID");
     }
   };
 
@@ -438,9 +452,6 @@ const UploadedContentDetails = (props) => {
       }
     });
   };
-
-  console.log("selectedImtems", selectedItems)
-
 
   const Audio = data?.filter((item) => item.type === "audio")
   const Video = data?.filter((item) => item.type === "video")
@@ -607,7 +618,6 @@ const UploadedContentDetails = (props) => {
         room_id: chatContentIds ? chatContentIds?.room_id : "",
         room_type: "task",
       };
-      // console.log("Obj ----->", obj)
       const resp = await Post("mediaHouse/internalGroupChatMH", obj);
       if (resp) {
         setSelectedIds([]);
@@ -622,12 +632,8 @@ const UploadedContentDetails = (props) => {
       }
     } catch (error) {
       toast.error(error?.response?.data?.message);
-      console.log(error, `<<<<<socketServer error`);
-      // Handle errors
     }
   };
-
-  console.log("chatContentIds", chatContentIds);
 
   const handleChange = async (event) => {
     const file = event.target.files[0];
@@ -921,6 +927,7 @@ const UploadedContentDetails = (props) => {
                               </div>
                             )}
                           </div>
+
                           <div
                             className="post_itm_icns right dtl_icns"
                             onClick={() => {
@@ -937,8 +944,53 @@ const UploadedContentDetails = (props) => {
                               alt=""
                             />
                           </div>
+
                           <div
-                            className="post_itm_icns right dtl_icns uploaded-magnifier"
+                            className="post_itm_icns right dtl_icns cart_icn clickable"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              const selectedContentId = data?.find((el) => el._id === showContent?._id)?._id;
+                              const findChatMessage = flattedMessages?.find((el) => el?.image_id === selectedContentId);
+                              AddToBasket({_id: findChatMessage?.chat_id}, selectedContentId, 'section_content')
+                            }}
+                          >
+                            {data?.find((el) => el._id === showContent?._id)?.basket_status == "false" ? (
+                              <svg
+                                width="31"
+                                height="30"
+                                viewBox="0 0 31 30"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M3 2.5H7.15316C7.37715 2.5 7.57421 2.64798 7.63667 2.8631L9.13911 8.03819M9.13911 8.03819L11.9571 17.7445C12.0195 17.9597 12.2166 18.1076 12.4406 18.1076H24.7597C24.9907 18.1076 25.1921 17.9504 25.2481 17.7263L27.5137 8.66378C27.5932 8.34601 27.3528 8.03819 27.0253 8.03819H9.13911ZM14.0764 21.1285C15.6057 21.2675 16.7328 22.62 16.5937 24.1493C16.4679 25.5339 15.461 26.5408 14.0764 26.6667C12.5471 26.8057 11.1946 25.6786 11.0556 24.1493C10.9045 22.4878 12.4149 20.9774 14.0764 21.1285ZM23.6424 21.1285C25.1717 21.2675 26.2988 22.62 26.1597 24.1493C26.0338 25.5339 25.027 26.5408 23.6424 26.6667C22.113 26.8057 20.7606 25.6786 20.6215 24.1493C20.4705 22.4878 21.9809 20.9774 23.6424 21.1285Z"
+                                  stroke="white"
+                                  stroke-width="1.96354"
+                                />
+                              </svg>
+                            ) : (
+                              <svg
+                                width="31"
+                                height="30"
+                                viewBox="0 0 31 30"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M3 2.5H7.15316C7.37715 2.5 7.57421 2.64798 7.63667 2.8631L9.13911 8.03819M9.13911 8.03819L11.9571 17.7445C12.0195 17.9597 12.2166 18.1076 12.4406 18.1076H24.7597C24.9907 18.1076 25.1921 17.9504 25.2481 17.7263L27.5137 8.66378C27.5932 8.34601 27.3528 8.03819 27.0253 8.03819H9.13911ZM14.0764 21.1285C15.6057 21.2675 16.7328 22.62 16.5937 24.1493C16.4679 25.5339 15.461 26.5408 14.0764 26.6667C12.5471 26.8057 11.1946 25.6786 11.0556 24.1493C10.9045 22.4878 12.4149 20.9774 14.0764 21.1285ZM23.6424 21.1285C25.1717 21.2675 26.2988 22.62 26.1597 24.1493C26.0338 25.5339 25.027 26.5408 23.6424 26.6667C22.113 26.8057 20.7606 25.6786 20.6215 24.1493C20.4705 22.4878 21.9809 20.9774 23.6424 21.1285Z"
+                                  stroke="white"
+                                  stroke-width="1.96354"
+                                />
+                                <path
+                                  d="M9 8H27.5L25 18H12L9 8Z"
+                                  fill="white"
+                                />
+                              </svg>
+                            )}
+                          </div>
+
+                          <div
+                            className="post_itm_icns right dtl_icns magnifier-icn"
                             onClick={() => {
                               setOpenContent(!openContent);
                             }}
@@ -1192,6 +1244,13 @@ const UploadedContentDetails = (props) => {
                                   className="red-btn"
                                 >
                                   Go to Basket
+                                </button>
+                                <button
+                                  // onClick={() => navigate(`/auto-invoice-task/${param.id}/${searchParams.get("hopper_id")}/${roomDetails?.roomsdetails?.room_id}`)}
+                                  className="red-btn"
+                                >
+                                
+                                  Amount
                                 </button>
                               </div>
                             </div>
@@ -1851,14 +1910,10 @@ const UploadedContentDetails = (props) => {
                                                       <button
                                                         className={curr?.media?.filter((el) => el.paid_status)?.length > 0 ? "light-gray-bg txt_bld" : "theme_btn"}
                                                         onClick={() => {
-                                                          if (taskExpireDiff >= 1) {
-                                                            successToasterFun("This task has been expired");
+                                                          if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
+                                                            return;
                                                           } else {
-                                                            if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
-                                                              return;
-                                                            } else {
-                                                              AddToBasket(curr);
-                                                            }
+                                                            AddToBasket(curr);
                                                           }
                                                         }}
                                                         disabled={selectedItems?.length === 0}
@@ -1868,14 +1923,10 @@ const UploadedContentDetails = (props) => {
                                                       <button
                                                         className={curr?.media?.filter((el) => el.paid_status)?.length > 0 ? "light-gray-bg txt_bld" : "theme_btn"}
                                                         onClick={() => {
-                                                          if (taskExpireDiff >= 1) {
-                                                            successToasterFun("This task has been expired");
+                                                          if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
+                                                            return;
                                                           } else {
-                                                            if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
-                                                              return;
-                                                            } else {
-                                                              stripePayment(curr);
-                                                            }
+                                                            stripePayment(curr);
                                                           }
                                                         }}
                                                         disabled={selectedItems?.length === 0}
@@ -1887,14 +1938,10 @@ const UploadedContentDetails = (props) => {
                                                     <button
                                                       className={curr?.request_sent ? "light-gray-bg txt_bld" : "secondary_btn"}
                                                       onClick={() => {
-                                                        if (taskExpireDiff >= 1) {
-                                                          successToasterFun("This task has been expired");
+                                                        if (curr?.request_sent) {
+                                                          return;
                                                         } else {
-                                                          if (curr?.request_sent) {
-                                                            return;
-                                                          } else {
-                                                            requestMoreContent(curr);
-                                                          }
+                                                          requestMoreContent(curr);
                                                         }
                                                       }}
                                                     >
