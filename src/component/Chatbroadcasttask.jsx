@@ -267,7 +267,7 @@ const Chatbroadcasttask = (props) => {
                     <Col md={6}>
                       <div className="priceOffer_wrap">
                         <div className="type_price justify-content-between">
-                          <label className="txt_lt">Photo</label>
+                          <label className="txt_lt">Photo ss</label>
                           <span
                             className={
                               taskDetails?.need_photos
@@ -321,7 +321,7 @@ const Chatbroadcasttask = (props) => {
                           console.log("taskDetails", taskDetails)
                         }
                         <div className="mediaWrap uploaded_mda">
-                        {taskDetails?.content?.slice(0, 3)?.map((el, index) => {
+                          {taskDetails?.content?.slice(0, 3)?.map((el, index) => {
                             return (
                               el?.media_type === "image" ? <img key={index} src={el?.watermark} alt="" /> : <div className="card-imgs-wrap"><img className="card-img" key={index} src={audioic} alt="" /></div>
                             );

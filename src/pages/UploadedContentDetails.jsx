@@ -208,7 +208,7 @@ const UploadedContentDetails = (props) => {
         getCountOfBasketItems();
         setLoading(false);
         setSelectedItems([]);
-        if(type !== "section_content") {
+        if (type !== "section_content") {
           successToasterFun("Content added to Basket");
         }
       }
@@ -951,7 +951,7 @@ const UploadedContentDetails = (props) => {
                               event.stopPropagation();
                               const selectedContentId = data?.find((el) => el._id === showContent?._id)?._id;
                               const findChatMessage = flattedMessages?.find((el) => el?.image_id === selectedContentId);
-                              AddToBasket({_id: findChatMessage?.chat_id}, selectedContentId, 'section_content')
+                              AddToBasket({ _id: findChatMessage?.chat_id }, selectedContentId, 'section_content')
                             }}
                           >
                             {data?.find((el) => el._id === showContent?._id)?.basket_status == "false" ? (
@@ -1215,7 +1215,7 @@ const UploadedContentDetails = (props) => {
                           "
                                 >
                                   <div className="btn-1">
-                                    <p>Photo</p>
+                                    <p>Photo </p>
                                     <button className="btn-price">
                                       £ {data?.[0]?.task_id?.hopper_photo_price || 0}
                                     </button>
@@ -1238,20 +1238,20 @@ const UploadedContentDetails = (props) => {
                                 </div>
                               </div>
 
-                              <div className="add-to-basket-btn">
+                              <div className="add-to-basket-btn text-center">
                                 <button
                                   onClick={() => navigate("/basket")}
-                                  className="red-btn"
+                                  className="red-btn m-auto"
                                 >
                                   Go to Basket
                                 </button>
-                                <button
+                                {/* <button
                                   // onClick={() => navigate(`/auto-invoice-task/${param.id}/${searchParams.get("hopper_id")}/${roomDetails?.roomsdetails?.room_id}`)}
                                   className="red-btn"
                                 >
-                                
+
                                   Amount
-                                </button>
+                                </button> */}
                               </div>
                             </div>
                           </div>
@@ -1906,9 +1906,10 @@ const UploadedContentDetails = (props) => {
                                                   </div>
 
                                                   <div className="usr_upld_opts">
-                                                    <div className="d-flex gap_20">
+                                                    <div className="d-flex gap_20 w-100">
                                                       <button
-                                                        className={curr?.media?.filter((el) => el.paid_status)?.length > 0 ? "light-gray-bg txt_bld" : "theme_btn"}
+                                                        style={{ width: '160px' }}
+                                                        className={curr?.media?.filter((el) => el.paid_status)?.length > 0 ? "light-gray-bg txt_bld px-3 " : "theme_btn px-3"}
                                                         onClick={() => {
                                                           if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
                                                             return;
@@ -1920,8 +1921,8 @@ const UploadedContentDetails = (props) => {
                                                       >
                                                         Add to basket
                                                       </button>
-                                                      <button
-                                                        className={curr?.media?.filter((el) => el.paid_status)?.length > 0 ? "light-gray-bg txt_bld" : "theme_btn"}
+                                                      <button style={{ width: '160px' }}
+                                                        className={curr?.media?.filter((el) => el.paid_status)?.length > 0 ? "light-gray-bg txt_bld px-3 w-160" : "theme_btn px-3 "}
                                                         onClick={() => {
                                                           if (curr?.media?.filter((el) => el.paid_status)?.length > 0) {
                                                             return;
@@ -1936,7 +1937,7 @@ const UploadedContentDetails = (props) => {
                                                     </div>
                                                     <span className="txt_mdm">or</span>
                                                     <button
-                                                      className={curr?.request_sent ? "light-gray-bg txt_bld" : "secondary_btn"}
+                                                      className={curr?.request_sent ? "light-gray-bg txt_bld w-100" : "secondary_btn w-100"}
                                                       onClick={() => {
                                                         if (curr?.request_sent) {
                                                           return;
