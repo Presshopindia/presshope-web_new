@@ -267,7 +267,7 @@ const Chatbroadcasttask = (props) => {
                     <Col md={6}>
                       <div className="priceOffer_wrap">
                         <div className="type_price justify-content-between">
-                          <label className="txt_lt">Photo ss</label>
+                          <label className="txt_lt">Photo</label>
                           <span
                             className={
                               taskDetails?.need_photos

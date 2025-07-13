@@ -480,7 +480,7 @@ const GroupContentDtlChat = (props) => {
                             </Button>
                           </div>
                         ) : (
-                          <div className="button-group d-flex justify-content-between chat-content-price">
+                          <div className="button-group d-flex justify-content-between chat-content-price gap-1">
                             <div className="btn-1">
                               <p>Photo</p>
                               <button className="btn-price">
