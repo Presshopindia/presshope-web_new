@@ -383,14 +383,14 @@ const BroadcastedTrackings = (props) => {
                   <Row className="justify-content-between price-wrapper">
                     <Col md={6} >
                       <div className="timeSlots_tiles">
-                        <label>Date and Time</label>
-                        <span className="sm-tiles  taskInfo_card_gray addnewdesign_location_input">
-                          {/* <img
-                            className="tsk_dlt_icns"
+                        <label>Time and Date</label>
+                        <span className="sm-tiles   taskInfo_card_gray addnewdesign_location_input">
+                          <img
+                            className="tsk_dlt_icns mx-2"
                             src={calendaric}
                             alt="date"
-                          /> */}
-                          <small className="taskFeedTime"><MdOutlineWatchLater /></small>
+                          />
+                          {/* <small className="taskFeedTime"><MdOutlineWatchLater /></small> */}
                           <span>
                             {moment(taskDetails?.createdAt).format(
                               "hh:mm A, DD MMM YYYY"
@@ -409,7 +409,7 @@ const BroadcastedTrackings = (props) => {
                         <label>Accepted by</label>
                         <span className="sm-tiles taskInfo_card_gray addnewdesign_location_input">
                           <img
-                            className="tsk_dlt_icns"
+                            className="tsk_dlt_icns mx-2"
                             src={gps}
                             alt="time"
                           />
