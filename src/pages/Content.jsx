@@ -902,7 +902,7 @@ const ContentPage = () => {
                         </Tab>
                         <Tab eventKey="underoffer" title="Under offer">
                           <div
-                            className="DashBoardsort_wrapper_tab d-flex fvt_undr_ofr"
+                            className="DashBoardsort_wrapper_tab d-flex fvt_undr_ofr fud_card"
                             style={{ flexWrap: "wrap" }}
                           >
                             {underOfferContent?.slice(0, 6).map((curr) => {
@@ -976,7 +976,7 @@ const ContentPage = () => {
                         </Tab>
                         <Tab eventKey="discount" title="Special offers">
                           <div
-                            className="DashBoardsort_wrapper d-flex justify-content-start fvt_undr_ofr"
+                            className="DashBoardsort_wrapper d-flex justify-content-start fvt_undr_ofr fud_card"
                             style={{ flexWrap: "wrap" }}
                           >
                             {discount?.map((curr, index) => {

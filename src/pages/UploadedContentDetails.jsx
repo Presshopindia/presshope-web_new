@@ -1241,7 +1241,7 @@ const UploadedContentDetails = (props) => {
                               <div className="add-to-basket-btn text-center">
                                 <button
                                   onClick={() => navigate("/basket")}
-                                  className="red-btn m-auto"
+                                  className="red-btn m-auto w-100"
                                 >
                                   Go to Basket
                                 </button>
@@ -1537,7 +1537,7 @@ const UploadedContentDetails = (props) => {
                                   <div className="tab_in_card">
                                     <Link>
                                       <div className="tab_in_card-heading d-flex justify-content-between align-items-center">
-                                        <h4>Participants</h4>
+                                        <h4>Participants a</h4>
                                       </div>
                                     </Link>
 
