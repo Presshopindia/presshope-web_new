@@ -174,8 +174,8 @@ const Footerlandingpage = ({ scrollToDiv }) => {
                     </Col>
                     <Col sm={6}>
                       <div className="appLinks text-end">
-                        <img src={appstore} alt="" className="me-3" />
-                        <img src={playstore} alt="" />
+                        <img src={appstore} alt="" className="me-3" onClick={() => window.open("https://apps.apple.com/in/app/presshop/id6744651614", "_blank")} />
+                        <img src={playstore} alt="" onClick={() => window.open("https://play.google.com/store/apps/details?id=com.presshop.app", "_blank")} />
                       </div>
                     </Col>
                   </Row>

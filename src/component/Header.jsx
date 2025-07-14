@@ -382,7 +382,7 @@ const Header = () => {
                       }`}
                     onClick={() => {
                       localStorage.removeItem("backBtnVisibility");
-                      setNavColor("/content/exclusive/published/favourited");
+                      setNavColor("/content/");
                       localStorage.setItem("activeNav", JSON.stringify("/content/"))
                     }}
                   >
@@ -425,7 +425,7 @@ const Header = () => {
                     className={`nav-link ${navColor.startsWith("/reports/") ? "nav-active" : ""
                       }`}
                     onClick={() => {
-                      setNavColor("/reports/content");
+                      setNavColor("/reports/");
                       localStorage.setItem("activeNav", JSON.stringify("/reports/"))
                     }}
                   >

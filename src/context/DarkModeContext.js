@@ -1,13 +1,11 @@
 // DarkModeContext.js
 import { createContext, useContext, useEffect, useState } from "react";
 import { Get } from "../services/user.services";
-import { useParams } from "react-router-dom";
 import socketServer from "../socket.config";
 
 const DarkModeContext = createContext();
 
 export const DarkModeProvider = ({ children }) => {
-  const param = useParams();
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem("darkMode") === "enabled"
   );
@@ -50,14 +48,10 @@ export const DarkModeProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if(localStorage.getItem("token")) {
+    if (localStorage.getItem("token")) {
       getProfileData();
     }
   }, [isDarkMode, profileChange]);
-
-  // useEffect(() => {
-  //   setNavColor(window.location.pathname);
-  // }, [window.location.pathname]);
 
   useEffect(() => {
     socketServer?.emit("addAdmin", (profileData?._id));
@@ -68,6 +62,16 @@ export const DarkModeProvider = ({ children }) => {
       }))
     })
   }, [socketServer, profileData]);
+
+  // useEffect(() => {
+  //   const handlePopState = () => {
+  //     localStorage.setItem("activeNav", JSON.stringify(window.location.pathname));
+  //     setNavColor(window.location.pathname)
+  //   };
+
+  //   window.addEventListener('popstate', handlePopState);
+  //   return () => window.removeEventListener('popstate', handlePopState);
+  // }, []);
 
   return (
     <DarkModeContext.Provider

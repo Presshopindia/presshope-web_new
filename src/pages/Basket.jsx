@@ -1,7 +1,7 @@
 import { Card, FormControl, FormControlLabel, FormGroup, FormLabel, Switch, Tooltip, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { BsArrowLeft } from "react-icons/bs";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import audioic from "../assets/images/audimg.svg";
 import audioicon from "../assets/images/audio-icon.svg";
 import calendericn from "../assets/images/calendarnic.svg";
@@ -53,11 +53,28 @@ const Basket = () => {
     off: "",
   });
 
-  const [checked, setChecked] = useState(false);
+  const location = useLocation();
+
+  const query = new URLSearchParams(location.search);
+  const initialChecked = query.get("checked") === "true";
+
+  const [checked, setChecked] = useState(initialChecked);
 
   const handleChange = (event) => {
-    setChecked(event.target.checked);
+    const newChecked = event.target.checked;
+    setChecked(newChecked);
+
+    // Update query param
+    const updatedQuery = new URLSearchParams(location.search);
+    updatedQuery.set("checked", newChecked);
+    navigate(`?${updatedQuery.toString()}`, { replace: true });
   };
+
+  // Sync state with URL if query changes outside (optional)
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    setChecked(query.get("checked") === "true");
+  }, [location.search]);
 
   const { setCartCount, profileData } = useDarkMode();
   const user = profileData;
@@ -93,7 +110,7 @@ const Basket = () => {
         getCountOfBasketItems();
         BasketData();
       });
-  }, []);
+  }, [checked]);
 
   const paymentintents = async (data) => {
     try {
@@ -343,6 +360,7 @@ const Basket = () => {
                                 <FormControl component="fieldset" variant="standard">
                                   <FormGroup>
                                     <FormControlLabel
+                                      color="black"
                                       control={
                                         <Switch checked={checked} onChange={handleChange} name="gilad" />
                                       }
