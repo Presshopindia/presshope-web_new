@@ -63,15 +63,10 @@ export const DarkModeProvider = ({ children }) => {
     })
   }, [socketServer, profileData]);
 
-  // useEffect(() => {
-  //   const handlePopState = () => {
-  //     localStorage.setItem("activeNav", JSON.stringify(window.location.pathname));
-  //     setNavColor(window.location.pathname)
-  //   };
-
-  //   window.addEventListener('popstate', handlePopState);
-  //   return () => window.removeEventListener('popstate', handlePopState);
-  // }, []);
+  useEffect(() => {
+    localStorage.setItem("activeNav", JSON.stringify(window.location.pathname));
+    setNavColor(window.location.pathname)
+  }, []);
 
   return (
     <DarkModeContext.Provider
