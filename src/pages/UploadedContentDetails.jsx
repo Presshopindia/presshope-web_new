@@ -192,7 +192,7 @@ const UploadedContentDetails = (props) => {
         setLoading(false);
       }
       let object = {
-        content_id: selectedItems?.length > 0 ? selectedItems?.length : [selectedContentId],
+        content_id: selectedItems?.length > 0 ? selectedItems : [selectedContentId],
         type: "task",
         hopper_id: taskHopperId,
         task_id: param.id,
@@ -949,9 +949,14 @@ const UploadedContentDetails = (props) => {
                             className="post_itm_icns right dtl_icns cart_icn clickable"
                             onClick={(event) => {
                               event.stopPropagation();
-                              const selectedContentId = data?.find((el) => el._id === showContent?._id)?._id;
+                              const selectedContentId = data?.find((el) => el._id === showContent?._id);
+                              const amount= selectedContentId?.type === "image" ? selectedContentId?.task_id?.hopper_photo_price : selectedContentId?.type === "video" ? selectedContentId?.task_id?.hopper_videos_price : selectedContentId?.task_id?.hopper_interview_price; 
                               const findChatMessage = flattedMessages?.find((el) => el?.image_id === selectedContentId);
-                              AddToBasket({ _id: findChatMessage?.chat_id }, selectedContentId, 'section_content')
+                              AddToBasket(
+                                {_id: findChatMessage?.chat_id },
+                                {image_id: selectedContentId?._id, amount: Number(amount)},
+                                'section_content'
+                              )
                             }}
                           >
                             {data?.find((el) => el._id === showContent?._id)?.basket_status == "false" ? (
@@ -1241,7 +1246,7 @@ const UploadedContentDetails = (props) => {
                               <div className="add-to-basket-btn text-center">
                                 <button
                                   onClick={() => navigate("/basket")}
-                                  className="red-btn m-auto"
+                                  className="red-btn m-auto w-100"
                                 >
                                   Go to Basket
                                 </button>
@@ -1537,7 +1542,7 @@ const UploadedContentDetails = (props) => {
                                   <div className="tab_in_card">
                                     <Link>
                                       <div className="tab_in_card-heading d-flex justify-content-between align-items-center">
-                                        <h4>Participants</h4>
+                                        <h4>Participants a</h4>
                                       </div>
                                     </Link>
 

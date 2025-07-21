@@ -483,6 +483,10 @@ nav {
     border-radius: 12px;
   }
 
+  a.special_card_design {
+    margin-bottom: 10px;
+  }
+
   .scrolling {
     height: 635px;
     overflow-y: auto;
@@ -10634,10 +10638,10 @@ select.PhoneInputCountrySelect {
   }
 
   button.sort_btn {
-    color: $black !important;
+    color: #fff !important;
 
     svg {
-      color: $black !important;
+      color: #fff !important;
     }
   }
 
@@ -11752,7 +11756,7 @@ p.text_light {
 
 .button-group button.btn-price {
   border: none !important;
-  width: 100px;
+  width: 92px;
   height: 50px;
   border-radius: 13px;
   background: #ec4e54;
@@ -11763,7 +11767,7 @@ p.text_light {
 
 .button-group p {
   font-size: 14px;
-  font-family: "AirbnbMedium" !important;
+  font-family: "AirbnbBold" !important;
   margin-bottom: 10px;
   text-align: center;
 }
@@ -12205,7 +12209,7 @@ span.button-apply {
   color: #7d8d8b;
   padding-left: 2px;
   text-decoration-line: line-through;
-  text-decoration-color: #000;
+  // text-decoration-color: #000;
   text-decoration-thickness: 2px;
 }
 
@@ -13305,22 +13309,24 @@ audio {
 
 span.red-dot {
   position: absolute;
-  top: 0;
-  width: 12px;
-  height: 12px;
-  background: red;
+  top: -2px;
+  width: 11.33px;
+  height: 11.33px;
+  background: #ec4e54;
   left: 26px;
   border-radius: 50%;
+  border: 2px solid #fff;
 }
 
 span.green-dot {
   position: absolute;
-  top: 0;
-  width: 12px;
-  height: 12px;
-  background: green;
+  top: -2px;
+  width: 11.33px;
+  height: 11.33px;
+  background: #10af0c;
   left: 26px;
   border-radius: 50%;
+  border: 2px solid #fff;
 }
 
 .email-client-modal .modal-content {
@@ -13372,4 +13378,7 @@ span.green-dot {
 .darkmode .fud_card .list-in.tab-card-wrap {
   background: #000 !important;
   border-radius: 14px;
+}
+.appLinks {
+  cursor: pointer;
 }

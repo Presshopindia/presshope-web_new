@@ -104,7 +104,7 @@ const DbFooter = () => {
                           </div>
                           <div className="singleTip">
                             <Form.Group className="globalSort">
-                              <Form.Select>
+                              <Form.Select disabled>
                                 <option>Monthly</option>
                                 <option>Latest</option>
                                 <option>Relevance</option>
@@ -117,7 +117,7 @@ const DbFooter = () => {
                           </div>
                           <div className="singleTip">
                             <Form.Group className="globalSort">
-                              <Form.Select>
+                              <Form.Select disabled>
                                 <option>Sort</option>
                                 <option>Latest</option>
                                 <option>Relevance</option>
@@ -127,7 +127,7 @@ const DbFooter = () => {
                           </div>
                           <div className="singleTip">
                             <Form.Group className="globalSort">
-                              <Form.Select>
+                              <Form.Select disabled>
                                 <option>Filter</option>
                                 <option>Latest</option>
                                 <option>Relevance</option>
@@ -217,8 +217,8 @@ const DbFooter = () => {
                   <Row className="align-items-end">
                     <Col sm={12} className="ps-5 pe-0">
                       <div className="appLinks">
-                        <img src={appstore} alt="" className="me-3" />
-                        <img src={playstore} alt="" />
+                        <img src={appstore} alt="" className="me-3" onClick={() => window.open("https://apps.apple.com/in/app/presshop/id6744651614", "_blank")} />
+                        <img src={playstore} alt="" onClick={() => window.open("https://play.google.com/store/apps/details?id=com.presshop.app", "_blank")} />
                       </div>
                       <h6 className="copyrText mt-1 mb-0">
                         © 2025 PressHop UK. All rights reserved.

@@ -74,6 +74,7 @@ const Login = () => {
           localStorage.setItem("token", resp.data.token);
           localStorage.setItem("id", resp.data.user._id);
           localStorage.setItem("user", JSON.stringify(resp.data.user));
+          localStorage.setItem("activeNav", JSON.stringify("/dashboard/exclusive"))
           await AddFirebaseMessaging();
 
           window.location.reload();

@@ -139,7 +139,7 @@ const LandingPage = () => {
                     News delivered straight to your desktop
                   </p>
                   <p className="landing_cstm_txt">
-                  PressHop is an easy-to-use platform that connects the public
+                    PressHop is an easy-to-use platform that connects the public
                     directly with the press.
                   </p>
                   <p className="landing_cstm_txt cstm_mb">
@@ -185,19 +185,19 @@ const LandingPage = () => {
                     slidesPerView={4}
                     navigation
                     from={1}
-                    // controlsProps={{
-                    //   dotsTouchable: true,
-                    //   prevPos: "left",
-                    //   nextPos: "right",
-                    //   nextTitle: "",
-                    //   prevTitle: "",
-                    //   dotsWrapperStyle: {},
-                    //   nextTitleStyle: {
-                    //     color: "#AAAAAA",
-                    //     fontSize: 20,
-                    //     fontWeight: "500",
-                    //   },
-                    // }}
+                  // controlsProps={{
+                  //   dotsTouchable: true,
+                  //   prevPos: "left",
+                  //   nextPos: "right",
+                  //   nextTitle: "",
+                  //   prevTitle: "",
+                  //   dotsWrapperStyle: {},
+                  //   nextTitleStyle: {
+                  //     color: "#AAAAAA",
+                  //     fontSize: 20,
+                  //     fontWeight: "500",
+                  //   },
+                  // }}
                   >
                     <SwiperSlide>
                       <img src={dailymail} alt="" />
@@ -397,11 +397,11 @@ const LandingPage = () => {
                     </div>
                   </div>
                   <div className="martketActn mt-4 text-end">
-                    <a
-                      href="https://drive.google.com/file/d/1KaGYZh_3jtkicJ3mVxmJ8nnj_ZhHBrD1/view?usp=sharing"
-                      download
-                    >
-                      <Button className="btn_bld" variant="primary">
+                    <a>
+                      <Button className="btn_bld" variant="primary" onClick={() => {
+                        window.open("https://apps.apple.com/in/app/presshop/id6744651614", "_blank");
+                        window.open("https://play.google.com/store/apps/details?id=com.presshop.app", "_blank");
+                      }}>
                         <HiArrowNarrowDown className="me-1" /> Download App
                       </Button>
                     </a>

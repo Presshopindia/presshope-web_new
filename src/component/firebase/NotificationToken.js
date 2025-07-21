@@ -13,7 +13,7 @@ export const checkNotificationPermission = () => {
 // Request notification permission with better UX
 export const requestNotificationPermission = async () => {
   if (!('Notification' in window)) {
-    toast.error('This browser does not support notifications');
+    // toast.error('This browser does not support notifications');
     return false;
   }
 
@@ -68,7 +68,7 @@ export const testNotification = () => {
       tag: 'test-notification'
     });
   } else {
-    toast.error('Notification permission not granted');
+    // toast.error('Notification permission not granted');
   }
 };
 
@@ -76,13 +76,13 @@ export const requestForToken = async () => {
   try {
     // Check if the browser supports notifications
     if (!('Notification' in window)) {
-      toast.error('This browser does not support notifications');
+      // toast.error('This browser does not support notifications');
       return;
     }
 
     // Check if service worker is supported
     if (!('serviceWorker' in navigator)) {
-      toast.error('Service Worker not supported - notifications may not work');
+      // toast.error('Service Worker not supported - notifications may not work');
       return;
     }
 
@@ -97,17 +97,17 @@ export const requestForToken = async () => {
         if (currentToken) {
           localStorage.setItem("DeviceToken", currentToken);
         } else {
-          toast.error('Could not generate notification token. Please check your browser settings.');
+          // toast.error('Could not generate notification token. Please check your browser settings.');
         }
       } catch (err) {
-        toast.error(`Error setting up notifications: ${err.message}`);
+        // toast.error(`Error setting up notifications: ${err.message}`);
       }
     } else if (permission === 'denied') {
-      toast.error('Notification permission denied. You may not receive important updates.');
+      // toast.error('Notification permission denied. You may not receive important updates.');
     } else {
-      toast.error('Notification permission not granted');
+      // toast.error('Notification permission not granted');
     }
   } catch (error) {
-    toast.error(`Error setting up notifications: ${error.message}`);
+    // toast.error(`Error setting up notifications: ${error.message}`);
   }
 };
