@@ -603,7 +603,7 @@ const AddBroadcastTask = (props) => {
                       </div>
                     )}
                     <span className="task_noti_color">
-                      Tasks available within Central London only
+                      Tasks available within London only
                     </span>
                   </div>
                 </Form.Group>
