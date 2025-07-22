@@ -11633,9 +11633,9 @@ p.text_light {
   width: 20% !important;
 }
 
-.tracker-task .col-md-6 {
-  width: 100% !important;
-}
+// .tracker-task .col-md-6 {
+//   width: 100% !important;
+// }
 
 .custm-crds {
   margin-top: 16px !important;
@@ -13381,4 +13381,20 @@ span.green-dot {
 }
 .appLinks {
   cursor: pointer;
+}
+
+.new-task-upload-head-padding {
+  padding: 6px 0 25px 0;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.m-0 {
+  margin: 0 !important;
+}
+
+.p-0 {
+  padding: 0 !important;
 }

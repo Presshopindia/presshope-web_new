@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import interviewic from "../assets/images/interview.svg";
 import Header from "../component/Header";
 import BroadcastedTrackings from "./BroadcastedList";
@@ -24,6 +24,10 @@ import ContentFeedCard from "../component/card/ContentFeedCard";
 import { formatAmountInMillion, getDeepModifiedTaskContent, getPurchasedTaskContent, getTaskContent } from "../component/commonFunction";
 import { Get, Post } from "../services/user.services";
 import { DashboardCardInfo } from "../component/DashboardCardInfo";
+import TaskCard from "../component/card/TaskCard";
+import contentCamera from "../assets/images/contentCamera.svg";
+import contentVideo from "../assets/images/contentVideo.svg";
+import typeInterviewwt from "../assets/images/typeinterview-wt.svg";
 
 const BroadcastedTask = () => {
   const [searchParams] = useSearchParams();
@@ -69,6 +73,7 @@ const BroadcastedTask = () => {
 
   // New Uploaded Content -
   const [newUploadedContent, setNewUploadedContent] = useState(null);
+  const [allUploadedContent, setAllUploadedContent] = useState(null);
 
   const TaskDetails = async (id = "") => {
     setLoading(true);
@@ -82,8 +87,20 @@ const BroadcastedTask = () => {
     }
   };
 
+    const allContent = async (id = "") => {
+    setLoading(true);
+    try {
+      let resp = await Get(`mediaHouse/getuploadedContentbyHoppers?task_id=${id}&limit=${limit}&offet=${+(page - 1) * limit}`)
+      setAllUploadedContent(resp?.data);
+      setLoading(false);
+      setTotalPage(Math.ceil(resp.data?.totalUploadedContent / limit));
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    TaskDetails();
+    allContent();
   }, [page]);
 
   const handleFavourite = (i) => {
@@ -258,141 +275,61 @@ const BroadcastedTask = () => {
           </Row>
 
           <Row className="tracker-task">
-            <Col md={4} className="mb-0">
-              <BroadcastedTrackings show={show} setViewTask={setViewTask} viewTask={viewTask} TaskDetails={TaskDetails} />
+            <Col md={8} className="mb-0">
+              <BroadcastedTrackings show={show} setViewTask={setViewTask} viewTask={viewTask} TaskDetails={TaskDetails} newUploadedContent={newUploadedContent?.uploadedContent} />
             </Col>
-            <Col md={8} className="pe-0">
-              <div className="top-bar">
-                <Row>
-                  <Col sm={12}>
-                    <div className="feedPreviews d-flex justify-content-between broadcast-heading align-items-center">
-                      <h2 className="mb-0">Uploaded content</h2>
-                      <div className="sorting_wrap d-flex">
-                        <div className="feedSorting me-4">
-                          <div className="fltrs_prnt top_fltr">
-                            <p className="lbl_fltr">Filter</p>
-                            <button
-                              className="sortTrigger"
-                              onClick={() => {
-                                setOpenFilterComponent(true);
-                              }}
-                            >
-                              Filter <AiFillCaretDown />
-                            </button>
-                            {openFilterComponent && (
-                              <TopFilterComn
-                                closeFilterComponent={
-                                  handleCloseFilterComponent
-                                }
-                                setAllFilterData={setAllFilterData}
-                                allFilterData={allFilterData}
-                              />
-                            )}
-                          </div>
-                        </div>
-                        <div className="feedSorting">
-                          <div className="fltrs_prnt top_fltr">
-                            <p className="lbl_fltr">Sort</p>
-                            <button
-                              className="sortTrigger"
-                              onClick={() => {
-                                setOpenSortComponent(true);
-                              }}
-                            >
-                              Sort <AiFillCaretDown />
-                            </button>
-                            {openSortComponent && (
-                              <Fundsinvested
-                                closeSortComponent={handleCloseSortComponent}
-                              />
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
+            <Col md={4} className="pe-0 list-card-wrap pt-0">
+              <div className="feedPreviews d-flex justify-content-between broadcast-heading align-items-center new-task-upload-head-padding">
+                <h2 className="mb-0">Content uploaded for all tasks</h2>
               </div>
-              <Row className="custm-crds">
-                {newUploadedContent?.uploadedContent?.map((item, index) => {
-                  const filteredContent = (mediaType) => {
-                    const content = item?.content?.filter((el) => el.type === mediaType);
-                    return content;
-                  };
-
-                  return (
-                    <Col lg={4} sm={6} key={item?._id}>
-                      <ContentFeedCard
-                        feedImg={
-                          item?.content[0]?.type === "image"
-                            ? item?.content[0]?.videothubnail ||
-                            process.env.REACT_APP_UPLOADED_CONTENT +
-                            item?.content[0]?.imageAndVideo
-                            : item?.content[0]?.type === "video"
-                              ? item?.content[0]?.videothubnail ||
-                              process.env.REACT_APP_UPLOADED_CONTENT +
-                              item?.content[0]?.videothubnail
-                              : item?.content[0]?.type === "audio"
-                                ? audioic
-                                : null
-                        }
-                        type={"task"}
-                        user_avatar={
-                          item?.content[0]?.avatar_details?.avatar
-                            ? process.env.REACT_APP_AVATAR_IMAGE +
-                            item?.content[0]?.avatar_details?.avatar
-                            : item?.content[0]?.avatar_detals?.[0]?.avatar
-                              ? process.env.REACT_APP_AVATAR_IMAGE +
-                              item?.content[0]?.avatar_detals?.avatar
-                              : ""
-                        }
-                        author_Name={item?.content[0]?.uploaded_by?.user_name}
-                        lnkto={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
-                        viewTransaction="View details"
-                        viewDetail={`/content-details/${item?.content[0]?.task_id?._id}?hopper_id=${item?.content[0]?.uploaded_by?._id}`}
-                        // fvticns={
-                        //   item?.content[0]?.favourited === "true"
-                        //     ? favouritedic
-                        //     : favic
-                        // }
-                        type_tag={item?.content[0]?.category_details?.name}
-                        allContent={item?.content[0]?.task_id?.content}
-                        type_img={item?.content[0]?.category_details?.icon}
-                        feedHead={item?.content[0]?.task_id?.heading}
-                        feedTime={moment(item?.content[0]?.updatedAt).format(
-                          " hh:mm A, DD MMM YYYY"
-                        )}
-                        feedLocation={item?.content[0]?.task_id?.location}
-                        // favourite={() => handleFavourite(index, "task")}
-                        // bool_fav={
-                        //   item?.content[0]?.favourited === "true" ? "false" : "true"
-                        // }
-                        content_id={item?._id}
-                        task_content_id={item?._id || item?.task_id?._id}
-                        // taskContentId={item?.content?.map((el) => el._id)}
-                        is_sale_status={true}
-                        feedTypeImg1={filteredContent("image")?.length > 0 ? cameraic : null}
-                        feedTypeImg2={filteredContent("video")?.length > 0 ? videoic : null}
-                        feedTypeImg3={filteredContent("audio")?.length > 0 ? interviewic : null}
-                        postcount={filteredContent("image")?.length}
-                        postcount2={filteredContent("video")?.length}
-                        postcount3={filteredContent("audio")?.length}
-                      />
-                    </Col>
-                  );
-                })}
-                {totalPage ? (
-                  <PaginationComp
-                    totalPage={totalPage}
-                    path="task"
-                    type="fav"
-                    setPage={setPage}
-                    page={page}
-                  />
-                ) : (
-                  " "
-                )}
-              </Row>
+              <Card className="dash-top-cards listing rt_crd rcnt_actvt mb-0 h-100">
+                <CardContent className="dash-c-body rev">
+                  <div className="scrolling">
+                    {allUploadedContent?.uploadedContent?.map((curr) => {
+                      return (
+                        <Link
+                          to={`/content-details/${curr?.content[0]?.task_id?._id}?hopper_id=${curr?.content[0]?.uploaded_by?._id}`}
+                          key={curr._id}
+                        >
+                          <TaskCard
+                            contentId={curr?.content[0]?.uploaded_by?._id}
+                            listcard1={curr?.content[0]?.task_id?.heading}
+                            listcard2={moment(
+                              curr?.content[0]?.createdAt
+                            ).format("hh:mm A, DD MMM YYYY")}
+                            reviewType={
+                              curr?.content[0]?.type === "audio"
+                                ? typeInterviewwt
+                                : curr?.content[0]?.type === "image"
+                                  ? contentCamera
+                                  : contentVideo
+                            }
+                            imgtype={curr?.content[0]?.type}
+                            imgl={
+                              curr?.content[0]?.type === "image"
+                                ? curr?.content[0]?.videothubnail ||
+                                process.env.REACT_APP_UPLOADED_CONTENT +
+                                curr?.content[0]?.imageAndVideo
+                                : curr?.content[0]?.type === "video"
+                                  ? curr?.content[0]?.videothubnail ||
+                                  process.env.REACT_APP_UPLOADED_CONTENT +
+                                  curr?.content[0]?.videothubnail
+                                  : curr?.content[0]?.type === "audio"
+                                    ? audioic
+                                    : null
+                            }
+                            imageCount={
+                              curr?.content?.length || 0
+                            }
+                            colorWhite={false}
+                            linkTo={`/content-details/${curr?.content[0]?.task_id?._id}?hopper_id=${curr?.content[0]?.uploaded_by?._id}`}
+                          />
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
             </Col>
           </Row>
 

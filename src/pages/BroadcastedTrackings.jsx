@@ -73,7 +73,6 @@ const BroadcastedTrackings = (props) => {
       );
       setDeadline(resp.data.tasks.deadline_date);
       setTaskDetails(resp.data.tasks);
-      // console.log(taskDetails, `<---this is a task details`);
       if (resp) {
         setLocation(resp.data.tasks.address_location.coordinates);
         setLoading(false);
@@ -125,8 +124,6 @@ const BroadcastedTrackings = (props) => {
     setOpenSortComponent(values);
   };
 
-  console.log(`<---this is a task details`, taskDetails);
-
   return (
     <>
       {loading && <Loader />}
@@ -136,7 +133,6 @@ const BroadcastedTrackings = (props) => {
           style={{ pointer: "cursor" }}
           onClick={() => {
             const lastUrl = sessionStorage.getItem("lastPageWithQuery");
-            console.log("lasturl ---> ", lastUrl);
             if (lastUrl) {
               navigate(lastUrl);
               sessionStorage.removeItem("lastPageWithQuery");
@@ -160,8 +156,8 @@ const BroadcastedTrackings = (props) => {
         // </div>
       )}
       <div className="trackingList_wrap">
-        <Row>
-          <Col md={6} className="ps-0 pe-1">
+        <Row >
+          <Col>
             <div className="bTask_list_card">
               <div className="taskcard_headr d-flex justify-content-between align-items-center">
                 <h2 className="dashCard-heading">
@@ -323,7 +319,7 @@ const BroadcastedTrackings = (props) => {
               </div>
             </div>
           </Col>
-          <Col md={6} className="ps-0 pe-1">
+          <Col>
             <div className="taskDetail_wrap">
               <h2 className="dashCard-heading">Task details</h2>
               <div className="singleTask_detail sngl_wrp">
